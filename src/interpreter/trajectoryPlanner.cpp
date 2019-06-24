@@ -1,6 +1,6 @@
 ///-----------------------------------------------------------------------------
 #include "common.h"
-#include "hirestimer.h"
+#include "../motion/hirestimer.h"
 ///-----------------------------------------------------------------------------
 #ifdef DEBUG_DOWNLOAD
 extern CString ds;

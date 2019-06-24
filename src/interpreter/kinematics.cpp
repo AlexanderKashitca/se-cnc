@@ -5,7 +5,7 @@
 ///-----------------------------------------------------------------------------
 
 #if 1
-CKinematics::CKinematics()
+KinematicsClass::KinematicsClass()
 {
 	m_MotionParams.BreakAngle = 30.0;
 	m_MotionParams.TPLookahead = 3.0;
@@ -99,12 +99,12 @@ CKinematics::CKinematics()
 
 }
 
-CKinematics::~CKinematics()
+KinematicsClass::~KinematicsClass()
 {
 	if (GeoTable) delete [] GeoTable;
 }
 
-int CKinematics::TransformCADtoActuators(double x, double y, double z, double a, double b, double c, double *Acts, bool NoGeo)
+int KinematicsClass::TransformCADtoActuators(double x, double y, double z, double a, double b, double c, double *Acts, bool NoGeo)
 {
 	GeoCorrect(x, y, z, &x, &y, &z);
 
@@ -120,7 +120,7 @@ int CKinematics::TransformCADtoActuators(double x, double y, double z, double a,
 
 // by default the 8 axis functions call the 6 axis functions for the case where 6-axis overrides exist but no 8 axis ovverrides
 
-int CKinematics::TransformCADtoActuators(double x, double y, double z, double a, double b, double c, double u, double v, double *Acts, bool NoGeo)
+int KinematicsClass::TransformCADtoActuators(double x, double y, double z, double a, double b, double c, double u, double v, double *Acts, bool NoGeo)
 {
 	Acts[6] = u*m_MotionParams.CountsPerInchU;
 	Acts[7] = v*m_MotionParams.CountsPerInchV;
@@ -129,13 +129,13 @@ int CKinematics::TransformCADtoActuators(double x, double y, double z, double a,
 }
 
 // as default do nothing
-int CKinematics::RemapForNonStandardAxes(double *x, double *y, double *z, double *a, double *b, double *c)
+int KinematicsClass::RemapForNonStandardAxes(double *x, double *y, double *z, double *a, double *b, double *c)
 {
 	return 0;
 }
 
 
-int CKinematics::InvertTransformCADtoActuators(double *Acts, double *xr, double *yr, double *zr, double *ar, double *br, double *cr, bool NoGeo)
+int KinematicsClass::InvertTransformCADtoActuators(double *Acts, double *xr, double *yr, double *zr, double *ar, double *br, double *cr, bool NoGeo)
 {
 	double Tol=1e-6;
 	double d=0.1;					// should be linear over this range
@@ -236,7 +236,7 @@ int CKinematics::InvertTransformCADtoActuators(double *Acts, double *xr, double 
 
 // by default the 8 axis functions call the 6 axis functions for the case where 6-axis overrides exist but no 8 axis ovverrides
 
-int CKinematics::TransformActuatorstoCAD(double *Acts, double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool NoGeo)
+int KinematicsClass::TransformActuatorstoCAD(double *Acts, double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool NoGeo)
 {
 	*u = Acts[6] / m_MotionParams.CountsPerInchU;
 	*v = Acts[7] / m_MotionParams.CountsPerInchV;
@@ -245,7 +245,7 @@ int CKinematics::TransformActuatorstoCAD(double *Acts, double *x, double *y, dou
 }
 
 
-int CKinematics::TransformActuatorstoCAD(double *Acts, double *x, double *y, double *z, double *a, double *b, double *c, bool NoGeo)
+int KinematicsClass::TransformActuatorstoCAD(double *Acts, double *x, double *y, double *z, double *a, double *b, double *c, bool NoGeo)
 {
 	if (GeoTableValid)
 	{
@@ -266,12 +266,12 @@ int CKinematics::TransformActuatorstoCAD(double *Acts, double *x, double *y, dou
 	}
 }
 
-int CKinematics::ComputeAnglesOption(int is)
+int KinematicsClass::ComputeAnglesOption(int is)
 {
 	return 0;
 }
 
-int CKinematics::MaxRateInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *rate)
+int KinematicsClass::MaxRateInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *rate)
 {
 	double Max,FeedRateToUse = 1e99;
 
@@ -328,7 +328,7 @@ int CKinematics::MaxRateInDirection(double dx, double dy, double dz, double da, 
 	return 0;
 }
 
-int CKinematics::MaxRapidRateInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *rate)
+int KinematicsClass::MaxRapidRateInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *rate)
 {
 	BOOL pure_angle;
 	double Max,FeedRateToUse = 1e99;
@@ -382,7 +382,7 @@ int CKinematics::MaxRapidRateInDirection(double dx, double dy, double dz, double
 }
 
 
-int CKinematics::MaxAccelInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *accel)
+int KinematicsClass::MaxAccelInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *accel)
 {
 	double Max,AccelToUse = 1e99;
 
@@ -439,7 +439,7 @@ int CKinematics::MaxAccelInDirection(double dx, double dy, double dz, double da,
 }
 
 
-int CKinematics::MaxRapidAccelInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *accel)
+int KinematicsClass::MaxRapidAccelInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *accel)
 {
 	double Max,AccelToUse = 1e99;
 
@@ -495,7 +495,7 @@ int CKinematics::MaxRapidAccelInDirection(double dx, double dy, double dz, doubl
 	return 0;
 }
 
-int CKinematics::MaxRapidJerkInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *jerk)
+int KinematicsClass::MaxRapidJerkInDirection(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, double *jerk)
 {
 	double Max,JerkToUse = 1e99;
 
@@ -557,7 +557,7 @@ int CKinematics::MaxRapidJerkInDirection(double dx, double dy, double dz, double
 // from : http://mcraefamily.com/MathHelp/GeometryConicSectionCircleIntersection.htm
 
 
-int CKinematics::IntersectionTwoCircles(CPT2D c0, double r0, CPT2D c1, double r1, CPT2D *q)
+int KinematicsClass::IntersectionTwoCircles(CPT2D c0, double r0, CPT2D c1, double r1, CPT2D *q)
 {
 	double d2 = sqr(c1.x-c0.x) + sqr(c1.y-c0.y);  
 	double K = 0.25 * sqrt((sqr(r0+r1)-d2)*(d2-sqr(r0-r1)));
@@ -592,7 +592,7 @@ int CKinematics::IntersectionTwoCircles(CPT2D c0, double r0, CPT2D c1, double r1
 // .
 // .
 
-int CKinematics::ReadGeoTable(const char *name)
+int KinematicsClass::ReadGeoTable(const char *name)
 {
 	double X,Y,Z;
 	int row,col;
@@ -665,7 +665,7 @@ int CKinematics::ReadGeoTable(const char *name)
 // for now the z just has an offset to make the x,y, plane at z=0 flat
 
 
-int CKinematics::GeoCorrect(double x, double y, double z, double *cx, double *cy, double *cz)
+int KinematicsClass::GeoCorrect(double x, double y, double z, double *cx, double *cy, double *cz)
 {
 	if (!GeoTableValid) return 1;
 
@@ -722,7 +722,7 @@ int CKinematics::GeoCorrect(double x, double y, double z, double *cx, double *cy
 //	Matrix size is really N x N+1
 
 
-int CKinematics::Solve(double *A, int N)
+int KinematicsClass::Solve(double *A, int N)
 {
 	int i,j,l,m,k,N1=N+1;
 	int NN=N*N1;
@@ -763,3 +763,4 @@ int CKinematics::Solve(double *A, int N)
 	return 0;
 }
 #endif
+///-----------------------------------------------------------------------------

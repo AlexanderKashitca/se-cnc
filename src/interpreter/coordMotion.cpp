@@ -1,23 +1,18 @@
-// CoordMotion.cpp: implementation of the CCoordMotion class.
-//
-//////////////////////////////////////////////////////////////////////
+///-----------------------------------------------------------------------------
+/// CoordMotion.cpp: implementation of the CoordMotionClass class.
+///-----------------------------------------------------------------------------
+#include "common.h"
+#include "coordMotion.h"
 
-#include "stdafx.h"
-#include "CoordMotion.h"
-#include "HiResTimer.h"
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
-
+#include "../motion/hirestimer.h"
+///-----------------------------------------------------------------------------
 #ifdef DEBUG_DOWNLOAD
-CString ds;
+QString ds;
 FILE *f=NULL;
 CHiResTimer DTimer;
 
 
-void PutString(CString s)
+void PutString(QString s)
 {
 	if (!f)
 	{
@@ -41,11 +36,11 @@ void CloseDiag()
 
 
 
-CCoordMotion::CCoordMotion(CKMotionDLL *KM)
+CoordMotionClass::CoordMotionClass(MotionClass *KM)
 {
 	m_board_type = BOARD_TYPE_UNKNOWN;
 
-	KMotionDLL=KM;
+    MotionLibrary=KM;
 
 	current_x=current_y=current_z=current_a=current_b=current_c=current_u=current_v=0;
 
@@ -64,7 +59,7 @@ CCoordMotion::CCoordMotion(CKMotionDLL *KM)
 
 	// Save for everybody what directory we are installed in
 
-	CString Path;
+    QString Path;
 
 	GetModuleFileName(GetModuleHandle("GCodeInterpreter.dll"),Path.GetBuffer(MAX_PATH),MAX_PATH);
 	Path.ReleaseBuffer();
@@ -101,12 +96,12 @@ CCoordMotion::CCoordMotion(CKMotionDLL *KM)
 
 	strncpy(MainPath,Path,MAX_PATH);
 
-	m_StraightTraverseCallback=NULL;
-	m_StraightTraverseSixAxisCallback=NULL;
-	m_StraightFeedCallback=NULL;
-	m_StraightFeedSixAxisCallback=NULL;
-	m_ArcFeedCallback=NULL;
-	m_ArcFeedSixAxisCallback=NULL;
+    m_StraightTraverseCallback=nullptr;
+    m_StraightTraverseSixAxisCallback=nullptr;
+    m_StraightFeedCallback=nullptr;
+    m_StraightFeedSixAxisCallback=nullptr;
+    m_ArcFeedCallback=nullptr;
+    m_ArcFeedSixAxisCallback=nullptr;
 
 	DownloadInit();
 
@@ -120,7 +115,7 @@ CCoordMotion::CCoordMotion(CKMotionDLL *KM)
 	m_TCP_affects_actuators = true;  // assume Tool Center Point has effects except for simple cases
 	// check for a special Kinematics File
 
-	FILE *f = fopen((CString)MainPath + "\\Data\\Kinematics.txt","rt");
+    FILE *f = fopen((QString)MainPath + "\\Data\\Kinematics.txt","rt");
 
 	if (f)
 	{
@@ -128,29 +123,29 @@ CCoordMotion::CCoordMotion(CKMotionDLL *KM)
 		fgets(s, 80, f);
 		// one exists, check if it is calling for Geppetto otherwise assume it is the 3Rod
 
-		if (strstr(s, "5AxisTableAC") != NULL)
-			Kinematics = new CKinematics5AxisTableAC;
-		else if (strstr(s, "5AxisTableBC") != NULL)
-			Kinematics = new CKinematics5AxisTableBC;
-		else if (strstr(s, "Kinematics5AxisTableAGimbalB") != NULL)
-			Kinematics = new CKinematics5AxisTableAGimbalB;
-		else if (strstr(s, "5AxisGimbalAB") != NULL)
-			Kinematics = new CKinematics5AxisGimbalAB;
-		else if (strstr(s, "5AxisGimbalCB") != NULL)
-			Kinematics = new CKinematics5AxisGimbalCB;
-		else if (strstr(s, "GeppettoExtruder") != NULL)
-			Kinematics = new CKinematicsGeppettoExtrude;
-		else if (strstr(s, "Geppetto") != NULL)
-			Kinematics = new CKinematicsGeppetto;
+        if (strstr(s, "5AxisTableAC") != nullptr)
+            Kinematics = new Kinematics5AxisTableACClass;
+        else if (strstr(s, "5AxisTableBC") != nullptr)
+            Kinematics = new Kinematics5AxisTableBCClass;
+        else if (strstr(s, "Kinematics5AxisTableAGimbalB") != nullptr)
+            Kinematics = new Kinematics5AxisTableAGimbalBClass;
+        else if (strstr(s, "5AxisGimbalAB") != nullptr)
+            Kinematics = new Kinematics5AxisGimbalABClass;
+        else if (strstr(s, "5AxisGimbalCB") != nullptr)
+            Kinematics = new Kinematics5AxisGimbalCBClass;
+        else if (strstr(s, "GeppettoExtruder") != nullptr)
+            Kinematics = new KinematicsGeppettoExtrudeClass;
+        else if (strstr(s, "Geppetto") != nullptr)
+            Kinematics = new KinematicsGeppettoClass;
 		else
-			Kinematics = new CKinematics3Rod;
+            Kinematics = new Kinematics3RodClass;
 		
 		fclose(f);
 	}
 	else
 	{
 		m_TCP_affects_actuators = false;
-		Kinematics = new CKinematics;
+        Kinematics = new KinematicsClass;
 	}
 
 	RapidParamsDirty=true;  // Trajectory Params should be refreshed from KFLOP
@@ -158,16 +153,16 @@ CCoordMotion::CCoordMotion(CKMotionDLL *KM)
 	x_axis=y_axis=z_axis=a_axis=b_axis=c_axis=-1;  // set all as initially undefined
 
 	#ifdef DEBUG_DOWNLOAD
-	AfxMessageBox("Download Diag Enabled");
+    ///AfxMessageBox("Download Diag Enabled");
 	#endif
 }
 
-CCoordMotion::~CCoordMotion()
+CoordMotionClass::~CoordMotionClass()
 {
 	if (Kinematics) delete Kinematics;
 }
 
-MOTION_PARAMS *CCoordMotion::GetMotionParams()
+MOTION_PARAMS *CoordMotionClass::GetMotionParams()
 {
 	return &Kinematics->m_MotionParams;
 }
@@ -176,14 +171,14 @@ MOTION_PARAMS *CCoordMotion::GetMotionParams()
 // Progress along theta from the start to each PI/2 peak position until the end.  If any of those
 // are outside then flag as an error.
 
-int CCoordMotion::CheckSoftLimitsArc(double XC, double YC, double z,
+int CoordMotionClass::CheckSoftLimitsArc(double XC, double YC, double z,
 					   double SoftLimitPosX,double SoftLimitNegX,
 					   double SoftLimitPosY,double SoftLimitNegY,
 					   double SoftLimitPosZ,double SoftLimitNegZ,
 					   double a, double b, double c, double u, double v, BOOL DirIsCCW, 
 					   double radius, double theta0, double dtheta, 
 					   int x_axis,int y_axis,int z_axis,
-					   char XSTR, char YSTR, char ZSTR, CString &errmsg)
+                       char XSTR, char YSTR, char ZSTR, QString &errmsg)
 {
 	if (m_DisableSoftLimits) return 0;
 
@@ -220,13 +215,13 @@ int CCoordMotion::CheckSoftLimitsArc(double XC, double YC, double z,
 
 		if (x_axis>=0)
 		{
-			if (x > SoftLimitPosX+SIGMA) {errmsg=(CString)XSTR+"+"; return 1;}
-			if (x < SoftLimitNegX-SIGMA) {errmsg=(CString)XSTR+"-"; return 1;}
+            if (x > SoftLimitPosX+SIGMA) {errmsg=(QString)XSTR+"+"; return 1;}
+            if (x < SoftLimitNegX-SIGMA) {errmsg=(QString)XSTR+"-"; return 1;}
 		}
 		if (y_axis>=0)
 		{
-			if (y > SoftLimitPosY+SIGMA) {errmsg=(CString)YSTR+"+"; return 1;}
-			if (y < SoftLimitNegY-SIGMA) {errmsg=(CString)YSTR+"-"; return 1;}
+            if (y > SoftLimitPosY+SIGMA) {errmsg=(QString)YSTR+"+"; return 1;}
+            if (y < SoftLimitNegY-SIGMA) {errmsg=(QString)YSTR+"-"; return 1;}
 		}
 
 		if (DirIsCCW)
@@ -238,8 +233,8 @@ int CCoordMotion::CheckSoftLimitsArc(double XC, double YC, double z,
 		
 	if (z_axis>=0)
 	{
-		if (z > SoftLimitPosZ) {errmsg=(CString)ZSTR+"+"; return 1;}
-		if (z < SoftLimitNegZ) {errmsg=(CString)ZSTR+"-"; return 1;}
+        if (z > SoftLimitPosZ) {errmsg=(QString)ZSTR+"+"; return 1;}
+        if (z < SoftLimitNegZ) {errmsg=(QString)ZSTR+"-"; return 1;}
 	}
 	if (a_axis>=0)
 	{
@@ -270,7 +265,7 @@ int CCoordMotion::CheckSoftLimitsArc(double XC, double YC, double z,
 }
 
 
-int CCoordMotion::CheckSoftLimits(double x, double y, double z, double a, double b, double c, double u, double v, CString &errmsg)
+int CoordMotionClass::CheckSoftLimits(double x, double y, double z, double a, double b, double c, double u, double v, QString &errmsg)
 {
 	if (m_DisableSoftLimits) return 0;
 
@@ -319,12 +314,12 @@ int CCoordMotion::CheckSoftLimits(double x, double y, double z, double a, double
 	return 0;
 }
 
-int CCoordMotion::StraightTraverse(double x, double y, double z, double a, double b, double c, bool NoCallback, int sequence_number, int ID)
+int CoordMotionClass::StraightTraverse(double x, double y, double z, double a, double b, double c, bool NoCallback, int sequence_number, int ID)
 {
 	return StraightTraverse(x, y, z, a, b, c, current_u, current_v, NoCallback, sequence_number, ID);
 }
 
-int CCoordMotion::StraightTraverse(double x, double y, double z, double a, double b, double c, double u, double v, bool NoCallback, int sequence_number, int ID)
+int CoordMotionClass::StraightTraverse(double x, double y, double z, double a, double b, double c, double u, double v, bool NoCallback, int sequence_number, int ID)
 {
 	double tdx, tdy, tdz, tda, tdb, tdc, tdu, tdv, rate, AccelToUse, JerkToUse;
 
@@ -349,12 +344,12 @@ int CCoordMotion::StraightTraverse(double x, double y, double z, double a, doubl
 	if (GetRapidSettings()) return 1;
 	
 	// if exceeding limits trigger Halt
-	CString errmsg;
+    QString errmsg;
 	if (CheckSoftLimits(x,y,z,a,b,c,u,v,errmsg)) 
 	{
 		if (m_Simulate)
 		{
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+" Rapid Traverse\r\r"
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+" Rapid Traverse\r\r"
 				"Soft Limits disabled for remainder of Simulation");
 			m_DisableSoftLimits=true;
 		}
@@ -363,7 +358,7 @@ int CCoordMotion::StraightTraverse(double x, double y, double z, double a, doubl
 			SetHalt();
 			CheckMotionHalt(true);
 			SetAbort();
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+" Rapid Traverse Job Halted");
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+" Rapid Traverse Job Halted");
 			return 1;
 		}
 	}
@@ -446,7 +441,7 @@ int CCoordMotion::StraightTraverse(double x, double y, double z, double a, doubl
 
 // 6-axes ArcFeed (using max possible Acceeration)
 
-int CCoordMotion::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
+int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 	double first_end, double second_end,
 	double first_axis, double second_axis, int rotation,
 	double axis_end_point, double a, double b, double c, int sequence_number, int ID)
@@ -458,7 +453,7 @@ int CCoordMotion::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 
 // ArcFeed (using max possible Acceeration)
 
-int CCoordMotion::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
+int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 				double first_end, double second_end, 
 		        double first_axis, double second_axis, int rotation,
 				double axis_end_point, double a, double b, double c, double u, double v, int sequence_number, int ID)
@@ -469,7 +464,7 @@ int CCoordMotion::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 
 // 6-axes Arc Feed with Specified Acceleration
 
-int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
+int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
 	double first_end, double second_end,
 	double first_axis, double second_axis, int rotation,
 	double axis_end_point, double a, double b, double c, int sequence_number, int ID)
@@ -479,7 +474,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 }
 // Arc Feed with Specified Acceleration
 
-int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
+int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
 				double first_end, double second_end, 
 		        double first_axis, double second_axis, int rotation,
 				double axis_end_point, double a, double b, double c, double u, double v, int sequence_number, int ID)
@@ -495,7 +490,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 	if (FeedRateToUse <= 0.0)
 	{
 		SetAbort();
-		KMotionDLL->DoErrMsg("Arc Feed with Feed Rate Zero or Negative");
+        MotionLibrary->DoErrMsg("Arc Feed with Feed Rate Zero or Negative");
 		return 1;
 	}
 
@@ -591,7 +586,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 	{
 		if ((MP->ArcsToSegs || MP->UseOnlyLinearSegments) && MP->CollinearTol==0.0)
 		{
-			AfxMessageBox("Error Arcs To Segs selected with Zero Collinear Tolerance");
+            ///AfxMessageBox("Error Arcs To Segs selected with Zero Collinear Tolerance");
 			SetAbort();
 			return 1;
 		}
@@ -640,7 +635,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 	if (GetRapidSettings()) return 1;
 
 	int SoftLimitResult;
-	CString errmsg;
+    QString errmsg;
 
 	if (plane == CANON_PLANE_XY)
 		SoftLimitResult = CheckSoftLimitsArc(first_axis, second_axis, axis_end_point,
@@ -671,7 +666,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 	{
 		if (m_Simulate)
 		{
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+" Arc\r\r"
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+" Arc\r\r"
 				"Soft Limits disabled for remainder of Simulation");
 			m_DisableSoftLimits=true;
 		}
@@ -680,7 +675,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 			SetHalt();
 			CheckMotionHalt(true);
 			SetAbort();
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+" Arc Job Halted");
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+" Arc Job Halted");
 			return 1;
 		}
 	}
@@ -759,7 +754,7 @@ int CCoordMotion::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Desired
 
 // Commit those segments pending to be combined
 
-int CCoordMotion::CommitPendingSegments(bool RapidMode)
+int CoordMotionClass::CommitPendingSegments(bool RapidMode)
 {
 	if (m_NumLinearNotDrawn>0)
 	{
@@ -792,7 +787,7 @@ int CCoordMotion::CommitPendingSegments(bool RapidMode)
 
 // 6-axes Straight Feed (using Max possible Acceleration)
 
-int CCoordMotion::StraightFeed(double DesiredFeedRate_in_per_sec,
+int CoordMotionClass::StraightFeed(double DesiredFeedRate_in_per_sec,
 	double x, double y, double z, double a, double b, double c, int sequence_number, int ID)
 {
 	return StraightFeedAccel(DesiredFeedRate_in_per_sec, 1e99, x, y, z, a, b, c, 0.0, 0.0, sequence_number, ID);
@@ -800,7 +795,7 @@ int CCoordMotion::StraightFeed(double DesiredFeedRate_in_per_sec,
 
 // Straight Feed (using Max possible Acceleration)
 
-int CCoordMotion::StraightFeed(double DesiredFeedRate_in_per_sec,
+int CoordMotionClass::StraightFeed(double DesiredFeedRate_in_per_sec,
 	double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
 	return StraightFeedAccel(DesiredFeedRate_in_per_sec, 1e99, x, y, z, a, b, c, u, v, sequence_number, ID);
@@ -808,7 +803,7 @@ int CCoordMotion::StraightFeed(double DesiredFeedRate_in_per_sec,
 	
 // 6-axes Straight Feed with specified Acceleration	
 
-int CCoordMotion::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
+int CoordMotionClass::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
 	double x, double y, double z, double a, double b, double c, int sequence_number, int ID)
 {
 	return StraightFeedAccelRapid(DesiredFeedRate_in_per_sec, DesiredAccel, false, false, x, y, z, a, b, c, 0.0, 0.0, sequence_number, ID);
@@ -816,7 +811,7 @@ int CCoordMotion::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double De
 
 // Straight Feed with specified Acceleration	
 
-int CCoordMotion::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
+int CoordMotionClass::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
 	double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
 	return StraightFeedAccelRapid(DesiredFeedRate_in_per_sec, DesiredAccel, false, false, x, y, z, a, b, c, u, v, sequence_number, ID);
@@ -824,7 +819,7 @@ int CCoordMotion::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double De
 
 // Straight Feed with specified Acceleration and RapidMode	
 
-int CCoordMotion::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, double DesiredAccel, bool RapidMode, bool NoCallback,
+int CoordMotionClass::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, double DesiredAccel, bool RapidMode, bool NoCallback,
 							   double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
 	MOTION_PARAMS *MP=&Kinematics->m_MotionParams;
@@ -850,7 +845,7 @@ int CCoordMotion::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, doub
 	if (FeedRateToUse <= 0.0)
 	{
 		SetAbort();
-		KMotionDLL->DoErrMsg("Straight Feed with Feed Rate Zero or Negative");
+        MotionLibrary->DoErrMsg("Straight Feed with Feed Rate Zero or Negative");
 		return 1;
 	}
 
@@ -859,16 +854,16 @@ int CCoordMotion::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, doub
 	// check if we should sync parameters with KFLOP
 	if (GetRapidSettings()) return 1;
 
-	CString errmsg;
+    QString errmsg;
 	if (CheckSoftLimits(x,y,z,a,b,c,u,v,errmsg)) 
 	{
-		CString FunctionType;
+        QString FunctionType;
 		if (RapidMode) FunctionType=" Straight Traverse";
 		else FunctionType=" Straight Feed";
 		
 		if (m_Simulate)
 		{
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+FunctionType+"\r\r"
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+FunctionType+"\r\r"
 				"Soft Limits disabled for remainder of Simulation");
 			m_DisableSoftLimits=true;
 		}
@@ -877,7 +872,7 @@ int CCoordMotion::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, doub
 			SetHalt();
 			CheckMotionHalt(true);
 			SetAbort();
-			KMotionDLL->DoErrMsg((CString)"Soft Limit "+errmsg+FunctionType+" Job Halted");
+            MotionLibrary->DoErrMsg((QString)"Soft Limit "+errmsg+FunctionType+" Job Halted");
 			return 1;
 		}
 	}
@@ -1016,7 +1011,7 @@ int CCoordMotion::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, doub
 }
 
 
-void CCoordMotion::DoSegmentCallbacks(int i0, int i1)
+void CoordMotionClass::DoSegmentCallbacks(int i0, int i1)
 {
 	if (nsegs >= 1 && (m_StraightFeedCallback || m_StraightFeedSixAxisCallback)) 
 	{
@@ -1037,7 +1032,7 @@ void CCoordMotion::DoSegmentCallbacks(int i0, int i1)
 	}
 }
 
-void CCoordMotion::DoSegmentCallbacksRapid(int i0, int i1)
+void CoordMotionClass::DoSegmentCallbacksRapid(int i0, int i1)
 {
 	if (nsegs >= 1 && (m_StraightTraverseCallback || m_StraightTraverseSixAxisCallback)) 
 	{
@@ -1061,7 +1056,7 @@ void CCoordMotion::DoSegmentCallbacksRapid(int i0, int i1)
 
 // limit speeds based on proportion in that direction
 
-int CCoordMotion::DoRateAdjustments(int i0, int i1)
+int CoordMotionClass::DoRateAdjustments(int i0, int i1)
 {
 	double tdx,tdy,tdz,tda,tdb,tdc,tdu,tdv,rate,FeedRateToUse,Accel,AccelToUse;
 	
@@ -1098,7 +1093,7 @@ int CCoordMotion::DoRateAdjustments(int i0, int i1)
 // limit accleration and velocity to the lowest values throughout the entire arc
 // lowest values should occur at the beginning, end, and quadrants
 
-int CCoordMotion::DoRateAdjustmentsArc(int i, double radius, double theta0, double dtheta, double dcircle)
+int CoordMotionClass::DoRateAdjustmentsArc(int i, double radius, double theta0, double dtheta, double dcircle)
 {
 	double dx,dy,dz,da,db,dc,du,dv,rate,FeedRateToUse,Accel,AccelToUse;
 	double end_theta, next_theta, quadrant, SIGMA = radius*1e-12;
@@ -1226,7 +1221,7 @@ int CCoordMotion::DoRateAdjustmentsArc(int i, double radius, double theta0, doub
 }
 
 
-int CCoordMotion::Dwell(double seconds, int sequence_number)
+int CoordMotionClass::Dwell(double seconds, int sequence_number)
 {
 	if (m_Abort) return 1;
 
@@ -1255,7 +1250,7 @@ int CCoordMotion::Dwell(double seconds, int sequence_number)
 
 // issue a pass through KMotion Command
 
-int CCoordMotion::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation)
+int CoordMotionClass::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation)
 {
 	if (m_Simulate) return 0;  // exit if we are simulating
 
@@ -1266,7 +1261,7 @@ int CCoordMotion::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperatio
 		if (WaitForSegmentsFinished(TRUE)) {SetAbort(); return 1;}
 	}
 
-	if (KMotionDLL->WriteLine(s)) {SetAbort(); return 1;}
+    if (MotionLibrary->WriteLine(s)) {SetAbort(); return 1;}
 
 	return 0;
 }
@@ -1279,7 +1274,7 @@ int CCoordMotion::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperatio
 // pending in the motion buffer before they are downloaded any number in a path can
 // exist.
 
-int CCoordMotion::DoKMotionBufCmd(const char *s,int sequence_number)
+int CoordMotionClass::DoKMotionBufCmd(const char *s,int sequence_number)
 {
 	strncpy(special_cmds[nspecial_cmds % MAX_SPECIAL_CMDS].cmd,s,MAX_LINE);
 
@@ -1318,9 +1313,9 @@ int CCoordMotion::DoKMotionBufCmd(const char *s,int sequence_number)
 
 
 
-int CCoordMotion::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
+int CoordMotionClass::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 {
-	CString response,response2;
+    QString response,response2;
 
 	if (m_Simulate || !m_SegmentsStartedExecuting) return 0;
 
@@ -1330,19 +1325,19 @@ int CCoordMotion::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 	{
 		if (count++)
 		{
-			if (KMotionDLL->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
+            if (MotionLibrary->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
 			response.ReleaseBuffer();
 			if (sscanf(response, "%lf",&m_TimeAlreadyExecuted)!= 1){SetAbort(); return 1;}
 			UpdateRealTimeState(m_TimeAlreadyExecuted);
 			Sleep(10);
 		}
 		
-		if (KMotionDLL->WriteLineReadLine("CheckDoneBuf",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+        if (MotionLibrary->WriteLineReadLine("CheckDoneBuf",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 		response.ReleaseBuffer();
 
 		if (response == "-1")
 		{
-			if (KMotionDLL->WriteLineReadLine("ExecTime",response2.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
+            if (MotionLibrary->WriteLineReadLine("ExecTime",response2.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
 			response2.ReleaseBuffer();
 			if (sscanf(response2, "%lf",&m_TimeAlreadyExecuted)!= 1){SetAbort(); return 1;}
 			UpdateRealTimeState(m_TimeAlreadyExecuted);
@@ -1363,7 +1358,7 @@ int CCoordMotion::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 	}
 	while (response!="1");
 
-	if (KMotionDLL->WriteLineReadLine("ExecTime",response2.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
+    if (MotionLibrary->WriteLineReadLine("ExecTime",response2.GetBufferSetLength(MAX_LINE))){SetAbort(); return 1;}
 	response2.ReleaseBuffer();
 	if (sscanf(response2, "%lf",&m_TimeAlreadyExecuted)!= 1){SetAbort(); return 1;}
 	UpdateRealTimeState(m_TimeAlreadyExecuted);
@@ -1373,15 +1368,15 @@ int CCoordMotion::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 	return 0;
 }
 
-int CCoordMotion::WaitForMoveXYZABCFinished()
+int CoordMotionClass::WaitForMoveXYZABCFinished()
 {
-	CString response;
+    QString response;
 
 	int count=0;
 	do
 	{
 		if (count++) Sleep(10);
-		if (KMotionDLL->WriteLineReadLine("CheckDoneXYZABC",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+        if (MotionLibrary->WriteLineReadLine("CheckDoneXYZABC",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 		response.ReleaseBuffer();
 
 		if (response == "-1")
@@ -1400,9 +1395,9 @@ int CCoordMotion::WaitForMoveXYZABCFinished()
 }
 
 
-int CCoordMotion::CheckMotionHalt(bool Coord)
+int CoordMotionClass::CheckMotionHalt(bool Coord)
 {
-	CString response,responsebuf;
+    QString response,responsebuf;
 	double BufTime=0;
 	bool Finished=false, NotStarted=false;
 	SEGMENT *segs_to_check;
@@ -1410,12 +1405,12 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 	if (!m_Abort && m_Halt && !m_Simulate)
 	{
 		// stop immediately
-		if (KMotionDLL->WriteLine("StopImmediate0"))  {SetAbort(); return 1;}
+        if (MotionLibrary->WriteLine("StopImmediate0"))  {SetAbort(); return 1;}
 
 		// wait until stopped
 		do
 		{
-			if (KMotionDLL->WriteLineReadLine("GetStopState",response.GetBufferSetLength(MAX_LINE)))  {SetAbort(); return 1;}
+            if (MotionLibrary->WriteLineReadLine("GetStopState",response.GetBufferSetLength(MAX_LINE)))  {SetAbort(); return 1;}
 			response.ReleaseBuffer();
 			if (m_Abort) return 1;
 
@@ -1424,7 +1419,7 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 
 			if (Coord && response == '1')
 			{
-				if (KMotionDLL->WriteLineReadLine("CheckDoneBuf",responsebuf.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+                if (MotionLibrary->WriteLineReadLine("CheckDoneBuf",responsebuf.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 				responsebuf.ReleaseBuffer();
 
 				if (responsebuf == "1")
@@ -1465,7 +1460,7 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 			else
 			{
 				// determine the line number we were at
-				if (KMotionDLL->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))) return 1;
+                if (MotionLibrary->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))) return 1;
 				response.ReleaseBuffer();
 				int result=sscanf(response, "%lf",&m_TimeAlreadyExecuted);
 				if (result != 1)  return 1;
@@ -1475,7 +1470,7 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 
 
 		// clear stop state - note this clears time executed in DSP
-		if (KMotionDLL->WriteLine("StopImmediate2"))  {SetAbort(); return 1;}
+        if (MotionLibrary->WriteLine("StopImmediate2"))  {SetAbort(); return 1;}
 
 		// save the raw machine positions
 		if (ReadCurAbsPosition(&m_StoppedMachinex,&m_StoppedMachiney,&m_StoppedMachinez,&m_StoppedMachinea,&m_StoppedMachineb,&m_StoppedMachinec,&m_StoppedMachineu,&m_StoppedMachinev,true)) return 1;
@@ -1604,7 +1599,7 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 			if (i==-1)
 			{
 				SetAbort();
-				KMotionDLL->DoErrMsg("Invalid buffer times on Halt");
+                MotionLibrary->DoErrMsg("Invalid buffer times on Halt");
 				return 1;
 			}
 
@@ -1629,7 +1624,7 @@ int CCoordMotion::CheckMotionHalt(bool Coord)
 // also remember if we were in an arc or a linear
 // to help handle resuming with tool compensation
 
-void CCoordMotion::SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i)
+void CoordMotionClass::SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i)
 {
 	m_PreviouslyStoppedType = segs_to_check[TPMOD(i)].type;
 	m_PreviouslyStoppedID = segs_to_check[TPMOD(i)].ID;
@@ -1666,7 +1661,7 @@ void CCoordMotion::SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i)
 
 // execute whatever segments are in the queue
 
-int CCoordMotion::FlushSegments()
+int CoordMotionClass::FlushSegments()
 {
 	int ispecial_cmd=0;
 
@@ -1710,7 +1705,7 @@ int CCoordMotion::FlushSegments()
 
 			if (WaitForSegmentsFinished()) {SetAbort(); return 1;}
 
-			if(KMotionDLL->WriteLine("OpenBuf")) {SetAbort(); return 1;}
+            if(MotionLibrary->WriteLine("OpenBuf")) {SetAbort(); return 1;}
 			m_TimeAlreadyExecuted=0;
 			ClearWriteLineBuffer();
 			
@@ -1747,7 +1742,7 @@ int CCoordMotion::FlushSegments()
 		}
 		
 		// Tell KFLOP that the buffer is complete sp that it doesn't worry about starvation
-		if(KMotionDLL->WriteLine("FlushBuf")) {SetAbort(); return 1;}
+        if(MotionLibrary->WriteLine("FlushBuf")) {SetAbort(); return 1;}
 
 		tp_init();
 		DownloadInit();
@@ -1756,11 +1751,11 @@ int CCoordMotion::FlushSegments()
 }
 
 
-int CCoordMotion::LaunchCoordMotion()
+int CoordMotionClass::LaunchCoordMotion()
 {
-	CString s;
+    QString s;
 
-	if (KMotionDLL->WriteLineReadLine("CheckDoneBuf",s.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+    if (MotionLibrary->WriteLineReadLine("CheckDoneBuf",s.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	s.ReleaseBuffer();
 
 	if (s == "-1")
@@ -1774,17 +1769,17 @@ int CCoordMotion::LaunchCoordMotion()
 	{
 		if (fabs(m_ThreadingBaseSpeedRPS) < 1e-9)
 		{
-			AfxMessageBox("Error Threading with Zero Speed");
+            ///AfxMessageBox("Error Threading with Zero Speed");
 			SetAbort();
 			return 1;
 		}
 
 		s.Format("TrigThread %.6f",m_ThreadingBaseSpeedRPS);
-		if(KMotionDLL->WriteLine(s)){SetAbort(); return 1;}
+        if(MotionLibrary->WriteLine(s)){SetAbort(); return 1;}
 	}
 	else  // no normal coordinated motion
 	{
-		if(KMotionDLL->WriteLine("ExecBuf")){SetAbort(); return 1;}
+        if(MotionLibrary->WriteLine("ExecBuf")){SetAbort(); return 1;}
 	}
 	return 0;
 }
@@ -1794,7 +1789,7 @@ int CCoordMotion::LaunchCoordMotion()
 // intitalize everything related to downloading and look ahead times
 
 
-void CCoordMotion::DownloadInit()
+void CoordMotionClass::DownloadInit()
 {
 	m_nsegs_downloaded=0;
 	m_TotalDownloadedTime = m_TimeAlreadyExecuted = 0.0;
@@ -1814,7 +1809,7 @@ void CCoordMotion::DownloadInit()
 //
 // 
 
-int CCoordMotion::ExecutionStop()
+int CoordMotionClass::ExecutionStop()
 {
 	// commit any segments waiting to potentially be combined
 	if (CommitPendingSegments(false)) return 1;
@@ -1836,7 +1831,7 @@ int CCoordMotion::ExecutionStop()
 
 // download any special commands that belong at the begining of the path
 
-int CCoordMotion::DoSpecialInitialCommands()
+int CoordMotionClass::DoSpecialInitialCommands()
 {
 	while (ispecial_cmd_downloaded <  nspecial_cmds &&
 		   ispecial_cmd_downloaded >= special_cmds_initial_first &&
@@ -1850,7 +1845,7 @@ int CCoordMotion::DoSpecialInitialCommands()
 
 // download any special commands that belong after this segment
 
-int CCoordMotion::DoSpecialCommand(int iseg)
+int CoordMotionClass::DoSpecialCommand(int iseg)
 {
 	// see if there are any special commands that need to be inserted after the seg
 
@@ -1865,9 +1860,9 @@ int CCoordMotion::DoSpecialCommand(int iseg)
 }
 
 
-int CCoordMotion::OutputSegment(int iseg)
+int CoordMotionClass::OutputSegment(int iseg)
 {
-	CString s;
+    QString s;
 	MOTION_PARAMS *MP=&Kinematics->m_MotionParams;
 
 	static bool LastWasLinear=false;  // After an arc we need to specify all.
@@ -2202,7 +2197,7 @@ int CCoordMotion::OutputSegment(int iseg)
 		}
 		if (i!=0)
 		{
-			KMotionDLL->DoErrMsg("Wrong Buffer Times",MB_ICONEXCLAMATION|MB_OK);   
+            MotionLibrary->DoErrMsg("Wrong Buffer Times",MB_ICONEXCLAMATION|MB_OK);
 			return 1;
 		}
 	}
@@ -2224,7 +2219,7 @@ int CCoordMotion::OutputSegment(int iseg)
 
 	if (m_SegmentsStartedExecuting)
 	{
-		CString response;
+        QString response;
 		bool wait;
 		int result;
 
@@ -2240,7 +2235,7 @@ int CCoordMotion::OutputSegment(int iseg)
 		while (wait && m_SegmentsStartedExecuting)
 		{
 			if (FlushWriteLineBuffer()) return 1;  // flush any segments beforehand
-			if (KMotionDLL->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))) return 1;
+            if (MotionLibrary->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))) return 1;
 			response.ReleaseBuffer();
 			result=sscanf(response, "%lf",&m_TimeAlreadyExecuted);
 			if (result != 1)  return 1;
@@ -2248,7 +2243,7 @@ int CCoordMotion::OutputSegment(int iseg)
 			if (m_TimeAlreadyExecuted < 0.0)
 			{
 				// Buffer ran dry.  Check if an axis was disabled
-				if (KMotionDLL->WriteLineReadLine("CheckDoneXYZABC",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+                if (MotionLibrary->WriteLineReadLine("CheckDoneXYZABC",response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 				response.ReleaseBuffer();
 
 				if (response == "-1")
@@ -2259,7 +2254,7 @@ int CCoordMotion::OutputSegment(int iseg)
 				}
 				else
 				{
-					result = AfxMessageBox("Unexpected Coordinated Motion Buffer Underflow!\r"
+                    result = ///AfxMessageBox("Unexpected Coordinated Motion Buffer Underflow!\r"
 						"(Consider increasing the Trajectory Planner Lookahead time in the Configuration Screen)\r\r"
 						"Press OK to attempt to continue motion\r"
 						"Press CANCEL to abort",
@@ -2297,7 +2292,7 @@ int CCoordMotion::OutputSegment(int iseg)
 
 // Using the time of motion reported by KFLOP figure out
 // what state the Interpreter was in at that previous state
-int CCoordMotion::UpdateRealTimeState(double T)
+int CoordMotionClass::UpdateRealTimeState(double T)
 {
 	double BufTime=0;
 	bool Finished=false, NotStarted=false;
@@ -2358,7 +2353,7 @@ int CCoordMotion::UpdateRealTimeState(double T)
 		if (i==-1)
 		{
 			SetAbort();
-			KMotionDLL->DoErrMsg("Invalid buffer times in Trajectry Planner");
+            MotionLibrary->DoErrMsg("Invalid buffer times in Trajectry Planner");
 			return 1;
 		}
 
@@ -2375,7 +2370,7 @@ int CCoordMotion::UpdateRealTimeState(double T)
 // other than the length of the vector, so adding/considering more vectors will
 // not affect them.
 
-int CCoordMotion::DownloadDoneSegments()
+int CoordMotionClass::DownloadDoneSegments()
 {
 	int ispecial_cmd=0;
 
@@ -2395,7 +2390,7 @@ int CCoordMotion::DownloadDoneSegments()
 
 				if (WaitForSegmentsFinished()) {SetAbort(); return 1;}
 
-				if(KMotionDLL->WriteLine("OpenBuf")) {SetAbort(); return 1;}
+                if(MotionLibrary->WriteLine("OpenBuf")) {SetAbort(); return 1;}
 				m_TimeAlreadyExecuted=0;
 				ClearWriteLineBuffer();
 				m_SegmentsStartedExecuting = false;
@@ -2420,11 +2415,11 @@ int CCoordMotion::DownloadDoneSegments()
 #define FLOAT_TOL 1e-6 
 
 
-int CCoordMotion::SetAxisDefinitions(int x, int y, int z, int a, int b, int c)
+int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c)
 {
-	CString s;
+    QString s;
 	s.Format("DefineCS %d %d %d %d %d %d", x, y, z, a, b, c);
-	if (KMotionDLL->WriteLine(s)) return 1;
+    if (MotionLibrary->WriteLine(s)) return 1;
 	x_axis=x;
 	y_axis=y;
 	z_axis=z;
@@ -2435,11 +2430,11 @@ int CCoordMotion::SetAxisDefinitions(int x, int y, int z, int a, int b, int c)
 	m_DefineCS_valid=true;
 	return 0;
 }
-int CCoordMotion::SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v)
+int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v)
 {
-	CString s;
+    QString s;
 	s.Format("DefineCSEx %d %d %d %d %d %d %d %d", x, y, z, a, b, c, u, v);
-	if (KMotionDLL->WriteLine(s)) return 1;
+    if (MotionLibrary->WriteLine(s)) return 1;
 	x_axis=x;
 	y_axis=y;
 	z_axis=z;
@@ -2453,14 +2448,14 @@ int CCoordMotion::SetAxisDefinitions(int x, int y, int z, int a, int b, int c, i
 	return 0;
 }
 
-int CCoordMotion::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c)
+int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c)
 {
-	CString response;
+    QString response;
 	int result;
 
 	if (!m_DefineCS_valid)
 	{
-		if (KMotionDLL->WriteLineReadLine("DefineCS",response.GetBufferSetLength(MAX_LINE))) return 1;
+        if (MotionLibrary->WriteLineReadLine("DefineCS",response.GetBufferSetLength(MAX_LINE))) return 1;
 		response.ReleaseBuffer();
 		result=sscanf(response, "%d%d%d%d%d%d",&x_axis,&y_axis,&z_axis,&a_axis,&b_axis,&c_axis);
 		if (result != 6) return 1;
@@ -2476,14 +2471,14 @@ int CCoordMotion::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int
 	return 0;
 }
 
-int CCoordMotion::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v)
+int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v)
 {
-	CString response;
+    QString response;
 	int result;
 
 	if (!m_DefineCS_valid)
 	{
-		if (KMotionDLL->WriteLineReadLine("DefineCSEx",response.GetBufferSetLength(MAX_LINE))) return 1;
+        if (MotionLibrary->WriteLineReadLine("DefineCSEx",response.GetBufferSetLength(MAX_LINE))) return 1;
 		response.ReleaseBuffer();
 		result = sscanf(response, "%d%d%d%d%d%d%d%d", &x_axis, &y_axis, &z_axis, &a_axis, &b_axis, &c_axis, &u_axis, &v_axis);
 		if (result != 8) return 1;
@@ -2503,7 +2498,7 @@ int CCoordMotion::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int
 
 // Get motion profile settings for all Axes in the Coordinated Motion System
 
-int CCoordMotion::GetRapidSettings()
+int CoordMotionClass::GetRapidSettings()
 {
 	if (!RapidParamsDirty) return 0;
 
@@ -2514,19 +2509,19 @@ int CCoordMotion::GetRapidSettings()
 
 	if (m_Simulate)
 	{
-		int result=KMotionDLL->WaitToken(false,100,"GetRapidSettings");
+        int result=MotionLibrary->WaitToken(false,100,"GetRapidSettings");
 		if (result != KMOTION_LOCKED)
 		{
 			RapidParamsDirty=false;
 			return 0;  // just exit
 		}
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 	}
 
 
 	if (GetAxisDefinitions(&x_axis,&y_axis,&z_axis,&a_axis, &b_axis, &c_axis, &u_axis, &v_axis)) {SetAbort(); return 1;}
 
-	KMotionDLL->WaitToken("GetRapidSettings2");  // lock the Token while we get all the parameters
+    MotionLibrary->WaitToken("GetRapidSettings2");  // lock the Token while we get all the parameters
 
 	if (GetRapidSettingsAxis(x_axis,&MP->MaxRapidVelX,
 									&MP->MaxRapidAccelX,
@@ -2535,7 +2530,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegX,
 									MP->CountsPerInchX))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2547,7 +2542,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegY,
 									MP->CountsPerInchY))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2559,7 +2554,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegZ,
 									MP->CountsPerInchZ))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2571,7 +2566,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegA,
 									MP->CountsPerInchA))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2583,7 +2578,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegB,
 									MP->CountsPerInchB))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2595,7 +2590,7 @@ int CCoordMotion::GetRapidSettings()
 									&MP->SoftLimitNegC,
 									MP->CountsPerInchC))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort=true;
 		return 1;
 	}
@@ -2607,7 +2602,7 @@ int CCoordMotion::GetRapidSettings()
 		&MP->SoftLimitNegU,
 		MP->CountsPerInchU))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort = true;
 		return 1;
 	}
@@ -2619,13 +2614,13 @@ int CCoordMotion::GetRapidSettings()
 		&MP->SoftLimitNegV,
 		MP->CountsPerInchV))
 	{
-		KMotionDLL->ReleaseToken();
+        MotionLibrary->ReleaseToken();
 		m_Abort = true;
 		return 1;
 	}
 
 
-	KMotionDLL->ReleaseToken();
+    MotionLibrary->ReleaseToken();
 
 	if (Kinematics->GetSoftLimits(&MP->SoftLimitNegX, &MP->SoftLimitPosX, &MP->SoftLimitNegY, &MP->SoftLimitPosY, &MP->SoftLimitNegZ, &MP->SoftLimitPosZ,
 		&MP->SoftLimitNegA, &MP->SoftLimitPosA, &MP->SoftLimitNegB, &MP->SoftLimitPosB, &MP->SoftLimitNegC, &MP->SoftLimitPosC,
@@ -2637,9 +2632,9 @@ int CCoordMotion::GetRapidSettings()
 
 // Get motion profile settings for a single Axis if included in the Coordinated Motion System
 
-int CCoordMotion::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch)
+int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch)
 {
-	CString s,response;
+    QString s,response;
 	int result;
 	double temp;
 
@@ -2647,27 +2642,27 @@ int CCoordMotion::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double
 
 	if (axis==-1) return 0;
 	s.Format("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d",axis,axis,axis,axis,axis);
-	if (KMotionDLL->WriteLine(s)) return 1;
+    if (MotionLibrary->WriteLine(s)) return 1;
 
-	if (KMotionDLL->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
 	result=sscanf(response, "%lf",&temp);
 	if (result != 1) return 1;
 	*Vel = fabs(temp/CountsPerInch);
 
-	if (KMotionDLL->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
 	result=sscanf(response, "%lf",&temp);
 	if (result != 1) return 1;
 	*Accel = fabs(temp/CountsPerInch);
 
-	if (KMotionDLL->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
 	result=sscanf(response, "%lf",&temp);
 	if (result != 1) return 1;
 	*Jerk = fabs(temp/CountsPerInch);
 
-	if (KMotionDLL->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
 	result=sscanf(response, "%lf",&temp);
 	if (result != 1) return 1;
@@ -2676,7 +2671,7 @@ int CCoordMotion::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double
 	else
 		*SoftLimitNeg = temp / CountsPerInch;
 
-	if (KMotionDLL->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
 	result=sscanf(response, "%lf",&temp);
 	if (result != 1) return 1;
@@ -2687,14 +2682,14 @@ int CCoordMotion::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double
 	return 0;
 }
 
-int CCoordMotion::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap, bool NoGeo)
+int CoordMotionClass::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap, bool NoGeo)
 {
 	double dummyu, dummyv;
 	return ReadCurAbsPosition(x, y, z, a, b, c, &dummyu, &dummyv, snap, NoGeo);
 }
 
 
-int CCoordMotion::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap,  bool NoGeo)
+int CoordMotionClass::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap,  bool NoGeo)
 {
 	double tx,ty,tz,ta,tb,tc,tu,tv;
 
@@ -2748,10 +2743,10 @@ int CCoordMotion::ReadCurAbsPosition(double *x, double *y, double *z, double *a,
 
 
 
-int CCoordMotion::GetDestination(int axis, double *d)
+int CoordMotionClass::GetDestination(int axis, double *d)
 {
 	int result;
-	CString cmd,response;
+    QString cmd,response;
 
 	*d=0.0;
 
@@ -2760,7 +2755,7 @@ int CCoordMotion::GetDestination(int axis, double *d)
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
 	cmd.Format("Dest%d",axis);
-	if (KMotionDLL->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+    if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
 	result=sscanf(response, "%lf",d);
@@ -2769,10 +2764,10 @@ int CCoordMotion::GetDestination(int axis, double *d)
 	return 0;
 }
 
-int CCoordMotion::GetPosition(int axis, double *d)
+int CoordMotionClass::GetPosition(int axis, double *d)
 {
 	int result;
-	CString cmd,response;
+    QString cmd,response;
 
 	*d=0.0;
 
@@ -2781,7 +2776,7 @@ int CCoordMotion::GetPosition(int axis, double *d)
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
 	cmd.Format("Pos%d",axis);
-	if (KMotionDLL->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+    if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
 	result=sscanf(response, "%lf",d);
@@ -2790,10 +2785,10 @@ int CCoordMotion::GetPosition(int axis, double *d)
 	return 0;
 }
 
-int CCoordMotion::GetAxisDone(int axis, int *r)
+int CoordMotionClass::GetAxisDone(int axis, int *r)
 {
 	int result;
-	CString cmd,response;
+    QString cmd,response;
 
 	*r=-1;  // assume disabled
 
@@ -2802,7 +2797,7 @@ int CCoordMotion::GetAxisDone(int axis, int *r)
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
 	cmd.Format("CheckDone%d",axis);
-	if (KMotionDLL->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+    if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
 	result=sscanf(response, "%d",r);
@@ -2819,7 +2814,7 @@ int CCoordMotion::GetAxisDone(int axis, int *r)
 // is above the HW Limit adjust the SW factor.  Whenever below the FRO
 // then adjust the HW Limit. 
 
-void CCoordMotion::DetermineSoftwareHardwareFRO(double &HW, double &SW)
+void CoordMotionClass::DetermineSoftwareHardwareFRO(double &HW, double &SW)
 {
 	HW=1.0,SW=1.0;
 
@@ -2883,9 +2878,9 @@ void CCoordMotion::DetermineSoftwareHardwareFRO(double &HW, double &SW)
 }
 
 
-void CCoordMotion::SetFeedRateOverride(double v)
+void CoordMotionClass::SetFeedRateOverride(double v)
 {
-	CString s;
+    QString s;
 	double HW,SW;
 
 	m_FeedRateOverride=v;	
@@ -2894,13 +2889,13 @@ void CCoordMotion::SetFeedRateOverride(double v)
 	{
 		DetermineSoftwareHardwareFRO(HW,SW);
 		s.Format("SetFRO %.4f",HW);
-		KMotionDLL->WriteLine(s);
+        MotionLibrary->WriteLine(s);
 	}
 }
 
-void CCoordMotion::SetFeedRateRapidOverride(double v)
+void CoordMotionClass::SetFeedRateRapidOverride(double v)
 {
-	CString s;
+    QString s;
 
 	if (v > Kinematics->m_MotionParams.MaxRapidFRO) v = Kinematics->m_MotionParams.MaxRapidFRO;
 
@@ -2909,82 +2904,82 @@ void CCoordMotion::SetFeedRateRapidOverride(double v)
 	if (!m_Simulate)
 	{
 		s.Format("SetRapidFRO %.4f",v);
-		KMotionDLL->WriteLine(s);
+        MotionLibrary->WriteLine(s);
 	}
 }
 
-void CCoordMotion::SetHardwareFRORange(double v)
+void CoordMotionClass::SetHardwareFRORange(double v)
 {
 	m_HardwareFRORange=v;
 }
 
-double CCoordMotion::GetHardwareFRORange()
+double CoordMotionClass::GetHardwareFRORange()
 {
 	return m_HardwareFRORange;
 }
 
-void CCoordMotion::SetSpindleRateOverride(double v)
+void CoordMotionClass::SetSpindleRateOverride(double v)
 {
 	m_SpindleRateOverride=v;
 }
 
-double CCoordMotion::GetFeedRateOverride()
+double CoordMotionClass::GetFeedRateOverride()
 {
 	return m_FeedRateOverride;
 }
 
-double CCoordMotion::GetFeedRateRapidOverride()
+double CoordMotionClass::GetFeedRateRapidOverride()
 {
 	return m_FeedRateRapidOverride;
 }
 
-double CCoordMotion::GetSpindleRateOverride()
+double CoordMotionClass::GetSpindleRateOverride()
 {
 	return m_SpindleRateOverride;
 }
 
-void CCoordMotion::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_CALLBACK *p)
+void CoordMotionClass::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_CALLBACK *p)
 {
 	m_StraightTraverseCallback=p;
 }
 
-void CCoordMotion::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK *p)
+void CoordMotionClass::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK *p)
 {
 	m_StraightTraverseSixAxisCallback=p;
 }
 
-void CCoordMotion::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK *p)
+void CoordMotionClass::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK *p)
 {
 	m_StraightFeedCallback=p;
 }
 
-void CCoordMotion::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK_SIX_AXIS *p)
+void CoordMotionClass::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK_SIX_AXIS *p)
 {
 	m_StraightFeedSixAxisCallback=p;
 }
 
-void CCoordMotion::SetArcFeedCallback(ARC_FEED_CALLBACK *p)
+void CoordMotionClass::SetArcFeedCallback(ARC_FEED_CALLBACK *p)
 {
 	m_ArcFeedCallback=p;
 }
 
-void CCoordMotion::SetArcFeedCallback(ARC_FEED_SIX_AXIS_CALLBACK *p)
+void CoordMotionClass::SetArcFeedCallback(ARC_FEED_SIX_AXIS_CALLBACK *p)
 {
 	m_ArcFeedSixAxisCallback=p;
 }
 
-void CCoordMotion::SetAbort()
+void CoordMotionClass::SetAbort()
 {
 	m_Abort=true;
 }
 
-void CCoordMotion::SetTPParams()
+void CoordMotionClass::SetTPParams()
 {
 	SetTrajectoryPlannerParams(&Kinematics->m_MotionParams);
 }
 
 
-void CCoordMotion::ClearAbort()
+void CoordMotionClass::ClearAbort()
 {
 	if (m_Abort)
 	{
@@ -2998,29 +2993,29 @@ void CCoordMotion::ClearAbort()
 	m_SegmentsStartedExecuting=false;
 }
 
-bool CCoordMotion::GetAbort()
+bool CoordMotionClass::GetAbort()
 {
 	return m_Abort;
 }
 
 
-void CCoordMotion::SetHalt()
+void CoordMotionClass::SetHalt()
 {
 	m_Halt=true;
 }
 
-void CCoordMotion::ClearHalt()
+void CoordMotionClass::ClearHalt()
 {
 	m_Halt=false;
 }
 
-bool CCoordMotion::GetHalt()
+bool CoordMotionClass::GetHalt()
 {
 	return m_Halt;
 }
 
 
-int CCoordMotion::MeasurePointAppendToFile(const char *name)
+int CoordMotionClass::MeasurePointAppendToFile(const char *name)
 {
 	double x,y,z,a,b,c;
 	static int row=0, col=0;
@@ -3035,7 +3030,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 
 	if (!f)
 	{
-		KMotionDLL->DoErrMsg((CString)"Unable to open Geometric Correction File : " + name);
+        MotionLibrary->DoErrMsg((QString)"Unable to open Geometric Correction File : " + name);
 		return 1;
 	}
 
@@ -3044,7 +3039,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 	if (result != 2 || NRows < 2 || NRows > 1000 || NCols < 2 || NCols > 1000)
 	{
 		fclose(f);
-		KMotionDLL->DoErrMsg((CString)"Invalid Geometric Correction File (NRows and NCols) : " + name);
+        MotionLibrary->DoErrMsg((QString)"Invalid Geometric Correction File (NRows and NCols) : " + name);
 		return 1;
 	}
 
@@ -3053,7 +3048,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 	if (result != 2)
 	{
 		fclose(f);
-		KMotionDLL->DoErrMsg((CString)"Invalid Geometric Correction File (GeoSpacingX and GeoSpacingY) : " + name);
+        MotionLibrary->DoErrMsg((QString)"Invalid Geometric Correction File (GeoSpacingX and GeoSpacingY) : " + name);
 		return 1;
 	}
 
@@ -3062,7 +3057,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 	if (result != 2)
 	{
 		fclose(f);
-		KMotionDLL->DoErrMsg((CString)"Invalid Geometric Correction File (GeoOffsetX and GeoOffsetY) : " + name);
+        MotionLibrary->DoErrMsg((QString)"Invalid Geometric Correction File (GeoOffsetX and GeoOffsetY) : " + name);
 		return 1;
 	}
 
@@ -3079,7 +3074,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 
 	if (!f)
 	{
-		KMotionDLL->DoErrMsg((CString)"Unable to open Measurement Point File : " + name);
+        MotionLibrary->DoErrMsg((QString)"Unable to open Measurement Point File : " + name);
 		return 1;
 	}
 
@@ -3099,7 +3094,7 @@ int CCoordMotion::MeasurePointAppendToFile(const char *name)
 }
 
 
-int CCoordMotion::PutWriteLineBuffer(CString s, double Time)
+int CoordMotionClass::PutWriteLineBuffer(QString s, double Time)
 {
 	if (m_Abort) return 1;
 
@@ -3125,49 +3120,49 @@ int CCoordMotion::PutWriteLineBuffer(CString s, double Time)
 }
 
 
-int CCoordMotion::FlushWriteLineBuffer()
+int CoordMotionClass::FlushWriteLineBuffer()
 {
 	if (m_Abort) return 1;
 
 	int Length = WriteLineBuffer.GetLength();
 
-	int result = KMotionDLL->WriteLine(WriteLineBuffer);
+    int result = MotionLibrary->WriteLine(WriteLineBuffer);
 	ClearWriteLineBuffer();
 	return result;
 }
 
-int CCoordMotion::ClearWriteLineBuffer()
+int CoordMotionClass::ClearWriteLineBuffer()
 {
 	WriteLineBuffer="";
 	WriteLineBufferTime=0.0;
 	return 0;
 }
 
-double CCoordMotion::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, BOOL *PureAngle)
+double CoordMotionClass::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, BOOL *PureAngle)
 {
 	return ::FeedRateDistance(dx, dy, dz, da, db, dc, 0.0, 0.0, &Kinematics->m_MotionParams, PureAngle);
 
 }
 
-double CCoordMotion::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, BOOL *PureAngle)
+double CoordMotionClass::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, BOOL *PureAngle)
 {
 	return ::FeedRateDistance(dx, dy, dz, da, db, dc, du, dv, &Kinematics->m_MotionParams, PureAngle);
 }
 
-int CCoordMotion::ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev)
+int CoordMotionClass::ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev)
 {
-	CString s;
+    QString s;
 	
 	s.Format("ConfigSpindle %d %d %.6f %.6f %f",type, axis, UpdateTime, Tau, CountsPerRev);
-	return KMotionDLL->WriteLine(s);
+    return MotionLibrary->WriteLine(s);
 }
 
 
-int CCoordMotion::GetSpindleRPS(float &speed)
+int CoordMotionClass::GetSpindleRPS(float &speed)
 {
-	CString response;
+    QString response;
 
-	if (KMotionDLL->WriteLineReadLine("GetSpindleRPS",response.GetBufferSetLength(MAX_LINE))) return 1;
+    if (MotionLibrary->WriteLineReadLine("GetSpindleRPS",response.GetBufferSetLength(MAX_LINE))) return 1;
 	
 	// check state
 	if (sscanf(response,"%f",&speed)!=1) return 1;
@@ -3175,7 +3170,7 @@ int CCoordMotion::GetSpindleRPS(float &speed)
 	return 0;
 }
 
-bool CCoordMotion::CheckCollinear(SEGMENT *s0, SEGMENT *s1, SEGMENT *s2, double tol)
+bool CoordMotionClass::CheckCollinear(SEGMENT *s0, SEGMENT *s1, SEGMENT *s2, double tol)
 {
 	return ::CheckCollinear(s0, s1, s2, tol);
 }

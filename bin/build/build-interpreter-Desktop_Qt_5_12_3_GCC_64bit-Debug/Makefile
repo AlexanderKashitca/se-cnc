@@ -52,8 +52,36 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../prj/interpreter/interpreter.cpp 
-OBJECTS       = interpreter.o
+SOURCES       = ../../../src/interpreter/PT2D.cpp \
+		../../../src/interpreter/PT3D.cpp \
+		../../../src/interpreter/common.cpp \
+		../../../src/interpreter/kinematics.cpp \
+		../../../src/interpreter/kinematics3Rod.cpp \
+		../../../src/interpreter/kinematics5AxisGimbalAB.cpp \
+		../../../src/interpreter/kinematics5AxisGimbalCB.cpp \
+		../../../src/interpreter/kinematics5AxisTableAC.cpp \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp \
+		../../../src/interpreter/kinematics5AxisTableBC.cpp \
+		../../../src/interpreter/kinematicsGeppetto.cpp \
+		../../../src/interpreter/kinematicsGeppettoExtrude.cpp \
+		../../../src/interpreter/rs274ngc.cpp \
+		../../../src/interpreter/trajectoryPlanner.cpp \
+		../../prj/interpreter/interpreter.cpp 
+OBJECTS       = PT2D.o \
+		PT3D.o \
+		common.o \
+		kinematics.o \
+		kinematics3Rod.o \
+		kinematics5AxisGimbalAB.o \
+		kinematics5AxisGimbalCB.o \
+		kinematics5AxisTableAC.o \
+		kinematics5AxisTableAGimbalB.o \
+		kinematics5AxisTableBC.o \
+		kinematicsGeppetto.o \
+		kinematicsGeppettoExtrude.o \
+		rs274ngc.o \
+		trajectoryPlanner.o \
+		interpreter.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -251,8 +279,37 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/interpreter/interpreter.pro ../../prj/interpreter/interpreter.h \
-		../../prj/interpreter/interpreter_global.h ../../prj/interpreter/interpreter.cpp
+		../../prj/interpreter/interpreter.pro ../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/canon.h \
+		../../../src/interpreter/common.h \
+		../../../src/interpreter/kinematics.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h ../../../src/interpreter/PT2D.cpp \
+		../../../src/interpreter/PT3D.cpp \
+		../../../src/interpreter/common.cpp \
+		../../../src/interpreter/kinematics.cpp \
+		../../../src/interpreter/kinematics3Rod.cpp \
+		../../../src/interpreter/kinematics5AxisGimbalAB.cpp \
+		../../../src/interpreter/kinematics5AxisGimbalCB.cpp \
+		../../../src/interpreter/kinematics5AxisTableAC.cpp \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp \
+		../../../src/interpreter/kinematics5AxisTableBC.cpp \
+		../../../src/interpreter/kinematicsGeppetto.cpp \
+		../../../src/interpreter/kinematicsGeppettoExtrude.cpp \
+		../../../src/interpreter/rs274ngc.cpp \
+		../../../src/interpreter/trajectoryPlanner.cpp \
+		../../prj/interpreter/interpreter.cpp
 QMAKE_TARGET  = interpreter
 DESTDIR       = 
 TARGET        = libinterpreter.so.1.0.0
@@ -699,8 +756,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/interpreter/interpreter.h ../../prj/interpreter/interpreter_global.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/interpreter/interpreter.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.h ../../../src/interpreter/PT3D.h ../../../src/interpreter/canon.h ../../../src/interpreter/common.h ../../../src/interpreter/kinematics.h ../../../src/interpreter/kinematics3Rod.h ../../../src/interpreter/kinematics5AxisGimbalAB.h ../../../src/interpreter/kinematics5AxisGimbalCB.h ../../../src/interpreter/kinematics5AxisTableAC.h ../../../src/interpreter/kinematics5AxisTableAGimbalB.h ../../../src/interpreter/kinematics5AxisTableBC.h ../../../src/interpreter/kinematicsGeppetto.h ../../../src/interpreter/kinematicsGeppettoExtrude.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/trajectoryPlanner.h ../../prj/interpreter/interpreter.h ../../prj/interpreter/interpreter_global.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.cpp ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/kinematics3Rod.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/trajectoryPlanner.cpp ../../prj/interpreter/interpreter.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -748,6 +805,540 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT2D.o ../../../src/interpreter/PT2D.cpp
+
+PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT3D.o ../../../src/interpreter/PT3D.cpp
+
+common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/interpreter/common.cpp
+
+kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics.o ../../../src/interpreter/kinematics.cpp
+
+kinematics3Rod.o: ../../../src/interpreter/kinematics3Rod.cpp ../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics3Rod.o ../../../src/interpreter/kinematics3Rod.cpp
+
+kinematics5AxisGimbalAB.o: ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalAB.o ../../../src/interpreter/kinematics5AxisGimbalAB.cpp
+
+kinematics5AxisGimbalCB.o: ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalCB.o ../../../src/interpreter/kinematics5AxisGimbalCB.cpp
+
+kinematics5AxisTableAC.o: ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAC.o ../../../src/interpreter/kinematics5AxisTableAC.cpp
+
+kinematics5AxisTableAGimbalB.o: ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAGimbalB.o ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp
+
+kinematics5AxisTableBC.o: ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableBC.o ../../../src/interpreter/kinematics5AxisTableBC.cpp
+
+kinematicsGeppetto.o: ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppetto.o ../../../src/interpreter/kinematicsGeppetto.cpp
+
+kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppettoExtrude.o ../../../src/interpreter/kinematicsGeppettoExtrude.cpp
+
+rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rs274ngc.o ../../../src/interpreter/rs274ngc.cpp
+
+trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o trajectoryPlanner.o ../../../src/interpreter/trajectoryPlanner.cpp
 
 interpreter.o: ../../prj/interpreter/interpreter.cpp ../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \

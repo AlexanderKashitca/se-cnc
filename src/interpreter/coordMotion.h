@@ -2,9 +2,9 @@
 #ifndef COORD_MOTION_H
 #define COORD_MOTION_H
 ///-----------------------------------------------------------------------------
-#include "gcodeinterpreter_global.h"
-
-#include "KMotionDLL.h"
+#include "../../prj/interpreter/interpreter.h"
+#include "../motion/motion.h"
+///-----------------------------------------------------------------------------
 #include "canon.h"
 #include "trajectoryPlanner.h"
 #include "kinematics.h"	// Added by ClassView
@@ -36,10 +36,10 @@ typedef void ARC_FEED_SIX_AXIS_CALLBACK(bool ZeroLenAsFullCircles, double Desire
 
 enum {STOPPED_NONE,STOPPED_INDEP,STOPPED_COORD,STOPPED_COORD_FINISHED};
 
-class GCODEINTERPRETER_API CCoordMotion  
+class INTERPRETERSHARED_EXPORT CoordMotionClass
 {
 public:
-	CKinematics *Kinematics;
+    KinematicsClass *Kinematics;
 	void DownloadInit();
 	int CheckMotionHalt(bool Coord);
 	int ExecutionStop();
@@ -55,8 +55,8 @@ public:
 	int GetPosition(int axis, double *d);
 	int GetAxisDone(int axis, int *r);
 
-	CCoordMotion(CKMotionDLL *KMotionDLL = new CKMotionDLL(0));
-	virtual ~CCoordMotion();
+    CoordMotionClass(MotionClass *KMotionDLL = new MotionClass(0));
+    virtual ~CoordMotionClass();
 
 	void SetAbort();
 	void ClearAbort();
@@ -116,7 +116,7 @@ public:
 							   double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID);
 
 
-	int CCoordMotion::Dwell(double seconds, int sequence_number=0);
+    int CoordMotionClass::Dwell(double seconds, int sequence_number=0);
 
 	int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap=false, bool NoGeo = false);
 	int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap=false, bool NoGeo = false);
@@ -136,7 +136,7 @@ public:
 	int DoRateAdjustments(int i0, int i1);
 	int DoRateAdjustmentsArc(int i, double radius, double theta0, double dtheta, double dcircle);
 
-	int CheckSoftLimits(double x, double y, double z, double a, double b, double c, double u, double v, CString &errmsg);
+    int CheckSoftLimits(double x, double y, double z, double a, double b, double c, double u, double v, QString &errmsg);
 	int CheckSoftLimitsArc(double XC, double YC, double Z1,
 						   double SoftLimitPosX,double SoftLimitNegX,
 						   double SoftLimitPosY,double SoftLimitNegY,
@@ -144,9 +144,9 @@ public:
 						   double a, double b, double c, double u, double v, BOOL DirIsCCW, 
 						   double radius, double theta0, double dtheta, 
 						   int x_axis,int y_axis,int z_axis,
-						   char XSTR, char YSTR, char ZSTR, CString &errmsg);
+                           char XSTR, char YSTR, char ZSTR, QString &errmsg);
 	
-	CKMotionDLL *KMotionDLL;
+    MotionClass *MotionLibrary;
 
 	double m_TotalDownloadedTime;
 	int m_nsegs_downloaded;
@@ -194,8 +194,8 @@ public:
 
 	void SetTPParams();
 
-	int CCoordMotion::GetRapidSettings();
-	int CCoordMotion::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
+    int CoordMotionClass::GetRapidSettings();
+    int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
 	bool RapidParamsDirty;
 
 	void SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i);
@@ -221,9 +221,9 @@ private:
 	ARC_FEED_SIX_AXIS_CALLBACK *m_ArcFeedSixAxisCallback;
 	bool m_SegmentsStartedExecuting;
 	int m_NumLinearNotDrawn;
-	CString WriteLineBuffer;
+    QString WriteLineBuffer;
 	double WriteLineBufferTime;
-	int PutWriteLineBuffer(CString s, double Time);
+    int PutWriteLineBuffer(QString s, double Time);
 	int FlushWriteLineBuffer();
 	int ClearWriteLineBuffer();
 	int CommitPendingSegments(bool RapidMode);

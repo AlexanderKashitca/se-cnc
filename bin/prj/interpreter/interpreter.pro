@@ -25,9 +25,45 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        ../../../src/interpreter/PT2D.cpp \
+        ../../../src/interpreter/PT3D.cpp \
+        ../../../src/interpreter/canon_stand_alone.cpp \
+        ../../../src/interpreter/common.cpp \
+        ../../../src/interpreter/coordMotion.cpp \
+        ../../../src/interpreter/driver.cpp \
+        ../../../src/interpreter/kinematics.cpp \
+        ../../../src/interpreter/kinematics3Rod.cpp \
+        ../../../src/interpreter/kinematics5AxisGimbalAB.cpp \
+        ../../../src/interpreter/kinematics5AxisGimbalCB.cpp \
+        ../../../src/interpreter/kinematics5AxisTableAC.cpp \
+        ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp \
+        ../../../src/interpreter/kinematics5AxisTableBC.cpp \
+        ../../../src/interpreter/kinematicsGeppetto.cpp \
+        ../../../src/interpreter/kinematicsGeppettoExtrude.cpp \
+        ../../../src/interpreter/rs274ngc.cpp \
+        ../../../src/interpreter/trajectoryPlanner.cpp \
         interpreter.cpp
 
 HEADERS += \
+        ../../../src/interpreter/PT2D.h \
+        ../../../src/interpreter/PT3D.h \
+        ../../../src/interpreter/canon.h \
+        ../../../src/interpreter/common.h \
+        ../../../src/interpreter/coordMotion.h \
+        ../../../src/interpreter/driver.h \
+        ../../../src/interpreter/kinematics.h \
+        ../../../src/interpreter/kinematics3Rod.h \
+        ../../../src/interpreter/kinematics5AxisGimbalAB.h \
+        ../../../src/interpreter/kinematics5AxisGimbalCB.h \
+        ../../../src/interpreter/kinematics5AxisTableAC.h \
+        ../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+        ../../../src/interpreter/kinematics5AxisTableBC.h \
+        ../../../src/interpreter/kinematicsGeppetto.h \
+        ../../../src/interpreter/kinematicsGeppettoExtrude.h \
+        ../../../src/interpreter/rs274ngc.h \
+        ../../../src/interpreter/rs274ngc_errors.h \
+        ../../../src/interpreter/rs274ngc_return.h \
+        ../../../src/interpreter/trajectoryPlanner.h \
         interpreter.h \
         interpreter_global.h 
 

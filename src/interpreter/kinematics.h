@@ -2,16 +2,15 @@
 #ifndef KINEMATICS_H
 #define KINEMATICS_H
 ///-----------------------------------------------------------------------------
-#include "gcodeinterpreter_global.h"
-
+#include "../../prj/interpreter/interpreter.h"
+///-----------------------------------------------------------------------------
 #include "PT2D.h"
 #include "PT3D.h"
-
 #include "trajectoryPlanner.h"
 ///-----------------------------------------------------------------------------
 #define MAX_ACTUATORS 8
 ///-----------------------------------------------------------------------------
-class GCODEINTERPRETER_API CKinematics
+class INTERPRETERSHARED_EXPORT KinematicsClass
 {
 public:
 	int Solve(double *A, int N);
@@ -46,8 +45,8 @@ public:
 		return 0;
 	}
 	
-	CKinematics();
-	virtual ~CKinematics();
+    KinematicsClass();
+    virtual ~KinematicsClass();
 
 	MOTION_PARAMS m_MotionParams;
 
@@ -60,5 +59,6 @@ public:
 	double GeoOffsetX,GeoOffsetY;  // Machine coordinates of grid point row=0 col=0
 
 };
-
+///-----------------------------------------------------------------------------
 #endif /// KINEMATICS_H
+///-----------------------------------------------------------------------------
