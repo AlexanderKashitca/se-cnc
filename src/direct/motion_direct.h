@@ -2,7 +2,8 @@
 #ifndef SEMOTION_DIRECT_H
 #define SEMOTION_DIRECT_H
 ///-----------------------------------------------------------------------------
-#include "motion_io.h"
+#include "../../prj/direct/direct_global.h"
+#include "../motion/motion_io.h"
 #include <stddef.h>
 ///-----------------------------------------------------------------------------
 enum 
@@ -31,9 +32,8 @@ enum
     DEST_ERRMSG
 };
 ///-----------------------------------------------------------------------------
-
-// This class is exported from the KMotionDLL_Direct.dll
-class MotionDirectClass
+/// This class is exported from the KMotionDLL_Direct.dll
+class DIRECTSHARED_EXPORT MotionDirectClass
 {
     private:
         MotionIOClass MotionIO;

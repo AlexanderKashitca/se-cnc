@@ -9,6 +9,7 @@
 #include "motion_global.h"
 ///-----------------------------------------------------------------------------
 #include "../../../src/motion/common.h"
+#include "../../../src/direct/motion_direct.h"
 ///-----------------------------------------------------------------------------
 typedef int CONSOLE_HANDLER(const char *buf);
 typedef void ERRMSG_HANDLER(const char *ErrMsg);

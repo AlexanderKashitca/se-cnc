@@ -1,5 +1,5 @@
 ///-----------------------------------------------------------------------------
-#include "common.h"
+#include "motion_direct.h"
 ///-----------------------------------------------------------------------------
 MotionDirectClass::MotionDirectClass()
 { 
@@ -55,7 +55,6 @@ int MotionDirectClass::MapBoardToIndex(int BoardID)
     MotionIO.Mutex->lock();  // better lock while assigning objects
 
 	// find an available object to handle it
-
 	for (i=0; i<MAX_BOARDS; i++)
 	{
         if (!MotionIO.BoardIDAssigned) break;
@@ -100,9 +99,9 @@ int MotionDirectClass::ListLocations(int *nlocations, int *list)
 			// go through the list and copy Dynomotion USB IDs to User's list
 			for (i=0; i<(int)numDevs; i++)
 			{
-				if (strstr(devInfo[i].Description,"KFLOP")!= NULL ||
-					strstr(devInfo[i].Description,"KMotion")!= NULL ||
-					strstr(devInfo[i].Description,"Dynomotion")!= NULL)
+                if (strstr(devInfo[i].Description,"KFLOP")!= nullptr ||
+                    strstr(devInfo[i].Description,"KMotion")!= nullptr ||
+                    strstr(devInfo[i].Description,"Dynomotion")!= nullptr)
 				{
 					list[(*nlocations)++] = devInfo[i].LocId;
 				}
@@ -146,7 +145,7 @@ int MotionDirectClass::Disconnect()
 {
     return MotionIO.Disconnect();
 }
-
+///-----------------------------------------------------------------------------
 int MotionDirectClass::FirmwareVersion()
 {
     return MotionIO.FirmwareVersion();

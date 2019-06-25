@@ -86,30 +86,30 @@ bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
 			}
             /// if USB Location is undefined select the first from
             /// the list that is not already taken
-			if (!BoardIDAssigned)
-			{
+            if (!BoardIDAssigned)
+            {
                 for(i = 0;i < static_cast<int>(numDevs) && !BoardIDAssigned;i++)
-				{
-					int k;
-                    /// make sure nobody is already using this one
+                {
+                    int k;
+                   /// make sure nobody is already using this one
                     for(k = 0;k < MAX_BOARDS;k++)
-					{
+                    {
 ///                        if(devInfo[i].LocId == SEMotionIO.USB_Loc_ID)
 ///                            break;
-					}
+                    }
                     if(k == MAX_BOARDS)
-					{
+                    {
                         BoardIDAssigned = true;
                         USB_Loc_ID = static_cast<int>(devInfo[i].LocId);  // assign it
-					}
-				}
-				if (!BoardIDAssigned)
-				{
+                    }
+                }
+                if (!BoardIDAssigned)
+                {
                     Mutex->unlock();
                     if(Reason) *Reason = "No SEMotion devices available";
-					return false;
-				}
-			}
+                    return false;
+                }
+            }
             /// user wants a specific usb location
             /// so see if it is available
             for(i = 0;i < static_cast<int>(numDevs);i++)
@@ -160,22 +160,15 @@ int MotionIOClass::Connect()
 		return 1;
 	}
 
-
-	
-
-
 	// FT_ListDevices OK, number of devices connected is in numDevs
-
 	// usually during boot the board comes and goes, since it appeared 
 	// to be there, try for a while to open it
-
 	DWORD t0=timeGetTime();
 
 	for (;;) 
 	{
 		ftStatus = FT_OpenEx((void *)USB_Loc_ID,FT_OPEN_BY_LOCATION,&ftHandle);
 
-		
 		if (ftStatus == FT_OK) 
 		{
 			// FT_Open OK, use ftHandle to access device

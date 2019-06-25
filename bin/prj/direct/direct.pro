@@ -1,16 +1,17 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-06-14T12:42:44
+# Project created by QtCreator 2019-06-25T09:15:16
 #
 #-------------------------------------------------
 
 QT       += testlib dbus
+
 QT       -= gui
 
-TARGET = motion
+TARGET = direct
 TEMPLATE = lib
 
-DEFINES += MOTION_LIBRARY
+DEFINES += DIRECT_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -24,17 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        ../../../src/motion/common.cpp \
-        ../../../src/motion/hirestimer.cpp \
-        ../../../src/motion/motion_io.cpp \
-        motion.cpp
+        ../../../src/direct/motion_direct.cpp \
+        direct.cpp
 
 HEADERS += \
-        ../../../src/motion/common.h \
-        ../../../src/motion/hirestimer.h \
-        ../../../src/motion/motion_io.h \
-        motion.h \
-        motion_global.h 
+        ../../../src/direct/motion_direct.h \
+        direct.h \
+        direct_global.h 
 
 unix {
     target.path = /usr/lib
