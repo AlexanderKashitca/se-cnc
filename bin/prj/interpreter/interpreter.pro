@@ -41,6 +41,7 @@ SOURCES += \
         ../../../src/interpreter/kinematicsGeppetto.cpp \
         ../../../src/interpreter/kinematicsGeppettoExtrude.cpp \
         ../../../src/interpreter/rs274ngc.cpp \
+        ../../../src/interpreter/setupTracker.cpp \
         ../../../src/interpreter/trajectoryPlanner.cpp \
         interpreter.cpp
 
@@ -63,6 +64,7 @@ HEADERS += \
         ../../../src/interpreter/rs274ngc.h \
         ../../../src/interpreter/rs274ngc_errors.h \
         ../../../src/interpreter/rs274ngc_return.h \
+        ../../../src/interpreter/setupTracker.h \
         ../../../src/interpreter/trajectoryPlanner.h \
         interpreter.h \
         interpreter_global.h 

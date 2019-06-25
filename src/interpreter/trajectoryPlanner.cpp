@@ -1,8 +1,8 @@
 ///-----------------------------------------------------------------------------
 #include "common.h"
-#include "../motion/hirestimer.h"
 ///-----------------------------------------------------------------------------
 #ifdef DEBUG_DOWNLOAD
+#include "../motion/hirestimer.h"
 extern CString ds;
 extern FILE *f;
 extern CHiResTimer DTimer;
@@ -19,40 +19,30 @@ void CloseDiag();
 
 #define NON_ZERO_ANGLE_IN_DEGREES 0.001 // smallest significant change in angle in units of degrees
 
-#ifndef TWO_PI
-#define TWO_PI (2.0*3.141592653589793238)
-#endif
-
-#ifndef HALF_PI
-#define HALF_PI (0.5*3.141592653589793238)
-#endif
-
-
-///-----------------------------------------------------------------------------
-/// ADD ME ---------------------------------------------------------------------
-#ifndef PI
-#define PI      3.1415926535897932
-#endif
-
-#ifndef PI2
-#define PI2     1.5707963267948966
-#endif
-
-#ifndef TRUE
-#define TRUE             1
-#endif
-
-#ifndef FALSE
-#define FALSE            0
-#endif
-
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
+//#ifndef TWO_PI
+//#define TWO_PI (2.0*3.141592653589793238)
+//#endif
+//#ifndef HALF_PI
+//#define HALF_PI (0.5*3.141592653589793238)
+//#endif
+//#ifndef PI
+//#define PI      3.1415926535897932
+//#endif
+//#ifndef PI2
+//#define PI2     1.5707963267948966
+//#endif
+//#ifndef TRUE
+//#define TRUE             1
+//#endif
+//#ifndef FALSE
+//#define FALSE            0
+//#endif
+//#ifndef max
+//#define max(a,b)            (((a) > (b)) ? (a) : (b))
+//#endif
+//#ifndef min
+//#define min(a,b)            (((a) < (b)) ? (a) : (b))
+//#endif
 
 #ifndef THETA_SIGMA
 #define THETA_SIGMA 1e-13
