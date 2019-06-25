@@ -109,39 +109,39 @@
 // These are not enums because the "&" operator is used in
 // reading the operation names and is illegal with an enum
 
-#define ABS 1
-#define ACOS 2
-#define ASIN 3
-#define ATAN 4
-#define COS 5
-#define EXP 6
-#define FIX 7
-#define FUP 8
-#define LN 9
-#define ROUND 10
-#define SIN 11
-#define SQRT 12
-#define TAN 13
-#define UNEGATIVE 14
+#define ABS         1
+#define ACOS        2
+#define ASIN        3
+#define ATAN        4
+#define COS         5
+#define EXP         6
+#define FIX         7
+#define FUP         8
+#define LN          9
+#define ROUND       10
+#define SIN         11
+#define SQRT        12
+#define TAN         13
+#define UNEGATIVE   14
 
 // binary operations
-#define NO_OPERATION 0
-#define DIVIDED_BY 1
-#define MODULO 2
-#define POWER 3
-#define TIMES 4
-#define AND2 5
-#define EXCLUSIVE_OR 6
-#define MINUS 7
-#define NON_EXCLUSIVE_OR 8
-#define PLUS 9
-#define RIGHT_BRACKET 10
-#define LOGICAL_LT 11
-#define LOGICAL_GT 12
-#define LOGICAL_LE 13
-#define LOGICAL_GE 14
-#define LOGICAL_EQ 15
-#define LOGICAL_NE 16
+#define NO_OPERATION        0
+#define DIVIDED_BY          1
+#define MODULO              2
+#define POWER               3
+#define TIMES               4
+#define AND2                5
+#define EXCLUSIVE_OR        6
+#define MINUS               7
+#define NON_EXCLUSIVE_OR    8
+#define PLUS                9
+#define RIGHT_BRACKET       10
+#define LOGICAL_LT          11
+#define LOGICAL_GT          12
+#define LOGICAL_LE          13
+#define LOGICAL_GE          14
+#define LOGICAL_EQ          15
+#define LOGICAL_NE          16
 
 // G Codes are symbolic to be dialect-independent in source code
 #define G_0      0
@@ -343,26 +343,26 @@ typedef struct setup_struct {
     ON_OFF probe_flag;		// flag indicating probing done
 	double program_x;		// program x, used when cutter comp on
 	double program_y;		// program y, used when cutter comp on
-	double pending_comp_move_type;	// either G_0 or G_1
-	double pending_comp_x;	// starting point x of contour used with fanuc style Comp Entry Style
-	double pending_comp_y;	// starting point y of contour used with fanuc style Comp Entry Style
-	double pending_comp_z;	// starting point z of contour used with fanuc style Comp Entry Style
-	double pending_comp_AA;	// starting point A of contour used with fanuc style Comp Entry Style
-	double pending_comp_BB;	// starting point B of contour used with fanuc style Comp Entry Style
-	double pending_comp_CC;	// starting point C of contour used with fanuc style Comp Entry Style
-	double pending_comp_UU;	// starting point U of contour used with fanuc style Comp Entry Style
-	double pending_comp_VV;	// starting point V of contour used with fanuc style Comp Entry Style
-	RETRACT_MODE retract_mode;	// for cycles, old_z or r_plane
-    int selected_tool_slot;	// tool slot selected but not active
-    int sequence_number;	// sequence number of line last read
-    double speed;		// current spindle speed in rpm
+    double pending_comp_move_type;      // either G_0 or G_1
+    double pending_comp_x;              // starting point x of contour used with fanuc style Comp Entry Style
+    double pending_comp_y;              // starting point y of contour used with fanuc style Comp Entry Style
+    double pending_comp_z;              // starting point z of contour used with fanuc style Comp Entry Style
+    double pending_comp_AA;             // starting point A of contour used with fanuc style Comp Entry Style
+    double pending_comp_BB;             // starting point B of contour used with fanuc style Comp Entry Style
+    double pending_comp_CC;             // starting point C of contour used with fanuc style Comp Entry Style
+    double pending_comp_UU;             // starting point U of contour used with fanuc style Comp Entry Style
+    double pending_comp_VV;             // starting point V of contour used with fanuc style Comp Entry Style
+    RETRACT_MODE retract_mode;          // for cycles, old_z or r_plane
+    int selected_tool_slot;             // tool slot selected but not active
+    int sequence_number;                // sequence number of line last read
+    double speed;                       // current spindle speed in rpm
     CANON_SPEED_FEED_MODE speed_feed_mode;	// independent or synched
-    ON_OFF speed_override;	// whether speed override is enabled
+    ON_OFF speed_override;              // whether speed override is enabled
     CANON_DIRECTION spindle_turning;	// direction spindle is turning
-    double tool_length_offset;	// current tool length offset
-    double tool_xoffset;	// current tool x offset
-    double tool_yoffset;	// current tool y offset
-    int tool_max;		// highest number tool slot in carousel
+    double tool_length_offset;          // current tool length offset
+    double tool_xoffset;                // current tool x offset
+    double tool_yoffset;                // current tool y offset
+    int tool_max;                       // highest number tool slot in carousel
     // number
     int tool_table_index;	// tool index used with cutter comp
     double traverse_rate;	// rate for traverse motions

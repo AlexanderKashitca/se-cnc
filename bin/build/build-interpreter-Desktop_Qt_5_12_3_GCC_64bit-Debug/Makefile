@@ -54,7 +54,10 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../../src/interpreter/PT2D.cpp \
 		../../../src/interpreter/PT3D.cpp \
+		../../../src/interpreter/canon_stand_alone.cpp \
 		../../../src/interpreter/common.cpp \
+		../../../src/interpreter/coordMotion.cpp \
+		../../../src/interpreter/driver.cpp \
 		../../../src/interpreter/kinematics.cpp \
 		../../../src/interpreter/kinematics3Rod.cpp \
 		../../../src/interpreter/kinematics5AxisGimbalAB.cpp \
@@ -69,7 +72,10 @@ SOURCES       = ../../../src/interpreter/PT2D.cpp \
 		../../prj/interpreter/interpreter.cpp 
 OBJECTS       = PT2D.o \
 		PT3D.o \
+		canon_stand_alone.o \
 		common.o \
+		coordMotion.o \
+		driver.o \
 		kinematics.o \
 		kinematics3Rod.o \
 		kinematics5AxisGimbalAB.o \
@@ -283,6 +289,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/canon.h \
 		../../../src/interpreter/common.h \
+		../../../src/interpreter/coordMotion.h \
+		../../../src/interpreter/driver.h \
 		../../../src/interpreter/kinematics.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -293,11 +301,16 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/rs274ngc_errors.h \
+		../../../src/interpreter/rs274ngc_return.h \
 		../../../src/interpreter/trajectoryPlanner.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h ../../../src/interpreter/PT2D.cpp \
 		../../../src/interpreter/PT3D.cpp \
+		../../../src/interpreter/canon_stand_alone.cpp \
 		../../../src/interpreter/common.cpp \
+		../../../src/interpreter/coordMotion.cpp \
+		../../../src/interpreter/driver.cpp \
 		../../../src/interpreter/kinematics.cpp \
 		../../../src/interpreter/kinematics3Rod.cpp \
 		../../../src/interpreter/kinematics5AxisGimbalAB.cpp \
@@ -756,8 +769,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.h ../../../src/interpreter/PT3D.h ../../../src/interpreter/canon.h ../../../src/interpreter/common.h ../../../src/interpreter/kinematics.h ../../../src/interpreter/kinematics3Rod.h ../../../src/interpreter/kinematics5AxisGimbalAB.h ../../../src/interpreter/kinematics5AxisGimbalCB.h ../../../src/interpreter/kinematics5AxisTableAC.h ../../../src/interpreter/kinematics5AxisTableAGimbalB.h ../../../src/interpreter/kinematics5AxisTableBC.h ../../../src/interpreter/kinematicsGeppetto.h ../../../src/interpreter/kinematicsGeppettoExtrude.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/trajectoryPlanner.h ../../prj/interpreter/interpreter.h ../../prj/interpreter/interpreter_global.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.cpp ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/kinematics3Rod.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/trajectoryPlanner.cpp ../../prj/interpreter/interpreter.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.h ../../../src/interpreter/PT3D.h ../../../src/interpreter/canon.h ../../../src/interpreter/common.h ../../../src/interpreter/coordMotion.h ../../../src/interpreter/driver.h ../../../src/interpreter/kinematics.h ../../../src/interpreter/kinematics3Rod.h ../../../src/interpreter/kinematics5AxisGimbalAB.h ../../../src/interpreter/kinematics5AxisGimbalCB.h ../../../src/interpreter/kinematics5AxisTableAC.h ../../../src/interpreter/kinematics5AxisTableAGimbalB.h ../../../src/interpreter/kinematics5AxisTableBC.h ../../../src/interpreter/kinematicsGeppetto.h ../../../src/interpreter/kinematicsGeppettoExtrude.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_errors.h ../../../src/interpreter/rs274ngc_return.h ../../../src/interpreter/trajectoryPlanner.h ../../prj/interpreter/interpreter.h ../../prj/interpreter/interpreter_global.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/canon_stand_alone.cpp ../../../src/interpreter/common.cpp ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter/driver.cpp ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/kinematics3Rod.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/trajectoryPlanner.cpp ../../prj/interpreter/interpreter.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -840,21 +853,57 @@ PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \
-		../../../src/interpreter/PT2D.h \
-		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
 		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
 		../../../src/interpreter/kinematics5AxisGimbalCB.h \
 		../../../src/interpreter/kinematics5AxisTableAC.h \
-		../../../src/interpreter/kinematics5AxisTableBC.h
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT2D.o ../../../src/interpreter/PT2D.cpp
 
 PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
@@ -891,22 +940,146 @@ PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \
-		../../../src/interpreter/PT2D.h \
-		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
 		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
 		../../../src/interpreter/kinematics5AxisGimbalCB.h \
 		../../../src/interpreter/kinematics5AxisTableAC.h \
-		../../../src/interpreter/kinematics5AxisTableBC.h
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT3D.o ../../../src/interpreter/PT3D.cpp
+
+canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h \
+		../../../src/interpreter/rs274ngc_return.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o canon_stand_alone.o ../../../src/interpreter/canon_stand_alone.cpp
 
 common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h \
 		../../../src/interpreter/canon.h \
@@ -942,22 +1115,234 @@ common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \
-		../../../src/interpreter/PT2D.h \
-		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
 		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
 		../../../src/interpreter/kinematics5AxisGimbalCB.h \
 		../../../src/interpreter/kinematics5AxisTableAC.h \
-		../../../src/interpreter/kinematics5AxisTableBC.h
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/interpreter/common.cpp
+
+coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h \
+		../../../src/interpreter/coordMotion.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o coordMotion.o ../../../src/interpreter/coordMotion.cpp
+
+driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h \
+		../../../src/interpreter/rs274ngc_return.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o driver.o ../../../src/interpreter/driver.cpp
 
 kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/common.h \
 		../../../src/interpreter/canon.h \
@@ -993,21 +1378,57 @@ kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/c
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \
-		../../../src/interpreter/PT2D.h \
-		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
 		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
 		../../../src/interpreter/kinematics5AxisGimbalCB.h \
 		../../../src/interpreter/kinematics5AxisTableAC.h \
-		../../../src/interpreter/kinematics5AxisTableBC.h
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics.o ../../../src/interpreter/kinematics.cpp
 
 kinematics3Rod.o: ../../../src/interpreter/kinematics3Rod.cpp ../../../src/interpreter/kinematics3Rod.h \
@@ -1037,7 +1458,54 @@ kinematics3Rod.o: ../../../src/interpreter/kinematics3Rod.cpp ../../../src/inter
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics3Rod.o ../../../src/interpreter/kinematics3Rod.cpp
 
 kinematics5AxisGimbalAB.o: ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1067,7 +1535,54 @@ kinematics5AxisGimbalAB.o: ../../../src/interpreter/kinematics5AxisGimbalAB.cpp 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalAB.o ../../../src/interpreter/kinematics5AxisGimbalAB.cpp
 
 kinematics5AxisGimbalCB.o: ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.h \
@@ -1097,7 +1612,54 @@ kinematics5AxisGimbalCB.o: ../../../src/interpreter/kinematics5AxisGimbalCB.cpp 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalCB.o ../../../src/interpreter/kinematics5AxisGimbalCB.cpp
 
 kinematics5AxisTableAC.o: ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAC.h \
@@ -1127,7 +1689,54 @@ kinematics5AxisTableAC.o: ../../../src/interpreter/kinematics5AxisTableAC.cpp ..
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAC.o ../../../src/interpreter/kinematics5AxisTableAC.cpp
 
 kinematics5AxisTableAGimbalB.o: ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
@@ -1157,7 +1766,54 @@ kinematics5AxisTableAGimbalB.o: ../../../src/interpreter/kinematics5AxisTableAGi
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAGimbalB.o ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp
 
 kinematics5AxisTableBC.o: ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematics5AxisTableBC.h \
@@ -1187,7 +1843,54 @@ kinematics5AxisTableBC.o: ../../../src/interpreter/kinematics5AxisTableBC.cpp ..
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableBC.o ../../../src/interpreter/kinematics5AxisTableBC.cpp
 
 kinematicsGeppetto.o: ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppetto.h \
@@ -1217,7 +1920,54 @@ kinematicsGeppetto.o: ../../../src/interpreter/kinematicsGeppetto.cpp ../../../s
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppetto.o ../../../src/interpreter/kinematicsGeppetto.cpp
 
 kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.h \
@@ -1247,10 +1997,57 @@ kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
 		../../../src/interpreter/PT2D.h \
 		../../../src/interpreter/PT3D.h \
-		../../../src/interpreter/trajectoryPlanner.h
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppettoExtrude.o ../../../src/interpreter/kinematicsGeppettoExtrude.cpp
 
-rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/rs274ngc.h \
+rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/common.h \
 		../../../src/interpreter/canon.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
@@ -1283,7 +2080,60 @@ rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/rs274
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
+		../../../src/interpreter/kinematics3Rod.h \
+		../../../src/interpreter/kinematics.h \
+		../../prj/interpreter/interpreter.h \
+		../../prj/interpreter/interpreter_global.h \
+		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
+		../../../src/interpreter/kinematicsGeppetto.h \
+		../../../src/interpreter/kinematicsGeppettoExtrude.h \
+		../../../src/interpreter/kinematics5AxisGimbalAB.h \
+		../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
+		../../../src/interpreter/kinematics5AxisGimbalCB.h \
+		../../../src/interpreter/kinematics5AxisTableAC.h \
+		../../../src/interpreter/kinematics5AxisTableBC.h \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h \
+		../../../src/interpreter/rs274ngc_return.h \
+		../../../src/interpreter/rs274ngc_errors.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o rs274ngc.o ../../../src/interpreter/rs274ngc.cpp
 
 trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src/interpreter/common.h \
@@ -1320,14 +2170,48 @@ trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/PT2D.h \
+		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/kinematics3Rod.h \
 		../../../src/interpreter/kinematics.h \
 		../../prj/interpreter/interpreter.h \
 		../../prj/interpreter/interpreter_global.h \
-		../../../src/interpreter/PT2D.h \
-		../../../src/interpreter/PT3D.h \
 		../../../src/interpreter/trajectoryPlanner.h \
+		../../prj/motion/motion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		../../../src/motion/motion_io.h \
+		../../../src/direct/motion_direct.h \
+		../../prj/direct/direct_global.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1335,9 +2219,8 @@ trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src
 		../../../src/interpreter/kinematics5AxisGimbalCB.h \
 		../../../src/interpreter/kinematics5AxisTableAC.h \
 		../../../src/interpreter/kinematics5AxisTableBC.h \
-		../../../src/motion/hirestimer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/driver.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o trajectoryPlanner.o ../../../src/interpreter/trajectoryPlanner.cpp
 
 interpreter.o: ../../prj/interpreter/interpreter.cpp ../../prj/interpreter/interpreter.h \

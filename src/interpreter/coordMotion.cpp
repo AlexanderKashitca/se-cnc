@@ -3,10 +3,10 @@
 ///-----------------------------------------------------------------------------
 #include "common.h"
 #include "coordMotion.h"
-
-#include "../motion/hirestimer.h"
+#include "../motion/common.h"
 ///-----------------------------------------------------------------------------
 #ifdef DEBUG_DOWNLOAD
+#include "../motion/hirestimer.h"
 QString ds;
 FILE *f=NULL;
 CHiResTimer DTimer;
@@ -27,18 +27,14 @@ void CloseDiag()
 	if (f) fclose(f);
 	f=NULL;
 }
-
-
 #endif
-
-
-
-
-
-
+///-----------------------------------------------------------------------------
 CoordMotionClass::CoordMotionClass(MotionClass *KM)
 {
-	m_board_type = BOARD_TYPE_UNKNOWN;
+
+#if 0
+
+    m_board_type = BOARD_TYPE_UNKNOWN;
 
     MotionLibrary=KM;
 
@@ -155,22 +151,24 @@ CoordMotionClass::CoordMotionClass(MotionClass *KM)
 	#ifdef DEBUG_DOWNLOAD
     ///AfxMessageBox("Download Diag Enabled");
 	#endif
-}
 
+#endif
+
+}
+///-----------------------------------------------------------------------------
 CoordMotionClass::~CoordMotionClass()
 {
 	if (Kinematics) delete Kinematics;
 }
-
+///-----------------------------------------------------------------------------
 MOTION_PARAMS *CoordMotionClass::GetMotionParams()
 {
 	return &Kinematics->m_MotionParams;
 }
-
-// check if arc goes outside of Limits.  Calculate as if arc is in xy plane but could be other planes
-// Progress along theta from the start to each PI/2 peak position until the end.  If any of those
-// are outside then flag as an error.
-
+///-----------------------------------------------------------------------------
+/// check if arc goes outside of Limits.  Calculate as if arc is in xy plane but could be other planes
+/// Progress along theta from the start to each PI/2 peak position until the end.  If any of those
+/// are outside then flag as an error.
 int CoordMotionClass::CheckSoftLimitsArc(double XC, double YC, double z,
 					   double SoftLimitPosX,double SoftLimitNegX,
 					   double SoftLimitPosY,double SoftLimitNegY,
@@ -263,8 +261,7 @@ int CoordMotionClass::CheckSoftLimitsArc(double XC, double YC, double z,
 	}
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::CheckSoftLimits(double x, double y, double z, double a, double b, double c, double u, double v, QString &errmsg)
 {
 	if (m_DisableSoftLimits) return 0;
@@ -313,12 +310,12 @@ int CoordMotionClass::CheckSoftLimits(double x, double y, double z, double a, do
 	}
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::StraightTraverse(double x, double y, double z, double a, double b, double c, bool NoCallback, int sequence_number, int ID)
 {
 	return StraightTraverse(x, y, z, a, b, c, current_u, current_v, NoCallback, sequence_number, ID);
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::StraightTraverse(double x, double y, double z, double a, double b, double c, double u, double v, bool NoCallback, int sequence_number, int ID)
 {
 	double tdx, tdy, tdz, tda, tdb, tdc, tdu, tdv, rate, AccelToUse, JerkToUse;
@@ -438,9 +435,8 @@ int CoordMotionClass::StraightTraverse(double x, double y, double z, double a, d
 
 	return 0;
 }
-
-// 6-axes ArcFeed (using max possible Acceeration)
-
+///-----------------------------------------------------------------------------
+/// 6-axes ArcFeed (using max possible Acceeration)
 int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 	double first_end, double second_end,
 	double first_axis, double second_axis, int rotation,
@@ -449,10 +445,8 @@ int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE pla
 	return ArcFeedAccel(DesiredFeedRate_in_per_sec, 1e99, plane, first_end, second_end,
 		first_axis, second_axis, rotation, axis_end_point, a, b, c, 0.0, 0.0, sequence_number, ID);
 }
-
-
-// ArcFeed (using max possible Acceeration)
-
+///-----------------------------------------------------------------------------
+/// ArcFeed (using max possible Acceeration)
 int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE plane,
 				double first_end, double second_end, 
 		        double first_axis, double second_axis, int rotation,
@@ -461,9 +455,8 @@ int CoordMotionClass::ArcFeed(double DesiredFeedRate_in_per_sec, CANON_PLANE pla
 	return ArcFeedAccel(DesiredFeedRate_in_per_sec, 1e99, plane, first_end, second_end, 
 		        first_axis, second_axis, rotation, axis_end_point, a, b, c, u, v, sequence_number, ID);
 }
-
-// 6-axes Arc Feed with Specified Acceleration
-
+///-----------------------------------------------------------------------------
+/// 6-axes Arc Feed with Specified Acceleration
 int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
 	double first_end, double second_end,
 	double first_axis, double second_axis, int rotation,
@@ -472,8 +465,8 @@ int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Des
 	return ArcFeedAccel(DesiredFeedRate_in_per_sec, DesiredAccel, plane, first_end, second_end,
 		        first_axis, second_axis, rotation, axis_end_point, a, b, c, 0.0, 0.0, sequence_number, ID);
 }
-// Arc Feed with Specified Acceleration
-
+///-----------------------------------------------------------------------------
+/// Arc Feed with Specified Acceleration
 int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel, CANON_PLANE plane,
 				double first_end, double second_end, 
 		        double first_axis, double second_axis, int rotation,
@@ -680,9 +673,6 @@ int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Des
 		}
 	}
 
-
-
-
 	if (!m_Simulate)  // skip if we are simulating
 	{
 		tp_insert_arc_seg(plane,
@@ -751,9 +741,8 @@ int CoordMotionClass::ArcFeedAccel(double DesiredFeedRate_in_per_sec, double Des
 
 	return 0;
 }
-
-// Commit those segments pending to be combined
-
+///-----------------------------------------------------------------------------
+/// Commit those segments pending to be combined
 int CoordMotionClass::CommitPendingSegments(bool RapidMode)
 {
 	if (m_NumLinearNotDrawn>0)
@@ -784,41 +773,36 @@ int CoordMotionClass::CommitPendingSegments(bool RapidMode)
 
 	return 0;
 }
-
-// 6-axes Straight Feed (using Max possible Acceleration)
-
+///-----------------------------------------------------------------------------
+/// 6-axes Straight Feed (using Max possible Acceleration)
 int CoordMotionClass::StraightFeed(double DesiredFeedRate_in_per_sec,
 	double x, double y, double z, double a, double b, double c, int sequence_number, int ID)
 {
 	return StraightFeedAccel(DesiredFeedRate_in_per_sec, 1e99, x, y, z, a, b, c, 0.0, 0.0, sequence_number, ID);
 }
-
-// Straight Feed (using Max possible Acceleration)
-
+///-----------------------------------------------------------------------------
+/// Straight Feed (using Max possible Acceleration)
 int CoordMotionClass::StraightFeed(double DesiredFeedRate_in_per_sec,
 	double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
 	return StraightFeedAccel(DesiredFeedRate_in_per_sec, 1e99, x, y, z, a, b, c, u, v, sequence_number, ID);
 }
-	
-// 6-axes Straight Feed with specified Acceleration	
-
+///-----------------------------------------------------------------------------
+/// 6-axes Straight Feed with specified Acceleration
 int CoordMotionClass::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
 	double x, double y, double z, double a, double b, double c, int sequence_number, int ID)
 {
 	return StraightFeedAccelRapid(DesiredFeedRate_in_per_sec, DesiredAccel, false, false, x, y, z, a, b, c, 0.0, 0.0, sequence_number, ID);
 }
-
-// Straight Feed with specified Acceleration	
-
+///-----------------------------------------------------------------------------
+/// Straight Feed with specified Acceleration
 int CoordMotionClass::StraightFeedAccel(double DesiredFeedRate_in_per_sec, double DesiredAccel,
 	double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
 	return StraightFeedAccelRapid(DesiredFeedRate_in_per_sec, DesiredAccel, false, false, x, y, z, a, b, c, u, v, sequence_number, ID);
 }
-
-// Straight Feed with specified Acceleration and RapidMode	
-
+///-----------------------------------------------------------------------------
+/// Straight Feed with specified Acceleration and RapidMode
 int CoordMotionClass::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, double DesiredAccel, bool RapidMode, bool NoCallback,
 							   double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID)
 {
@@ -1009,8 +993,7 @@ int CoordMotionClass::StraightFeedAccelRapid(double DesiredFeedRate_in_per_sec, 
 
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::DoSegmentCallbacks(int i0, int i1)
 {
 	if (nsegs >= 1 && (m_StraightFeedCallback || m_StraightFeedSixAxisCallback)) 
@@ -1031,7 +1014,7 @@ void CoordMotionClass::DoSegmentCallbacks(int i0, int i1)
 		}
 	}
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::DoSegmentCallbacksRapid(int i0, int i1)
 {
 	if (nsegs >= 1 && (m_StraightTraverseCallback || m_StraightTraverseSixAxisCallback)) 
@@ -1052,10 +1035,8 @@ void CoordMotionClass::DoSegmentCallbacksRapid(int i0, int i1)
 		}
 	}
 }
-
-
-// limit speeds based on proportion in that direction
-
+///-----------------------------------------------------------------------------
+/// limit speeds based on proportion in that direction
 int CoordMotionClass::DoRateAdjustments(int i0, int i1)
 {
 	double tdx,tdy,tdz,tda,tdb,tdc,tdu,tdv,rate,FeedRateToUse,Accel,AccelToUse;
@@ -1088,11 +1069,9 @@ int CoordMotionClass::DoRateAdjustments(int i0, int i1)
 	}
 	return 0;
 }
-
-
-// limit accleration and velocity to the lowest values throughout the entire arc
-// lowest values should occur at the beginning, end, and quadrants
-
+///-----------------------------------------------------------------------------
+/// limit accleration and velocity to the lowest values throughout the entire arc
+/// lowest values should occur at the beginning, end, and quadrants
 int CoordMotionClass::DoRateAdjustmentsArc(int i, double radius, double theta0, double dtheta, double dcircle)
 {
 	double dx,dy,dz,da,db,dc,du,dv,rate,FeedRateToUse,Accel,AccelToUse;
@@ -1219,8 +1198,7 @@ int CoordMotionClass::DoRateAdjustmentsArc(int i, double radius, double theta0, 
 
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::Dwell(double seconds, int sequence_number)
 {
 	if (m_Abort) return 1;
@@ -1245,11 +1223,8 @@ int CoordMotionClass::Dwell(double seconds, int sequence_number)
 	}
 	return 0;
 }
-
-
-
-// issue a pass through KMotion Command
-
+///-----------------------------------------------------------------------------
+/// issue a pass through KMotion Command
 int CoordMotionClass::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation)
 {
 	if (m_Simulate) return 0;  // exit if we are simulating
@@ -1265,15 +1240,13 @@ int CoordMotionClass::DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOper
 
 	return 0;
 }
-
-
-// issue a buffered KMotion Command at the end of the current segment
-// if there are no segment yet, then add to the special_commands_initial list
-//
-// note special commands use a circular list such as lone as there are not too many
-// pending in the motion buffer before they are downloaded any number in a path can
-// exist.
-
+///-----------------------------------------------------------------------------
+/// issue a buffered KMotion Command at the end of the current segment
+/// if there are no segment yet, then add to the special_commands_initial list
+///
+/// note special commands use a circular list such as lone as there are not too many
+/// pending in the motion buffer before they are downloaded any number in a path can
+/// exist.
 int CoordMotionClass::DoKMotionBufCmd(const char *s,int sequence_number)
 {
 	strncpy(special_cmds[nspecial_cmds % MAX_SPECIAL_CMDS].cmd,s,MAX_LINE);
@@ -1308,11 +1281,7 @@ int CoordMotionClass::DoKMotionBufCmd(const char *s,int sequence_number)
 	}
 	return 0;
 }
-
-
-
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 {
     QString response,response2;
@@ -1367,7 +1336,7 @@ int CoordMotionClass::WaitForSegmentsFinished(BOOL NoErrorOnDisable)
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::WaitForMoveXYZABCFinished()
 {
     QString response;
@@ -1393,8 +1362,7 @@ int CoordMotionClass::WaitForMoveXYZABCFinished()
 
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::CheckMotionHalt(bool Coord)
 {
     QString response,responsebuf;
@@ -1618,12 +1586,10 @@ int CoordMotionClass::CheckMotionHalt(bool Coord)
 	}
 	return 0;
 }
-
-
-// set Gcode line number back to this line number
-// also remember if we were in an arc or a linear
-// to help handle resuming with tool compensation
-
+///-----------------------------------------------------------------------------
+/// set Gcode line number back to this line number
+/// also remember if we were in an arc or a linear
+/// to help handle resuming with tool compensation
 void CoordMotionClass::SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i)
 {
 	m_PreviouslyStoppedType = segs_to_check[TPMOD(i)].type;
@@ -1654,13 +1620,8 @@ void CoordMotionClass::SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i)
 		}
 	}
 }
-
-
-
-
-
-// execute whatever segments are in the queue
-
+///-----------------------------------------------------------------------------
+/// execute whatever segments are in the queue
 int CoordMotionClass::FlushSegments()
 {
 	int ispecial_cmd=0;
@@ -1749,8 +1710,7 @@ int CoordMotionClass::FlushSegments()
 	}
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::LaunchCoordMotion()
 {
     QString s;
@@ -1783,32 +1743,25 @@ int CoordMotionClass::LaunchCoordMotion()
 	}
 	return 0;
 }
-
-
-
-// intitalize everything related to downloading and look ahead times
-
-
+///-----------------------------------------------------------------------------
+/// intitalize everything related to downloading and look ahead times
 void CoordMotionClass::DownloadInit()
 {
 	m_nsegs_downloaded=0;
 	m_TotalDownloadedTime = m_TimeAlreadyExecuted = 0.0;
 	m_ThreadingMode=false;
 }
-
-
-
-// Called when the Interpreter is stopping due to either
-// a single step, a halt, or program stop
-//
-// if some segments have been downloaded and execution
-// is in progress, then we should send whatever is
-// left in the TP which should bring everything to a 
-// safe stop similar as if we had a break angle at
-// this point
-//
-// 
-
+///-----------------------------------------------------------------------------
+/// Called when the Interpreter is stopping due to either
+/// a single step, a halt, or program stop
+///
+/// if some segments have been downloaded and execution
+/// is in progress, then we should send whatever is
+/// left in the TP which should bring everything to a
+/// safe stop similar as if we had a break angle at
+/// this point
+///
+///
 int CoordMotionClass::ExecutionStop()
 {
 	// commit any segments waiting to potentially be combined
@@ -1827,10 +1780,8 @@ int CoordMotionClass::ExecutionStop()
 
 	return result;
 }
-
-
-// download any special commands that belong at the begining of the path
-
+///-----------------------------------------------------------------------------
+/// download any special commands that belong at the begining of the path
 int CoordMotionClass::DoSpecialInitialCommands()
 {
 	while (ispecial_cmd_downloaded <  nspecial_cmds &&
@@ -1842,9 +1793,8 @@ int CoordMotionClass::DoSpecialInitialCommands()
 	}
 	return 0;
 }
-
-// download any special commands that belong after this segment
-
+///-----------------------------------------------------------------------------
+/// download any special commands that belong after this segment
 int CoordMotionClass::DoSpecialCommand(int iseg)
 {
 	// see if there are any special commands that need to be inserted after the seg
@@ -1858,8 +1808,7 @@ int CoordMotionClass::DoSpecialCommand(int iseg)
 	}
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::OutputSegment(int iseg)
 {
     QString s;
@@ -2180,8 +2129,6 @@ int CoordMotionClass::OutputSegment(int iseg)
 		}
 	}
 
-
-
 #if 0 //  sanity check.  Sum times in buffer must be equal to Downloaded times
 	{
 		int i;
@@ -2202,9 +2149,6 @@ int CoordMotionClass::OutputSegment(int iseg)
 		}
 	}
 #endif
-
-
-
 
 	m_nsegs_downloaded++;
 
@@ -2289,9 +2233,9 @@ int CoordMotionClass::OutputSegment(int iseg)
 
 	return 0;
 }
-
-// Using the time of motion reported by KFLOP figure out
-// what state the Interpreter was in at that previous state
+///-----------------------------------------------------------------------------
+/// Using the time of motion reported by KFLOP figure out
+/// what state the Interpreter was in at that previous state
 int CoordMotionClass::UpdateRealTimeState(double T)
 {
 	double BufTime=0;
@@ -2362,14 +2306,12 @@ int CoordMotionClass::UpdateRealTimeState(double T)
 	}
 	return 0;
 }
-
-
-// download any "Done" segments
-//
-// "Done" segments are those that are already max'ed out based on constraints
-// other than the length of the vector, so adding/considering more vectors will
-// not affect them.
-
+///-----------------------------------------------------------------------------
+/// download any "Done" segments
+///
+/// "Done" segments are those that are already max'ed out based on constraints
+/// other than the length of the vector, so adding/considering more vectors will
+/// not affect them.
 int CoordMotionClass::DownloadDoneSegments()
 {
 	int ispecial_cmd=0;
@@ -2410,11 +2352,8 @@ int CoordMotionClass::DownloadDoneSegments()
 	}
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 #define FLOAT_TOL 1e-6 
-
-
 int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c)
 {
     QString s;
@@ -2430,6 +2369,7 @@ int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int 
 	m_DefineCS_valid=true;
 	return 0;
 }
+///-----------------------------------------------------------------------------
 int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v)
 {
     QString s;
@@ -2447,7 +2387,7 @@ int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int 
 	m_DefineCS_valid=true;
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c)
 {
     QString response;
@@ -2470,7 +2410,7 @@ int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b,
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v)
 {
     QString response;
@@ -2495,9 +2435,8 @@ int CoordMotionClass::GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b,
 
 	return 0;
 }
-
-// Get motion profile settings for all Axes in the Coordinated Motion System
-
+///-----------------------------------------------------------------------------
+/// Get motion profile settings for all Axes in the Coordinated Motion System
 int CoordMotionClass::GetRapidSettings()
 {
 	if (!RapidParamsDirty) return 0;
@@ -2629,9 +2568,8 @@ int CoordMotionClass::GetRapidSettings()
 	RapidParamsDirty=false;
 	return 0;
 }
-
-// Get motion profile settings for a single Axis if included in the Coordinated Motion System
-
+///-----------------------------------------------------------------------------
+/// Get motion profile settings for a single Axis if included in the Coordinated Motion System
 int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch)
 {
     QString s,response;
@@ -2681,14 +2619,13 @@ int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,do
 		*SoftLimitPos = temp / CountsPerInch;
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap, bool NoGeo)
 {
 	double dummyu, dummyv;
 	return ReadCurAbsPosition(x, y, z, a, b, c, &dummyu, &dummyv, snap, NoGeo);
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap,  bool NoGeo)
 {
 	double tx,ty,tz,ta,tb,tc,tu,tv;
@@ -2738,11 +2675,7 @@ int CoordMotionClass::ReadCurAbsPosition(double *x, double *y, double *z, double
 	if (v_axis < 0 || (snap && fabs(tv - current_v) < fabs(FLOAT_TOL * tv))) *v = current_v; else *v = tv;
 	return 0;    
 }
-
-
-
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetDestination(int axis, double *d)
 {
 	int result;
@@ -2763,7 +2696,7 @@ int CoordMotionClass::GetDestination(int axis, double *d)
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetPosition(int axis, double *d)
 {
 	int result;
@@ -2784,7 +2717,7 @@ int CoordMotionClass::GetPosition(int axis, double *d)
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetAxisDone(int axis, int *r)
 {
 	int result;
@@ -2805,15 +2738,14 @@ int CoordMotionClass::GetAxisDone(int axis, int *r)
 
 	return 0;
 }
-
-// Use a combination of Hardware and Software factors to 
-// achieve the desired FRO.  
-//
-// Start at a SW=1.0 and HW=1.0 and gradually change one or the other
-// to move the current FRO toward our goal.  Whenever the total FRO
-// is above the HW Limit adjust the SW factor.  Whenever below the FRO
-// then adjust the HW Limit. 
-
+///-----------------------------------------------------------------------------
+/// Use a combination of Hardware and Software factors to
+/// achieve the desired FRO.
+///
+/// Start at a SW=1.0 and HW=1.0 and gradually change one or the other
+/// to move the current FRO toward our goal.  Whenever the total FRO
+/// is above the HW Limit adjust the SW factor.  Whenever below the FRO
+/// then adjust the HW Limit.
 void CoordMotionClass::DetermineSoftwareHardwareFRO(double &HW, double &SW)
 {
 	HW=1.0,SW=1.0;
@@ -2876,8 +2808,7 @@ void CoordMotionClass::DetermineSoftwareHardwareFRO(double &HW, double &SW)
 		}
 	}
 }
-
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetFeedRateOverride(double v)
 {
     QString s;
@@ -2892,7 +2823,7 @@ void CoordMotionClass::SetFeedRateOverride(double v)
         MotionLibrary->WriteLine(s);
 	}
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetFeedRateRapidOverride(double v)
 {
     QString s;
@@ -2907,78 +2838,77 @@ void CoordMotionClass::SetFeedRateRapidOverride(double v)
         MotionLibrary->WriteLine(s);
 	}
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetHardwareFRORange(double v)
 {
 	m_HardwareFRORange=v;
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::GetHardwareFRORange()
 {
 	return m_HardwareFRORange;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetSpindleRateOverride(double v)
 {
 	m_SpindleRateOverride=v;
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::GetFeedRateOverride()
 {
 	return m_FeedRateOverride;
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::GetFeedRateRapidOverride()
 {
 	return m_FeedRateRapidOverride;
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::GetSpindleRateOverride()
 {
 	return m_SpindleRateOverride;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_CALLBACK *p)
 {
 	m_StraightTraverseCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetStraightTraverseCallback(STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK *p)
 {
 	m_StraightTraverseSixAxisCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK *p)
 {
 	m_StraightFeedCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK_SIX_AXIS *p)
 {
 	m_StraightFeedSixAxisCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetArcFeedCallback(ARC_FEED_CALLBACK *p)
 {
 	m_ArcFeedCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetArcFeedCallback(ARC_FEED_SIX_AXIS_CALLBACK *p)
 {
 	m_ArcFeedSixAxisCallback=p;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetAbort()
 {
 	m_Abort=true;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetTPParams()
 {
 	SetTrajectoryPlannerParams(&Kinematics->m_MotionParams);
 }
-
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::ClearAbort()
 {
 	if (m_Abort)
@@ -2992,29 +2922,27 @@ void CoordMotionClass::ClearAbort()
 	m_Abort=false;
 	m_SegmentsStartedExecuting=false;
 }
-
+///-----------------------------------------------------------------------------
 bool CoordMotionClass::GetAbort()
 {
 	return m_Abort;
 }
-
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::SetHalt()
 {
 	m_Halt=true;
 }
-
+///-----------------------------------------------------------------------------
 void CoordMotionClass::ClearHalt()
 {
 	m_Halt=false;
 }
-
+///-----------------------------------------------------------------------------
 bool CoordMotionClass::GetHalt()
 {
 	return m_Halt;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::MeasurePointAppendToFile(const char *name)
 {
 	double x,y,z,a,b,c;
@@ -3092,8 +3020,7 @@ int CoordMotionClass::MeasurePointAppendToFile(const char *name)
 
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::PutWriteLineBuffer(QString s, double Time)
 {
 	if (m_Abort) return 1;
@@ -3118,8 +3045,7 @@ int CoordMotionClass::PutWriteLineBuffer(QString s, double Time)
 
 	return 0;
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::FlushWriteLineBuffer()
 {
 	if (m_Abort) return 1;
@@ -3130,25 +3056,25 @@ int CoordMotionClass::FlushWriteLineBuffer()
 	ClearWriteLineBuffer();
 	return result;
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::ClearWriteLineBuffer()
 {
 	WriteLineBuffer="";
 	WriteLineBufferTime=0.0;
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, BOOL *PureAngle)
 {
 	return ::FeedRateDistance(dx, dy, dz, da, db, dc, 0.0, 0.0, &Kinematics->m_MotionParams, PureAngle);
 
 }
-
+///-----------------------------------------------------------------------------
 double CoordMotionClass::FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, BOOL *PureAngle)
 {
 	return ::FeedRateDistance(dx, dy, dz, da, db, dc, du, dv, &Kinematics->m_MotionParams, PureAngle);
 }
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev)
 {
     QString s;
@@ -3156,8 +3082,7 @@ int CoordMotionClass::ConfigSpindle(int type, int axis, double UpdateTime, doubl
 	s.Format("ConfigSpindle %d %d %.6f %.6f %f",type, axis, UpdateTime, Tau, CountsPerRev);
     return MotionLibrary->WriteLine(s);
 }
-
-
+///-----------------------------------------------------------------------------
 int CoordMotionClass::GetSpindleRPS(float &speed)
 {
     QString response;
@@ -3169,9 +3094,9 @@ int CoordMotionClass::GetSpindleRPS(float &speed)
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 bool CoordMotionClass::CheckCollinear(SEGMENT *s0, SEGMENT *s1, SEGMENT *s2, double tol)
 {
 	return ::CheckCollinear(s0, s1, s2, tol);
 }
-
+///-----------------------------------------------------------------------------

@@ -89,8 +89,8 @@ KinematicsGeppettoExtrudeClass::~KinematicsGeppettoExtrudeClass()
 void KinematicsGeppettoExtrudeClass::Rotate(double xc,double yc,double zc,double z,double a,double b,
 								double *xp,double *yp,double *zp)
 {
-	double ar=a*PI/180.0;
-	double br=b*PI/180.0;
+    double ar=a*M_PI/180.0;
+    double br=b*M_PI/180.0;
 	
 	// first rotate about x axis a degrees (changes only y and z)
 	double ya = yc - (z-zc)*sin(ar);
@@ -110,9 +110,9 @@ void KinematicsGeppettoExtrudeClass::Rotate(double xc,double yc,double zc,double
 void KinematicsGeppettoExtrudeClass::Rotate3(double xc,double yc,double zc,double x,double y,double z,double a,double b,double c,
 								double *xp,double *yp,double *zp)
 {
-	double ar=a*PI/180.0;
-	double br=b*PI/180.0;
-	double cr=c*PI/180.0;
+    double ar=a*M_PI/180.0;
+    double br=b*M_PI/180.0;
+    double cr=c*M_PI/180.0;
 	
 	// first rotate about x axis a degrees (changes only y and z)
 	double xa = x;
@@ -343,7 +343,7 @@ int KinematicsGeppettoExtrudeClass::ReadGeoTable(const char *name)
 
 	if (!f)
 	{
-		AfxMessageBox((CString)"Unable to open Geometric Correction File : " + name);
+        ///AfxMessageBox((CString)"Unable to open Geometric Correction File : " + name);
 		return 1;
 	}
 
@@ -352,7 +352,7 @@ int KinematicsGeppettoExtrudeClass::ReadGeoTable(const char *name)
 	if (result != 2 || NRows < 2 || NRows > 4000 || NCols < 2 || NCols > 4000)
 	{
 		fclose(f);
-		AfxMessageBox((CString)"Invalid Geometric Correction File (NRows and NCols) : " + name);
+        ///AfxMessageBox((CString)"Invalid Geometric Correction File (NRows and NCols) : " + name);
 		return 1;
 	}
 
@@ -361,7 +361,7 @@ int KinematicsGeppettoExtrudeClass::ReadGeoTable(const char *name)
 	if (result != 2)
 	{
 		fclose(f);
-		AfxMessageBox((CString)"Invalid Geometric Correction File (GeoSpacingX and GeoSpacingY) : " + name);
+        ///AfxMessageBox((CString)"Invalid Geometric Correction File (GeoSpacingX and GeoSpacingY) : " + name);
 		return 1;
 	}
 
@@ -370,7 +370,7 @@ int KinematicsGeppettoExtrudeClass::ReadGeoTable(const char *name)
 	if (result != 2)
 	{
 		fclose(f);
-		AfxMessageBox((CString)"Invalid Geometric Correction File (GeoOffsetX and GeoOffsetY) : " + name);
+        ///AfxMessageBox((CString)"Invalid Geometric Correction File (GeoOffsetX and GeoOffsetY) : " + name);
 		return 1;
 	}
 
@@ -384,7 +384,7 @@ int KinematicsGeppettoExtrudeClass::ReadGeoTable(const char *name)
 		if (result != 6 || row < 0 || row >= NRows || col < 0 || col >= NCols)
 		{
 			fclose(f);
-			AfxMessageBox((CString)"Invalid Geometric Correction File (invalid data value) : " + name);
+            ///AfxMessageBox((CString)"Invalid Geometric Correction File (invalid data value) : " + name);
 			return 1;
 		}
 

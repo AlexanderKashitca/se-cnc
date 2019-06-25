@@ -539,6 +539,7 @@ int read_tool_file(      /* ARGUMENT VALUES             */
 				   char * tool_file,       /* name of tool file           */
 				   setup_pointer settings) /* pointer to machine settings */
 {
+#if 0
 	FILE * tool_file_port;
 	int slot,i,n,index;
 	int Revision=0;
@@ -588,7 +589,7 @@ int read_tool_file(      /* ARGUMENT VALUES             */
 			Comment = s;
 
 			//remove beginning and ending whitespace
-			Comment.Trim();
+            Comment.Trim();
 			BOOL bImageSuccess = TRUE;
 			BOOL bCommentSuccess = TRUE;
 			//first isolate our image name
@@ -643,6 +644,7 @@ int read_tool_file(      /* ARGUMENT VALUES             */
 		index++;
 	}
 	fclose(tool_file_port);
+#endif
 	return RS274NGC_OK;
 }
 

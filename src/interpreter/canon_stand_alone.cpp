@@ -19,6 +19,9 @@ stdout to a file.
    1-Nov-2000 WPS added unused variables a,b,c to ARC_FEED,STRAIHT_FEED, etc.
   24-Feb-2000  FMP added CANON_UPDATE_POSITION()
 */
+
+#if 0
+
 #define _CRT_SECURE_NO_DEPRECATE 1
 #define NO_WARN_MBCS_MFC_DEPRECATION
 
@@ -1087,4 +1090,10 @@ int CHECK_PREVIOUS_STOP(double mx, double my, int log)
 		return 0;
 	}
 }
+
+
+
+
+#endif
+
 

@@ -2,6 +2,9 @@
 #ifndef TRAJECTORY_PLANNER_H
 #define TRAJECTORY_PLANNER_H
 ///-----------------------------------------------------------------------------
+#include "canon.h"
+#include "../motion/motion.h"
+///-----------------------------------------------------------------------------
 enum {SEG_UNDEFINED,SEG_LINEAR,SEG_ARC,SEG_RAPID,SEG_DWELL};
 
 #define MAX_TP_SEGMENTS 65536 
@@ -16,9 +19,9 @@ enum {SEG_UNDEFINED,SEG_LINEAR,SEG_ARC,SEG_RAPID,SEG_DWELL};
 ///-----------------------------------------------------------------------------
 /// ADD ME ---------------------------------------------------------------------
 /// original at KMotionDLL.h
-#ifndef MAX_LINE
-    #define MAX_LINE 2560
-#endif
+//#ifndef MAX_LINE
+//    #define MAX_LINE 2560
+//#endif
 /// END ADD ME -----------------------------------------------------------------
 ///-----------------------------------------------------------------------------
 

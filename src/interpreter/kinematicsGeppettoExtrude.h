@@ -1,7 +1,7 @@
 ///-----------------------------------------------------------------------------
 /// KinematicsGeppettoExtrude.h: interface for the CKinematicsGeppetto class with Extruder Axis.
 ///-----------------------------------------------------------------------------
-#define KINEMATICS_GEPPETTO_EXTRUDE_H
+#ifndef KINEMATICS_GEPPETTO_EXTRUDE_H
 #define KINEMATICS_GEPPETTO_EXTRUDE_H
 ///-----------------------------------------------------------------------------
 #include <math.h>

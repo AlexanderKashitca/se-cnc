@@ -941,10 +941,10 @@ motion.o: ../../prj/motion/motion.cpp ../../prj/motion/motion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
 		../../prj/motion/motion_global.h \
+		../../../src/dsp/PC-DSP.h \
 		../../../src/motion/common.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
-		../../../src/dsp/PC-DSP.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \

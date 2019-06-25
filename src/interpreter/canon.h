@@ -2,10 +2,11 @@
 #define CANON_HH
 
 #include <stdio.h>		// FILE
+#include <QString>
 
 
-extern CString Output;
-extern CString ErrorOutput;
+extern QString Output;
+extern QString ErrorOutput;
 extern int ErrorFileLineNumber;
 extern int line_number;
 
@@ -159,8 +160,8 @@ struct CANON_TOOL_TABLE {
     double diameter;
     double xoffset;
     double yoffset;
-	CString Comment;
-	CString ToolImage;
+    QString Comment;
+    QString ToolImage;
 };
 
 /* Initialization */

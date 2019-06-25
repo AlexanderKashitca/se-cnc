@@ -2,6 +2,9 @@
 #ifndef COORD_MOTION_H
 #define COORD_MOTION_H
 ///-----------------------------------------------------------------------------
+#include <linux/limits.h> /// MAX_PATH
+#define MAX_PATH PATH_MAX
+///-----------------------------------------------------------------------------
 #include "../../prj/interpreter/interpreter.h"
 #include "../motion/motion.h"
 ///-----------------------------------------------------------------------------
@@ -9,46 +12,103 @@
 #include "trajectoryPlanner.h"
 #include "kinematics.h"	// Added by ClassView
 ///-----------------------------------------------------------------------------
-
-
-typedef void STRAIGHT_TRAVERSE_CALLBACK(double x, double y, double z, int sequence_number);
-
-typedef void STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK(double x, double y, double z, double a, double b, double c, int sequence_number);
-
-typedef void STRAIGHT_FEED_CALLBACK(double DesiredFeedRate_in_per_sec,
-							   double x, double y, double z, int sequence_number, int ID);
-
-typedef void STRAIGHT_FEED_CALLBACK_SIX_AXIS(double DesiredFeedRate_in_per_sec,
-							   double x, double y, double z, double a, double b, double c, int sequence_number, int ID);
-
-typedef void ARC_FEED_CALLBACK(bool ZeroLenAsFullCircles, double DesiredFeedRate_in_per_sec, 
-			    CANON_PLANE plane,
-				double first_end, double second_end, 
-		        double first_axis, double second_axis, int rotation,
-				double axis_end_point,
-				double first_start, double second_start, double axis_start_point, int sequence_number, int ID);
-typedef void ARC_FEED_SIX_AXIS_CALLBACK(bool ZeroLenAsFullCircles, double DesiredFeedRate_in_per_sec, 
-			    CANON_PLANE plane,
-				double first_end, double second_end, 
-		        double first_axis, double second_axis, int rotation,
-				double axis_end_point,double a, double b, double c,
-				double first_start, double second_start, double axis_start_point, int sequence_number, int ID);
-
-enum {STOPPED_NONE,STOPPED_INDEP,STOPPED_COORD,STOPPED_COORD_FINISHED};
-
+typedef void STRAIGHT_TRAVERSE_CALLBACK
+        (
+            double x,
+            double y,
+            double z,
+            int sequence_number
+        );
+typedef void STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK
+        (
+            double x,
+            double y,
+            double z,
+            double a,
+            double b,
+            double c,
+            int sequence_number
+        );
+typedef void STRAIGHT_FEED_CALLBACK
+        (
+            double DesiredFeedRate_in_per_sec,
+            double x,
+            double y,
+            double z,
+            int sequence_number,
+            int ID
+        );
+typedef void STRAIGHT_FEED_CALLBACK_SIX_AXIS
+        (
+            double DesiredFeedRate_in_per_sec,
+            double x,
+            double y,
+            double z,
+            double a,
+            double b,
+            double c,
+            int sequence_number,
+            int ID
+        );
+typedef void ARC_FEED_CALLBACK
+        (
+            bool ZeroLenAsFullCircles,
+            double DesiredFeedRate_in_per_sec,
+            CANON_PLANE plane,
+            double first_end,
+            double second_end,
+            double first_axis,
+            double second_axis,
+            int rotation,
+            double axis_end_point,
+            double first_start,
+            double second_start,
+            double axis_start_point,
+            int sequence_number,
+            int ID
+        );
+typedef void ARC_FEED_SIX_AXIS_CALLBACK
+        (
+            bool ZeroLenAsFullCircles,
+            double DesiredFeedRate_in_per_sec,
+            CANON_PLANE plane,
+            double first_end,
+            double second_end,
+            double first_axis,
+            double second_axis,
+            int rotation,
+            double axis_end_point,
+            double a,
+            double b,
+            double c,
+            double first_start,
+            double second_start,
+            double axis_start_point,
+            int sequence_number,
+            int ID
+        );
+///-----------------------------------------------------------------------------
+enum
+{
+    STOPPED_NONE,
+    STOPPED_INDEP,
+    STOPPED_COORD,
+    STOPPED_COORD_FINISHED
+};
+///-----------------------------------------------------------------------------
 class INTERPRETERSHARED_EXPORT CoordMotionClass
 {
-public:
-    KinematicsClass *Kinematics;
-	void DownloadInit();
-	int CheckMotionHalt(bool Coord);
-	int ExecutionStop();
-	double GetFeedRateOverride();
-	double GetFeedRateRapidOverride();
-	double GetSpindleRateOverride();
-	void SetFeedRateOverride(double v);
-	void SetFeedRateRapidOverride(double v);
-	void SetHardwareFRORange(double v);
+    public:
+        KinematicsClass *Kinematics;
+        void    DownloadInit();
+        int     CheckMotionHalt(bool Coord);
+        int     ExecutionStop();
+        double  GetFeedRateOverride();
+        double  GetFeedRateRapidOverride();
+        double  GetSpindleRateOverride();
+        void    SetFeedRateOverride(double v);
+        void SetFeedRateRapidOverride(double v);
+        void SetHardwareFRORange(double v);
 	double GetHardwareFRORange();
 	void SetSpindleRateOverride(double v);
 	int GetDestination(int axis, double *d);
@@ -116,7 +176,7 @@ public:
 							   double x, double y, double z, double a, double b, double c, double u, double v, int sequence_number, int ID);
 
 
-    int CoordMotionClass::Dwell(double seconds, int sequence_number=0);
+    int Dwell(double seconds, int sequence_number=0);
 
 	int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap=false, bool NoGeo = false);
 	int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap=false, bool NoGeo = false);
@@ -194,8 +254,8 @@ public:
 
 	void SetTPParams();
 
-    int CoordMotionClass::GetRapidSettings();
-    int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
+    int GetRapidSettings();
+    int GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
 	bool RapidParamsDirty;
 
 	void SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i);
@@ -231,5 +291,6 @@ private:
 	int UpdateRealTimeState(double T);
 	void DetermineSoftwareHardwareFRO(double &HW, double &SW);
 };
-
-#endif // COORD_MOTION_H
+///-----------------------------------------------------------------------------
+#endif /// COORD_MOTION_H
+///-----------------------------------------------------------------------------

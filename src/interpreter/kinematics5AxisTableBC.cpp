@@ -39,9 +39,9 @@ Kinematics5AxisTableBCClass::~Kinematics5AxisTableBCClass()
 void Kinematics5AxisTableBCClass::Rotate3(double xc,double yc,double zc,double x,double y,double z,double a,double b,double c,
 								double *xp,double *yp,double *zp)
 {
-	double ar=a*PI/180.0;
-	double br=b*PI/180.0;
-	double cr=c*PI/180.0;
+    double ar=a*M_PI/180.0;
+    double br=b*M_PI/180.0;
+    double cr=c*M_PI/180.0;
 	
 	// first rotate about x axis a degrees (changes only y and z)
 	double xa = x;
