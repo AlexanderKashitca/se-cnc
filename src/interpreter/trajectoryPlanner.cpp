@@ -37,16 +37,8 @@ void CloseDiag();
 //#ifndef FALSE
 //#define FALSE            0
 //#endif
-//#ifndef max
-//#define max(a,b)            (((a) > (b)) ? (a) : (b))
-//#endif
-//#ifndef min
-//#define min(a,b)            (((a) < (b)) ? (a) : (b))
-//#endif
 
-#ifndef THETA_SIGMA
-#define THETA_SIGMA 1e-13
-#endif
+
 /// END ADD ME -----------------------------------------------------------------
 ///-----------------------------------------------------------------------------
 
@@ -241,8 +233,8 @@ int tp_insert_linear_seg(double x0, double y0, double z0, double a0, double b0, 
 				pm1->dx < MaxCombineLength*0.25 &&
 				pm1->type==SEG_LINEAR &&
 				pm2->type==SEG_LINEAR &&
-				fabs(pm2->OrigVel - pm1->OrigVel) <= SPEED_TOL * min(pm1->OrigVel,pm2->OrigVel) &&
-				fabs(pm2->OrigAccel - pm1->OrigAccel) <= SPEED_TOL * min(pm1->OrigAccel,pm2->OrigAccel))
+                fabs(pm2->OrigVel - pm1->OrigVel) <= SPEED_TOL * qMin(pm1->OrigVel,pm2->OrigVel) &&
+                fabs(pm2->OrigAccel - pm1->OrigAccel) <= SPEED_TOL * qMin(pm1->OrigAccel,pm2->OrigAccel))
 				DiscardTinySegment=true;
 		}
 
@@ -791,13 +783,13 @@ void RoundCorner(int is)
 
 	double original_L = L;
 
-	// determine if the rounding is 
+    // deterqMine if the rounding is
 	if (d0 < L) L = d0;
 	if (d1/2 < L) L = d1/2;  // only allow usage of 1/2 of the next segment
 
 	// this is a bit complicated, but in the case that L  is  very close
 	// to d0 or d1 we might end up with a microscopic segment with a sharp 
-	// angle, so if it leaves less than sigma eliminate it.  sigma is the 
+    // angle, so if it leaves less than sigma eliqMinate it.  sigma is the
 	// smaller of either 0.1% of the CornerTolerance or segment lengths
 	// whichever is smaller
 
@@ -805,8 +797,8 @@ void RoundCorner(int is)
 	if (sigma > d0 * 0.001) sigma = d0 * 0.001;
 	if (sigma > d1 * 0.001) sigma = d1 * 0.001;
 
-	bool EliminateP0 = fabs(L - d0) < sigma;
-	bool EliminateP2 = fabs(L - d1) < sigma;
+    bool EliqMinateP0 = fabs(L - d0) < sigma;
+    bool EliqMinateP2 = fabs(L - d1) < sigma;
 
 	// recompute R in case L changed;
 	if (original_L != L && original_L!=0.0 )
@@ -817,8 +809,8 @@ void RoundCorner(int is)
 	int NumberDeletedBefore = 0;
 	int NumberDeletedAfter = 0;
 
-	if (EliminateP0) NumberDeletedBefore++;
-	if (EliminateP2) NumberDeletedAfter++;
+    if (EliqMinateP0) NumberDeletedBefore++;
+    if (EliqMinateP2) NumberDeletedAfter++;
 
 	CopySegStartToP8(segm,p0);
 	CopySegStartToP8(seg,p1);
@@ -868,7 +860,7 @@ void RoundCorner(int is)
 
 	SEGMENT FromABC,ToABC;
 
-	if (!EliminateP0)  // if it hasn't been completely eliminated
+    if (!EliqMinateP0)  // if it hasn't been completely eliqMinated
 	{
 		AdjustSegToEndAtP8(is-1,L);  // adjust segment is-1 to now end at pa
 		FromABC.a1 = segm->a1;
@@ -886,7 +878,7 @@ void RoundCorner(int is)
 		FromABC.v1 = segm->v0;
 	}
 
-	if (!EliminateP2)  // if it hasn't been completely eliminated
+    if (!EliqMinateP2)  // if it hasn't been completely eliqMinated
 	{
 		AdjustSegToBeginAtP8(is,L);  // adjust segment is to now begin at pb
 
@@ -972,7 +964,7 @@ void RoundCorner(int is)
 
 		CreateSegFromTo(is+i-NumberDeletedBefore,&FromABC,&ToABC,prev,pv,(double)i/(n-1), double(i+1)/(n-1));
 
-		if (i==0 && EliminateP0 && StopRequiredAtP0)
+        if (i==0 && EliqMinateP0 && StopRequiredAtP0)
 		{
 			GetSegPtr(is+i-NumberDeletedBefore)->StopRequired=TRUE;
 		}
@@ -995,7 +987,7 @@ void RoundCorner(int is)
 
 	// recompute exiting segment direction now that we 
 	// rounded corner and previous angles have changed
-	if (!EliminateP2)  // if it hasn't been completely eliminated
+    if (!EliqMinateP2)  // if it hasn't been completely eliqMinated
 		segNew->ChangeInDirection = CalcChangeInDirection(is_new);
 
 	nsegs += nadded;  // we added this many segments
@@ -1041,7 +1033,7 @@ void GetSegmentDirection(int i, double *dx, double *dy, double *dz, double *da, 
 // area=(1/2) x Base x Height. Where the height is an altitude drawn from the base to the opposite angle. 
 // This formula makes for a relatively easy calculation of the area of a triangle but it is rather difficult 
 // to naturally find a triangle that is given in terms of at least one side (the base) and a height. 
-// We typically can determine or are given the sides of a triangle when a triangle is present. 
+// We typically can deterqMine or are given the sides of a triangle when a triangle is present.
 // formula does exist that can calculate the area of a triangle when all three sides are known.
 // This formula is attributed to Heron of Alexandria but can be traced back to Archimedes.
 //
@@ -1164,13 +1156,13 @@ int CombineSegments(double MaxLength)
 
 	// max speeds must be very similar
 
-	if (fabs(pn->OrigVel - pm1->OrigVel) > SPEED_TOL * min(pn->OrigVel,pm1->OrigVel)) 
+    if (fabs(pn->OrigVel - pm1->OrigVel) > SPEED_TOL * qMin(pn->OrigVel,pm1->OrigVel))
 	{
 		nCombined = 0;
 		return 1;
 	}
 
-	if (fabs(pn->OrigAccel - pm1->OrigAccel) > SPEED_TOL * min(pn->OrigAccel,pm1->OrigAccel)) 
+    if (fabs(pn->OrigAccel - pm1->OrigAccel) > SPEED_TOL * qMin(pn->OrigAccel,pm1->OrigAccel))
 	{
 		nCombined = 0;
 		return 1;
@@ -1223,7 +1215,7 @@ int CombineSegments(double MaxLength)
 
 	// yes, ok to combine
 
-	// save the point that was eliminated
+    // save the point that was eliqMinated
 	SEGMENT *pnc=&CombinedList[nCombined];
 	pnc->x0 = pn->x0;
 	pnc->y0 = pn->y0;
@@ -1423,7 +1415,7 @@ void CalcFinalDirectionOfSegment(SEGMENT *p,double &dx, double &dy, double &dz,d
 		// Arc case
 
 		// calc direction (in xy plane) from
-		// center of rotation to terminal point
+        // center of rotation to terqMinal point
 
 		double dxc = p->x1 - p->xc;
 		double dyc = p->y1 - p->yc;
@@ -1845,7 +1837,7 @@ double MaximizeSegmentForward(int i)
 	}
 	else
 	{
-		// must solve quadratic to determine time at end
+        // must solve quadratic to deterqMine time at end
 		t_b = (-V0_b + sqrt(V0_b*V0_b + 2.0f*A_b*X_b))/A_b;
 
 		return V0_b + t_b * A_b;
@@ -1890,7 +1882,7 @@ double MaximizeSegmentBackward(int i)
 	}
 	else
 	{
-		// must solve quadratic to determine time at end
+        // must solve quadratic to deterqMine time at end
 		t_e = (-V0_e + sqrt(V0_e*V0_e + 2.0f*A_e*X_e))/A_e;
 
 		return V0_e + t_e * A_e;
@@ -2004,14 +1996,14 @@ void MaximizeSegments()
 					if (!pp1->StopRequired)
 					{
 						double MaxBegVel2 = MaximizeSegmentBackward(i+1);
-						double min = MaxEndVel0;
-						if (MaxBegVel2 < min) min = MaxBegVel2;
-						if (pi->MaxVel < min) min = pi->MaxVel;
-						// increase middle segment to min of all constraints if not already higher
-						if (pi->vel < min)
+                        double qMin = MaxEndVel0;
+                        if (MaxBegVel2 < qMin) qMin = MaxBegVel2;
+                        if (pi->MaxVel < qMin) qMin = pi->MaxVel;
+                        // increase middle segment to qMin of all constraints if not already higher
+                        if (pi->vel < qMin)
 						{
                             Q_ASSERT(!pi->Done);
-							pi->vel = min;
+                            pi->vel = qMin;
 							SomethingChanged = true;
 						}
 					}
@@ -2035,7 +2027,7 @@ void MaximizeSegments()
 
 					}
 
-					// check if the i-1th segment can be determined to be "Done"
+                    // check if the i-1th segment can be deterqMined to be "Done"
 					// (beginning and ending velocity won't ever change)
 					//
 					// if it ends at MaxVel for the segment or
@@ -2068,7 +2060,7 @@ void MaximizeSegments()
 						SomethingChanged = true;
 					}
 
-					// For a segment to be "Done" we must determine that BOTH ends can never be increased
+                    // For a segment to be "Done" we must deterqMine that BOTH ends can never be increased
 					//
 					// if a segment further to the right exists and is done
 					// or starting at MaxVel or a Stop is required and the 
@@ -2090,7 +2082,7 @@ void MaximizeSegments()
 				}
 			}
 
-			// For a segment to be "Done" we must determine that BOTH ends can never be increased
+            // For a segment to be "Done" we must deterqMine that BOTH ends can never be increased
 			//
 			// Any segment that has a Done segment or segment already beginning at
 			// max velocity to the right, and the segment to the Left is
@@ -2125,7 +2117,7 @@ void MaximizeSegments()
 			}
 
 		
-			// How to determine if we went backward through enough
+            // How to deterqMine if we went backward through enough
 			// segments and that all the rest are done is complicated.
 			//
 			// Initially on the first pass all the "Done"s are contiguous on the left
@@ -2134,7 +2126,7 @@ void MaximizeSegments()
 			// So on the first pass remember where the first "Done" was encountered.
 			//
 			// But eventually any gaps between "Done" segments will be filled in because
-			// if two ends will not ever change then everything between will be determined
+            // if two ends will not ever change then everything between will be deterqMined
 			// 
 			// Also advance it forward through any new "Done"s that might have been
 			// set during the recent pass
@@ -2253,7 +2245,7 @@ int tp_calc_seg_trip_states(int i)
 	}
 	else
 	{
-		// must solve to determine time at highest vel
+        // must solve to deterqMine time at highest vel
 
 		VM = sqrt((A*V1*V1+D*V0*V0+2.0f*A*D*X)/(A+D));
 
@@ -2555,7 +2547,7 @@ int tp_calc_seg_trip_states_rapid(int i)
 }  
 
 /* calculates a position by evaluating a 3rd order
-   polynomial given the "trip state" (that determines
+   polynomial given the "trip state" (that deterqMines
    what set of polynomial coefficients to use,
    and the time (t).  Time is from the beginning
    of the trip state (not the beginning of the move)
@@ -2688,7 +2680,7 @@ double FeedRateDistance(double dx, double dy, double dz, double da, double db, d
 			d += dc*dc;
 		}
 
-		//if there is xyz abc(linear) motion it determines the feedrate, otherwise uv determines the feed rate
+        //if there is xyz abc(linear) motion it deterqMines the feedrate, otherwise uv deterqMines the feed rate
 		if (d == 0.0) d = du*du + dv*dv;
 	}
 	return sqrt(d);

@@ -1734,8 +1734,10 @@ int CoordMotionClass::LaunchCoordMotion()
 			return 1;
 		}
 
-		s.Format("TrigThread %.6f",m_ThreadingBaseSpeedRPS);
-        if(MotionLibrary->WriteLine(s)){SetAbort(); return 1;}
+        ///s.Format("TrigThread %.6f",m_ThreadingBaseSpeedRPS);
+        s = QString("TrigThread %.6f")
+                .arg(m_ThreadingBaseSpeedRPS);
+        if(MotionLibrary->WriteLine(s.toStdString().c_str())){SetAbort(); return 1;}
 	}
 	else  // no normal coordinated motion
 	{
@@ -1912,7 +1914,11 @@ int CoordMotionClass::OutputSegment(int iseg)
 				int *IntUV = (int *)FloatUVArray;
 
 #ifdef DEBUG_DOWNLOAD
-				ds.Format("Linear %f %d %d\n",DTimer.Elapsed_Seconds(),iseg,i);
+                ///ds.Format("Linear %f %d %d\n",DTimer.Elapsed_Seconds(),iseg,i);
+                ds = QString("Linear %f %d %d\n")
+                        .arg(DTimer.Elapsed_Seconds()
+                        .arg(iseg)
+                        .arg(i);
 				PutString(ds);
 #endif
 
@@ -1920,27 +1926,51 @@ int CoordMotionClass::OutputSegment(int iseg)
 				if (!LastWasLinear)  // must specify all if first or there was an arc
 				{
 					if (u_axis >= 0 || v_axis >= 0)
-						s.Format("LinearHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], IntUV[0], IntUV[1], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], IntUV[2], IntUV[3], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        ///s.Format("LinearHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], IntUV[0], IntUV[1], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], IntUV[2], IntUV[3], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        s = QString("LinearHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3]).arg(Int[4]).arg(Int[5])
+                                .arg(IntUV[0]).arg(IntUV[1])
+                                .arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9]).arg(Int[10]).arg(Int[11])
+                                .arg(IntUV[2]).arg(IntUV[3])
+                                .arg(Int[12]).arg(Int[13]).arg(Int[14]).arg(Int[15]).arg(Int[16]);
 					else
-						s.Format("LinearHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        ///s.Format("LinearHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        s = QString("LinearHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2])
+                                .arg(Int[3]).arg(Int[4]).arg(Int[5])
+                                .arg(Int[6]).arg(Int[7]).arg(Int[8])
+                                .arg(Int[9]).arg(Int[10]).arg(Int[11])
+                                .arg(Int[12]).arg(Int[13]).arg(Int[14])
+                                .arg(Int[15]).arg(Int[16]);
 
 					DidThisLinear=LastWasLinear=true;
 				}
 				else if (!DidThisLinear) // new linear so we must specify the new endpoint
 				{
 					if (u_axis >= 0 || v_axis >= 0)
-						s.Format("LHexEx1 %X %X %X %X %X %X %X %X %X %X %X %X %X", Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], IntUV[2], IntUV[3], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        ///s.Format("LHexEx1 %X %X %X %X %X %X %X %X %X %X %X %X %X", Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], IntUV[2], IntUV[3], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        s = QString("LHexEx1 %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9])
+                                .arg(Int[10]).arg(Int[11]).arg(IntUV[2]).arg(IntUV[3])
+                                .arg(Int[12]).arg(Int[13]).arg(Int[14]).arg(Int[15]).arg(Int[16]);
 					else
-						s.Format("LHex1 %X %X %X %X %X %X %X %X %X %X %X", Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        ///s.Format("LHex1 %X %X %X %X %X %X %X %X %X %X %X", Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16]);
+                        s = QString("LHex1 %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13])
+                                .arg(Int[14]).arg(Int[15]).arg(Int[16]);
 							
 					DidThisLinear=true;
 				}
 				else
 				{
-					s.Format("LHex2 %X %X %X %X %X",
-						Int[12],Int[13],Int[14],Int[15],Int[16]); 
+                    ///s.Format("LHex2 %X %X %X %X %X",
+                    ///	Int[12],Int[13],Int[14],Int[15],Int[16]);
+                    s = QString("LHex2 %X %X %X %X %X")
+                            .arg(Int[12]).arg(Int[13])
+                            .arg(Int[14]).arg(Int[15]).arg(Int[16]);
 				}
 
 			}
@@ -2018,11 +2048,24 @@ int CoordMotionClass::OutputSegment(int iseg)
 					FloatArray[18]  = (float)(p->C[i].t);
 
 					if (u_axis >= 0 || v_axis >= 0)
-						s.Format("ArcHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHexEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3])
+                                .arg(Int[4]).arg(Int[5]).arg(Int[6]).arg(Int[7])
+                                .arg(Int[8]).arg(Int[9])
+                                .arg(IntUV[0]).arg(IntUV[1])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13])
+                                .arg(IntUV[2]).arg(IntUV[3])
+                                .arg(Int[14]).arg(Int[15]).arg(Int[16]).arg(Int[17]).arg(Int[18]);
 					else
-						s.Format("ArcHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-						Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHex %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3]).arg(Int[4])
+                                .arg(Int[5]).arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13])
+                                .arg(Int[14]).arg(Int[15]).arg(Int[16]).arg(Int[17]).arg(Int[18]);
 				}
 				else if (p->plane == CANON_PLANE_XZ)
 				{
@@ -2061,11 +2104,24 @@ int CoordMotionClass::OutputSegment(int iseg)
 					FloatArray[18]  = (float)(p->C[i].t);
 
 					if (u_axis >= 0 || v_axis >= 0)
-						s.Format("ArcHexZXEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHexZXEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHexZXEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3])
+                                .arg(Int[4]).arg(Int[5]).arg(Int[6]).arg(Int[7])
+                                .arg(Int[8]).arg(Int[9])
+                                .arg(IntUV[0]).arg(IntUV[1])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13])
+                                .arg(IntUV[2]).arg(IntUV[3])
+                                .arg(Int[14]).arg(Int[15]).arg(Int[16]).arg(Int[17]).arg(Int[18]);
 					else
-						s.Format("ArcHexZX %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHexZX %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHexZX %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3]).arg(Int[4])
+                                .arg(Int[5]).arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13]).arg(Int[14])
+                                .arg(Int[15]).arg(Int[16]).arg(Int[17]).arg(Int[18]);
 				}
 				else // YZ
 				{
@@ -2104,16 +2160,33 @@ int CoordMotionClass::OutputSegment(int iseg)
 					FloatArray[18]  = (float)(p->C[i].t);
 
 					if (u_axis >= 0 || v_axis >= 0)
-						s.Format("ArcHexYZEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHexYZEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], IntUV[0], IntUV[1], Int[10], Int[11], Int[12], Int[13], IntUV[2], IntUV[3], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHexYZEx %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3]).arg(Int[4])
+                                .arg(Int[5]).arg(Int[6]).arg(Int[7]).arg(Int[8]).arg(Int[9])
+                                .arg(IntUV[0]).arg(IntUV[1])
+                                .arg(Int[10]).arg(Int[11]).arg(Int[12]).arg(Int[13])
+                                .arg(IntUV[2]).arg(IntUV[3])
+                                .arg(Int[14]).arg(Int[15]).arg(Int[16]).arg(Int[17]).arg(Int[18]);
 					else
-						s.Format("ArcHexYZ %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
-							Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        ///s.Format("ArcHexYZ %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X",
+                        ///	Int[0], Int[1], Int[2], Int[3], Int[4], Int[5], Int[6], Int[7], Int[8], Int[9], Int[10], Int[11], Int[12], Int[13], Int[14], Int[15], Int[16], Int[17], Int[18]);
+                        s = QString("ArcHexYZ %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X %X")
+                                .arg(Int[0]).arg(Int[1]).arg(Int[2]).arg(Int[3])
+                                .arg(Int[4]).arg(Int[5]).arg(Int[6]).arg(Int[7])
+                                .arg(Int[8]).arg(Int[9]).arg(Int[10]).arg(Int[11])
+                                .arg(Int[12]).arg(Int[13]).arg(Int[14]).arg(Int[15])
+                                .arg(Int[16]).arg(Int[17]).arg(Int[18]);
 				}
 
 
 #ifdef DEBUG_DOWNLOAD
-				ds.Format("Arc %f %d %d\n",DTimer.Elapsed_Seconds(),iseg,i);
+                ///ds.Format("Arc %f %d %d\n",DTimer.Elapsed_Seconds(),iseg,i);
+                ds = QString("Arc %f %d %d\n")
+                        .arg(DTimer.Elapsed_Seconds())
+                        .arg(iseg)
+                        .arg(i);
 				PutString(ds);
 #endif
 			}
@@ -2123,7 +2196,12 @@ int CoordMotionClass::OutputSegment(int iseg)
 			m_TotalDownloadedTime += p->C[i].t;  // sum all downloaded times
 
 #ifdef DEBUG_DOWNLOAD
-				ds.Format("Done %f %d %d %f\n",DTimer.Elapsed_Seconds(),iseg,i,m_TotalDownloadedTime);
+                ///ds.Format("Done %f %d %d %f\n",DTimer.Elapsed_Seconds(),iseg,i,m_TotalDownloadedTime);
+                ds = QString("Done %f %d %d %f\n")
+                        .arg(DTimer.Elapsed_Seconds())
+                        .arg(iseg)
+                        .arg(i)
+                        .arg(m_TotalDownloadedTime);
 				PutString(ds);
 #endif
 		}
@@ -2357,8 +2435,10 @@ int CoordMotionClass::DownloadDoneSegments()
 int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c)
 {
     QString s;
-	s.Format("DefineCS %d %d %d %d %d %d", x, y, z, a, b, c);
-    if (MotionLibrary->WriteLine(s)) return 1;
+    ///s.Format("DefineCS %d %d %d %d %d %d", x, y, z, a, b, c);
+    s = QString("DefineCS %d %d %d %d %d %d")
+            .arg(x).arg(y).arg(z).arg(a).arg(b).arg(c);
+    if (MotionLibrary->WriteLine(s.toStdString().c_str())) return 1;
 	x_axis=x;
 	y_axis=y;
 	z_axis=z;
@@ -2373,7 +2453,9 @@ int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int 
 int CoordMotionClass::SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v)
 {
     QString s;
-	s.Format("DefineCSEx %d %d %d %d %d %d %d %d", x, y, z, a, b, c, u, v);
+    ///s.Format("DefineCSEx %d %d %d %d %d %d %d %d", x, y, z, a, b, c, u, v);
+    s = QString("DefineCSEx %d %d %d %d %d %d %d %d")
+            .arg(x).arg(y).arg(z).arg(a).arg(b).arg(c).arg(u).arg(v);
     if (MotionLibrary->WriteLine(s)) return 1;
 	x_axis=x;
 	y_axis=y;
@@ -2579,30 +2661,32 @@ int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,do
 	if (CountsPerInch==0.0) return 1;
 
 	if (axis==-1) return 0;
-	s.Format("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d",axis,axis,axis,axis,axis);
-    if (MotionLibrary->WriteLine(s)) return 1;
+    ///s.Format("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d",axis,axis,axis,axis,axis);
+    s = QString("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d")
+            .arg(axis).arg(axis).arg(axis).arg(axis).arg(axis);
+    if (MotionLibrary->WriteLine(s.toStdString().c_str())) return 1;
 
     if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
-	result=sscanf(response, "%lf",&temp);
+    result=sscanf(response.toStdString().c_str(), "%lf",&temp);
 	if (result != 1) return 1;
 	*Vel = fabs(temp/CountsPerInch);
 
     if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
-	result=sscanf(response, "%lf",&temp);
+    result=sscanf(response.toStdString().c_str(), "%lf",&temp);
 	if (result != 1) return 1;
 	*Accel = fabs(temp/CountsPerInch);
 
     if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
-	result=sscanf(response, "%lf",&temp);
+    result=sscanf(response.toStdString().c_str(), "%lf",&temp);
 	if (result != 1) return 1;
 	*Jerk = fabs(temp/CountsPerInch);
 
     if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
-	result=sscanf(response, "%lf",&temp);
+    result=sscanf(response.toStdString().c_str(), "%lf",&temp);
 	if (result != 1) return 1;
 	if (CountsPerInch >= 0.0)
 		*SoftLimitPos = temp / CountsPerInch;
@@ -2611,7 +2695,7 @@ int CoordMotionClass::GetRapidSettingsAxis(int axis,double *Vel,double *Accel,do
 
     if (MotionLibrary->ReadLineTimeOut(response.GetBufferSetLength(MAX_LINE))) return 1;
 	response.ReleaseBuffer();
-	result=sscanf(response, "%lf",&temp);
+    result=sscanf(response.toStdString().c_str(), "%lf",&temp);
 	if (result != 1) return 1;
 	if (CountsPerInch >= 0.0)
 		*SoftLimitNeg = temp / CountsPerInch;
@@ -2687,11 +2771,13 @@ int CoordMotionClass::GetDestination(int axis, double *d)
 	
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
-	cmd.Format("Dest%d",axis);
+    ///cmd.Format("Dest%d",axis);
+    cmd = QString("Dest%d")
+            .arg(axis);
     if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
-	result=sscanf(response, "%lf",d);
+    result=sscanf(response.toStdString().c_str(), "%lf",d);
 	if (result != 1) {SetAbort(); return 1;}
 
 	return 0;
@@ -2708,11 +2794,13 @@ int CoordMotionClass::GetPosition(int axis, double *d)
 	
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
-	cmd.Format("Pos%d",axis);
+    ///cmd.Format("Pos%d",axis);
+    cmd = QString("Pos%d")
+            .arg(axis);
     if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
-	result=sscanf(response, "%lf",d);
+    result=sscanf(response.toStdString().c_str(), "%lf",d);
 	if (result != 1) {SetAbort(); return 1;}
 
 	return 0;
@@ -2729,11 +2817,13 @@ int CoordMotionClass::GetAxisDone(int axis, int *r)
 	
 	if (axis<0 || axis>N_CHANNELS) {SetAbort(); return 1;} // invalid
 
-	cmd.Format("CheckDone%d",axis);
+    ///cmd.Format("CheckDone%d",axis);
+    cmd = QString("CheckDone%d")
+            .arg(axis);
     if (MotionLibrary->WriteLineReadLine(cmd,response.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
 	response.ReleaseBuffer();
 
-	result=sscanf(response, "%d",r);
+    result=sscanf(response.toStdString().c_str(), "%d",r);
 	if (result != 1) {SetAbort(); return 1;}
 
 	return 0;
@@ -2819,8 +2909,10 @@ void CoordMotionClass::SetFeedRateOverride(double v)
 	if (!m_Simulate)
 	{
 		DetermineSoftwareHardwareFRO(HW,SW);
-		s.Format("SetFRO %.4f",HW);
-        MotionLibrary->WriteLine(s);
+        ///s.Format("SetFRO %.4f",HW);
+        s = QString("SetFRO %.4f")
+                .arg(HW);
+        MotionLibrary->WriteLine(s.toStdString().c_str());
 	}
 }
 ///-----------------------------------------------------------------------------
@@ -2834,8 +2926,10 @@ void CoordMotionClass::SetFeedRateRapidOverride(double v)
 
 	if (!m_Simulate)
 	{
-		s.Format("SetRapidFRO %.4f",v);
-        MotionLibrary->WriteLine(s);
+        ///s.Format("SetRapidFRO %.4f",v);
+        s = QString("SetRapidFRO %.4f")
+                .arg(v);
+        MotionLibrary->WriteLine(s.toStdString().c_str());
 	}
 }
 ///-----------------------------------------------------------------------------
@@ -3078,9 +3172,14 @@ double CoordMotionClass::FeedRateDistance(double dx, double dy, double dz, doubl
 int CoordMotionClass::ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev)
 {
     QString s;
-	
-	s.Format("ConfigSpindle %d %d %.6f %.6f %f",type, axis, UpdateTime, Tau, CountsPerRev);
-    return MotionLibrary->WriteLine(s);
+    ///s.Format("ConfigSpindle %d %d %.6f %.6f %f",type, axis, UpdateTime, Tau, CountsPerRev);
+    s = QString("ConfigSpindle %d %d %.6f %.6f %f")
+            .arg(type)
+            .arg(axis)
+            .arg(UpdateTime)
+            .arg(Tau)
+            .arg(CountsPerRev);
+    return MotionLibrary->WriteLine(s.toStdString().c_str());
 }
 ///-----------------------------------------------------------------------------
 int CoordMotionClass::GetSpindleRPS(float &speed)
