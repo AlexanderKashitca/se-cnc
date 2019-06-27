@@ -26,9 +26,9 @@ enum
  */
 enum
 {
-    BOARD_TYPE_UNKNOWN=0,
-    BOARD_TYPE_KMOTION=1,
-    BOARD_TYPE_KFLOP=2,
+    BOARD_TYPE_UNKNOWN = 0,
+    BOARD_TYPE_KMOTION = 1,
+    BOARD_TYPE_KFLOP   = 2,
 };
 /**
  *  @brief SEMotionLocked Return Codes

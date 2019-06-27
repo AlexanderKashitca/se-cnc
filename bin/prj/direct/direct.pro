@@ -35,3 +35,10 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+unix:!macx: LIBS += -L$$PWD/../../../src/ftdi/ -lftd2xx
+
+INCLUDEPATH += $$PWD/../../../src/ftdi
+DEPENDPATH += $$PWD/../../../src/ftdi
+
+unix:!macx: PRE_TARGETDEPS += $$PWD/../../../src/ftdi/libftd2xx.a

@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DDIRECT_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_TESTLIB_LIB -DQT_DBUS_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug"'
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/direct -I. -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtTest -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../prj/direct -I. -I../../../src/ftdi -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtTest -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = direct1.0.0
 DISTDIR = /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/direct1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/evil/Qt/5.12.3/gcc_64/lib -shared -Wl,-soname,libdirect.so.1
-LIBS          = $(SUBLIBS) -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Test -lQt5DBus -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/ -lftd2xx -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Test -lQt5DBus -lQt5Core -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -266,7 +266,7 @@ TARGET2       = libdirect.so.1.0
 first: all
 ####### Build rules
 
-libdirect.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
+libdirect.so.1.0.0: /home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/libftd2xx.a $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
 	-$(DEL_FILE) $(TARGET) $(TARGET0) $(TARGET1) $(TARGET2)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) $(OBJCOMP)
 	-ln -s $(TARGET) $(TARGET0)
@@ -277,7 +277,7 @@ libdirect.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)
 
 staticlib: libdirect.a
 
-libdirect.a:  $(OBJECTS) $(OBJCOMP) 
+libdirect.a: /home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/libftd2xx.a $(OBJECTS) $(OBJCOMP) 
 	-$(DEL_FILE) $(TARGETA) 
 	$(AR) $(TARGETA) $(OBJECTS)
 

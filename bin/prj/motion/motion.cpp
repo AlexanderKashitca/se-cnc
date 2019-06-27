@@ -68,17 +68,17 @@ int MotionClass::WriteLineReadLine(const char *s, char *response)
     ReleaseToken();
     return result;
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::WriteLine(const char *s)
 {
     return PipeCmdStr(ENUM_WriteLine, s);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::WriteLineWithEcho(const char *s)
 {
     return PipeCmdStr(ENUM_WriteLineWithEcho, s);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::ReadLineTimeOut(char *response, int TimeOutms)
 {
     /// Send Code, BoardID, timeout -- Get Dest, Result (int), and string
@@ -97,7 +97,7 @@ int MotionClass::ReadLineTimeOut(char *response, int TimeOutms)
 
     return result;
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::ListLocations(int *nlocations, int *list)
 {
     // Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
@@ -121,43 +121,41 @@ int MotionClass::ListLocations(int *nlocations, int *list)
     }
     return result;
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::Failed()
 {
     return PipeCmd(ENUM_Failed);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::Disconnect()
 {
     return PipeCmd(ENUM_Disconnect);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::FirmwareVersion()
 {
     return PipeCmd(ENUM_FirmwareVersion);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::CheckForReady()
 {
     return PipeCmd(ENUM_CheckForReady);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::MotionLock(char *CallerID)
 {
     return PipeCmdStr(ENUM_KMotionLock, CallerID);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::USBLocation()
 {
     return PipeCmd(ENUM_USBLocation);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::MotionLockRecovery()
 {
     return PipeCmd(ENUM_KMotionLockRecovery);
 }
-
-
 ///-----------------------------------------------------------------------------
 /// Try and get the token for the Board
 ///
@@ -224,18 +222,18 @@ int MotionClass::WaitToken(bool display_msg, int TimeOut_ms, char *CallerID)
 
     return result;
 }
-
+///-----------------------------------------------------------------------------
 void MotionClass::ReleaseToken()
 {
     PipeCmd(ENUM_ReleaseToken);
     PipeMutex->unlock();      // also release the pipe
 }
-
+///-----------------------------------------------------------------------------
 int  MotionClass::ServiceConsole()
 {
     return PipeCmd(ENUM_ServiceConsole);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::SetConsoleCallback(CONSOLE_HANDLER *ch)
 {
     ConsoleHandler = ch;
@@ -244,15 +242,12 @@ int MotionClass::SetConsoleCallback(CONSOLE_HANDLER *ch)
     // the console
     return PipeCmd(ENUM_SetConsole);
 }
-
+///-----------------------------------------------------------------------------
 int MotionClass::SetErrMsgCallback(ERRMSG_HANDLER *ch)
 {
     ErrMsgHandler = ch;
     return 0;
 }
-
-
-
 ///-----------------------------------------------------------------------------
 /// send code, board
 int MotionClass::PipeCmd(int code)

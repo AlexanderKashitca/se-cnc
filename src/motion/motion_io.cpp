@@ -1,5 +1,8 @@
 ///-----------------------------------------------------------------------------
 #include "common.h"
+
+///#include <sys/types.h>
+//#include <cstring>
 ///-----------------------------------------------------------------------------
 #define CONNECT_TRIES       5
 #define CONNECT_TIMEOUT     1000
@@ -49,6 +52,7 @@ void MotionIOClass::Sleep(DWORD millseconds)
 
 }
 ///-----------------------------------------------------------------------------
+/// return true if successful
 bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
 {
 	FT_DEVICE_LIST_INFO_NODE *devInfo;
@@ -60,13 +64,13 @@ bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
 
     /// create the device information list
 	ftStatus = FT_CreateDeviceInfoList(&numDevs);
-	
 	if (ftStatus == FT_OK) 
 	{ 
 		if (numDevs > 0) 
 		{ 
             /// allocate storage for list based on numDevs
-            devInfo = (FT_DEVICE_LIST_INFO_NODE*) malloc(sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs);
+            ///devInfo = (FT_DEVICE_LIST_INFO_NODE*) malloc(sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs);
+            devInfo = new FT_DEVICE_LIST_INFO_NODE[sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs];
             /// get the device information list
 			ftStatus = FT_GetDeviceInfoList(devInfo,&numDevs);
             for(i=0;i < static_cast<int>(numDevs);i++)
@@ -91,11 +95,11 @@ bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
                 for(i = 0;i < static_cast<int>(numDevs) && !BoardIDAssigned;i++)
                 {
                     int k;
-                   /// make sure nobody is already using this one
+                    /// make sure nobody is already using this one
                     for(k = 0;k < MAX_BOARDS;k++)
                     {
-///                        if(devInfo[i].LocId == SEMotionIO.USB_Loc_ID)
-///                            break;
+                        if(devInfo[i].LocId == static_cast<DWORD>(USB_Loc_ID))
+                            break;
                     }
                     if(k == MAX_BOARDS)
                     {
@@ -118,13 +122,12 @@ bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
 					break;
 			}
             if(i == static_cast<int>(numDevs))
-			{
+            { /// not find the devices
                 Mutex->unlock();
                 if(Reason)
                 {
-                    *Reason = QString("SEMotion not found on USB Location %08X\r\r"
-                                      "Unable to open device")
-                               .arg(USB_Loc_ID);
+                    *Reason = QString("SEMotion not found on USB Location %08X\r\r Unable to open device")
+                                .arg(USB_Loc_ID);
                 }
 				return false;
 			}
@@ -144,105 +147,94 @@ bool MotionIOClass::RequestedDeviceAvail(QString *Reason)
 int MotionIOClass::Connect()
 {
     QString reason;
-
 	FT_STATUS ftStatus;
 
-	if (NonRespondingCount==CONNECT_TRIES) return 1;
+    if(NonRespondingCount == CONNECT_TRIES)
+        return 1;
 
-	m_SaveChars[0]=0;  // start anew
-
+    m_SaveChars[0] = 0; /// start anew
     Mutex->lock();
 
-	if (!RequestedDeviceAvail(&reason))
+    if(!RequestedDeviceAvail(&reason))
 	{
-///		ErrorMessageBox(reason);
+        ErrorMessageBox(reason.toStdString().c_str());
         Mutex->unlock();
 		return 1;
 	}
-
-	// FT_ListDevices OK, number of devices connected is in numDevs
-	// usually during boot the board comes and goes, since it appeared 
-	// to be there, try for a while to open it
-	DWORD t0=timeGetTime();
-
-	for (;;) 
+    /// FT_ListDevices OK, number of devices connected is in numDevs
+    /// usually during boot the board comes and goes, since it appeared
+    /// to be there, try for a while to open it
+    DWORD t0 = timeGetTime();
+    while(1)
 	{
-		ftStatus = FT_OpenEx((void *)USB_Loc_ID,FT_OPEN_BY_LOCATION,&ftHandle);
-
-		if (ftStatus == FT_OK) 
-		{
-			// FT_Open OK, use ftHandle to access device
-
-			if (SetLatency(2))
+        ///ftStatus = FT_OpenEx((void *)USB_Loc_ID,FT_OPEN_BY_LOCATION,&ftHandle);
+        ftStatus = FT_OpenEx(static_cast<void*>(&USB_Loc_ID),FT_OPEN_BY_LOCATION,&ftHandle);
+        if(ftStatus == FT_OK)
+        { /// FT_Open OK, use ftHandle to access device
+            if(SetLatency(2))
 			{
                 Mutex->unlock();
 				return 1;
 			}
-
-			
-			if (FlushInputBuffer())
+            if(FlushInputBuffer())
 			{
 				FT_Close(ftHandle);
                 Mutex->unlock();
 				return 1;
 			}
-
-			m_Connected=true;  // All set
-
+            m_Connected = true;  // All set
             Mutex->unlock();
 			return 0;
 		}
 		else 
-		{
-			// FT_Open failed
-
-			if (timeGetTime()-t0 > TIME_TO_TRY_TO_OPEN)
+        { /// FT_Open failed
+            if(timeGetTime() - t0 > TIME_TO_TRY_TO_OPEN)
 			{
-				ErrorMessageBox("Unable to open KMotion device");
+                ErrorMessageBox("Unable to open SEMotion device");
                 Mutex->unlock();
 				return 1;
 			}
-
-            Sleep(100);  // delay a bit then loop back and try again
+            Sleep(100); /// delay a bit then loop back and try again
 		}
 	}
-
-    Mutex->unlock();
-	return 0;
 }
-
-int MotionIOClass::NumberBytesAvailToRead(int *navail, bool ShowMessage)
+///-----------------------------------------------------------------------------
+int MotionIOClass::NumberBytesAvailToRead(int *navail,bool ShowMessage)
 {
 	FT_STATUS ftStatus;
 	DWORD EventDWord;
 	DWORD RxBytes;
 	DWORD TxBytes;
 
-	*navail = strlen(m_SaveChars);  // take into account any already read in
+    *navail = static_cast<int>(strlen(m_SaveChars)); /// take into account any already read in
 	
     Mutex->lock();
 	ftStatus = FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
-
-	if (ftStatus != FT_OK) 
+    if(ftStatus != FT_OK)
 	{
-		if (ShowMessage)
+        if(ShowMessage)
+        {
 			Failed();
+        }
 		else
+        {
 			m_Connected=false;
-
+        }
         Mutex->unlock();
 		return 1;
 	}
 	else
 	{
-		*navail+=(int)RxBytes;
+        *navail += static_cast<int>(RxBytes);
         Mutex->unlock();
 		return 0;
 	}
 }
-
-
-int MotionIOClass::ReadBytesAvailable(char *RxBuffer, int maxbytes, DWORD *BytesReceived, int timeout_ms)
+///-----------------------------------------------------------------------------
+int MotionIOClass::ReadBytesAvailable(char  *RxBuffer,
+                                      int    maxbytes,
+                                      DWORD *BytesReceived,
+                                      int    timeout_ms)
 {
 	FT_STATUS ftStatus;
 	DWORD EventDWord;
@@ -252,24 +244,25 @@ int MotionIOClass::ReadBytesAvailable(char *RxBuffer, int maxbytes, DWORD *Bytes
     Mutex->lock();
 	ftStatus=FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
 
-	if (ftStatus != FT_OK)
+    if(ftStatus != FT_OK)
 	{
 		Failed();
         Mutex->unlock();
 		return 1;
 	}
+    if(static_cast<int>(RxBytes) > maxbytes)
+    {
+        RxBytes = static_cast<DWORD>(maxbytes - 1); // leave room for null
+    }
 
-	if ((int)RxBytes > maxbytes) RxBytes = maxbytes-1; // leave room for null
-
-	RxBuffer[0]=0;  // set buf empty initially
-	*BytesReceived=0;
-
-	if (RxBytes > 0) 
+    RxBuffer[0] = 0; /// set buf empty initially
+    *BytesReceived = 0;
+    if(RxBytes > 0)
 	{
 		ftStatus = FT_Read(ftHandle,RxBuffer,RxBytes,BytesReceived);
-		if (ftStatus == FT_OK) 
+        if(ftStatus == FT_OK)
 		{
-			RxBuffer[*BytesReceived]=0;  // null terminate
+            RxBuffer[*BytesReceived] = 0; /// null terminate
 		}
 		else 
 		{
@@ -278,274 +271,236 @@ int MotionIOClass::ReadBytesAvailable(char *RxBuffer, int maxbytes, DWORD *Bytes
 			return 1;
 		}
 	}
-
     Mutex->unlock();
 	return 0;
 }
-
-
-
-// Call this to check if a "Ready" response came back
-// 
-// Note:There is a possibility that other DSP threads are
-// printing to the console screen
-//
-// First check if any input is available
-// if not, return instantly (KMOTION_OK)
-// if so, then a whole line might not be available
-// but should be in transmission and be in very soon,
-// so wait up to a short while to get in an entire line
-// if the line doesn't come in for some reason return (KMOTION_TIMEOUT)
-// check if the line should go to the console (esc)
-// if so print it and repeat the above as long as 
-// there is still input available
-// if the line is not console data, check for "Ready",
-// if it is "Ready" send it to the console and return KMOTION_READY;
-// otherwise send it to the console
-
-
+///-----------------------------------------------------------------------------
+/// Call this to check if a "Ready" response came back
+///
+/// Note:There is a possibility that other DSP threads are
+/// printing to the console screen
+///
+/// First check if any input is available
+/// if not, return instantly (SE_MOTION_OK)
+/// if so, then a whole line might not be available
+/// but should be in transmission and be in very soon,
+/// so wait up to a short while to get in an entire line
+/// if the line doesn't come in for some reason return (SE_MOTION_TIMEOUT)
+/// check if the line should go to the console (esc)
+/// if so print it and repeat the above as long as
+/// there is still input available
+/// if the line is not console data, check for "Ready",
+/// if it is "Ready" send it to the console and return SE_MOTION_READY;
+/// otherwise send it to the console
 int MotionIOClass::CheckForReady()
 {
 	char buf[257];
 	char *beg;
 	char copy[257];
-	int nbytes, result;
-	bool DetectedError=false;
+    int  nbytes;
+    bool DetectedError(false);
 
-	for (;;) 
+    while(1)
 	{
 		if (m_Connected)
 		{
-			if (!NumberBytesAvailToRead(&nbytes, true) && nbytes>0)
+            if (!NumberBytesAvailToRead(&nbytes,true) && nbytes > 0)
 			{
-				result = ReadLineTimeOutRaw(buf, 100);
-				
-				if (result==0)
+                if(ReadLineTimeOutRaw(buf,100) == 0)
 				{
-					
-					// check if first char is an ESC
-
-					if (buf[0] == 0x1b)
-						beg=buf+1;
+                    /// check if first char is an ESC
+                    if(buf[0] == 0x1b)
+                    {
+                        beg = buf + 1;
+                    }
 					else
-						beg=buf;
-				
+                    {
+                        beg = buf;
+                    }
 					strncpy(copy,beg,255);
-///					_strupr(copy);
-
-					// check for "Error"
-                    if (strstr(copy,"ERROR") != nullptr)
-					{
-						// error, send to console
-
-						DetectedError=true;
+///                    strupr(copy);
+                    /// check for "Error"
+                    if(strstr(copy,"ERROR") != nullptr)
+                    { /// error, send to console
+                        DetectedError = true;
 					}
-					
-					
-					// check for "Ready"
-					if (strcmp(beg,"Ready\r\n"))  
-					{
-						// no, strange send to console
-
+                    /// check for "Ready"
+                    if(strcmp(beg,"Ready\r\n"))
+                    { /// no, strange send to console
 						LogToConsole(beg);
 					}
 					else
-					{
-						// yes! send to console and return Ready
-
+                    { /// yes! send to console and return Ready
 						LogToConsole(beg);
-						if (DetectedError)
-                            return SE_MOTION_ERROR;  // a line contained the word "error"
+                        if(DetectedError)
+                        {
+                            return SE_MOTION_ERROR; /// a line contained the word "error"
+                        }
 						else
+                        {
                             return SE_MOTION_READY;
+                        }
 					}
 				}
 				else
 				{
-                    return SE_MOTION_TIMEOUT;  // not a whole line for some reason
+                    return SE_MOTION_TIMEOUT; /// not a whole line for some reason
 				}
 			}
 			else
 			{
-                return SE_MOTION_OK;  // no data, return OK, not Ready
+                return SE_MOTION_OK; /// no data, return OK, not Ready
 			}
 		}
 		else
 		{
-            return SE_MOTION_ERROR;  // not connected return error
+            return SE_MOTION_ERROR; /// not connected return error
 		}
 	}
-
-	return result;
 }
-
-
-
-
-
-// Reads a line and if it gets a line with no timeout
-// check if it is a user message (indicated by esc char
-// at the beginning.  If so print it to the Console
-// repeat until we get a normal line to be returned
-// to the caller
-
-
-int MotionIOClass::ReadLineTimeOut(char *buf, int TimeOutms)
+///-----------------------------------------------------------------------------
+/// Reads a line and if it gets a line with no timeout
+/// check if it is a user message (indicated by esc char
+/// at the beginning.  If so print it to the Console
+/// repeat until we get a normal line to be returned
+/// to the caller
+int MotionIOClass::ReadLineTimeOut(char *buf,int TimeOutms)
 {
 	int result;
 	bool Done;
 
 	do 
 	{
-		Done=true;
-		result = ReadLineTimeOutRaw(buf, TimeOutms);
-		
-		if (result==0)
+        Done = true;
+        result = ReadLineTimeOutRaw(buf,TimeOutms);
+        if(result==0)
 		{
-			// check if first char is an ESC
-
-			if (buf[0] == 0x1b)
+            /// check if first char is an ESC
+            if(buf[0] == 0x1b)
 			{
-				// it is!  
-				
-				// if next character is 1-7
-				// handle it as a write file command
-				
-				if (buf[1] >=1 && buf[1] <=7)
+                /// it is!
+                /// if next character is 1-7
+                /// handle it as a write file command
+                if(buf[1] >= 1 && buf[1] <= 7)
 				{
-					// it is a disk command
+                    /// it is a disk command
 					HandleDiskIO(buf+1);
 				}
 				else
 				{
-					// Send to console
+                    /// Send to console
 					LogToConsole(buf+1);
 				}
-				
-				Done=false;
+                Done = false;
 			}
 		}
 	}
-	while (!Done);
-
+    while(!Done);
 	return result;
 }
-
+///-----------------------------------------------------------------------------
 int MotionIOClass::ReadLineTimeOutRaw(char *buf, int TimeOutms)
 {
-	BOOL Done=FALSE;
-	int TotalBytes, result;
+    BOOL  Done(FALSE);
+    int   TotalBytes;
+    int   result;
 	DWORD NBytesRead;
 	char *p;
-	char ReadBuffer[MAX_LINE];
-	int i,freespace;
-	bool FirstTime=true;
+    char  ReadBuffer[MAX_LINE];
+    int   i;
+    int   freespace;
+    bool  FirstTime=true;
 	static bool ErrorDisplayed=false;
 
 
-	if (ErrorDisplayed) return 1;
-
+    if(ErrorDisplayed)
+    {
+        return 1;
+    }
     Mutex->lock();
 
 	strcpy(buf,m_SaveChars);
-    TotalBytes = strlen(buf);
-	m_SaveChars[0]=0; // remember we used them
+    TotalBytes = static_cast<int>(strlen(buf));
+    m_SaveChars[0] = 0; /// remember we used them
 
-	DWORD t0=timeGetTime();
-
-	while (!Done)
+    DWORD t0 = timeGetTime();
+    while(!Done)
 	{ 
-		if (FirstTime)
-			FirstTime=false;
+        if(FirstTime)
+        {
+            FirstTime = false;
+        }
 		else
 		{
 			timeBeginPeriod(1);
 			Sleep(1);
 			timeEndPeriod(1);
 		}
-
-		for (i=0; i<200; i++)
+        for(i = 0;i < 200;i++)
 		{
-			ReadBuffer[i]=0;
+            ReadBuffer[i] = 0;
 		}
-
-		freespace = MAX_LINE-TotalBytes-1;
-
-		if (freespace > 0)
+        freespace = MAX_LINE - TotalBytes - 1;
+        if(freespace > 0)
 		{
-			result = ReadBytesAvailable(ReadBuffer, freespace, &NBytesRead, 0);
-
-			if (result)
+            result = ReadBytesAvailable(ReadBuffer,freespace,&NBytesRead,0);
+            if(result)
 			{
                 Mutex->unlock();
 				return result;
 			}
-			
-			if (NBytesRead > 0) 
+            if(NBytesRead > 0)
 			{
-				for (i=0; i<(int)NBytesRead; i++)
+                for(i=0;i < static_cast<int>(NBytesRead); i++)
 				{
-					if (i+TotalBytes > MAX_LINE)
+                    if(i+TotalBytes > MAX_LINE)
 					{
-						ErrorMessageBox("KMotion Received Line too long");
+                        ErrorMessageBox("SEMotion Received Line too long");
                         Mutex->unlock();
 						return 1;
 					}
 					buf[i+TotalBytes] = ReadBuffer[i];
 				}
 			}
-
 			TotalBytes += NBytesRead;
-
-			//Successfully received data.  Zero terminate string.
+            /// Successfully received data.  Zero terminate string.
 			buf[TotalBytes] = 0;
-		
 		}
-		// check if we got a terminating character  \n 
-
-
+        /// check if we got a terminating character  \n
 		p = strchr(buf,'\n');
-
-
-		if (p)
+        if(p)
 		{
-			// check if we read extra characters
-			if ((p-buf) < (int)(strlen(buf)-1))
+            /// check if we read extra characters
+            if ((p-buf) < static_cast<int>(strlen(buf)-1))
 			{
-				// yes, save them for next time
+                /// yes, save them for next time
 				strcpy(m_SaveChars,p+1);
-				// now zero terminate first string
-				// after the \r
+                /// now zero terminate first string
+                /// after the \r
 				*(p+1) = 0;
 			}
-
-			Done=TRUE;
+            Done = TRUE;
 		}
-
-        if (!NO_SEMOTION_TIMEOUT && !Done && (int)(timeGetTime()-t0) > TimeOutms)
+        if(!NO_SEMOTION_TIMEOUT && !Done && (int)(timeGetTime()-t0) > TimeOutms)
 		{
             Mutex->unlock();
-			return 2;  // return with timeout indication
+            return 2; /// return with timeout indication
 		}
 
 	}
-	FailMessageAlreadyShown=false;  // if we successfully received something show any subsequent error
+    FailMessageAlreadyShown = false; /// if we successfully received something show any subsequent error
     Mutex->unlock();
 	return 0;
 }
-
-
-// special prefix tells DSP not to echo
-
+///-----------------------------------------------------------------------------
+/// special prefix tells DSP not to echo
 int MotionIOClass::WriteLine(const char *s)
 {
 	char s2[MAX_LINE+1]="\x1b\x01";
-
 	strcat(s2,s);
 	return WriteLineWithEcho(s2);
 }
-
-
+///-----------------------------------------------------------------------------
 int MotionIOClass::WriteLineWithEcho(const char *s)
 {
 	FT_STATUS ftStatus;
@@ -553,11 +508,14 @@ int MotionIOClass::WriteLineWithEcho(const char *s)
     DWORD length;
 	char s2[MAX_LINE+1];   
 
-	if (MakeSureConnected()) return 1;
+    if(MakeSureConnected())
+    {
+        return 1;
+    }
     strcpy(s2,s);
 	strcat(s2,"\r"); // Add CR
 
-    length = (DWORD)strlen(s2);
+    length = static_cast<DWORD>(strlen(s2));
 
     Mutex->lock();
 	ftStatus = FT_Write(ftHandle, s2, length, &BytesWritten);
@@ -566,38 +524,42 @@ int MotionIOClass::WriteLineWithEcho(const char *s)
 
 	return 0;
 }
-
+///-----------------------------------------------------------------------------
 int MotionIOClass::SetLatency(UCHAR LatencyTimer)
 {
 	FT_STATUS ftStatus;
-		
 	unsigned char c;
 
-	
     Mutex->lock();
 
-	ftStatus = FT_GetLatencyTimer (ftHandle, &c);
-
+    ftStatus = FT_GetLatencyTimer(ftHandle,&c);
+    if(ftStatus != FT_OK)
+    {
+        ErrorMessageBox("Unable to get USB Latency Timer Value");
+        Mutex->unlock();
+        return 1;
+    }
 	ftStatus = FT_SetLatencyTimer(ftHandle,LatencyTimer);
-	
-	if (ftStatus == FT_OK) 
+    if(ftStatus == FT_OK)
 	{ 
 		ftStatus = FT_GetLatencyTimer (ftHandle, &c);
-
-		// LatencyTimer set 
-
-		ftStatus = FT_SetChars (ftHandle, '\n', 1, 0,0);
-
-		if (ftStatus == FT_OK) 
+        if(ftStatus != FT_OK)
+        {
+            ErrorMessageBox("Unable to get USB Latency Timer Value");
+            Mutex->unlock();
+            return 1;
+        }
+        /// LatencyTimer set
+        ftStatus = FT_SetChars(ftHandle,'\n',1,0,0);
+        if(ftStatus == FT_OK)
 		{ 
-			// Event set 
-
+            /// Event set
             Mutex->unlock();
 			return 0;
 		}
 		else 
 		{ 
-			// FT_SetLatencyTimer FAILED!
+            /// FT_SetLatencyTimer FAILED!
 			ErrorMessageBox("Unable to set USB Event Character");
             Mutex->unlock();
 			return 1;
@@ -611,32 +573,25 @@ int MotionIOClass::SetLatency(UCHAR LatencyTimer)
 		return 1;
 	}
 }
-
-
-int MotionIOClass::WriteLineReadLine(const char *send, char *response)
+///-----------------------------------------------------------------------------
+int MotionIOClass::WriteLineReadLine(const char *send,char *response)
 {
     Mutex->lock();
-	if (WriteLine(send))
+    if(WriteLine(send))
 	{
         Mutex->unlock();
 		return 1;
 	}
-
-	if (ReadLineTimeOut(response,3000))
+    if(ReadLineTimeOut(response,3000))
 	{
         Mutex->unlock();
 		return 1;
 	}
-	
-	response[strlen(response)-2]=0;  // remove the /r /n
-
+    response[strlen(response)-2] = 0; /// remove the /r /n
     Mutex->unlock();
-
 	return 0;
 }
-
-
-
+///-----------------------------------------------------------------------------
 int MotionIOClass::FlushInputBuffer()
 {
 	FT_STATUS ftStatus;
@@ -649,71 +604,70 @@ int MotionIOClass::FlushInputBuffer()
 	char RxBuffer[500];
 
 	ftStatus = FT_Purge(ftHandle,FT_PURGE_RX|FT_PURGE_TX);
-	if (ftStatus != FT_OK) 	return 1;
-
-
-	// discard any data in the read queue in the driver
-
-	DWORD t0=timeGetTime();
+    if(ftStatus != FT_OK)
+    {
+        return 1;
+    }
+    /// discard any data in the read queue in the driver
+    DWORD t0 = timeGetTime();
 	do
 	{
-		ftStatus=FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
-		if (ftStatus != FT_OK) 
-			return 1;
-
-		if (RxBytes > 0)
+        ftStatus = FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
+        if(ftStatus != FT_OK)
+        {
+            return 1;
+        }
+        if(RxBytes > 0)
 		{
-			if (RxBytes > 400) RxBytes=400;
+            if(RxBytes > 400)
+            {
+                RxBytes = 400;
+            }
 			ftStatus = FT_Read(ftHandle,RxBuffer,RxBytes,&BytesReceived);
 		}
 	}
-	while (RxBytes > 0 && timeGetTime()-t0 < CONNECT_TIMEOUT);
-
-
-
-	if (SendAbortOnConnect)
+    while(RxBytes > 0 && timeGetTime() - t0 < CONNECT_TIMEOUT);
+    if(SendAbortOnConnect)
 	{
-		// send flush command to DSP
-
-		s[0]=ABORT_CHAR;
-		s[1]=0;
-
-
-		ftStatus = FT_Write(ftHandle, s, 1, &BytesWritten);
-		if (ftStatus != FT_OK) 
-			return 1;
-		if (BytesWritten != 1) 
-			return 1;
-
-
-		// wait and be sure chars are transmitted
-
-		t0=timeGetTime();
+        /// send flush command to DSP
+        s[0] = ABORT_CHAR;
+        s[1] = 0;
+        ftStatus = FT_Write(ftHandle,s,1,&BytesWritten);
+        if(ftStatus != FT_OK)
+        {
+            return 1;
+        }
+        if(BytesWritten != 1)
+        {
+            return 1;
+        }
+        /// wait and be sure chars are transmitted
+        t0 = timeGetTime();
 		do
 		{
-			ftStatus=FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
-			if (ftStatus != FT_OK) 
-				return 1;
+            ftStatus = FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
+            if(ftStatus != FT_OK)
+            {
+                return 1;
+            }
 		}
-		while (TxBytes != 0 && timeGetTime()-t0 < CONNECT_TIMEOUT);
-
-		if (TxBytes != 0) return 1;
-
-
-		// wait for a fixed time for the abort acknowledge
-		// to come back which is exactly 3 characters ESC C \r
-
-		t0=timeGetTime();
-
+        while(TxBytes != 0 && timeGetTime() - t0 < CONNECT_TIMEOUT);
+        if(TxBytes != 0)
+        {
+            return 1;
+        }
+        /// wait for a fixed time for the abort acknowledge
+        /// to come back which is exactly 3 characters ESC C \r
+        t0 = timeGetTime();
 		do
 		{
-			ftStatus=FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
-			if (ftStatus != FT_OK) 
-				return 1;
+            ftStatus = FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
+            if(ftStatus != FT_OK)
+            {
+                return 1;
+            }
 		}
-		while (RxBytes < 3 && timeGetTime()-t0 < CONNECT_TIMEOUT);
-
-
+        while(RxBytes < 3 && timeGetTime() - t0 < CONNECT_TIMEOUT);
 		if (RxBytes == 0)
 		{
             /// KMotion seems to be present but not responding
