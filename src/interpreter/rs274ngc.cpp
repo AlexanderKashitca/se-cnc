@@ -672,8 +672,8 @@ static int arc_data_comp_ijk(	/* ARGUMENTS */
 
     *center_x = (current_x + i_number);
     *center_y = (current_y + j_number);
-    arc_radius = _hypot(i_number, j_number);
-    radius2 = _hypot((*center_x - end_x), (*center_y - end_y));
+    arc_radius = hypot(i_number, j_number);
+    radius2 = hypot((*center_x - end_x), (*center_y - end_y));
     radius2 =
     (((side == LEFT) && (move == 30)) ||
     ((side == RIGHT) && (move == 20))) ?
@@ -783,7 +783,7 @@ static int arc_data_comp_r(	/* ARGUMENTS */
             && (move == G_2)))),
     NCE_TOOL_RADIUS_NOT_LESS_THAN_ARC_RADIUS_WITH_COMP);
 
-    distance = _hypot((end_x - current_x), (end_y - current_y));
+    distance = hypot((end_x - current_x), (end_y - current_y));
     alpha = atan2((end_y - current_y), (end_x - current_x));
     theta = (((move == G_3) && (big_radius > 0)) ||
     ((move == G_2) && (big_radius < 0))) ? (alpha + PI2) : (alpha - PI2);
@@ -885,8 +885,8 @@ static int arc_data_ijk(	/* ARGUMENTS */
         }
     }
 
-    radius = _hypot(dx_cur, dy_cur);
-    radius2 = _hypot(dx_end, dy_end);
+    radius = hypot(dx_cur, dy_cur);
+    radius2 = hypot(dx_end, dy_end);
     CHK(((radius == 0.0) || (radius2 == 0.0)), NCE_ZERO_RADIUS_ARC);
     CHK((fabs(radius - radius2) > tolerance),
     NCE_RADIUS_TO_END_OF_ARC_DIFFERS_FROM_RADIUS_TO_START);
@@ -1030,7 +1030,7 @@ static int arc_data_r(		/* ARGUMENTS */
 
     mid_x = (end_x + current_x) / 2.0;
     mid_y = (end_y + current_y) / 2.0;
-    half_length = _hypot((mid_x - end_x), (mid_y - end_y));
+    half_length = hypot((mid_x - end_x), (mid_y - end_y));
 
     double tolerance = (_setup.length_units == CANON_UNITS_INCHES) ?
         _setup.arc_radius_small_tol : _setup.arc_radius_small_tol * MM_PER_INCH;
@@ -1751,7 +1751,7 @@ static int convert_arc_comp1(	/* ARGUMENTS */
     tolerance = (settings->length_units == CANON_UNITS_INCHES) ?
     settings->arc_radius_tol : settings->arc_radius_tol * MM_PER_INCH;
 
-    CHK((_hypot((end_x - settings->current_x),
+    CHK((hypot((end_x - settings->current_x),
         (end_y - settings->current_y)) <= tool_radius),
     NCE_CUTTER_GOUGING_WITH_CUTTER_RADIUS_COMP);
 
@@ -1901,7 +1901,7 @@ static int convert_arc_comp2(	/* ARGUMENTS */
 /* compute other data */
     side = settings->cutter_comp_side;
     tool_radius = settings->cutter_comp_radius;	/* always is positive */
-    arc_radius = _hypot((center_x - end_x), (center_y - end_y));
+    arc_radius = hypot((center_x - end_x), (center_y - end_y));
 
     delta = atan2(center_y - start_y, center_x - start_x);  // angle to beginning of this contour
     alpha = (move == G_3) ? (delta - PI2) : (delta + PI2);
@@ -2334,7 +2334,7 @@ static int convert_comment2(	/* ARGUMENTS */
 static int convert_comment(char *comment)
 {
     int i,n,r;
-    CString s=comment;
+    QString s = comment;
 
     i=s.Find('(');
     n=s.Find(')');
@@ -3234,8 +3234,11 @@ static int convert_cycle_g84(	/* ARGUMENTS */
 // increment the caller's persist var number
 int PutIntVarToKFLOP(int v, int &ipersist)
 {
-    CString s;
-    s.Format("SetPersistHex %d %x", ipersist, v);
+    QString s;
+    ///s.Format("SetPersistHex %d %x", ipersist, v);
+    s = QString("SetPersistHex %d %x")
+            .arg(ipersist)
+            .arg(v);
     if (CM->KMotionDLL->WriteLine(s)) { CM->SetAbort(); return 1; }
     ipersist++;
     return 0;
@@ -3245,9 +3248,12 @@ int PutIntVarToKFLOP(int v, int &ipersist)
 // increment the caller's persist var number
 int PutFloatVarToKFLOP(double v, int &ipersist)
 {
-    CString s;
+    QString s;
     float f = (float)v;
-    s.Format("SetPersistHex %d %x", ipersist, *(int *)&f);
+    ///s.Format("SetPersistHex %d %x", ipersist, *(int *)&f);
+    s = QString("SetPersistHex %d %x")
+            .arg(ipersist)
+            .arg(*(int *)&f);
     if (CM->KMotionDLL->WriteLine(s)) { CM->SetAbort(); return 1; }
     ipersist++;
     return 0;
@@ -5695,7 +5701,7 @@ static int convert_straight_comp1(	/* ARGUMENTS */
     {
         // do old EMC Style
         radius = settings->cutter_comp_radius;	/* always will be positive */
-        distance = _hypot((px - cx), (py - cy));
+        distance = hypot((px - cx), (py - cy));
 
         CHK(((side != LEFT) && (side != RIGHT)), NCE_BUG_SIDE_NOT_RIGHT_OR_LEFT);
         CHK((distance <= radius), NCE_CUTTER_GOUGING_WITH_CUTTER_RADIUS_COMP);
@@ -6775,12 +6781,12 @@ static double find_arc_length(	/* ARGUMENTS */
     double radius;
     double theta;		/* amount of turn of arc in radians */
 
-    radius = _hypot((center_x - x1), (center_y - y1));
+    radius = hypot((center_x - x1), (center_y - y1));
     theta = find_turn(x1, y1, center_x, center_y, turn, x2, y2);
     if (z2 == z1)
     return (radius * fabs(theta));
     else
-    return _hypot((radius * theta), (z2 - z1));
+    return hypot((radius * theta), (z2 - z1));
 }
 
 /****************************************************************************/
@@ -10854,7 +10860,7 @@ int rs274ngc_open(		/* ARGUMENTS */
         char s[500];
 
         sprintf(s, "Unable to open input file %s\r\r code=%d", filename, errno);
-        AfxMessageBox(s);
+        ///AfxMessageBox(s);
     }
     CHK((_setup.file_pointer == NULL), NCE_UNABLE_TO_OPEN_FILE);
 
@@ -11070,7 +11076,7 @@ int rs274ngc_restore_parameters(	/* ARGUMENTS */
         char s[500];
 
         sprintf(s,"Unable to open file %s",filename);
-        AfxMessageBox(s);
+        ///AfxMessageBox(s);
     }
 
     CHK((infile == NULL), NCE_UNABLE_TO_OPEN_FILE);

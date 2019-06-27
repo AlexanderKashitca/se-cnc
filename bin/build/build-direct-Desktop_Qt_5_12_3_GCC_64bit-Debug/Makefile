@@ -52,10 +52,8 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../../src/direct/motion_direct.cpp \
-		../../prj/direct/direct.cpp 
-OBJECTS       = motion_direct.o \
-		direct.o
+SOURCES       = ../../prj/direct/direct.cpp 
+OBJECTS       = direct.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -253,10 +251,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/direct/direct.pro ../../../src/direct/motion_direct.h \
-		../../prj/direct/direct.h \
-		../../prj/direct/direct_global.h ../../../src/direct/motion_direct.cpp \
-		../../prj/direct/direct.cpp
+		../../prj/direct/direct.pro ../../prj/direct/direct.h \
+		../../prj/direct/direct_global.h ../../prj/direct/direct.cpp
 QMAKE_TARGET  = direct
 DESTDIR       = 
 TARGET        = libdirect.so.1.0.0
@@ -703,8 +699,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/direct/motion_direct.h ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/direct/motion_direct.cpp ../../prj/direct/direct.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../prj/direct/direct.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -753,7 +749,7 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-motion_direct.o: ../../../src/direct/motion_direct.cpp ../../../src/direct/motion_direct.h \
+direct.o: ../../prj/direct/direct.cpp ../../prj/direct/direct.h \
 		../../prj/direct/direct_global.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
@@ -794,31 +790,6 @@ motion_direct.o: ../../../src/direct/motion_direct.cpp ../../../src/direct/motio
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o motion_direct.o ../../../src/direct/motion_direct.cpp
-
-direct.o: ../../prj/direct/direct.cpp ../../prj/direct/direct.h \
-		../../prj/direct/direct_global.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o direct.o ../../prj/direct/direct.cpp
 
 ####### Install

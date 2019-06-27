@@ -2531,7 +2531,7 @@ int CoordMotionClass::GetRapidSettings()
 	if (m_Simulate)
 	{
         int result=MotionLibrary->WaitToken(false,100,"GetRapidSettings");
-		if (result != KMOTION_LOCKED)
+        if (result != SE_MOTION_LOCKED)
 		{
 			RapidParamsDirty=false;
 			return 0;  // just exit
@@ -2540,7 +2540,11 @@ int CoordMotionClass::GetRapidSettings()
 	}
 
 
-	if (GetAxisDefinitions(&x_axis,&y_axis,&z_axis,&a_axis, &b_axis, &c_axis, &u_axis, &v_axis)) {SetAbort(); return 1;}
+    if (GetAxisDefinitions(&x_axis,&y_axis,&z_axis,&a_axis, &b_axis, &c_axis, &u_axis, &v_axis))
+    {
+        SetAbort();
+        return 1;
+    }
 
     MotionLibrary->WaitToken("GetRapidSettings2");  // lock the Token while we get all the parameters
 
@@ -3120,13 +3124,13 @@ int CoordMotionClass::PutWriteLineBuffer(QString s, double Time)
 	if (m_Abort) return 1;
 
 	// new string won't fit, flush it first
-	if (WriteLineBuffer.GetLength() + s.GetLength() > MAX_LINE-10)
+    if (WriteLineBuffer.length() + s.length() > MAX_LINE-10)
 	{
 		if (FlushWriteLineBuffer()) return 1;
 	}
 
 	// put in the string
-	if (!WriteLineBuffer.IsEmpty()) WriteLineBuffer += ';';
+    if (!WriteLineBuffer.isEmpty()) WriteLineBuffer += ';';
 	WriteLineBuffer += s;
 	WriteLineBufferTime += Time;
 
@@ -3144,9 +3148,9 @@ int CoordMotionClass::FlushWriteLineBuffer()
 {
 	if (m_Abort) return 1;
 
-	int Length = WriteLineBuffer.GetLength();
+    int Length = WriteLineBuffer.length();
 
-    int result = MotionLibrary->WriteLine(WriteLineBuffer);
+    int result = MotionLibrary->WriteLine(WriteLineBuffer.toStdString().c_str());
 	ClearWriteLineBuffer();
 	return result;
 }
@@ -3189,7 +3193,7 @@ int CoordMotionClass::GetSpindleRPS(float &speed)
     if (MotionLibrary->WriteLineReadLine("GetSpindleRPS",response.GetBufferSetLength(MAX_LINE))) return 1;
 	
 	// check state
-	if (sscanf(response,"%f",&speed)!=1) return 1;
+    if (sscanf(response.toStdString().c_str(),"%f",&speed)!=1) return 1;
 
 	return 0;
 }

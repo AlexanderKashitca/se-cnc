@@ -824,10 +824,8 @@ compiler_clean: compiler_moc_predefs_clean
 ####### Compile
 
 PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -849,6 +847,11 @@ PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -873,7 +876,6 @@ PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -911,10 +913,8 @@ PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT2D.o ../../../src/interpreter/PT2D.cpp
 
 PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -936,6 +936,11 @@ PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -960,7 +965,6 @@ PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -998,10 +1002,8 @@ PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o PT3D.o ../../../src/interpreter/PT3D.cpp
 
 canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1023,6 +1025,11 @@ canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -1047,7 +1054,6 @@ canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -1086,10 +1092,8 @@ canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o canon_stand_alone.o ../../../src/interpreter/canon_stand_alone.cpp
 
 common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1111,6 +1115,11 @@ common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -1135,7 +1144,6 @@ common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -1173,10 +1181,8 @@ common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/interpreter/common.cpp
 
 coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1198,6 +1204,11 @@ coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -1222,7 +1233,6 @@ coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -1261,10 +1271,8 @@ coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o coordMotion.o ../../../src/interpreter/coordMotion.cpp
 
 driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1286,6 +1294,11 @@ driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -1310,7 +1323,6 @@ driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -1349,10 +1361,8 @@ driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o driver.o ../../../src/interpreter/driver.cpp
 
 kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1374,6 +1384,11 @@ kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/c
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -1398,7 +1413,6 @@ kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/c
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -2052,10 +2066,8 @@ kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppettoExtrude.o ../../../src/interpreter/kinematicsGeppettoExtrude.cpp
 
 rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -2077,6 +2089,11 @@ rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/commo
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -2101,7 +2118,6 @@ rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/commo
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
@@ -2144,10 +2160,8 @@ setupTracker.o: ../../../src/interpreter/setupTracker.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o setupTracker.o ../../../src/interpreter/setupTracker.cpp
 
 trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src/interpreter/common.h \
-		../../../src/interpreter/canon.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -2169,6 +2183,11 @@ trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		../../../src/interpreter/canon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -2193,7 +2212,6 @@ trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
