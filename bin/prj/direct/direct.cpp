@@ -19,172 +19,167 @@ MotionDirectClass::MotionDirectClass()
 //
 // If a new Board Identifier is encountered the first available MotionIO
 // object is assigned to it
-int MotionDirectClass::MapBoardToIndex(int BoardID)
+int MotionDirectClass::mapBoardToIndex(int BoardID)
 {
     int i;
-
-    if (BoardID <= 0 && BoardID >= -15)
-    {
-        // simply use the BoardID as the object
+    if(BoardID <= 0 && BoardID >= -15)
+    { /// simply use the BoardID as the object
         return -BoardID;
     }
-
-    // if requested BoardID is specified as a USB location
-    // first scan all objects to see if one is already connected
-    // to that USB location
-
-    for (i=0; i<MAX_BOARDS; i++)
+    /// if requested BoardID is specified as a USB location
+    /// first scan all objects to see if one is already connected
+    /// to that USB location
+    for(i = 0;i < MAX_BOARDS;i++)
     {
-        if (MotionIO.BoardIDAssigned &&
-            MotionIO.m_Connected &&
-            MotionIO.USB_Loc_ID == BoardID)
-                return i;   // found previously assigned matching Location use it
-    }
-
-    for (i=0; i<MAX_BOARDS; i++)
-    {
-        if (MotionIO.BoardIDAssigned)
-        {
-            if (MotionIO.USB_Loc_ID == BoardID)
-                return i;   // found previously assigned matching object, return it
+        if(MotionIO.BoardIDAssigned &&
+           MotionIO.m_Connected &&
+           MotionIO.USB_Loc_ID == BoardID
+        )
+        { /// found previously assigned matching Location use it
+            return i;
         }
     }
-
-    // BoardID never before encountered
-
-    MotionIO.Mutex->lock();  // better lock while assigning objects
-
-    // find an available object to handle it
-    for (i=0; i<MAX_BOARDS; i++)
+    for(i = 0;i < MAX_BOARDS;i++)
     {
-        if (!MotionIO.BoardIDAssigned) break;
+        if(MotionIO.BoardIDAssigned)
+        {
+            if(MotionIO.USB_Loc_ID == BoardID)
+            { /// found previously assigned matching object, return it
+                return i;
+            }
+        }
     }
-
-    if (i==MAX_BOARDS)
+    /// BoardID never before encountered
+    MotionIO.Mutex->lock(); /// better lock while assigning objects
+    /// find an available object to handle it
+    for(i = 0;i < MAX_BOARDS;i++)
+    {
+        if(!MotionIO.BoardIDAssigned)
+        {
+            break;
+        }
+    }
+    if(i == MAX_BOARDS)
     {
 ///		AfxMessageBox("Fatal Error: Too Many Board IDs used",MB_ICONSTOP|MB_OK);
         MotionIO.Mutex->unlock();
         exit(1);
     }
-
     MotionIO.BoardIDAssigned = true;
-    MotionIO.USB_Loc_ID = BoardID;  	// assign the ID
-
+    MotionIO.USB_Loc_ID = BoardID; /// assign the ID
     MotionIO.Mutex->unlock();
     return i;
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::ListLocations(int *nlocations, int *list)
+int MotionDirectClass::listLocations(int *nlocations, int *list)
 {
     FT_DEVICE_LIST_INFO_NODE *devInfo;
     FT_STATUS ftStatus;
     DWORD numDevs;
     int i;
 
-    list[0]=-1;
-    *nlocations=0;
-
-    // create the device information list
+    list[0] = -1;
+    *nlocations = 0;
+    /// create the device information list
     ftStatus = FT_CreateDeviceInfoList(&numDevs);
-
-    if (ftStatus == FT_OK)
+    if(ftStatus == FT_OK)
     {
-        if (numDevs > 0)
+        if(numDevs > 0)
         {
-            // allocate storage for list based on numDevs
-            devInfo = (FT_DEVICE_LIST_INFO_NODE*)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE)*numDevs); // get the device information list
-            // get the device information list
+            /// allocate storage for list based on numDevs
+            ///devInfo = (FT_DEVICE_LIST_INFO_NODE*)malloc(sizeof(FT_DEVICE_LIST_INFO_NODE)*numDevs); // get the device information list
+            devInfo = new FT_DEVICE_LIST_INFO_NODE[sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs];
+            /// get the device information list
             ftStatus = FT_GetDeviceInfoList(devInfo,&numDevs);
-
-            // go through the list and copy Dynomotion USB IDs to User's list
-            for (i=0; i<(int)numDevs; i++)
+            /// go through the list and copy Dynomotion USB IDs to User's list
+            for(i = 0;i < static_cast<int>(numDevs);i++)
             {
                 if(
                     strstr(devInfo[i].Description,"KFLOP")!= nullptr ||
                     strstr(devInfo[i].Description,"KMotion")!= nullptr ||
                     strstr(devInfo[i].Description,"Dynomotion")!= nullptr)
                 {
-                    list[(*nlocations)++] = (int)devInfo[i].LocId;
+                    list[(*nlocations)++] = static_cast<int>(devInfo[i].LocId);
                 }
             }
             delete (devInfo);
         }
     }
     else
-    {
-        return 1;  // Create List Failed
+    { /// Create List Failed
+        return 1;
     }
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::WriteLineReadLine(const char *s, char *response)
+int MotionDirectClass::writeLineReadLine(const char *s, char *response)
 {
-    return MotionIO.WriteLineReadLine(s, response);
+    return MotionIO.writeLineReadLine(s, response);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::WriteLine(const char *s)
+int MotionDirectClass::writeLine(const char *s)
 {
-    return MotionIO.WriteLine(s);
+    return MotionIO.writeLine(s);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::WriteLineWithEcho(const char *s)
+int MotionDirectClass::writeLineWithEcho(const char *s)
 {
-    return MotionIO.WriteLineWithEcho(s);
-}
-
-int MotionDirectClass::ReadLineTimeOut(char *buf, int TimeOutms)
-{
-    return MotionIO.ReadLineTimeOut(buf,TimeOutms);
+    return MotionIO.writeLineWithEcho(s);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::Failed()
+int MotionDirectClass::readLineTimeOut(char *buf, int TimeOutms)
 {
-    return MotionIO.Failed();
+    return MotionIO.readLineTimeOut(buf,TimeOutms);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::Disconnect()
+int MotionDirectClass::failed()
 {
-    return MotionIO.Disconnect();
+    return MotionIO.failed();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::FirmwareVersion()
+int MotionDirectClass::disconnect()
 {
-    return MotionIO.FirmwareVersion();
+    return MotionIO.disconnect();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::CheckForReady()
+int MotionDirectClass::firmwareVersion()
 {
-    return MotionIO.CheckForReady();
+    return MotionIO.firmwareVersion();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::MotionLock(char *CallerID)
+int MotionDirectClass::checkForReady()
 {
-    return MotionIO.SEMotionLock(CallerID);
+    return MotionIO.checkForReady();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::USBLocation()
+int MotionDirectClass::motionLock(char *CallerID)
 {
-    return MotionIO.USBLocation();
+    return MotionIO.motionLock(CallerID);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::MotionLockRecovery()
+int MotionDirectClass::usbLocation()
 {
-    return MotionIO.SEMotionLockRecovery();
+    return MotionIO.usbLocation();
 }
 ///-----------------------------------------------------------------------------
-void MotionDirectClass::ReleaseToken()
+int MotionDirectClass::motionLockRecovery()
 {
-    MotionIO.ReleaseToken();
+    return MotionIO.motionLockRecovery();
 }
 ///-----------------------------------------------------------------------------
-int  MotionDirectClass::ServiceConsole()
+void MotionDirectClass::releaseToken()
 {
-    return MotionIO.ServiceConsole();
+    MotionIO.releaseToken();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::SetConsoleCallback(SERVER_CONSOLE_HANDLER *ch)
+int  MotionDirectClass::serviceConsole()
 {
-    MotionIO.SetConsoleCallback(ch);
+    return MotionIO.serviceConsole();
+}
+///-----------------------------------------------------------------------------
+int MotionDirectClass::setConsoleCallback(SERVER_CONSOLE_HANDLER *ch)
+{
+    MotionIO.setConsoleCallback(ch);
     return 0;
 }
 ///-----------------------------------------------------------------------------
@@ -193,12 +188,12 @@ int MotionDirectClass::nInstances()
     return(1);
 }
 ///-----------------------------------------------------------------------------
-const char * MotionDirectClass::GetErrMsg()
+const char * MotionDirectClass::getErrMsg()
 {
     return MotionIO.ErrMsg.toStdString().c_str();
 }
 ///-----------------------------------------------------------------------------
-void MotionDirectClass::ClearErrMsg()
+void MotionDirectClass::clearErrMsg()
 {
     MotionIO.ErrMsg="";
 }

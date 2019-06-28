@@ -52,8 +52,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../prj/direct/direct.cpp 
-OBJECTS       = direct.o
+SOURCES       = ../../../src/motion/hirestimer.cpp \
+		../../../src/motion/motion_io.cpp \
+		../../prj/direct/direct.cpp 
+OBJECTS       = hirestimer.o \
+		motion_io.o \
+		direct.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -251,8 +255,12 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/direct/direct.pro ../../prj/direct/direct.h \
-		../../prj/direct/direct_global.h ../../prj/direct/direct.cpp
+		../../prj/direct/direct.pro ../../../src/motion/hirestimer.h \
+		../../../src/motion/motion_io.h \
+		../../prj/direct/direct.h \
+		../../prj/direct/direct_global.h ../../../src/motion/hirestimer.cpp \
+		../../../src/motion/motion_io.cpp \
+		../../prj/direct/direct.cpp
 QMAKE_TARGET  = direct
 DESTDIR       = 
 TARGET        = libdirect.so.1.0.0
@@ -699,8 +707,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/direct/direct.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/motion/hirestimer.h ../../../src/motion/motion_io.h ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/motion/hirestimer.cpp ../../../src/motion/motion_io.cpp ../../prj/direct/direct.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -748,6 +756,86 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+hirestimer.o: ../../../src/motion/hirestimer.cpp ../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hirestimer.o ../../../src/motion/hirestimer.cpp
+
+motion_io.o: ../../../src/motion/motion_io.cpp ../../../src/motion/common.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/hirestimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o motion_io.o ../../../src/motion/motion_io.cpp
 
 direct.o: ../../prj/direct/direct.cpp ../../prj/direct/direct.h \
 		../../prj/direct/direct_global.h \

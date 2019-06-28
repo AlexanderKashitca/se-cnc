@@ -39,25 +39,25 @@ class DIRECTSHARED_EXPORT MotionDirectClass
     public:
         MotionDirectClass(void);
 
-        int     MapBoardToIndex(int BoardID);
-        int     WriteLineReadLine(const char *s,char *response);
-        int     WriteLine(const char *s);
-        int     WriteLineWithEcho(const char *s);
-        int     ReadLineTimeOut(char *buf,int TimeOutms);
-        int     ListLocations(int *nlocations,int *list);
-        void    WaitToken(char *CallerID = nullptr);
-        int     MotionLock(char *CallerID = nullptr);
-        int     USBLocation();
-        int     MotionLockRecovery();
-        void    ReleaseToken();
-        int     Failed();
-        int     Disconnect();
-        int     FirmwareVersion();
-        int     CheckForReady();
-        int     ServiceConsole();
-        const char* GetErrMsg();
-        void    ClearErrMsg();
-        int     SetConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
+        int     mapBoardToIndex(int BoardID);
+        int     writeLineReadLine(const char *s,char *response);
+        int     writeLine(const char *s);
+        int     writeLineWithEcho(const char *s);
+        int     readLineTimeOut(char *buf,int TimeOutms);
+        int     listLocations(int *nlocations,int *list);
+        void    waitToken(char *CallerID = nullptr);
+        int     motionLock(char *CallerID = nullptr);
+        int     usbLocation();
+        int     motionLockRecovery();
+        void    releaseToken();
+        int     failed();
+        int     disconnect();
+        int     firmwareVersion();
+        int     checkForReady();
+        int     serviceConsole();
+        const char* getErrMsg();
+        void    clearErrMsg();
+        int     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
         int     nInstances();
 };
 ///-----------------------------------------------------------------------------

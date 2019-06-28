@@ -46,8 +46,10 @@ double HiResTimerClass::DiffSecs(int t1,int t0)
 ///-----------------------------------------------------------------------------
 void HiResTimerClass::Split()
 {
-    if(nSplit >= MAX_TIMES) return;
-
+    if(nSplit >= MAX_TIMES)
+    {
+        return;
+    }
     Times[nSplit] = Timer.nsecsElapsed();
     Desc[nSplit] = "";
 	nSplit++;
@@ -55,8 +57,10 @@ void HiResTimerClass::Split()
 ///-----------------------------------------------------------------------------
 void HiResTimerClass::Split(QString s)
 {
-    if (nSplit >= MAX_TIMES) return;
-
+    if(nSplit >= MAX_TIMES)
+    {
+        return;
+    }
     Times[nSplit] = Timer.nsecsElapsed();
     Desc[nSplit] = s;
 	nSplit++;
@@ -84,9 +88,7 @@ void HiResTimerClass::DisplayDiff(int t1, int t0)
         .arg(Diff_us(t1,t0));
     if(MessageDisplayed) return;
     MessageDisplayed = true;
-
     ///MessageBox(NULL,s,"Timer",MB_OK|MB_SYSTEMMODAL);
-
     MessageDisplayed = false;
 }
 ///-----------------------------------------------------------------------------
@@ -104,7 +106,7 @@ void HiResTimerClass::DisplaySplit()
             .arg(Desc[i+1]);
         s2 = s2 + s + "\r";
 	}
-	if (MessageDisplayed) return;
+    if(MessageDisplayed) return;
 	MessageDisplayed=true;
 ///	MessageBox(NULL,s2,"Timer",MB_OK|MB_SYSTEMMODAL);
 	MessageDisplayed=false;
