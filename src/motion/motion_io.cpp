@@ -251,7 +251,7 @@ int MotionIOClass::readBytesAvailable(char  *RxBuffer,
 	DWORD TxBytes;
 
     Mutex->lock();
-	ftStatus=FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
+    ftStatus = FT_GetStatus(ftHandle,&RxBytes,&TxBytes,&EventDWord);
 
     if(ftStatus != FT_OK)
 	{
@@ -261,7 +261,7 @@ int MotionIOClass::readBytesAvailable(char  *RxBuffer,
 	}
     if(static_cast<int>(RxBytes) > maxbytes)
     {
-        RxBytes = static_cast<DWORD>(maxbytes - 1); // leave room for null
+        RxBytes = static_cast<DWORD>(maxbytes - 1); /// leave room for null
     }
 
     RxBuffer[0] = 0; /// set buf empty initially
