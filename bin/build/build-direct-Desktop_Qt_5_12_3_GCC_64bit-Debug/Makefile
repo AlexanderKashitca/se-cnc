@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DDIRECT_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_TESTLIB_LIB -DQT_DBUS_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug"'
+DEFINES       = -DDIRECT_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/direct -I. -I../../../src/ftdi -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtTest -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../prj/direct -I. -I../../../src/ftdi -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = direct1.0.0
 DISTDIR = /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/direct1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/evil/Qt/5.12.3/gcc_64/lib -shared -Wl,-soname,libdirect.so.1
-LIBS          = $(SUBLIBS) -L/home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/ -lftd2xx -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Test -lQt5DBus -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Core -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -244,10 +244,6 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -255,7 +251,9 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/direct/direct.pro ../../../src/motion/hirestimer.h \
+		../../prj/direct/direct.pro ../../../src/ftdi/WinTypes.h \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/motion/hirestimer.h \
 		../../../src/motion/motion_io.h \
 		../../prj/direct/direct.h \
 		../../prj/direct/direct_global.h ../../../src/motion/hirestimer.cpp \
@@ -274,7 +272,7 @@ TARGET2       = libdirect.so.1.0
 first: all
 ####### Build rules
 
-libdirect.so.1.0.0: /home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/libftd2xx.a $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
+libdirect.so.1.0.0:  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
 	-$(DEL_FILE) $(TARGET) $(TARGET0) $(TARGET1) $(TARGET2)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) $(OBJCOMP)
 	-ln -s $(TARGET) $(TARGET0)
@@ -285,7 +283,7 @@ libdirect.so.1.0.0: /home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src
 
 staticlib: libdirect.a
 
-libdirect.a: /home/evil/Programming/Qt/se-cnc/bin/prj/direct/../../../src/ftdi/libftd2xx.a $(OBJECTS) $(OBJCOMP) 
+libdirect.a:  $(OBJECTS) $(OBJCOMP) 
 	-$(DEL_FILE) $(TARGETA) 
 	$(AR) $(TARGETA) $(OBJECTS)
 
@@ -475,10 +473,6 @@ Makefile: ../../prj/direct/direct.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -487,8 +481,6 @@ Makefile: ../../prj/direct/direct.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/direct/direct.pro \
-		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Test.prl \
-		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5DBus.prl \
 		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile ../../prj/direct/direct.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf:
@@ -677,10 +669,6 @@ Makefile: ../../prj/direct/direct.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf:
-/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri:
-/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf:
-/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf:
-/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf:
@@ -689,8 +677,6 @@ Makefile: ../../prj/direct/direct.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf:
 ../../prj/direct/direct.pro:
-/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Test.prl:
-/home/evil/Qt/5.12.3/gcc_64/lib/libQt5DBus.prl:
 /home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../../prj/direct/direct.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
@@ -707,7 +693,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/motion/hirestimer.h ../../../src/motion/motion_io.h ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/ftdi/WinTypes.h ../../../src/ftdi/ftd2xx.h ../../../src/motion/hirestimer.h ../../../src/motion/motion_io.h ../../prj/direct/direct.h ../../prj/direct/direct_global.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../src/motion/hirestimer.cpp ../../../src/motion/motion_io.cpp ../../prj/direct/direct.cpp $(DISTDIR)/
 
 
@@ -882,24 +868,9 @@ direct.o: ../../prj/direct/direct.cpp ../../prj/direct/direct.h \
 
 ####### Install
 
-install_target: first FORCE
-	@test -d $(INSTALL_ROOT)/usr/lib || mkdir -p $(INSTALL_ROOT)/usr/lib
-	-$(QINSTALL_PROGRAM) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET0)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET1)
-	-$(SYMLINK) $(TARGET) $(INSTALL_ROOT)/usr/lib/$(TARGET2)
+install:  FORCE
 
-uninstall_target: FORCE
-	-$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET0) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET1) 
-	 -$(DEL_FILE) $(INSTALL_ROOT)/usr/lib/$(TARGET2)
-	-$(DEL_DIR) $(INSTALL_ROOT)/usr/lib/ 
-
-
-install: install_target  FORCE
-
-uninstall: uninstall_target  FORCE
+uninstall:  FORCE
 
 FORCE:
 

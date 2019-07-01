@@ -777,13 +777,13 @@ server.o: ../../../src/server/server.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtC
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o server.o ../../../src/server/server.cpp
 
 main.o: ../../prj/server/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \

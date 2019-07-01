@@ -788,9 +788,9 @@ int MotionIOClass::usbLocation()
     }
 }
 ///-----------------------------------------------------------------------------
-/// returns 0 KMOTION_LOCKED (and token is locked) if KMotion is available for use
-/// returns 1 KMOTION_IN_USE if already in use
-/// returns 2 KMOTION_NOT_CONNECTED if not able to connect
+/// returns 0 SE_MOTION_LOCKED (and token is locked) if KMotion is available for use
+/// returns 1 SE_MOTION_IN_USE if already in use
+/// returns 2 SE_MOTION_NOT_CONNECTED if not able to connect
 /// stronger than a Mutex lock because it protects against the same thread
 int MotionIOClass::motionLock(char *CallerID)
 {

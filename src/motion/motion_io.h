@@ -72,7 +72,6 @@ class MotionIOClass
     private:
         int errorMessageBox(const char *s);
         int m_FirmwareVersion;
-
         /// my implamentation
         DWORD getCurrentTimeMs(void);
         int   sleep(DWORD miliseconds);

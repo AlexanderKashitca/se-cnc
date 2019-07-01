@@ -1,16 +1,10 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2019-06-25T09:15:16
-#
-#-------------------------------------------------
+#-------------------------------------------------------------------------------
+# Project created by QtCreator 2019-06-25T09:15:16 -----------------------------
+#-------------------------------------------------------------------------------
 
-QT       += testlib dbus
-
-QT       -= gui
-
-TARGET = direct
+QT      -= gui
+TARGET   = direct
 TEMPLATE = lib
-
 DEFINES += DIRECT_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
@@ -24,25 +18,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/ftdi
+DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/src/ftdi
+LIBS        += -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx
+
+
 SOURCES += \
         ../../../src/motion/hirestimer.cpp \
         ../../../src/motion/motion_io.cpp \
         direct.cpp
 
 HEADERS += \
+        ../../../src/ftdi/WinTypes.h \
+        ../../../src/ftdi/ftd2xx.h \
         ../../../src/motion/hirestimer.h \
         ../../../src/motion/motion_io.h \
         direct.h \
-        direct_global.h 
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
-
-unix:!macx: LIBS += -L$$PWD/../../../src/ftdi/ -lftd2xx
-
-INCLUDEPATH += $$PWD/../../../src/ftdi
-DEPENDPATH += $$PWD/../../../src/ftdi
-
-unix:!macx: PRE_TARGETDEPS += $$PWD/../../../src/ftdi/libftd2xx.a
+        direct_global.h

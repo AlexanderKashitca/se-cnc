@@ -5,7 +5,7 @@
 #include "../motion/motion.h"
 #include "../ftdi/ftd2xx.h"
 #include "../motion/motion_io.h"
-#include "../direct/direct_global.h"
+///#include "../direct/direct_global.h"
 ///-----------------------------------------------------------------------------
 
 ///extern CMainFrame *TheFrame;

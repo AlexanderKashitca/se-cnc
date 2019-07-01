@@ -1,3 +1,4 @@
+#-------------------------------------------------------------------------------
 QT -= gui
 
 CONFIG += c++11 console
@@ -14,15 +15,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+
+
+
 SOURCES += \
+        ../../../src/motion/common.cpp \
+        ../../../src/motion/hirestimer.cpp \
+        ../../../src/motion/motion_io.cpp \
+        ../direct/direct.cpp \
         main.cpp
+HEADERS += \
+    ../../../src/ftdi/WinTypes.h \
+    ../../../src/ftdi/ftd2xx.h \
+    ../../../src/motion/common.h \
+    ../../../src/motion/hirestimer.h \
+    ../../../src/motion/motion_io.h \
+    ../direct/direct.h
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS += -L$$PWD/../../build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug/ -ldirect
+#INCLUDEPATH += /usr/local/lib
+#DEPENDPATH  += /usr/local/lib
+#LIBS        += -L/usr/local/lib/ -ldirect
 
-INCLUDEPATH += $$PWD/../../build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug
-DEPENDPATH += $$PWD/../../build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Debug
+#INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
+#DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
+#LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release/ -ldirect
+
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/ftdi
+DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/src/ftdi
+LIBS        += -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx
+
+
+
