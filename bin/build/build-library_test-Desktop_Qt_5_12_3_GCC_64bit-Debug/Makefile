@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/test -I. -I../../../src/ftdi -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../prj/test -I. -I/usr/local/lib -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = library_test1.0.0
 DISTDIR = /home/evil/Programming/Qt/se-cnc/bin/build/build-library_test-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/library_test1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/evil/Qt/5.12.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/usr/local/lib/ -lftd2xx -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Core -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed

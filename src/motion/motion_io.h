@@ -22,8 +22,22 @@ extern HiResTimerClass Timer;
 ///-----------------------------------------------------------------------------
 typedef int SERVER_CONSOLE_HANDLER (int board, const char *buf);
 ///-----------------------------------------------------------------------------
+typedef struct
+{
+    DWORD dwIndex;
+    DWORD lpdwFlags;
+    DWORD lpdwType;
+    DWORD lpdwID;
+    DWORD lpdwLocId;
+    char  SerialNumber[16];
+    char  Description[64];
+}FtdiDeviceInfoDetail;
+///-----------------------------------------------------------------------------
 class MotionIOClass
 {
+    private:
+        bool    requestedDeviceAvail(QString *reason);
+        int     connect();
     public:
         bool    FailMessageAlreadyShown;
         bool    SendAbortOnConnect;
@@ -43,7 +57,7 @@ class MotionIOClass
         QMutex *Mutex;
         int     numberBytesAvailToRead(int *navail,bool ShowMessage);
         int     writeLineReadLine(const char *send,char *response);
-        bool    requestedDeviceAvail(QString *reason);
+
         int     readLineTimeOut(char *buf,int TimeOutms);
         int     readLineTimeOutRaw(char *buf,int TimeOutms);
         int     setLatency(unsigned char LatencyTimer);
@@ -53,16 +67,20 @@ class MotionIOClass
         int     readSendNextLine(FILE *fr);
         int     serviceConsole();
         int     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
-        int     connect();
+
         MotionIOClass();
         virtual ~MotionIOClass();
 
-        bool    BoardIDAssigned;
-        int     USB_Loc_ID;
+
         bool    m_Connected;
         QString ErrMsg;
-
         QString m_LastCallerID;
+
+        int     USB_Loc_ID;
+        bool    BoardIDAssigned;
+private:
+
+
 
     protected:
         int     Token;

@@ -64,92 +64,98 @@ int MotionIOClass::sleep(DWORD miliseconds)
 /// return true if successful
 bool MotionIOClass::requestedDeviceAvail(QString *Reason)
 {
-	FT_DEVICE_LIST_INFO_NODE *devInfo;
+    FT_DEVICE_LIST_INFO_NODE* devInfo;
 	FT_STATUS ftStatus;
-	DWORD numDevs;  
-	int i;
+    DWORD     numDevs;
 
-    Mutex->lock();
+    /// Mutex->lock();
 
     /// create the device information list
 	ftStatus = FT_CreateDeviceInfoList(&numDevs);
-	if (ftStatus == FT_OK) 
+    if(ftStatus == FT_OK)
 	{ 
-		if (numDevs > 0) 
+        if(numDevs > 0)
 		{ 
             /// allocate storage for list based on numDevs
-            ///devInfo = (FT_DEVICE_LIST_INFO_NODE*) malloc(sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs);
-            devInfo = new FT_DEVICE_LIST_INFO_NODE[sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs];
+            devInfo = new FT_DEVICE_LIST_INFO_NODE[(sizeof(FT_DEVICE_LIST_INFO_NODE) * numDevs)];
             /// get the device information list
-			ftStatus = FT_GetDeviceInfoList(devInfo,&numDevs);
-            for(i=0;i < static_cast<int>(numDevs);i++)
-			{
-                if(
-                   strstr(devInfo[i].Description,"KFLOP") == nullptr &&
-                   strstr(devInfo[i].Description,"KMotion") == nullptr &&
-                   strstr(devInfo[i].Description,"Dynomotion") == nullptr
-                   )
-				{
-                    /// remove it from the list
-                    for(int k = i + 1;k < static_cast<int>(numDevs);k++)
-						devInfo[k-1] = devInfo[k];  // shift up
-                    numDevs--;
-                    i--; /// redo this slot since it was deleted and things shifted up
-				}
-			}
-            /// if USB Location is undefined select the first from
-            /// the list that is not already taken
-            if (!BoardIDAssigned)
+            ftStatus = FT_GetDeviceInfoList(devInfo,&numDevs);
+            if(ftStatus == FT_OK)
             {
-                for(i = 0;i < static_cast<int>(numDevs) && !BoardIDAssigned;i++)
+                if(!BoardIDAssigned)
                 {
-                    int k;
-                    /// make sure nobody is already using this one
-                    for(k = 0;k < MAX_BOARDS;k++)
-                    {
-                        if(devInfo[i].LocId == static_cast<DWORD>(USB_Loc_ID))
-                            break;
-                    }
-                    if(k == MAX_BOARDS)
-                    {
-                        BoardIDAssigned = true;
-                        USB_Loc_ID = static_cast<int>(devInfo[i].LocId);  // assign it
-                    }
+                    BoardIDAssigned = true;
+                    USB_Loc_ID = static_cast<int>(devInfo[0].LocId);  // assign it
                 }
-                if (!BoardIDAssigned)
+                if(!BoardIDAssigned)
                 {
                     Mutex->unlock();
                     if(Reason) *Reason = "No SEMotion devices available";
                     return false;
                 }
             }
+            //for(i=0;i < static_cast<int>(numDevs);i++)
+            //{
+            //    ///if(
+            //    ///   strstr(devInfo[i].Description,"KFLOP") == nullptr &&
+            //    ///   strstr(devInfo[i].Description,"KMotion") == nullptr &&
+            //    ///   strstr(devInfo[i].Description,"Dynomotion") == nullptr
+            //    ///   )
+            //    ///{
+            //    ///    /// remove it from the list
+            //    ///    for(int k = i + 1;k < static_cast<int>(numDevs);k++)
+            //    ///        devInfo[k-1] = devInfo[k];  // shift up
+            //    ///    numDevs--;
+            //    ///    i--; /// redo this slot since it was deleted and things shifted up
+            //    ///}
+            //}
+            /// if USB Location is undefined select the first from
+            /// the list that is not already taken
+            //if(!BoardIDAssigned)
+            //{
+            //    for(i = 0;i < static_cast<int>(numDevs) && !BoardIDAssigned;i++)
+            //    {
+            //        int k;
+            //        /// make sure nobody is already using this one
+            //        for(k = 0;k < MAX_BOARDS;k++)
+            //        {
+            //            if(devInfo[i].LocId == static_cast<DWORD>(USB_Loc_ID))
+            //                break;
+            //        }
+            //        if(k == MAX_BOARDS)
+            //        {
+            //            BoardIDAssigned = true;
+            //            USB_Loc_ID = static_cast<int>(devInfo[i].LocId);  // assign it
+            //        }
+            //    }
+            //}
             /// user wants a specific usb location
             /// so see if it is available
-            for(i = 0;i < static_cast<int>(numDevs);i++)
-			{
-                if(devInfo[i].LocId == static_cast<DWORD>(USB_Loc_ID))
-					break;
-			}
-            if(i == static_cast<int>(numDevs))
-            { /// not find the devices
-                Mutex->unlock();
-                if(Reason)
-                {
-                    *Reason = QString("SEMotion not found on USB Location %08X\r\r Unable to open device")
-                                .arg(USB_Loc_ID);
-                }
-				return false;
-			}
-			delete (devInfo);
+            //for(i = 0;i < static_cast<int>(numDevs);i++)
+            //{
+            //    if(devInfo[i].LocId == static_cast<DWORD>(USB_Loc_ID))
+            //        break;
+            //}
+            //if(i == static_cast<int>(numDevs))
+            //{ /// not find the devices
+            //    Mutex->unlock();
+            //    if(Reason)
+            //    {
+            //        *Reason = QString("SEMotion not found on USB Location %08X\r\r Unable to open device")
+            //                    .arg(USB_Loc_ID);
+            //    }
+            //    return false;
+            //}
+            delete (devInfo);
 		}
 		else
 		{
-            Mutex->unlock();
+            ///Mutex->unlock();
             if(Reason) *Reason ="No SEMotion devices available";
 			return false;
 		}
 	}
-    Mutex->unlock();
+    ///Mutex->unlock();
 	return true;
 }
 ///-----------------------------------------------------------------------------
@@ -158,6 +164,62 @@ int MotionIOClass::connect()
     QString reason;
 	FT_STATUS ftStatus;
 
+
+#define BUF_SIZE 0x10
+#define MAX_DEVICES		5
+
+    unsigned char 	cBufWrite[BUF_SIZE];
+    unsigned char * pcBufRead = NULL;
+    char * 	pcBufLD[MAX_DEVICES + 1];
+    char 	cBufLD[MAX_DEVICES][64];
+    DWORD	dwRxSize = 0;
+    DWORD 	dwBytesWritten, dwBytesRead;
+    FT_HANDLE	ftHandle[MAX_DEVICES];
+    int	iNumDevs = 0;
+    int	i, j;
+    int	iDevicesOpen = 0;
+    int queueChecks = 0;
+    long int timeout = 5; // seconds
+    struct timeval  startTime;
+
+    for(i = 0; i < MAX_DEVICES; i++) {
+        pcBufLD[i] = cBufLD[i];
+    }
+    pcBufLD[MAX_DEVICES] = NULL;
+
+    ftStatus = FT_ListDevices(pcBufLD, &iNumDevs, FT_LIST_ALL | FT_OPEN_BY_SERIAL_NUMBER);
+
+    if(ftStatus != FT_OK) {
+        printf("Error: FT_ListDevices(%d)\n", (int)ftStatus);
+        return 1;
+    }
+
+    for(i = 0; ( (i <MAX_DEVICES) && (i < iNumDevs) ); i++) {
+        printf("Device %d Serial Number - %s\n", i, cBufLD[i]);
+    }
+
+    for(j = 0; j < BUF_SIZE; j++) {
+        cBufWrite[j] = j;
+    }
+
+    /* Setup */
+            if((ftStatus = FT_OpenEx(cBufLD[i], FT_OPEN_BY_SERIAL_NUMBER, &ftHandle[i])) != FT_OK){
+                /*
+                    This can fail if the ftdi_sio driver is loaded
+                    use lsmod to check this and rmmod ftdi_sio to remove
+                    also rmmod usbserial
+                */
+                printf("Error FT_OpenEx(%d), device %d\n", (int)ftStatus, i);
+                printf("Use lsmod to check if ftdi_sio (and usbserial) are present.\n");
+                printf("If so, unload them using rmmod, as they conflict with ftd2xx.\n");
+                return 1;
+            }
+
+            printf("Opened device %s\n", cBufLD[i]);
+
+
+    char SerialNumber[] = "00000001";
+
     if(NonRespondingCount == CONNECT_TRIES)
         return 1;
 
@@ -165,19 +227,17 @@ int MotionIOClass::connect()
     Mutex->lock();
 
     if(!requestedDeviceAvail(&reason))
-	{
+    {
         errorMessageBox(reason.toStdString().c_str());
-        Mutex->unlock();
-		return 1;
-	}
+        return 1;
+    }
     /// FT_ListDevices OK, number of devices connected is in numDevs
     /// usually during boot the board comes and goes, since it appeared
     /// to be there, try for a while to open it
     DWORD t0 = getCurrentTimeMs();
     while(1)
 	{
-        ///ftStatus = FT_OpenEx((void *)USB_Loc_ID,FT_OPEN_BY_LOCATION,&ftHandle);
-        ftStatus = FT_OpenEx(static_cast<void*>(&USB_Loc_ID),FT_OPEN_BY_LOCATION,&ftHandle);
+        ///ftStatus = FT_OpenEx(SerialNumber,FT_OPEN_BY_SERIAL_NUMBER,&ftHandle);
         if(ftStatus == FT_OK)
         { /// FT_Open OK, use ftHandle to access device
             if(setLatency(2))
@@ -796,19 +856,19 @@ int MotionIOClass::motionLock(char *CallerID)
 {
 	int result;
     ///int board = this - SEMotionIO;
-    if(!Mutex->tryLock(3000))
-    {
-        return SE_MOTION_NOT_CONNECTED;
-    }
+//    if(!Mutex->tryLock(3000))
+///    {
+//        return SE_MOTION_NOT_CONNECTED;
+//    }
     if(!m_Connected)
 	{
         /// try to connect
         if(!requestedDeviceAvail(nullptr))
-		{
-			NonRespondingCount=0;
+        {
+            NonRespondingCount=0;
             Mutex->unlock();  /// no such device available
             return SE_MOTION_NOT_CONNECTED;
-		}
+        }
         if(connect())
 		{
             Mutex->unlock();  /// couldn't connect

@@ -94,13 +94,15 @@ int MotionDirectClass::listLocations(int *nlocations, int *list)
             /// go through the list and copy Dynomotion USB IDs to User's list
             for(i = 0;i < static_cast<int>(numDevs);i++)
             {
-                if(
-                    strstr(devInfo[i].Description,"KFLOP")!= nullptr ||
-                    strstr(devInfo[i].Description,"KMotion")!= nullptr ||
-                    strstr(devInfo[i].Description,"Dynomotion")!= nullptr)
-                {
+                //if
+                //(
+                //    strstr(devInfo[i].Description,"KFLOP")!= nullptr ||
+                //    strstr(devInfo[i].Description,"KMotion")!= nullptr ||
+                //    strstr(devInfo[i].Description,"Dynomotion")!= nullptr
+                //)
+                //{
                     list[(*nlocations)++] = static_cast<int>(devInfo[i].LocId);
-                }
+                //}
             }
             delete (devInfo);
         }

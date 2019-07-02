@@ -33,17 +33,17 @@ HEADERS += \
     ../direct/direct.h
 
 
-#INCLUDEPATH += /usr/local/lib
-#DEPENDPATH  += /usr/local/lib
-#LIBS        += -L/usr/local/lib/ -ldirect
+INCLUDEPATH += /usr/local/lib
+DEPENDPATH  += /usr/local/lib
+LIBS        += -L/usr/local/lib/ -lftd2xx
 
 #INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
 #DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
 #LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release/ -ldirect
 
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/ftdi
-DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/src/ftdi
-LIBS        += -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx
+#INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/ftdi
+#DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/src/ftdi
+#LIBS        += -L/home/evil/Programming/Qt/se-cnc/src/ftdi/ -lftd2xx
 
 
 
