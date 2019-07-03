@@ -801,6 +801,39 @@ common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
 		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/motion/common.cpp
 
@@ -881,6 +914,39 @@ motion_io.o: ../../../src/motion/motion_io.cpp ../../../src/motion/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
 		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o motion_io.o ../../../src/motion/motion_io.cpp
 
@@ -942,8 +1008,24 @@ motion.o: ../../prj/motion/motion.cpp ../../prj/motion/motion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
 		../../prj/motion/motion_global.h \
 		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
 		../../prj/direct/direct_global.h \
 		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \

@@ -2,6 +2,7 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 ///-----------------------------------------------------------------------------
+#include <QLibrary>
 #include "direct_global.h"
 #include "../../../src/motion/motion_io.h"
 ///-----------------------------------------------------------------------------
@@ -35,9 +36,11 @@ class DIRECTSHARED_EXPORT MotionDirectClass
 {
     private:
         MotionIOClass MotionIO;
+        QLibrary library;
+        bool    _ftdiLibraryLoad;
     public:
-        MotionDirectClass(void);
-
+                MotionDirectClass();
+        bool    getFtdiLibraryLoad();
         int     mapBoardToIndex(int BoardID);
         int     writeLineReadLine(const char *s,char *response);
         int     writeLine(const char *s);
@@ -46,7 +49,7 @@ class DIRECTSHARED_EXPORT MotionDirectClass
         int     listLocations(int *nlocations,int *list);
         void    waitToken(char *CallerID = nullptr);
         int     motionLock(char *CallerID = nullptr);
-        int     usbLocation();
+        QString usbLocation();
         int     motionLockRecovery();
         void    releaseToken();
         int     failed();

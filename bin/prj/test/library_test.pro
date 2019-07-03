@@ -1,7 +1,8 @@
 #-------------------------------------------------------------------------------
 QT -= gui
 
-CONFIG += c++11 console
+CONFIG += c++11
+CONFIG += console
 CONFIG -= app_bundle
 
 # The following define makes your compiler emit warnings if you use
@@ -19,27 +20,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        ../../../src/motion/common.cpp \
-        ../../../src/motion/hirestimer.cpp \
-        ../../../src/motion/motion_io.cpp \
-        ../direct/direct.cpp \
+#        ../../../src/motion/common.cpp \
+#        ../../../src/motion/hirestimer.cpp \
+#        ../../../src/motion/motion_io.cpp \
+#        ../direct/direct.cpp \
         main.cpp
 HEADERS += \
-    ../../../src/ftdi/WinTypes.h \
-    ../../../src/ftdi/ftd2xx.h \
-    ../../../src/motion/common.h \
-    ../../../src/motion/hirestimer.h \
-    ../../../src/motion/motion_io.h \
+#    ../../../src/ftdi/WinTypes.h \
+#    ../../../src/ftdi/ftd2xx.h \
+#    ../../../src/motion/common.h \
+#    ../../../src/motion/hirestimer.h \
+#    ../../../src/motion/motion_io.h \
     ../direct/direct.h
 
 
-INCLUDEPATH += /usr/local/lib
-DEPENDPATH  += /usr/local/lib
-LIBS        += -L/usr/local/lib/ -lftd2xx
+#INCLUDEPATH += /usr/local/lib
+#DEPENDPATH  += /usr/local/lib
+#LIBS        += -L/usr/local/lib/ -lftd2xx
 
-#INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
-#DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
-#LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release/ -ldirect
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
+DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
+LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release/ -ldirect
 
 #INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/ftdi
 #DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/src/ftdi

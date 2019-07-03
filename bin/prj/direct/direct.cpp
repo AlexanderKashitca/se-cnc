@@ -3,6 +3,20 @@
 ///-----------------------------------------------------------------------------
 MotionDirectClass::MotionDirectClass()
 {
+    library.setFileName("libftd2xx.so");
+    if(!library.load())
+    {
+        _ftdiLibraryLoad = false;
+    }
+    else
+    {
+        _ftdiLibraryLoad = true;
+    }
+}
+///-----------------------------------------------------------------------------
+bool MotionDirectClass::getFtdiLibraryLoad()
+{
+    return(_ftdiLibraryLoad);
 }
 ///-----------------------------------------------------------------------------
 // Maps a specified Board Identifiers to a MotionIO Index (or object)
@@ -21,6 +35,7 @@ MotionDirectClass::MotionDirectClass()
 // object is assigned to it
 int MotionDirectClass::mapBoardToIndex(int BoardID)
 {
+/*
     int i;
     if(BoardID <= 0 && BoardID >= -15)
     { /// simply use the BoardID as the object
@@ -50,7 +65,7 @@ int MotionDirectClass::mapBoardToIndex(int BoardID)
         }
     }
     /// BoardID never before encountered
-    MotionIO.Mutex->lock(); /// better lock while assigning objects
+//    MotionIO.Mutex->lock(); /// better lock while assigning objects
     /// find an available object to handle it
     for(i = 0;i < MAX_BOARDS;i++)
     {
@@ -62,13 +77,14 @@ int MotionDirectClass::mapBoardToIndex(int BoardID)
     if(i == MAX_BOARDS)
     {
 ///		AfxMessageBox("Fatal Error: Too Many Board IDs used",MB_ICONSTOP|MB_OK);
-        MotionIO.Mutex->unlock();
+//        MotionIO.Mutex->unlock();
         exit(1);
     }
     MotionIO.BoardIDAssigned = true;
     MotionIO.USB_Loc_ID = BoardID; /// assign the ID
-    MotionIO.Mutex->unlock();
+//    MotionIO.Mutex->unlock();
     return i;
+*/
 }
 ///-----------------------------------------------------------------------------
 int MotionDirectClass::listLocations(int *nlocations, int *list)
@@ -159,7 +175,7 @@ int MotionDirectClass::motionLock(char *CallerID)
     return MotionIO.motionLock(CallerID);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::usbLocation()
+QString MotionDirectClass::usbLocation()
 {
     return MotionIO.usbLocation();
 }
@@ -192,11 +208,11 @@ int MotionDirectClass::nInstances()
 ///-----------------------------------------------------------------------------
 const char * MotionDirectClass::getErrMsg()
 {
-    return MotionIO.ErrMsg.toStdString().c_str();
+    return MotionIO._errMsg.toStdString().c_str();
 }
 ///-----------------------------------------------------------------------------
 void MotionDirectClass::clearErrMsg()
 {
-    MotionIO.ErrMsg="";
+    MotionIO._errMsg="";
 }
 ///-----------------------------------------------------------------------------

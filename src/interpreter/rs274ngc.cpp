@@ -2330,24 +2330,24 @@ static int convert_comment2(	/* ARGUMENTS */
 
 
 // extract multiple concatenated comments and process each
-
+/// TODO
 static int convert_comment(char *comment)
 {
     int i,n,r;
-    QString s = comment;
-
-    i=s.Find('(');
-    n=s.Find(')');
-
-    while (n>i)
-    {
-        r=convert_comment2(s.Mid(i+1,n-i-1).GetBuffer(0));
-
-        if (r != RS274NGC_OK) return r;
-
-        i=s.Find('(',n+1);
-        n=s.Find(')',n+1);
-    }
+///    QString s = comment;
+///
+///    i=s.Find('(');
+///    n=s.Find(')');
+///
+///    while (n>i)
+///    {
+///        r=convert_comment2(s.Mid(i+1,n-i-1).GetBuffer(0));
+///
+///        if (r != RS274NGC_OK) return r;
+///
+///        i=s.Find('(',n+1);
+///        n=s.Find(')',n+1);
+///    }
     return r;
 }
 

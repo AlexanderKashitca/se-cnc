@@ -891,16 +891,32 @@ PT2D.o: ../../../src/interpreter/PT2D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -980,16 +996,32 @@ PT3D.o: ../../../src/interpreter/PT3D.cpp ../../../src/interpreter/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1069,16 +1101,32 @@ canon_stand_alone.o: ../../../src/interpreter/canon_stand_alone.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1159,16 +1207,32 @@ common.o: ../../../src/interpreter/common.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1248,16 +1312,32 @@ coordMotion.o: ../../../src/interpreter/coordMotion.cpp ../../../src/interpreter
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1338,16 +1418,32 @@ driver.o: ../../../src/interpreter/driver.cpp ../../../src/interpreter/common.h 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1428,16 +1524,32 @@ kinematics.o: ../../../src/interpreter/kinematics.cpp ../../../src/interpreter/c
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1514,16 +1626,32 @@ kinematics3Rod.o: ../../../src/interpreter/kinematics3Rod.cpp ../../../src/inter
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics3Rod.o ../../../src/interpreter/kinematics3Rod.cpp
 
 kinematics5AxisGimbalAB.o: ../../../src/interpreter/kinematics5AxisGimbalAB.cpp ../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -1591,16 +1719,32 @@ kinematics5AxisGimbalAB.o: ../../../src/interpreter/kinematics5AxisGimbalAB.cpp 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalAB.o ../../../src/interpreter/kinematics5AxisGimbalAB.cpp
 
 kinematics5AxisGimbalCB.o: ../../../src/interpreter/kinematics5AxisGimbalCB.cpp ../../../src/interpreter/kinematics5AxisGimbalCB.h \
@@ -1668,16 +1812,32 @@ kinematics5AxisGimbalCB.o: ../../../src/interpreter/kinematics5AxisGimbalCB.cpp 
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisGimbalCB.o ../../../src/interpreter/kinematics5AxisGimbalCB.cpp
 
 kinematics5AxisTableAC.o: ../../../src/interpreter/kinematics5AxisTableAC.cpp ../../../src/interpreter/kinematics5AxisTableAC.h \
@@ -1745,16 +1905,32 @@ kinematics5AxisTableAC.o: ../../../src/interpreter/kinematics5AxisTableAC.cpp ..
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAC.o ../../../src/interpreter/kinematics5AxisTableAC.cpp
 
 kinematics5AxisTableAGimbalB.o: ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp ../../../src/interpreter/kinematics5AxisTableAGimbalB.h \
@@ -1822,16 +1998,32 @@ kinematics5AxisTableAGimbalB.o: ../../../src/interpreter/kinematics5AxisTableAGi
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableAGimbalB.o ../../../src/interpreter/kinematics5AxisTableAGimbalB.cpp
 
 kinematics5AxisTableBC.o: ../../../src/interpreter/kinematics5AxisTableBC.cpp ../../../src/interpreter/kinematics5AxisTableBC.h \
@@ -1899,16 +2091,32 @@ kinematics5AxisTableBC.o: ../../../src/interpreter/kinematics5AxisTableBC.cpp ..
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics5AxisTableBC.o ../../../src/interpreter/kinematics5AxisTableBC.cpp
 
 kinematicsGeppetto.o: ../../../src/interpreter/kinematicsGeppetto.cpp ../../../src/interpreter/kinematicsGeppetto.h \
@@ -1976,16 +2184,32 @@ kinematicsGeppetto.o: ../../../src/interpreter/kinematicsGeppetto.cpp ../../../s
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppetto.o ../../../src/interpreter/kinematicsGeppetto.cpp
 
 kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.cpp ../../../src/interpreter/kinematicsGeppettoExtrude.h \
@@ -2053,16 +2277,32 @@ kinematicsGeppettoExtrude.o: ../../../src/interpreter/kinematicsGeppettoExtrude.
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematicsGeppettoExtrude.o ../../../src/interpreter/kinematicsGeppettoExtrude.cpp
 
 rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/common.h \
@@ -2133,16 +2373,32 @@ rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/commo
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \
@@ -2227,16 +2483,32 @@ trajectoryPlanner.o: ../../../src/interpreter/trajectoryPlanner.cpp ../../../src
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../prj/motion/motion_global.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/motion/hirestimer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/motion/motion_io.h \
-		../../../src/direct/motion_direct.h \
-		../../prj/direct/direct_global.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
 		../../../src/interpreter/kinematicsGeppetto.h \
 		../../../src/interpreter/kinematicsGeppettoExtrude.h \
 		../../../src/interpreter/kinematics5AxisGimbalAB.h \

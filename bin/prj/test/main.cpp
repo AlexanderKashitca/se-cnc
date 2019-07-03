@@ -13,14 +13,18 @@ int main(int argc, char *argv[])
     int list[10];
     QCoreApplication a(argc, argv);
 
-    QLibrary library("libftd2xx.so");
-    if (!library.load())
-    qDebug() << library.errorString();
-    else {
+    MotionDirectClass MotionDirect;
+
+    if(!MotionDirect.getFtdiLibraryLoad())
+    {
+        qDebug() << "FTDI Library not loading" << endl;
+    }
+    else
+    {
         qDebug() << "All Library is loaded" << endl;
     }
 
-    MotionDirectClass MotionDirect;
+
     if(MotionDirect.listLocations(location,list) == 0)
     {
         int ret;
@@ -38,11 +42,6 @@ int main(int argc, char *argv[])
                 qDebug() << "SE_MOTION_NOT_CONNECTED" << endl;
                 break;
         }
-
-                /// returns 0 KMOTION_LOCKED (and token is locked) if KMotion is available for use
-                /// returns 1 KMOTION_IN_USE if already in use
-                /// returns 2 KMOTION_NOT_CONNECTED if not able to connect
-
     }
 
     return a.exec();

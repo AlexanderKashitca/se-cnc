@@ -1,24 +1,33 @@
 ///-----------------------------------------------------------------------------
 #include <QPair>
 ///-----------------------------------------------------------------------------
-#include "../motion/hirestimer.h"
-#include "../motion/motion.h"
-#include "../ftdi/ftd2xx.h"
-#include "../motion/motion_io.h"
-///#include "../direct/direct_global.h"
+#include "../direct/direct.h"
 ///-----------------------------------------------------------------------------
-
+#define BUFSIZE 4096
+///-----------------------------------------------------------------------------
+static MotionDirectClass MotionDirect;
+///-----------------------------------------------------------------------------
+void GetAnswerToRequest(char *chRequest,
+                        DWORD nInBytes,
+                        char *chReply,
+                        DWORD *cbReplyBytes,
+                        HANDLE hPipe);
+///-----------------------------------------------------------------------------
+void MyErrExit(char *s)
+{
+///	MessageBox(NULL,s,"KMotion Server",MB_ICONSTOP|MB_OK|MB_SYSTEMMODAL);
+    exit(1);
+}
+///-----------------------------------------------------------------------------
 ///extern CMainFrame *TheFrame;
 
 #if 0
 
-#define BUFSIZE 4096
 #define PIPE_TIMEOUT 10000
 
-MotionDirectClass MotionDirect;
 
 void InstanceThread(LPVOID); 
-void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *cbReplyBytes, HANDLE hPipe);
+
 int ConsoleHandler(int board, const char *buf);
  
 int nClients = 0; 
@@ -28,11 +37,7 @@ HANDLE ConsolePipeHandle[MAX_BOARDS];
 QPair <QString,QString> ConsoleList[MAX_BOARDS];
 
 
-void MyErrExit(char *s)
-{
-///	MessageBox(NULL,s,"KMotion Server",MB_ICONSTOP|MB_OK|MB_SYSTEMMODAL);
-	exit(1);
-}
+
 
 
  
@@ -98,7 +103,7 @@ void ServerMain(LPVOID lpvParam)
    } 
    return; 
 } 
- 
+#endif
 VOID InstanceThread(LPVOID lpvParam) 
 { 
    CHAR chRequest[BUFSIZE]; 
@@ -113,13 +118,13 @@ VOID InstanceThread(LPVOID lpvParam)
 
 	while (1) 
 	{ 
-		// Read client requests from the pipe. 
-		fSuccess = ReadFile( 
-			 hPipe,        // handle to pipe 
-			 chRequest,    // buffer to receive data 
-			 BUFSIZE,      // size of buffer 
-			 &cbBytesRead, // number of bytes read 
-			 NULL);        // not overlapped I/O 
+///		// Read client requests from the pipe.
+///		fSuccess = ReadFile(
+///			 hPipe,        // handle to pipe
+///			 chRequest,    // buffer to receive data
+///			 BUFSIZE,      // size of buffer
+///			 &cbBytesRead, // number of bytes read
+///			 NULL);        // not overlapped I/O
 
       if (! fSuccess || cbBytesRead == 0) 
          break; 
@@ -161,7 +166,7 @@ void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *c
 	if (code!=ENUM_ListLocations)  // all commands require a board to be mapped, except this command
 	{
 		memcpy(&BoardID, chRequest+4,4);
-        board=MotionDirect.MapBoardToIndex(BoardID);
+///        board=MotionDirect.MapBoardToIndex(BoardID);
 	}
 
 	chReply[0]=DEST_NORMAL;
@@ -170,32 +175,32 @@ void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *c
 	{
 
 	case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
-        result = MotionDirect.WriteLineReadLine(chRequest+8, chReply+1+4);
+        result = MotionDirect.writeLineReadLine(chRequest+8, chReply+1+4);
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
 		break;
 
 	case ENUM_WriteLine:	
-        result = MotionDirect.WriteLine(chRequest+8);
+        result = MotionDirect.writeLine(chRequest+8);
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_WriteLineWithEcho:	
-        result = MotionDirect.WriteLineWithEcho(chRequest+8);
+        result = MotionDirect.writeLineWithEcho(chRequest+8);
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
 		memcpy(&TimeOutms, chRequest+8,4);
-        result = MotionDirect.ReadLineTimeOut(chReply+1+4 ,TimeOutms);
+        result = MotionDirect.readLineTimeOut(chReply+1+4 ,TimeOutms);
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
 		break;
 
 	case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
-        result = MotionDirect.ListLocations(&nLocations, List);
+        result = MotionDirect.listLocations(&nLocations, List);
 		memcpy(chReply+1, &result,4);
 		memcpy(chReply+1+4, &nLocations,4);
 		memcpy(chReply+1+8, List, nLocations*4);
@@ -203,155 +208,150 @@ void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *c
 		break;
 
 	case ENUM_Failed:	
-        result = MotionDirect.Failed();
+        result = MotionDirect.failed();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_Disconnect:	
-        result = MotionDirect.Disconnect();
+        result = MotionDirect.disconnect();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_FirmwareVersion:	
-        result = MotionDirect.FirmwareVersion();
+        result = MotionDirect.firmwareVersion();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_CheckForReady:	
-        result = MotionDirect.CheckForReady();
+        result = MotionDirect.checkForReady();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_KMotionLock:	
-        result = MotionDirect.KMotionLock(chRequest + 8);
+        result = MotionDirect.motionLock(chRequest + 8);
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_USBLocation:	
-        result = MotionDirect.USBLocation();
+///        result = MotionDirect.usbLocation();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_KMotionLockRecovery:	
-        result = MotionDirect.KMotionLockRecovery();
+        result = MotionDirect.motionLockRecovery();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_ReleaseToken:	
-        MotionDirect.ReleaseToken();
+        MotionDirect.releaseToken();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_ServiceConsole:	
-        result = MotionDirect.ServiceConsole();
+        result = MotionDirect.serviceConsole();
 		memcpy(chReply+1, &result,4);
 		*cbReplyBytes=1+4;
 		break;
 
 	case ENUM_SetConsole:
-		// remember which pipe is associated with the console handler for the board
-		ConsolePipeHandle[board] = hPipe;  
-        result = MotionDirect.SetConsoleCallback(ConsoleHandler);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
+/// remember which pipe is associated with the console handler for the board
+///ConsolePipeHandle[board] = hPipe;
+///result = MotionDirect.setConsoleCallback(ConsoleHandler);
+///memcpy(chReply+1, &result,4);
+///*cbReplyBytes=1+4;
 		break;
 
 	default: MyErrExit("Bad Request Code");
 	}
 
-	// before we send the answer back check if this pipe
-	// is the message handler for the board and there are
-	// messages in the queue 
-
-	if (code!=ENUM_ListLocations && hPipe == ConsolePipeHandle[board])
-	{
-		int nSent=0;
-
-		while (!ConsoleList[board].IsEmpty() && nSent++<10)
-		{
-			DWORD cbReplyBytes, cbBytesRead, cbWritten; 
-			unsigned char Reply;
-			BOOL fSuccess; 
-			CString s = ConsoleList[board].RemoveHead();
-
-			s.Insert(0,DEST_CONSOLE);
-
-			cbReplyBytes = s.GetLength()+1+1;  // + Term Null + DEST code
-
-			// Write the message to the pipe. 
-			fSuccess = WriteFile( 
-				 hPipe,        // handle to pipe 
-				 s.GetBuffer(0),      // buffer to write from 
-				 cbReplyBytes, // number of bytes to write 
-				 &cbWritten,   // number of bytes written 
-				 NULL);        // not overlapped I/O 
-
-			if (! fSuccess || cbReplyBytes != cbWritten) break; 
-
-
-			
-
-		   // Read back 1 byte ack 0xAA from Console Handler
-			
-			fSuccess = ReadFile( 
-				 hPipe,        // handle to pipe 
-				 &Reply,    // buffer to receive data 
-				 1,      // size of buffer 
-				 &cbBytesRead, // number of bytes read 
-				 NULL);        // not overlapped I/O 
-
-			if (! fSuccess || cbBytesRead != 1 || Reply != 0xAA) 
-				break; 
-      
-		}
-	}
+///	// before we send the answer back check if this pipe
+///	// is the message handler for the board and there are
+///	// messages in the queue
+///	if (code!=ENUM_ListLocations && hPipe == ConsolePipeHandle[board])
+///	{
+///		int nSent=0;
+///
+///		while (!ConsoleList[board].IsEmpty() && nSent++<10)
+///		{
+///			DWORD cbReplyBytes, cbBytesRead, cbWritten;
+///			unsigned char Reply;
+///			BOOL fSuccess;
+///			CString s = ConsoleList[board].RemoveHead();
+///
+///			s.Insert(0,DEST_CONSOLE);
+///
+///			cbReplyBytes = s.GetLength()+1+1;  // + Term Null + DEST code
+///
+///			// Write the message to the pipe.
+///			fSuccess = WriteFile(
+///				 hPipe,        // handle to pipe
+///				 s.GetBuffer(0),      // buffer to write from
+///				 cbReplyBytes, // number of bytes to write
+///				 &cbWritten,   // number of bytes written
+///				 NULL);        // not overlapped I/O
+///
+///			if (! fSuccess || cbReplyBytes != cbWritten) break;
+///
+///		   // Read back 1 byte ack 0xAA from Console Handler
+///
+///			fSuccess = ReadFile(
+///				 hPipe,        // handle to pipe
+///				 &Reply,    // buffer to receive data
+///				 1,      // size of buffer
+///				 &cbBytesRead, // number of bytes read
+///				 NULL);        // not overlapped I/O
+///
+///if (! fSuccess || cbBytesRead != 1 || Reply != 0xAA)
+///break;
+///}
+///}
 
 	// check if we have an error message to send back
 
-    if (code!=ENUM_ListLocations && !MotionDirect.GetErrMsg()[0]==0)
+    if (code!=ENUM_ListLocations && !MotionDirect.getErrMsg()[0]==0)
 	{
 		DWORD cbReplyBytes, cbBytesRead, cbWritten; 
 		unsigned char Reply;
 		BOOL fSuccess; 
-        CString s = MotionDirect.GetErrMsg();
+        QString s = MotionDirect.getErrMsg();
 
-		s.Insert(0,DEST_ERRMSG);
+        s.insert(0,DEST_ERRMSG);
 
-		cbReplyBytes = s.GetLength()+1+1;  // + Term Null + DEST code
+        cbReplyBytes = s.length() + 1 + 1;  // + Term Null + DEST code
 
-		// Write the message to the pipe. 
-		fSuccess = WriteFile( 
-			 hPipe,        // handle to pipe 
-			 s.GetBuffer(0),      // buffer to write from 
-			 cbReplyBytes, // number of bytes to write 
-			 &cbWritten,   // number of bytes written 
-			 NULL);        // not overlapped I/O 
+///		// Write the message to the pipe.
+///		fSuccess = WriteFile(
+///			 hPipe,        // handle to pipe
+///			 s.GetBuffer(0),      // buffer to write from
+///			 cbReplyBytes, // number of bytes to write
+///			 &cbWritten,   // number of bytes written
+///			 NULL);        // not overlapped I/O
 
-		if (fSuccess && cbReplyBytes == cbWritten)
-		{
-		   // Read back 1 byte ack 0xAA from Console Handler
-			
-			fSuccess = ReadFile( 
-				 hPipe,        // handle to pipe 
-				 &Reply,    // buffer to receive data 
-				 1,      // size of buffer 
-				 &cbBytesRead, // number of bytes read 
-				 NULL);        // not overlapped I/O 
-		}
+///		if (fSuccess && cbReplyBytes == cbWritten)
+///		{
+///		   // Read back 1 byte ack 0xAA from Console Handler
+///
+///			fSuccess = ReadFile(
+///				 hPipe,        // handle to pipe
+///				 &Reply,    // buffer to receive data
+///				 1,      // size of buffer
+///				 &cbBytesRead, // number of bytes read
+///				 NULL);        // not overlapped I/O
+///		}
 
-        MotionDirect.ClearErrMsg();
+        MotionDirect.clearErrMsg();
 	}
 }
 
-
+#if 0
 int ConsoleHandler(int board, const char *buf)
 {
 	// check if there is a console handler for

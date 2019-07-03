@@ -2,6 +2,7 @@
 #ifndef MOTION_IO_H
 #define MOTION_IO_H
 ///-----------------------------------------------------------------------------
+#include <QDebug>
 #include <QString>
 #include <QMutex>
 ///-----------------------------------------------------------------------------
@@ -22,77 +23,87 @@ extern HiResTimerClass Timer;
 ///-----------------------------------------------------------------------------
 typedef int SERVER_CONSOLE_HANDLER (int board, const char *buf);
 ///-----------------------------------------------------------------------------
-typedef struct
-{
-    DWORD dwIndex;
-    DWORD lpdwFlags;
-    DWORD lpdwType;
-    DWORD lpdwID;
-    DWORD lpdwLocId;
-    char  SerialNumber[16];
-    char  Description[64];
-}FtdiDeviceInfoDetail;
-///-----------------------------------------------------------------------------
 class MotionIOClass
 {
     private:
+        QMutex *_mutex;
+        QString _serialNumber;
+        int     _nonRespondingCount;
+        int     _firmwareVersion;
+        bool    _failMessageAlreadyShown;
+        bool    _sendAbortOnConnect;
+        bool    _connected;
+
+        int errorMessageBox(const char *s);
+        int errorMessageBox(QString const s);
+
+
+        DWORD   getCurrentTimeMs(void);
+        int     sleep(DWORD miliseconds);
         bool    requestedDeviceAvail(QString *reason);
         int     connect();
-    public:
-        bool    FailMessageAlreadyShown;
-        bool    SendAbortOnConnect;
+        int     setLatency(unsigned char LatencyTimer);
+        int     flushInputBuffer();
         int     logToConsole(char *s);
         int     handleDiskIO(char *s);
-        int     motionLock(char *CallerID);
-        int     usbLocation();
-        int     motionLockRecovery();
         int     makeSureConnected();
+        int     numberBytesAvailToRead(int *navail,bool ShowMessage);
+        int     readLineTimeOutRaw(char *buf,int TimeOutms);
+        int     readBytesAvailable(char *RxBuffer,int maxbytes,DWORD *BytesReceived,int timeout_ms = 0);
+        int     readSendNextLine(FILE *fr);
+    protected:
+        int     _token;
+        char    _saveChars[MAX_LINE + 1];
+        FT_HANDLE   _ftHandle;
+        SERVER_CONSOLE_HANDLER *ConsoleHandler;
+
+    public:
+        MotionIOClass();
+        virtual ~MotionIOClass();
+
+
+
+        QString _errMsg;
+        QString _lastCallerID;
+
+
+        bool    _boardAssigned;
+
+        int     motionLock(char *CallerID);
+        int     motionLockRecovery();
+        QString usbLocation();
         void    releaseToken();
         int     checkForReady();
         int     failed();
         int     disconnect();
         int     firmwareVersion();
-        int     NonRespondingCount;
-        int     flushInputBuffer();
-        QMutex *Mutex;
-        int     numberBytesAvailToRead(int *navail,bool ShowMessage);
         int     writeLineReadLine(const char *send,char *response);
-
         int     readLineTimeOut(char *buf,int TimeOutms);
-        int     readLineTimeOutRaw(char *buf,int TimeOutms);
-        int     setLatency(unsigned char LatencyTimer);
         int     writeLineWithEcho(const char * s);
         int     writeLine(const char *s);
-        int     readBytesAvailable(char *RxBuffer,int maxbytes,DWORD *BytesReceived,int timeout_ms = 0);
-        int     readSendNextLine(FILE *fr);
         int     serviceConsole();
         int     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
 
-        MotionIOClass();
-        virtual ~MotionIOClass();
+/*
+        int     mapBoardToIndex(int BoardID);
+        int     listLocations(int *nlocations,int *list);
+        void    waitToken(char *CallerID = nullptr);
+        const char* getErrMsg();
+        void    clearErrMsg();
+        int     nInstances();
+ */
 
 
-        bool    m_Connected;
-        QString ErrMsg;
-        QString m_LastCallerID;
 
-        int     USB_Loc_ID;
-        bool    BoardIDAssigned;
+
 private:
 
 
 
-    protected:
-        int     Token;
-        char    m_SaveChars[MAX_LINE + 1];
-        FT_HANDLE   ftHandle;
-        SERVER_CONSOLE_HANDLER *ConsoleHandler;
+
     private:
-        int errorMessageBox(const char *s);
-        int m_FirmwareVersion;
-        /// my implamentation
-        DWORD getCurrentTimeMs(void);
-        int   sleep(DWORD miliseconds);
+
+
 };
 ///-----------------------------------------------------------------------------
 #endif /// MOTION_IO_H
