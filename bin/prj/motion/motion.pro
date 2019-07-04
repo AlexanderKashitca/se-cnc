@@ -24,13 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         ../../../src/motion/common.cpp \
         ../../../src/motion/hirestimer.cpp \
-        ../../../src/motion/motion_io.cpp \
         motion.cpp
 
 HEADERS += \
         ../../../src/motion/common.h \
         ../../../src/motion/hirestimer.h \
-        ../../../src/motion/motion_io.h \
+        ../../../src/server/server.h \
         motion.h \
         motion_global.h 
 

@@ -28,14 +28,12 @@ LIBS        += -L/usr/local/lib/ -lftd2xx
 
 
 SOURCES += \
-        ../../../src/motion/hirestimer.cpp \
         ../../../src/motion/motion_io.cpp \
         direct.cpp
 
 HEADERS += \
         ../../../src/ftdi/WinTypes.h \
         ../../../src/ftdi/ftd2xx.h \
-        ../../../src/motion/hirestimer.h \
         ../../../src/motion/motion_io.h \
         direct.h \
         direct_global.h

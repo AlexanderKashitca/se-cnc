@@ -19,24 +19,24 @@ typedef void ERRMSG_HANDLER(const char *ErrMsg);
 class MOTIONSHARED_EXPORT MotionClass
 {
     public:
-        MotionClass(int boardid);
+        MotionClass(int boardId);
         virtual ~MotionClass();
-        int BoardID;
+        int     _boardID;
 
         int     WriteLineReadLine(const char *s,char *response);
         int     WriteLine(const char *s);
         int     WriteLineWithEcho(const char *s);
         int     ReadLineTimeOut(char *buf,int TimeOutms = 1000000);
         int     ListLocations(int *nlocations,int *list);
-        int     WaitToken(bool display_msg = true,int TimeOut_ms = 1000000,char* CallerID = nullptr);
-        int     MotionLock(char *CallerID = nullptr);
-        int     USBLocation();
-        int     MotionLockRecovery();
-        void    ReleaseToken();
-        int     Failed();
-        int     Disconnect();
-        int     FirmwareVersion();
-        int     CheckForReady();
+        int     waitToken(bool display_msg = true,int TimeOut_ms = 1000000,char* CallerID = nullptr);
+        int     motionLock(char *CallerID = nullptr);
+        int     usbLocation();
+        int     motionLockRecovery();
+        void    releaseToken();
+        int     failed();
+        int     disconnect();
+        int     firmwareVersion();
+        int     checkForReady();
 
         int     ServiceConsole();
         int     SetConsoleCallback(CONSOLE_HANDLER *ch);
@@ -46,22 +46,22 @@ class MOTIONSHARED_EXPORT MotionClass
         int     GetStatus(MAIN_STATUS& status,bool lock);
         void    DoErrMsg(const char *s);
 
-        bool    ErrMessageDisplayed;
+        bool    _errMessageDisplayed;
     private:
-        QMutex *PipeMutex;
-        bool    PipeOpen;
-        bool    ServerMessDisplayed;
+        QMutex* _pipeMutex;
+        bool    _pipeOpen;
+        bool    _serverMessDisplayed;
 
-        CONSOLE_HANDLER *ConsoleHandler;
-        ERRMSG_HANDLER *ErrMsgHandler;
+        CONSOLE_HANDLER *consoleHandler;
+        ERRMSG_HANDLER *errMsgHandler;
 
-        int PipeCmd(int code);
-        int PipeCmdStr(int code,const char *s);
-        int Pipe(const char *s,int n,char *r,int *m);
-        int LaunchServer();
+        int pipeCmd(int code);
+        int pipeCmdStr(int code,const char *s);
+        int pipe(const char *s,int n,char *r,int *m);
+        int launchServer();
 
         QString ExtractPath(QString InFile);
-        QFile PipeFile;
+        QFile   PipeFile;
 
 };
 ///-----------------------------------------------------------------------------

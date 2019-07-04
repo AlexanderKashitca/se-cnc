@@ -1,5 +1,6 @@
 ///-----------------------------------------------------------------------------
 #include "motion.h"
+#include "../../../src/server/server.h"
 ///-----------------------------------------------------------------------------
 extern QString MainPathDLL;
 extern QString MainPath;
@@ -17,103 +18,101 @@ void errorMessageBox(const QString msg,QString header)
     ///QMessageBox::information(nullptr,"Hello",msg,"Ok");
 }
 ///-----------------------------------------------------------------------------
-MotionClass::MotionClass(int boardid)
+MotionClass::MotionClass(int boardID)
 {
-    BoardID  = boardid;
-    PipeOpen = false;
-    ServerMessDisplayed = false;
-    ErrMessageDisplayed = false;
+    _boardID  = boardID;
+    _pipeOpen = false;
+    _serverMessDisplayed = false;
+    _errMessageDisplayed = false;
 
-    PipeMutex = new QMutex();
+    _pipeMutex = new QMutex();
 
-    ConsoleHandler = nullptr;
-    ErrMsgHandler = nullptr;
+    consoleHandler = nullptr;
+    errMsgHandler = nullptr;
 }
 ///-----------------------------------------------------------------------------
 MotionClass::~MotionClass()
 {
 ///    LPTSTR lpszPipename = "\\\\.\\pipe\\kmotionpipe";
-    if (PipeOpen)
+    if (_pipeOpen)
     {
-        PipeOpen = false;
+        _pipeOpen = false;
 ///        if(share==2)
 ///        {
 ///            PipeFile.Close();
 ///            Sleep(100);  // give some time for Server to close
 ///        }
     }
-    delete PipeMutex;
+    delete _pipeMutex;
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::WriteLineReadLine(const char *s, char *response)
 {
     /// Send Code, board, string -- Get Dest (byte), Result (int), and string
-    char d[MAX_LINE+1];
-    char r[MAX_LINE+1];
-    int result, m, code = ENUM_WriteLineReadLine;
+    char d[MAX_LINE + 1];
+    char r[MAX_LINE + 1];
+    int m;
+    int result;
+    int code = ENUM_WriteLineReadLine;
 
-    result = WaitToken("WriteLineReadLine");
-
-    if (result) return result;
-
+    result = waitToken("WriteLineReadLine");
+    if(result)
+    {
+        return result;
+    }
     memcpy(d,&code,4);
-    memcpy(d+4,&BoardID,4);
-    strcpy(d+8,s);
-
-    Pipe(d, strlen(s)+1+8 ,r, &m);
-
-    memcpy(&result,r+1,4);
-    strcpy(response,r+1+4);
-
-    ReleaseToken();
+    memcpy(d + 4,&_boardID,4);
+    strcpy(d + 8,s);
+    pipe(d,strlen(s) + 1 + 8,r,&m);
+    memcpy(&result,r + 1,4);
+    strcpy(response,r + 1 + 4);
+    releaseToken();
     return result;
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::WriteLine(const char *s)
 {
-    return PipeCmdStr(ENUM_WriteLine, s);
+    return pipeCmdStr(ENUM_WriteLine,s);
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::WriteLineWithEcho(const char *s)
 {
-    return PipeCmdStr(ENUM_WriteLineWithEcho, s);
+    return pipeCmdStr(ENUM_WriteLineWithEcho,s);
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::ReadLineTimeOut(char *response, int TimeOutms)
 {
-    /// Send Code, BoardID, timeout -- Get Dest, Result (int), and string
-    char d[MAX_LINE+1];
-    char r[MAX_LINE+1];
-    int result, m, code = ENUM_ReadLineTimeOut;
-
+    /// Send Code, _boardID, timeout -- Get Dest, Result (int), and string
+    char d[MAX_LINE + 1];
+    char r[MAX_LINE + 1];
+    int m;
+    int result;
+    int code = ENUM_ReadLineTimeOut;
     memcpy(d,&code,4);
-    memcpy(d+4,&BoardID,4);
-    memcpy(d+8,&TimeOutms,4);
-
-    Pipe(d, 12 ,r, &m);
-
-    memcpy(&result,r+1,4);
-    strcpy(response,r+1+4);
-
+    memcpy(d + 4,&_boardID,4);
+    memcpy(d + 8,&TimeOutms,4);
+    pipe(d,12,r,&m);
+    memcpy(&result,r + 1,4);
+    strcpy(response,r + 1 + 4);
     return result;
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::ListLocations(int *nlocations, int *list)
 {
-    // Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
-    char d[MAX_LINE+1];
-    char r[MAX_LINE+1];
-    int result, m, code = ENUM_ListLocations;
+    /// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
+    char d[MAX_LINE + 1];
+    char r[MAX_LINE + 1];
+    int m;
+    int result;
+    int code = ENUM_ListLocations;
 
     memcpy(d,&code,4);
-
-    Pipe(d, 4 ,r, &m);
-
+    pipe(d,4,r,&m);
     memcpy(&result,r+1,4);
     if (result==0)
     {
         memcpy(nlocations,r+1+4,4);
-        memcpy(list,r+1+8, *nlocations*sizeof(int));
+        memcpy(list,r + 1 + 8,(*nlocations * sizeof(int)));
     }
     else
     {
@@ -122,177 +121,169 @@ int MotionClass::ListLocations(int *nlocations, int *list)
     return result;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::Failed()
+int MotionClass::failed()
 {
-    return PipeCmd(ENUM_Failed);
+    return pipeCmd(ENUM_Failed);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::Disconnect()
+int MotionClass::disconnect()
 {
-    return PipeCmd(ENUM_Disconnect);
+    return pipeCmd(ENUM_Disconnect);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::FirmwareVersion()
+int MotionClass::firmwareVersion()
 {
-    return PipeCmd(ENUM_FirmwareVersion);
+    return pipeCmd(ENUM_FirmwareVersion);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::CheckForReady()
+int MotionClass::checkForReady()
 {
-    return PipeCmd(ENUM_CheckForReady);
+    return pipeCmd(ENUM_CheckForReady);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::MotionLock(char *CallerID)
+int MotionClass::motionLock(char *CallerID)
 {
-    return PipeCmdStr(ENUM_KMotionLock, CallerID);
+    return pipeCmdStr(ENUM_KMotionLock,CallerID);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::USBLocation()
+int MotionClass::usbLocation()
 {
-    return PipeCmd(ENUM_USBLocation);
+    return pipeCmd(ENUM_USBLocation);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::MotionLockRecovery()
+int MotionClass::motionLockRecovery()
 {
-    return PipeCmd(ENUM_KMotionLockRecovery);
+    return pipeCmd(ENUM_KMotionLockRecovery);
 }
 ///-----------------------------------------------------------------------------
 /// Try and get the token for the Board
-///
 ///    return with the token (return value = KMOTION_LOCKED)
 /// OR
 ///    if there is a problem with the board
 ///    display a message (return value = KMOTION_NOT_CONNECTED)
-int MotionClass::WaitToken(bool display_msg, int TimeOut_ms, char *CallerID)
+int MotionClass::waitToken(bool display_msg, int TimeOut_ms, char *CallerID)
 {
     HiResTimerClass Timer;
     int result;
-
-    if (ErrMessageDisplayed) return SE_MOTION_NOT_CONNECTED;
-
+    int count(0);
+    if(_errMessageDisplayed)
+    {
+        return SE_MOTION_NOT_CONNECTED;
+    }
     Timer.Start();
 
-    int count=0;
     do
     {
-        // this Mutex helps maintain a waiting list
-        // so everybody gets a chance at the token
-        // rather than leaving it random.  Also make
-        // sure we have everything before we proceed
-        // so we don't get stuck somewhere (deadlocked)
-
-        if (!PipeMutex->tryLock(TimeOut_ms))
+        /// this Mutex helps maintain a waiting list
+        /// so everybody gets a chance at the token
+        /// rather than leaving it random.  Also make
+        /// sure we have everything before we proceed
+        /// so we don't get stuck somewhere (deadlocked)
+        if(!_pipeMutex->tryLock(TimeOut_ms))
         {
             return SE_MOTION_IN_USE;
         }
-
-        if (Timer.Elapsed_Seconds() > 2.0 * TimeOut_ms * 0.001)
+        if(Timer.Elapsed_Seconds() > 2.0 * TimeOut_ms * 0.001)
         {
-            PipeMutex->unlock();
+            _pipeMutex->unlock();
             return SE_MOTION_IN_USE;
         }
-
-        if (count++)
+        if(count++)
         {
 ///            Sleep(10);
         }
-
-        result = MotionLock(CallerID);
-
-        if (result == SE_MOTION_IN_USE)
-            PipeMutex->unlock();
+        result = motionLock(CallerID);
+        if(result == SE_MOTION_IN_USE)
+        {
+            _pipeMutex->unlock();
+        }
     }
-    while (result == SE_MOTION_IN_USE);
+    while(result == SE_MOTION_IN_USE);
 
-    if (result == SE_MOTION_NOT_CONNECTED && display_msg)
+    if(result == SE_MOTION_NOT_CONNECTED && display_msg)
     {
         char s[256];
-
-        if (BoardID>0)
-            sprintf(s,"Can't Connect to KMotion Board 0x%X", BoardID);
+        if(_boardID > 0)
+        {
+            sprintf(s,"Can't Connect to SEMotion Board 0x%X",_boardID);
+        }
         else
-            sprintf(s,"Can't Connect to KMotion Board #%d", BoardID);
-
+        {
+            sprintf(s,"Can't Connect to SEMotion Board #%d",_boardID);
+        }
         DoErrMsg(s);
-
     }
-
-    if (result != SE_MOTION_LOCKED)
-        PipeMutex->unlock();      // keep the pipe if we have the token
-
+    if(result != SE_MOTION_LOCKED)
+    { /// keep the pipe if we have the token
+        _pipeMutex->unlock();
+    }
     return result;
 }
 ///-----------------------------------------------------------------------------
-void MotionClass::ReleaseToken()
+void MotionClass::releaseToken()
 {
-    PipeCmd(ENUM_ReleaseToken);
-    PipeMutex->unlock();      // also release the pipe
+    pipeCmd(ENUM_ReleaseToken);
+    _pipeMutex->unlock();      // also release the pipe
 }
 ///-----------------------------------------------------------------------------
 int  MotionClass::ServiceConsole()
 {
-    return PipeCmd(ENUM_ServiceConsole);
+    return pipeCmd(ENUM_ServiceConsole);
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::SetConsoleCallback(CONSOLE_HANDLER *ch)
 {
-    ConsoleHandler = ch;
-
-    // tell the server who is the server for
-    // the console
-    return PipeCmd(ENUM_SetConsole);
+    consoleHandler = ch;
+    /// tell the server who is the server for the console
+    return pipeCmd(ENUM_SetConsole);
 }
 ///-----------------------------------------------------------------------------
 int MotionClass::SetErrMsgCallback(ERRMSG_HANDLER *ch)
 {
-    ErrMsgHandler = ch;
+    errMsgHandler = ch;
     return 0;
 }
 ///-----------------------------------------------------------------------------
 /// send code, board
-int MotionClass::PipeCmd(int code)
+int MotionClass::pipeCmd(int code)
 {
-    char d[MAX_LINE+1];
-    char r[MAX_LINE+1];
-    int result, m;
+    char d[MAX_LINE + 1];
+    char r[MAX_LINE + 1];
+    int result;
+    int m;
 
     memcpy(d,&code,4);
-    memcpy(d+4,&BoardID,4);
-
-    Pipe(d, 8 ,r, &m);
-
+    memcpy(d+4,&_boardID,4);
+    pipe(d, 8 ,r, &m);
     memcpy(&result,r+1,4);
-
     return result;
 }
 ///-----------------------------------------------------------------------------
 /// send code, board, string
-int MotionClass::PipeCmdStr(int code, const char *s)
+int MotionClass::pipeCmdStr(int code, const char *s)
 {
-    char d[MAX_LINE+1];
-    char r[MAX_LINE+1];
-    int result, m;
+    char d[MAX_LINE + 1];
+    char r[MAX_LINE + 1];
+    int result;
+    int m;
 
     memcpy(d,&code,4);
-    memcpy(d+4,&BoardID,4);
-
-    if (s == nullptr)
+    memcpy(d + 4,&_boardID,4);
+    if(s == nullptr)
     {
         d[8] = 0;
-        Pipe(d, 1 + 8, r, &m);
+        pipe(d,1 + 8,r,&m);
     }
     else
     {
-        strcpy(d + 8, s);
-        Pipe(d, strlen(s) + 1 + 8, r, &m);
+        strcpy(d + 8,s);
+        pipe(d,static_cast<int>(strlen(s)) + 1 + 8,r,&m);
     }
-
     memcpy(&result,r+1,4);
-
     return result;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::Pipe(const char *s, int n, char *r, int *m)
+int MotionClass::pipe(const char *s, int n, char *r, int *m)
 {
 #if 0
     unsigned char Reply = 0xAA;
@@ -300,29 +291,29 @@ int MotionClass::Pipe(const char *s, int n, char *r, int *m)
     bool ReceivedErrMsg = false;
     static int EntryCount = 0;
 
-    if(ServerMessDisplayed)
+    if(_serverMessDisplayed)
         return 1;
 
     ///    LPTSTR lpszPipename = "\\\\.\\pipe\\kmotionpipe";
     try
     {
-        PipeMutex->lock();
+        _pipeMutex->lock();
         if(EntryCount > 0)
         {
             int Result = SE_MOTION_IN_USE;
             memcpy(r + 1,&Result,sizeof(Result));
-            PipeMutex->unlock();
+            _pipeMutex->unlock();
             return 1;
         }
         EntryCount++;
-        if(!PipeOpen)
+        if(!_pipeOpen)
         {
             int i;
-            PipeOpen = true;  // only try once
+            _pipeOpen = true;  // only try once
             if(!PipeFile.Open(lpszPipename, CFile::modeReadWrite))
             {
                 // pipe won't open try to launch server
-                LaunchServer();
+                launchServer();
 
                 for(i=0; i<100; i++) // try for a few secs
                 {
@@ -334,10 +325,10 @@ int MotionClass::Pipe(const char *s, int n, char *r, int *m)
                 if(i==100)
                 {
                     EntryCount--;
-                    if (ServerMessDisplayed) return 1;
-                    ServerMessDisplayed=TRUE;
+                    if (_serverMessDisplayed) return 1;
+                    _serverMessDisplayed=TRUE;
                     DoErrMsg("Unable to Connect to KMotion Server");
-                    PipeMutex->Unlock();
+                    _pipeMutex->Unlock();
                     exit(1);
                 }
             }
@@ -358,8 +349,8 @@ int MotionClass::Pipe(const char *s, int n, char *r, int *m)
 
                 // send it to the console if someone registered a callback
 
-                if (ConsoleHandler)
-                    ConsoleHandler(r+1);
+                if (consoleHandler)
+                    consoleHandler(r+1);
             }
             else if (*r == DEST_ERRMSG)
             {
@@ -379,16 +370,16 @@ int MotionClass::Pipe(const char *s, int n, char *r, int *m)
 
         EntryCount--;
 
-        PipeMutex->Unlock();
+        _pipeMutex->Unlock();
     }
     catch (CFileException *e)
     {
         e->Delete();  // to avoid memory leak
         EntryCount--;
-        if (ServerMessDisplayed) return 1;
-        ServerMessDisplayed=TRUE;
+        if (_serverMessDisplayed) return 1;
+        _serverMessDisplayed=TRUE;
         DoErrMsg("Unable to Connect to KMotion Server");
-        PipeMutex->Unlock();
+        _pipeMutex->Unlock();
         exit(1);
     }
 
@@ -400,7 +391,7 @@ int MotionClass::Pipe(const char *s, int n, char *r, int *m)
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::LaunchServer()
+int MotionClass::launchServer()
 {
 #if 0
     SECURITY_ATTRIBUTES sa          = {0};
@@ -421,14 +412,14 @@ int MotionClass::LaunchServer()
 
 
     // Create pipe for standard output redirection.
-    CreatePipe(&hPipeOutputRead,  // read handle
+    Createpipe(&hPipeOutputRead,  // read handle
         &hPipeOutputWrite, // write handle
         &sa,      // security attributes
         0      // number of bytes reserved for pipe - 0 default
         );
 
     // Create pipe for standard input redirection.
-    CreatePipe(&hPipeInputRead,  // read handle
+    Createpipe(&hPipeInputRead,  // read handle
         &hPipeInputWrite, // write handle
         &sa,      // security attributes
         0      // number of bytes reserved for pipe - 0 default
@@ -455,7 +446,7 @@ int MotionClass::LaunchServer()
         NULL, NULL,
         &si, &pi))
     {
-        ServerMessDisplayed = true;
+        _serverMessDisplayed = true;
         CString Errmsg;
         Errmsg.Format("Unable to execute:\r\r" + cmd + "\r\rTry re-installing software or copy this file to the same location as KMotion.exe or Calling Application");
         DoErrMsg(Errmsg);
@@ -509,7 +500,7 @@ int MotionClass::CheckKMotionVersion(int *type, bool GetBoardTypeOnly)
     {
         // Get the firmware date from the KMotion Card which
         // will be in PT (Pacific Time)
-        ReleaseToken();
+        releaseToken();
         result = WriteLineReadLine("Version",BoardVersion.GetBufferSetLength(MAX_LINE));
         BoardVersion.ReleaseBuffer();
         if (result) return result;
@@ -580,25 +571,25 @@ int MotionClass::CheckKMotionVersion(int *type, bool GetBoardTypeOnly)
 void MotionClass::DoErrMsg(const char *s)
 {
 #if 0
-    if (!ErrMessageDisplayed)
+    if (!_errMessageDisplayed)
     {
-        ErrMessageDisplayed=true;
-        if (ErrMsgHandler)
+        _errMessageDisplayed=true;
+        if (errMsgHandler)
         {
             __try
             {
-                ErrMsgHandler(s);
+                errMsgHandler(s);
             }
             __finally
             {
-                ErrMessageDisplayed=false;
+                _errMessageDisplayed=false;
             }
         }
         else
         {
             AfxMessageBox(s,MB_ICONSTOP|MB_OK|MB_TOPMOST|MB_SETFOREGROUND|MB_SYSTEMMODAL);
         }
-        ErrMessageDisplayed=false;
+        _errMessageDisplayed=false;
     }
 #endif
 }
@@ -611,7 +602,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
     int *p=(int *)&status;
     if(lock)
     {
-        token = WaitToken( false, 100, "GetStatus");
+        token = waitToken( false, 100, "GetStatus");
         if (token != SE_MOTION_LOCKED) return 1;
     }
 
@@ -620,7 +611,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
     ///s.Format("GetStatus");
     if (WriteLine(s))
     {
-        if (lock) ReleaseToken();
+        if (lock) releaseToken();
         return 1;
     }
 
@@ -635,7 +626,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
         {
             if (ReadLineTimeOut(s.GetBuffer(257),5000))
             {
-                if (lock) ReleaseToken();
+                if (lock) releaseToken();
                 return 1;
             }
 
@@ -654,7 +645,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
 
         if (result!=1)
         {
-            if (lock) ReleaseToken();
+            if (lock) releaseToken();
             return 1;
         }
 
@@ -664,7 +655,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
         }
         else
         {
-            if (lock) ReleaseToken();
+            if (lock) releaseToken();
             return 1;
         }
 
@@ -691,7 +682,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
             }
         }
     }
-    if(lock)ReleaseToken();
+    if(lock)releaseToken();
 #endif
     return 0;
 }

@@ -6,32 +6,6 @@
 #include "direct_global.h"
 #include "../../../src/motion/motion_io.h"
 ///-----------------------------------------------------------------------------
-enum
-{
-    ENUM_WriteLineReadLine,
-    ENUM_WriteLine,
-    ENUM_WriteLineWithEcho,
-    ENUM_ReadLineTimeOut,
-    ENUM_ListLocations,
-    ENUM_Failed,
-    ENUM_Disconnect,
-    ENUM_FirmwareVersion,
-    ENUM_CheckForReady,
-    ENUM_KMotionLock,
-    ENUM_USBLocation,
-    ENUM_KMotionLockRecovery,
-    ENUM_ReleaseToken,
-    ENUM_ServiceConsole,
-    ENUM_SetConsole
-};
-///-----------------------------------------------------------------------------
-enum
-{
-    DEST_NORMAL,
-    DEST_CONSOLE,
-    DEST_ERRMSG
-};
-///-----------------------------------------------------------------------------
 class DIRECTSHARED_EXPORT MotionDirectClass
 {
     private:

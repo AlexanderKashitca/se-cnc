@@ -1,17 +1,23 @@
 ///-----------------------------------------------------------------------------
-#include <QPair>
+#include <QList>
 ///-----------------------------------------------------------------------------
+#include "../server/server.h"
 #include "../direct/direct.h"
 ///-----------------------------------------------------------------------------
-#define BUFSIZE 4096
+#define BUFSIZE     4096
+#define MAX_BOARDS  16
 ///-----------------------------------------------------------------------------
 static MotionDirectClass MotionDirect;
 ///-----------------------------------------------------------------------------
-void GetAnswerToRequest(char *chRequest,
-                        DWORD nInBytes,
+static void GetAnswerToRequest(char *chRequest,
+                        unsigned int nInBytes,
                         char *chReply,
-                        DWORD *cbReplyBytes,
-                        HANDLE hPipe);
+                        unsigned int *cbReplyBytes,
+                        void* hPipe);
+static int ConsoleHandler(int board,const char *buf);
+///-----------------------------------------------------------------------------
+static void* ConsolePipeHandle[MAX_BOARDS];
+static QList <QString> ConsoleList[MAX_BOARDS];
 ///-----------------------------------------------------------------------------
 void MyErrExit(char *s)
 {
@@ -28,14 +34,9 @@ void MyErrExit(char *s)
 
 void InstanceThread(LPVOID); 
 
-int ConsoleHandler(int board, const char *buf);
+
  
 int nClients = 0; 
-
-HANDLE ConsolePipeHandle[MAX_BOARDS];
-
-QPair <QString,QString> ConsoleList[MAX_BOARDS];
-
 
 
 
@@ -104,13 +105,15 @@ void ServerMain(LPVOID lpvParam)
    return; 
 } 
 #endif
-VOID InstanceThread(LPVOID lpvParam) 
+VOID InstanceThread(void* lpvParam)
 { 
-   CHAR chRequest[BUFSIZE]; 
-   CHAR chReply[BUFSIZE]; 
-   DWORD cbBytesRead, cbReplyBytes, cbWritten; 
-   BOOL fSuccess; 
-   HANDLE hPipe; 
+   char chRequest[BUFSIZE];
+   char chReply[BUFSIZE];
+   unsigned int cbBytesRead;
+   unsigned int cbReplyBytes;
+   unsigned int cbWritten;
+   bool fSuccess;
+   void* hPipe;
  
 // The thread's parameter is a handle to a pipe instance. 
  
@@ -129,7 +132,7 @@ VOID InstanceThread(LPVOID lpvParam)
       if (! fSuccess || cbBytesRead == 0) 
          break; 
       
-	  GetAnswerToRequest(chRequest, cbBytesRead, chReply, &cbReplyBytes, hPipe); 
+      GetAnswerToRequest(chRequest,cbBytesRead,chReply,&cbReplyBytes,hPipe);
 	   
    // Write the reply to the pipe. 
       fSuccess = WriteFile( 
@@ -156,10 +159,22 @@ VOID InstanceThread(LPVOID lpvParam)
 } 
  
 
-
-void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *cbReplyBytes, HANDLE hPipe)
+///-----------------------------------------------------------------------------
+void GetAnswerToRequest(char *chRequest,
+                        unsigned int nInBytes,
+                        char *chReply,
+                        unsigned int *cbReplyBytes,
+                        void* hPipe)
 {
-	int code, BoardID, board, TimeOutms, result=0, nLocations, List[256];
+    int code;
+    int board;
+    int BoardID;
+    int result(0);
+    int List[256];
+    int TimeOutms;
+    int nLocations;
+
+
 
 	memcpy(&code, chRequest,4);
 
@@ -170,106 +185,90 @@ void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *c
 	}
 
 	chReply[0]=DEST_NORMAL;
-
 	switch (code)
 	{
-
-	case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
-        result = MotionDirect.writeLineReadLine(chRequest+8, chReply+1+4);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
-		break;
-
-	case ENUM_WriteLine:	
-        result = MotionDirect.writeLine(chRequest+8);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_WriteLineWithEcho:	
-        result = MotionDirect.writeLineWithEcho(chRequest+8);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
-		memcpy(&TimeOutms, chRequest+8,4);
-        result = MotionDirect.readLineTimeOut(chReply+1+4 ,TimeOutms);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
-		break;
-
-	case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
-        result = MotionDirect.listLocations(&nLocations, List);
-		memcpy(chReply+1, &result,4);
-		memcpy(chReply+1+4, &nLocations,4);
-		memcpy(chReply+1+8, List, nLocations*4);
-		*cbReplyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
-		break;
-
-	case ENUM_Failed:	
-        result = MotionDirect.failed();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_Disconnect:	
-        result = MotionDirect.disconnect();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_FirmwareVersion:	
-        result = MotionDirect.firmwareVersion();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_CheckForReady:	
-        result = MotionDirect.checkForReady();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_KMotionLock:	
-        result = MotionDirect.motionLock(chRequest + 8);
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_USBLocation:	
+        case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
+            result = MotionDirect.writeLineReadLine(chRequest+8, chReply+1+4);
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_WriteLine:
+            result = MotionDirect.writeLine(chRequest+8);
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_WriteLineWithEcho:
+            result = MotionDirect.writeLineWithEcho(chRequest+8);
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
+            memcpy(&TimeOutms, chRequest+8,4);
+            result = MotionDirect.readLineTimeOut(chReply+1+4 ,TimeOutms);
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
+            result = MotionDirect.listLocations(&nLocations, List);
+            memcpy(chReply+1, &result,4);
+            memcpy(chReply+1+4, &nLocations,4);
+            memcpy(chReply+1+8, List, nLocations*4);
+            *cbReplyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_Failed:
+            result = MotionDirect.failed();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_Disconnect:
+            result = MotionDirect.disconnect();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_FirmwareVersion:
+            result = MotionDirect.firmwareVersion();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_CheckForReady:
+            result = MotionDirect.checkForReady();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_KMotionLock:
+            result = MotionDirect.motionLock(chRequest + 8);
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_USBLocation:
 ///        result = MotionDirect.usbLocation();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_KMotionLockRecovery:	
-        result = MotionDirect.motionLockRecovery();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_ReleaseToken:	
-        MotionDirect.releaseToken();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_ServiceConsole:	
-        result = MotionDirect.serviceConsole();
-		memcpy(chReply+1, &result,4);
-		*cbReplyBytes=1+4;
-		break;
-
-	case ENUM_SetConsole:
-/// remember which pipe is associated with the console handler for the board
-///ConsolePipeHandle[board] = hPipe;
-///result = MotionDirect.setConsoleCallback(ConsoleHandler);
-///memcpy(chReply+1, &result,4);
-///*cbReplyBytes=1+4;
-		break;
-
-	default: MyErrExit("Bad Request Code");
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_KMotionLockRecovery:
+            result = MotionDirect.motionLockRecovery();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_ReleaseToken:
+            MotionDirect.releaseToken();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_ServiceConsole:
+            result = MotionDirect.serviceConsole();
+            memcpy(chReply+1, &result,4);
+            *cbReplyBytes=1+4;
+            break;
+        case ENUM_SetConsole:
+            /// remember which pipe is associated with the console handler for the board
+            ///ConsolePipeHandle[board] = hPipe;
+            result = MotionDirect.setConsoleCallback(ConsoleHandler);
+            ///memcpy(chReply+1, &result,4);
+            ///*cbReplyBytes=1+4;
+            break;
+        default :
+            MyErrExit("Bad Request Code");
 	}
 
 ///	// before we send the answer back check if this pipe
@@ -350,20 +349,15 @@ void GetAnswerToRequest(char *chRequest, DWORD nInBytes, char *chReply, DWORD *c
         MotionDirect.clearErrMsg();
 	}
 }
-
-#if 0
+///-----------------------------------------------------------------------------
 int ConsoleHandler(int board, const char *buf)
 {
-	// check if there is a console handler for
-	// this board
-
-	if (ConsolePipeHandle[board])
+    /// check if there is a console handler for this board
+    if(ConsolePipeHandle[board])
 	{
-		// there is, add the message to the list
-
-		ConsoleList[board].AddTail(buf);
+        /// there is, add the message to the list
+        ConsoleList[board].append(buf);
 	}
 	return 0;
 }
-
-#endif
+///-----------------------------------------------------------------------------

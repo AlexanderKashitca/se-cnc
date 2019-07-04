@@ -8,20 +8,13 @@
 ///-----------------------------------------------------------------------------
 #include "../ftdi/ftd2xx.h"
 ///-----------------------------------------------------------------------------
-#include "hirestimer.h"
-///-----------------------------------------------------------------------------
 #ifndef MAX_LINE
     #define MAX_LINE    2560
 #endif
-#ifndef MAX_BOARDS
-    #define MAX_BOARDS  16
-#endif
-///-----------------------------------------------------------------------------
-extern HiResTimerClass Timer;
 ///-----------------------------------------------------------------------------
 #define NO_SEMOTION_TIMEOUT false /// useful for debugging
 ///-----------------------------------------------------------------------------
-typedef int SERVER_CONSOLE_HANDLER (int board, const char *buf);
+typedef int SERVER_CONSOLE_HANDLER(int board,const char *buf);
 ///-----------------------------------------------------------------------------
 class MotionIOClass
 {
@@ -34,10 +27,8 @@ class MotionIOClass
         bool    _sendAbortOnConnect;
         bool    _connected;
 
-        int errorMessageBox(const char *s);
-        int errorMessageBox(QString const s);
-
-
+        int     errorMessageBox(const char *s);
+        int     errorMessageBox(QString const s);
         DWORD   getCurrentTimeMs(void);
         int     sleep(DWORD miliseconds);
         bool    requestedDeviceAvail(QString *reason);
@@ -56,18 +47,15 @@ class MotionIOClass
         char    _saveChars[MAX_LINE + 1];
         FT_HANDLE   _ftHandle;
         SERVER_CONSOLE_HANDLER *ConsoleHandler;
-
     public:
-        MotionIOClass();
-        virtual ~MotionIOClass();
-
-
-
         QString _errMsg;
         QString _lastCallerID;
-
-
         bool    _boardAssigned;
+
+        MotionIOClass();
+        MotionIOClass(const MotionIOClass&) = delete; /// disable copy constructor
+        void operator=(const MotionIOClass&)= delete; /// desable overload operator=
+        virtual ~MotionIOClass();
 
         int     motionLock(char *CallerID);
         int     motionLockRecovery();
@@ -92,18 +80,6 @@ class MotionIOClass
         void    clearErrMsg();
         int     nInstances();
  */
-
-
-
-
-private:
-
-
-
-
-    private:
-
-
 };
 ///-----------------------------------------------------------------------------
 #endif /// MOTION_IO_H
