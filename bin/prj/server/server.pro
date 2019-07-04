@@ -15,8 +15,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        ../../../src/server/server.cpp \
-        main.cpp
+            ../../../src/server/server.cpp \
+            main.cpp
+HEADERS += \
+            ../../../src/motion/motion_service.h \
+            ../../../src/server/server.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -26,3 +29,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
 DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release
 LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/build/build-direct-Desktop_Qt_5_12_3_GCC_64bit-Release/ -ldirect
+
+

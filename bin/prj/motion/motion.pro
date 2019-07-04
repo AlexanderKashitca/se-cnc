@@ -29,6 +29,7 @@ SOURCES += \
 HEADERS += \
         ../../../src/motion/common.h \
         ../../../src/motion/hirestimer.h \
+        ../../../src/motion/motion_service.h \
         ../../../src/server/server.h \
         motion.h \
         motion_global.h 
