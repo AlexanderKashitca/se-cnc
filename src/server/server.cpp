@@ -1,9 +1,64 @@
 ///-----------------------------------------------------------------------------
 #include <QList>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTimer>
+#include <QtDBus/QtDBus>
+///-----------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
 ///-----------------------------------------------------------------------------
 #include "../server/server.h"
 #include "../direct/direct.h"
 ///-----------------------------------------------------------------------------
+/// the property
+QString ServerClass::value() const
+{
+    return m_value;
+}
+///-----------------------------------------------------------------------------
+void ServerClass::setValue(const QString &newValue)
+{
+    m_value = newValue;
+}
+///-----------------------------------------------------------------------------
+void ServerClass::quit()
+{
+    QTimer::singleShot(0,QCoreApplication::instance(),&QCoreApplication::quit);
+}
+///-----------------------------------------------------------------------------
+QDBusVariant ServerClass::query(const int &query)
+{
+
+
+
+}
+///-----------------------------------------------------------------------------
+QDBusVariant ServerClass::query(const QString &query)
+{
+    QString q = query.toLower();
+    if (q == "hello")
+        return QDBusVariant("World");
+    if (q == "ping")
+        return QDBusVariant("Pong");
+    if (q.indexOf("the answer to life, the universe and everything") != -1)
+        return QDBusVariant(42);
+    if (q.indexOf("unladen swallow") != -1) {
+        if (q.indexOf("european") != -1)
+            return QDBusVariant(11.0);
+        return QDBusVariant(QByteArray("african or european?"));
+    }
+
+    return QDBusVariant("Sorry, I don't know the answer");
+}
+///-----------------------------------------------------------------------------
+
+
+
+
+
+
+///-----------------------------------------------------------------------------
+#if 0
 #define BUFSIZE     4096
 #define MAX_BOARDS  16
 ///-----------------------------------------------------------------------------
@@ -31,17 +86,14 @@ void MyErrExit(char *s)
 
 #define PIPE_TIMEOUT 10000
 
-
 void InstanceThread(LPVOID); 
-
-
  
 int nClients = 0; 
 
 
 
-
- 
+#endif
+#endif
 void ServerMain(LPVOID lpvParam) 
 { 
    BOOL fConnected; 
@@ -104,7 +156,7 @@ void ServerMain(LPVOID lpvParam)
    } 
    return; 
 } 
-#endif
+///#endif
 VOID InstanceThread(void* lpvParam)
 { 
    char chRequest[BUFSIZE];
@@ -135,12 +187,12 @@ VOID InstanceThread(void* lpvParam)
       GetAnswerToRequest(chRequest,cbBytesRead,chReply,&cbReplyBytes,hPipe);
 	   
    // Write the reply to the pipe. 
-      fSuccess = WriteFile( 
-         hPipe,        // handle to pipe 
-         chReply,      // buffer to write from 
-         cbReplyBytes, // number of bytes to write 
-         &cbWritten,   // number of bytes written 
-         NULL);        // not overlapped I/O 
+///      fSuccess = WriteFile(
+///         hPipe,        // handle to pipe
+///         chReply,      // buffer to write from
+///         cbReplyBytes, // number of bytes to write
+///         &cbWritten,   // number of bytes written
+///         NULL);        // not overlapped I/O
 
       if (! fSuccess || cbReplyBytes != cbWritten) break; 
   } 
@@ -149,12 +201,12 @@ VOID InstanceThread(void* lpvParam)
 // before disconnecting. Then disconnect the pipe, and close the 
 // handle to this pipe instance. 
  
-   FlushFileBuffers(hPipe); 
-   DisconnectNamedPipe(hPipe); 
-   CloseHandle(hPipe); 
+///   FlushFileBuffers(hPipe);
+///   DisconnectNamedPipe(hPipe);
+///   CloseHandle(hPipe);
 
 
-   if (--nClients <= 0) exit(0);              // nobody left - terminate server
+///   if (--nClients <= 0) exit(0);              // nobody left - terminate server
    if (MotionDirect.nInstances() < 2) exit(0);  // nobody left - terminate server
 } 
  
@@ -361,3 +413,76 @@ int ConsoleHandler(int board, const char *buf)
 	return 0;
 }
 ///-----------------------------------------------------------------------------
+#endif
+
+
+
+
+
+/// send message from motion to server
+int MotionClass::pipe(const char *s, int n, char *r, int *m)
+{
+
+    unsigned char Reply = 0xAA;
+    QString ErrorMsg;
+    bool ReceivedErrMsg = false;
+    static int EntryCount = 0;
+
+    if(_serverMessDisplayed)
+        return 1;
+
+    try
+    {
+        _pipeMutex->lock();
+        EntryCount++;
+        PipeFile.Write(s,n); /// Send the request
+        for (;;)
+        {
+            /// ответ от сервера
+            /// *m - количество прочитаных байт в буфере r
+            *m = PipeFile.Read(r, MAX_LINE+1);     // Get the response
+            /// парсинг первого байта ответа
+            // the first byte of the response is the destination
+            // currently DEST_NORMAL, DEST_CONSOLE
+            if(*r == DEST_CONSOLE)
+            {
+                PipeFile.Write(&Reply, 1);     // Send an ACK back to server
+                // send it to the console if someone registered a callback
+                if (consoleHandler)
+                    consoleHandler(r+1);
+            }
+            else
+            if(*r == DEST_ERRMSG)
+            {
+                PipeFile.Write(&Reply, 1);     // Send an ACK back to server
+                // because callback might throw an exception, delay doing the User Callback
+                // until everything is received back from the Server and we clean up
+                ErrorMsg=r+1;
+                ReceivedErrMsg=true;
+            }
+            else
+            {
+                break;
+            }
+        }
+        EntryCount--;
+        _pipeMutex->Unlock();
+    }
+
+    catch (CFileException *e)
+    {
+        e->Delete();  // to avoid memory leak
+        EntryCount--;
+        if (_serverMessDisplayed) return 1;
+        _serverMessDisplayed=TRUE;
+        DoErrMsg("Unable to Connect to KMotion Server");
+        _pipeMutex->Unlock();
+        exit(1);
+    }
+
+    if (ReceivedErrMsg)
+    {
+        DoErrMsg(ErrorMsg);
+    }
+    return 0;
+}

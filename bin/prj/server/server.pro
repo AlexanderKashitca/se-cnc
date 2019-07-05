@@ -1,8 +1,10 @@
+#------------------------------------------------------------------------------
 QT -= gui
-
+QT += dbus
+#------------------------------------------------------------------------------
 CONFIG += c++11 console
 CONFIG -= app_bundle
-
+#------------------------------------------------------------------------------
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -19,7 +21,8 @@ SOURCES += \
             main.cpp
 HEADERS += \
             ../../../src/motion/motion_service.h \
-            ../../../src/server/server.h
+            ../../../src/server/server.h \
+            ../../../src/server/server_common.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
