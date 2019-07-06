@@ -56,8 +56,8 @@ static const uint qt_meta_data_ServerClass[] = {
        8,       // revision
        0,       // classname
        1,   14, // classinfo
-       3,   16, // methods
-       1,   36, // properties
+       4,   16, // methods
+       1,   44, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
@@ -67,17 +67,19 @@ static const uint qt_meta_data_ServerClass[] = {
        1,    2,
 
  // signals: name, argc, parameters, tag, flags
-       3,    0,   31,    4, 0x06 /* Public */,
+       3,    0,   36,    4, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,   32,    4, 0x0a /* Public */,
-       7,    0,   35,    8, 0x0a /* Public */,
+       5,    1,   37,    4, 0x0a /* Public */,
+       5,    1,   40,    4, 0x0a /* Public */,
+       7,    0,   43,    8, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
 
  // slots: parameters
     0x80000000 | 6, QMetaType::QString,    5,
+    0x80000000 | 6, QMetaType::QByteArray,    5,
     QMetaType::Void,
 
  // properties: name, type, flags
@@ -95,7 +97,9 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 0: _t->aboutToQuit(); break;
         case 1: { QDBusVariant _r = _t->query((*reinterpret_cast< const QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
-        case 2: _t->quit(); break;
+        case 2: { QDBusVariant _r = _t->query((*reinterpret_cast< const QByteArray(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
+        case 3: _t->quit(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -159,13 +163,13 @@ int ServerClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 4)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 3;
+        _id -= 4;
     }
 #ifndef QT_NO_PROPERTIES
    else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty

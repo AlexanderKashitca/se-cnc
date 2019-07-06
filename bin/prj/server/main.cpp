@@ -8,7 +8,7 @@
 #include "../../../src/server/server.h"
 #include "../../../src/motion/motion_service.h"
 
-#include <stdio.h>
+
 
 
 

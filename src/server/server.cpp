@@ -9,25 +9,145 @@
 ///-----------------------------------------------------------------------------
 #include "../server/server.h"
 #include "../direct/direct.h"
+
+static MotionDirectClass MotionDirect;
 ///-----------------------------------------------------------------------------
-/// the property
+// the property
 QString ServerClass::value() const
 {
     return m_value;
 }
-///-----------------------------------------------------------------------------
 void ServerClass::setValue(const QString &newValue)
 {
     m_value = newValue;
 }
-///-----------------------------------------------------------------------------
 void ServerClass::quit()
 {
     QTimer::singleShot(0,QCoreApplication::instance(),&QCoreApplication::quit);
 }
 ///-----------------------------------------------------------------------------
-QDBusVariant ServerClass::query(const int &query)
+void ServerClass::GetQueryToAnswer()
 {
+    int code;
+    int board;
+    int BoardID;
+    int result(0);
+    int List[256];
+    int TimeOutms;
+    int nLocations;
+
+    memcpy(&code, _replyBuffer,4);
+
+    if (code!=ENUM_ListLocations)  // all commands require a board to be mapped, except this command
+    {
+        memcpy(&BoardID, _replyBuffer+4,4);
+///        board=MotionDirect.MapBoardToIndex(BoardID);
+    }
+
+    _replyBuffer[0] = DEST_NORMAL;
+    switch (code)
+    {
+        case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
+            result = MotionDirect.writeLineReadLine(_replyBuffer+8, _replyBuffer+1+4);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_WriteLine:
+            result = MotionDirect.writeLine(_replyBuffer+8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_WriteLineWithEcho:
+            result = MotionDirect.writeLineWithEcho(_requestBuffer+8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
+            memcpy(&TimeOutms, _replyBuffer+8,4);
+            result = MotionDirect.readLineTimeOut(_replyBuffer+1+4 ,TimeOutms);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
+            result = MotionDirect.listLocations(&nLocations, List);
+            memcpy(_replyBuffer+1, &result,4);
+            memcpy(_replyBuffer+1+4, &nLocations,4);
+            memcpy(_replyBuffer+1+8, List, nLocations*4);
+            _replyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_Failed:
+            result = MotionDirect.failed();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_Disconnect:
+            result = MotionDirect.disconnect();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_FirmwareVersion:
+            result = MotionDirect.firmwareVersion();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_CheckForReady:
+            result = MotionDirect.checkForReady();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_KMotionLock:
+            result = MotionDirect.motionLock(_replyBuffer + 8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_USBLocation:
+///        result = MotionDirect.usbLocation();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_KMotionLockRecovery:
+            result = MotionDirect.motionLockRecovery();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ReleaseToken:
+            MotionDirect.releaseToken();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ServiceConsole:
+            result = MotionDirect.serviceConsole();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_SetConsole:
+            /// remember which pipe is associated with the console handler for the board
+            ///ConsolePipeHandle[board] = hPipe;
+            ///result = MotionDirect.setConsoleCallback(ConsoleHandler);
+            ///memcpy(_replyBuffer+1, &result,4);
+            ///_replyBytes=1+4;
+            break;
+        //default :
+            ///MyErrExit("Bad Request Code");
+    }
+}
+///-----------------------------------------------------------------------------
+QDBusVariant ServerClass::query(const QByteArray &query)
+{
+
+
+
+    if(!query.isEmpty())
+    {
+        for(int i = 0;i < query.length();i++)
+        {
+            _requestBuffer[i] = query.at(i);
+        }
+        _requestBytes = static_cast<unsigned int>(query.length());
+        GetQueryToAnswer();
+
+    }
+
 
 
 
@@ -62,7 +182,7 @@ QDBusVariant ServerClass::query(const QString &query)
 #define BUFSIZE     4096
 #define MAX_BOARDS  16
 ///-----------------------------------------------------------------------------
-static MotionDirectClass MotionDirect;
+
 ///-----------------------------------------------------------------------------
 static void GetAnswerToRequest(char *chRequest,
                         unsigned int nInBytes,
@@ -82,8 +202,6 @@ void MyErrExit(char *s)
 ///-----------------------------------------------------------------------------
 ///extern CMainFrame *TheFrame;
 
-#if 0
-
 #define PIPE_TIMEOUT 10000
 
 void InstanceThread(LPVOID); 
@@ -92,8 +210,8 @@ int nClients = 0;
 
 
 
-#endif
-#endif
+
+
 void ServerMain(LPVOID lpvParam) 
 { 
    BOOL fConnected; 
@@ -156,7 +274,7 @@ void ServerMain(LPVOID lpvParam)
    } 
    return; 
 } 
-///#endif
+
 VOID InstanceThread(void* lpvParam)
 { 
    char chRequest[BUFSIZE];
@@ -413,7 +531,7 @@ int ConsoleHandler(int board, const char *buf)
 	return 0;
 }
 ///-----------------------------------------------------------------------------
-#endif
+
 
 
 
@@ -486,3 +604,4 @@ int MotionClass::pipe(const char *s, int n, char *r, int *m)
     }
     return 0;
 }
+#endif
