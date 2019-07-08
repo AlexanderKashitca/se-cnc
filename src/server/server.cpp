@@ -1,5 +1,4 @@
 ///-----------------------------------------------------------------------------
-#include <QList>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
@@ -8,134 +7,24 @@
 #include <stdlib.h>
 ///-----------------------------------------------------------------------------
 #include "../server/server.h"
-#include "../direct/direct.h"
 
-static MotionDirectClass MotionDirect;
+
 ///-----------------------------------------------------------------------------
-// the property
-QString ServerClass::value() const
+ServerClass::~ServerClass()
 {
-    return m_value;
+    _motionDirect.~MotionDirectClass();
 }
-void ServerClass::setValue(const QString &newValue)
-{
-    m_value = newValue;
-}
+///-----------------------------------------------------------------------------
 void ServerClass::quit()
 {
-    QTimer::singleShot(0,QCoreApplication::instance(),&QCoreApplication::quit);
-}
-///-----------------------------------------------------------------------------
-void ServerClass::GetQueryToAnswer()
-{
-    int code;
-    int board;
-    int BoardID;
-    int result(0);
-    int List[256];
-    int TimeOutms;
-    int nLocations;
-
-    memcpy(&code, _replyBuffer,4);
-
-    if (code!=ENUM_ListLocations)  // all commands require a board to be mapped, except this command
-    {
-        memcpy(&BoardID, _replyBuffer+4,4);
-///        board=MotionDirect.MapBoardToIndex(BoardID);
-    }
-
-    _replyBuffer[0] = DEST_NORMAL;
-    switch (code)
-    {
-        case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
-            result = MotionDirect.writeLineReadLine(_replyBuffer+8, _replyBuffer+1+4);
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
-            break;
-        case ENUM_WriteLine:
-            result = MotionDirect.writeLine(_replyBuffer+8);
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_WriteLineWithEcho:
-            result = MotionDirect.writeLineWithEcho(_requestBuffer+8);
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
-            memcpy(&TimeOutms, _replyBuffer+8,4);
-            result = MotionDirect.readLineTimeOut(_replyBuffer+1+4 ,TimeOutms);
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
-            break;
-        case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
-            result = MotionDirect.listLocations(&nLocations, List);
-            memcpy(_replyBuffer+1, &result,4);
-            memcpy(_replyBuffer+1+4, &nLocations,4);
-            memcpy(_replyBuffer+1+8, List, nLocations*4);
-            _replyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
-            break;
-        case ENUM_Failed:
-            result = MotionDirect.failed();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_Disconnect:
-            result = MotionDirect.disconnect();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_FirmwareVersion:
-            result = MotionDirect.firmwareVersion();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_CheckForReady:
-            result = MotionDirect.checkForReady();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_KMotionLock:
-            result = MotionDirect.motionLock(_replyBuffer + 8);
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_USBLocation:
-///        result = MotionDirect.usbLocation();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_KMotionLockRecovery:
-            result = MotionDirect.motionLockRecovery();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_ReleaseToken:
-            MotionDirect.releaseToken();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_ServiceConsole:
-            result = MotionDirect.serviceConsole();
-            memcpy(_replyBuffer+1, &result,4);
-            _replyBytes=1+4;
-            break;
-        case ENUM_SetConsole:
-            /// remember which pipe is associated with the console handler for the board
-            ///ConsolePipeHandle[board] = hPipe;
-            ///result = MotionDirect.setConsoleCallback(ConsoleHandler);
-            ///memcpy(_replyBuffer+1, &result,4);
-            ///_replyBytes=1+4;
-            break;
-        //default :
-            ///MyErrExit("Bad Request Code");
-    }
+    QTimer::singleShot(0, QCoreApplication::instance(), &QCoreApplication::quit);
 }
 ///-----------------------------------------------------------------------------
 QDBusVariant ServerClass::query(const QByteArray &query)
 {
 
-
+    QByteArray response;
+    response.append("Server Response");
 
     if(!query.isEmpty())
     {
@@ -147,10 +36,7 @@ QDBusVariant ServerClass::query(const QByteArray &query)
         GetQueryToAnswer();
 
     }
-
-
-
-
+    return(QDBusVariant(QByteArray(response)));
 }
 ///-----------------------------------------------------------------------------
 QDBusVariant ServerClass::query(const QString &query)
@@ -171,7 +57,115 @@ QDBusVariant ServerClass::query(const QString &query)
     return QDBusVariant("Sorry, I don't know the answer");
 }
 ///-----------------------------------------------------------------------------
+void ServerClass::GetQueryToAnswer()
+{
+#if 0
+    int code;
+    int board;
+    int BoardID;
+    int result(0);
+    int List[256];
+    int TimeOutms;
+    int nLocations;
 
+    memcpy(&code, _replyBuffer,4);
+
+    if (code!=ENUM_ListLocations)  // all commands require a board to be mapped, except this command
+    {
+        memcpy(&BoardID, _replyBuffer+4,4);
+///        board=_motionDirect.MapBoardToIndex(BoardID);
+    }
+
+    _replyBuffer[0] = DEST_NORMAL;
+
+    switch (code)
+    {
+        case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
+            result = _motionDirect.writeLineReadLine(_replyBuffer+8, _replyBuffer+1+4);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_WriteLine:
+            result = _motionDirect.writeLine(_replyBuffer+8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_WriteLineWithEcho:
+            result = _motionDirect.writeLineWithEcho(_requestBuffer+8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
+            memcpy(&TimeOutms, _replyBuffer+8,4);
+            result = _motionDirect.readLineTimeOut(_replyBuffer+1+4 ,TimeOutms);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes = 1+4+strlen(_replyBuffer+1+4)+1; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
+            result = _motionDirect.listLocations(&nLocations, List);
+            memcpy(_replyBuffer+1, &result,4);
+            memcpy(_replyBuffer+1+4, &nLocations,4);
+            memcpy(_replyBuffer+1+8, List, nLocations*4);
+            _replyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
+            break;
+        case ENUM_Failed:
+            result = _motionDirect.failed();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_Disconnect:
+            result = _motionDirect.disconnect();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_FirmwareVersion:
+            result = _motionDirect.firmwareVersion();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_CheckForReady:
+            result = _motionDirect.checkForReady();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_KMotionLock:
+            result = _motionDirect.motionLock(_replyBuffer + 8);
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_USBLocation:
+///        result = _motionDirect.usbLocation();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_KMotionLockRecovery:
+            result = _motionDirect.motionLockRecovery();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ReleaseToken:
+            _motionDirect.releaseToken();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_ServiceConsole:
+            result = _motionDirect.serviceConsole();
+            memcpy(_replyBuffer+1, &result,4);
+            _replyBytes=1+4;
+            break;
+        case ENUM_SetConsole:
+            /// remember which pipe is associated with the console handler for the board
+            ///ConsolePipeHandle[board] = hPipe;
+            ///result = _motionDirect.setConsoleCallback(ConsoleHandler);
+            ///memcpy(_replyBuffer+1, &result,4);
+            ///_replyBytes=1+4;
+            break;
+        //default :
+            ///MyErrExit("Bad Request Code");
+    }
+#endif
+}
+///-----------------------------------------------------------------------------
 
 
 
@@ -325,7 +319,7 @@ VOID InstanceThread(void* lpvParam)
 
 
 ///   if (--nClients <= 0) exit(0);              // nobody left - terminate server
-   if (MotionDirect.nInstances() < 2) exit(0);  // nobody left - terminate server
+   if (_motionDirect.nInstances() < 2) exit(0);  // nobody left - terminate server
 } 
  
 
@@ -351,89 +345,89 @@ void GetAnswerToRequest(char *chRequest,
 	if (code!=ENUM_ListLocations)  // all commands require a board to be mapped, except this command
 	{
 		memcpy(&BoardID, chRequest+4,4);
-///        board=MotionDirect.MapBoardToIndex(BoardID);
+///        board=_motionDirect.MapBoardToIndex(BoardID);
 	}
 
 	chReply[0]=DEST_NORMAL;
 	switch (code)
 	{
         case ENUM_WriteLineReadLine:	// Send Code, board, string -- Get Dest byte, Result (int) and string
-            result = MotionDirect.writeLineReadLine(chRequest+8, chReply+1+4);
+            result = _motionDirect.writeLineReadLine(chRequest+8, chReply+1+4);
             memcpy(chReply+1, &result,4);
             *cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
             break;
         case ENUM_WriteLine:
-            result = MotionDirect.writeLine(chRequest+8);
+            result = _motionDirect.writeLine(chRequest+8);
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_WriteLineWithEcho:
-            result = MotionDirect.writeLineWithEcho(chRequest+8);
+            result = _motionDirect.writeLineWithEcho(chRequest+8);
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_ReadLineTimeOut:	// Send Code, board, timeout -- Dest byte, Get Result (int), and string
             memcpy(&TimeOutms, chRequest+8,4);
-            result = MotionDirect.readLineTimeOut(chReply+1+4 ,TimeOutms);
+            result = _motionDirect.readLineTimeOut(chReply+1+4 ,TimeOutms);
             memcpy(chReply+1, &result,4);
             *cbReplyBytes = 1+4+strlen(chReply+1+4)+1; // Dest byte, Result int, string, null char
             break;
         case ENUM_ListLocations:		// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
-            result = MotionDirect.listLocations(&nLocations, List);
+            result = _motionDirect.listLocations(&nLocations, List);
             memcpy(chReply+1, &result,4);
             memcpy(chReply+1+4, &nLocations,4);
             memcpy(chReply+1+8, List, nLocations*4);
             *cbReplyBytes = 1+4+4+4*nLocations; // Dest byte, Result int, string, null char
             break;
         case ENUM_Failed:
-            result = MotionDirect.failed();
+            result = _motionDirect.failed();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_Disconnect:
-            result = MotionDirect.disconnect();
+            result = _motionDirect.disconnect();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_FirmwareVersion:
-            result = MotionDirect.firmwareVersion();
+            result = _motionDirect.firmwareVersion();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_CheckForReady:
-            result = MotionDirect.checkForReady();
+            result = _motionDirect.checkForReady();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_KMotionLock:
-            result = MotionDirect.motionLock(chRequest + 8);
+            result = _motionDirect.motionLock(chRequest + 8);
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_USBLocation:
-///        result = MotionDirect.usbLocation();
+///        result = _motionDirect.usbLocation();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_KMotionLockRecovery:
-            result = MotionDirect.motionLockRecovery();
+            result = _motionDirect.motionLockRecovery();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_ReleaseToken:
-            MotionDirect.releaseToken();
+            _motionDirect.releaseToken();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_ServiceConsole:
-            result = MotionDirect.serviceConsole();
+            result = _motionDirect.serviceConsole();
             memcpy(chReply+1, &result,4);
             *cbReplyBytes=1+4;
             break;
         case ENUM_SetConsole:
             /// remember which pipe is associated with the console handler for the board
             ///ConsolePipeHandle[board] = hPipe;
-            result = MotionDirect.setConsoleCallback(ConsoleHandler);
+            result = _motionDirect.setConsoleCallback(ConsoleHandler);
             ///memcpy(chReply+1, &result,4);
             ///*cbReplyBytes=1+4;
             break;
@@ -485,12 +479,12 @@ void GetAnswerToRequest(char *chRequest,
 
 	// check if we have an error message to send back
 
-    if (code!=ENUM_ListLocations && !MotionDirect.getErrMsg()[0]==0)
+    if (code!=ENUM_ListLocations && !_motionDirect.getErrMsg()[0]==0)
 	{
 		DWORD cbReplyBytes, cbBytesRead, cbWritten; 
 		unsigned char Reply;
 		BOOL fSuccess; 
-        QString s = MotionDirect.getErrMsg();
+        QString s = _motionDirect.getErrMsg();
 
         s.insert(0,DEST_ERRMSG);
 
@@ -516,7 +510,7 @@ void GetAnswerToRequest(char *chRequest,
 ///				 NULL);        // not overlapped I/O
 ///		}
 
-        MotionDirect.clearErrMsg();
+        _motionDirect.clearErrMsg();
 	}
 }
 ///-----------------------------------------------------------------------------

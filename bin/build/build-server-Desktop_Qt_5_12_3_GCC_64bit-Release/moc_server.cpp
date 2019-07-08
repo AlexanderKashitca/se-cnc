@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_ServerClass_t {
-    QByteArrayData data[10];
-    char stringdata0[103];
+    QByteArrayData data[9];
+    char stringdata0[117];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,20 +33,19 @@ static const qt_meta_stringdata_ServerClass_t qt_meta_stringdata_ServerClass = {
     {
 QT_MOC_LITERAL(0, 0, 11), // "ServerClass"
 QT_MOC_LITERAL(1, 12, 15), // "D-Bus Interface"
-QT_MOC_LITERAL(2, 28, 21), // "QtDBus.Service.Server"
-QT_MOC_LITERAL(3, 50, 11), // "aboutToQuit"
-QT_MOC_LITERAL(4, 62, 0), // ""
-QT_MOC_LITERAL(5, 63, 5), // "query"
-QT_MOC_LITERAL(6, 69, 12), // "QDBusVariant"
-QT_MOC_LITERAL(7, 82, 4), // "quit"
-QT_MOC_LITERAL(8, 87, 9), // "Q_NOREPLY"
-QT_MOC_LITERAL(9, 97, 5) // "value"
+QT_MOC_LITERAL(2, 28, 41), // "org.example.QtDBus.SeMotionSe..."
+QT_MOC_LITERAL(3, 70, 11), // "aboutToQuit"
+QT_MOC_LITERAL(4, 82, 0), // ""
+QT_MOC_LITERAL(5, 83, 5), // "query"
+QT_MOC_LITERAL(6, 89, 12), // "QDBusVariant"
+QT_MOC_LITERAL(7, 102, 4), // "quit"
+QT_MOC_LITERAL(8, 107, 9) // "Q_NOREPLY"
 
     },
     "ServerClass\0D-Bus Interface\0"
-    "QtDBus.Service.Server\0aboutToQuit\0\0"
-    "query\0QDBusVariant\0quit\0Q_NOREPLY\0"
-    "value"
+    "org.example.QtDBus.SeMotionService.Server\0"
+    "aboutToQuit\0\0query\0QDBusVariant\0quit\0"
+    "Q_NOREPLY"
 };
 #undef QT_MOC_LITERAL
 
@@ -56,8 +55,8 @@ static const uint qt_meta_data_ServerClass[] = {
        8,       // revision
        0,       // classname
        1,   14, // classinfo
-       4,   16, // methods
-       1,   44, // properties
+       3,   16, // methods
+       0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
@@ -67,23 +66,18 @@ static const uint qt_meta_data_ServerClass[] = {
        1,    2,
 
  // signals: name, argc, parameters, tag, flags
-       3,    0,   36,    4, 0x06 /* Public */,
+       3,    0,   31,    4, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,   37,    4, 0x0a /* Public */,
-       5,    1,   40,    4, 0x0a /* Public */,
-       7,    0,   43,    8, 0x0a /* Public */,
+       5,    1,   32,    4, 0x0a /* Public */,
+       7,    0,   35,    8, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
 
  // slots: parameters
     0x80000000 | 6, QMetaType::QByteArray,    5,
-    0x80000000 | 6, QMetaType::QString,    5,
     QMetaType::Void,
-
- // properties: name, type, flags
-       9, QMetaType::QString, 0x00095103,
 
        0        // eod
 };
@@ -97,9 +91,7 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 0: _t->aboutToQuit(); break;
         case 1: { QDBusVariant _r = _t->query((*reinterpret_cast< const QByteArray(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
-        case 2: { QDBusVariant _r = _t->query((*reinterpret_cast< const QString(*)>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
-        case 3: _t->quit(); break;
+        case 2: _t->quit(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -112,26 +104,6 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
             }
         }
     }
-#ifndef QT_NO_PROPERTIES
-    else if (_c == QMetaObject::ReadProperty) {
-        auto *_t = static_cast<ServerClass *>(_o);
-        Q_UNUSED(_t)
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: *reinterpret_cast< QString*>(_v) = _t->value(); break;
-        default: break;
-        }
-    } else if (_c == QMetaObject::WriteProperty) {
-        auto *_t = static_cast<ServerClass *>(_o);
-        Q_UNUSED(_t)
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: _t->setValue(*reinterpret_cast< QString*>(_v)); break;
-        default: break;
-        }
-    } else if (_c == QMetaObject::ResetProperty) {
-    }
-#endif // QT_NO_PROPERTIES
 }
 
 QT_INIT_METAOBJECT const QMetaObject ServerClass::staticMetaObject = { {
@@ -163,31 +135,14 @@ int ServerClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 4;
+        _id -= 3;
     }
-#ifndef QT_NO_PROPERTIES
-   else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
-            || _c == QMetaObject::ResetProperty || _c == QMetaObject::RegisterPropertyMetaType) {
-        qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
-    } else if (_c == QMetaObject::QueryPropertyDesignable) {
-        _id -= 1;
-    } else if (_c == QMetaObject::QueryPropertyScriptable) {
-        _id -= 1;
-    } else if (_c == QMetaObject::QueryPropertyStored) {
-        _id -= 1;
-    } else if (_c == QMetaObject::QueryPropertyEditable) {
-        _id -= 1;
-    } else if (_c == QMetaObject::QueryPropertyUser) {
-        _id -= 1;
-    }
-#endif // QT_NO_PROPERTIES
     return _id;
 }
 

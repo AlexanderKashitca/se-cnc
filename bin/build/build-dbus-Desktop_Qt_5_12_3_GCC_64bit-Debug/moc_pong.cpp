@@ -1,16 +1,16 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'server.h'
+** Meta object code from reading C++ file 'pong.h'
 **
 ** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.3)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../../src/server/server.h"
+#include "../../prj/dbus/pong.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'server.h' doesn't include <QObject>."
+#error "The header file 'pong.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
 #error "This file was generated using the moc from 5.12.3. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -20,44 +20,43 @@
 QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-struct qt_meta_stringdata_ServerClass_t {
+struct qt_meta_stringdata_Pong_t {
     QByteArrayData data[10];
-    char stringdata0[103];
+    char stringdata0[96];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_ServerClass_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_Pong_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_ServerClass_t qt_meta_stringdata_ServerClass = {
+static const qt_meta_stringdata_Pong_t qt_meta_stringdata_Pong = {
     {
-QT_MOC_LITERAL(0, 0, 11), // "ServerClass"
-QT_MOC_LITERAL(1, 12, 15), // "D-Bus Interface"
-QT_MOC_LITERAL(2, 28, 21), // "QtDBus.Service.Server"
-QT_MOC_LITERAL(3, 50, 11), // "aboutToQuit"
-QT_MOC_LITERAL(4, 62, 0), // ""
-QT_MOC_LITERAL(5, 63, 5), // "query"
-QT_MOC_LITERAL(6, 69, 12), // "QDBusVariant"
-QT_MOC_LITERAL(7, 82, 4), // "quit"
-QT_MOC_LITERAL(8, 87, 9), // "Q_NOREPLY"
-QT_MOC_LITERAL(9, 97, 5) // "value"
+QT_MOC_LITERAL(0, 0, 4), // "Pong"
+QT_MOC_LITERAL(1, 5, 15), // "D-Bus Interface"
+QT_MOC_LITERAL(2, 21, 21), // "QtDBus.Service.Server"
+QT_MOC_LITERAL(3, 43, 11), // "aboutToQuit"
+QT_MOC_LITERAL(4, 55, 0), // ""
+QT_MOC_LITERAL(5, 56, 5), // "query"
+QT_MOC_LITERAL(6, 62, 12), // "QDBusVariant"
+QT_MOC_LITERAL(7, 75, 4), // "quit"
+QT_MOC_LITERAL(8, 80, 9), // "Q_NOREPLY"
+QT_MOC_LITERAL(9, 90, 5) // "value"
 
     },
-    "ServerClass\0D-Bus Interface\0"
-    "QtDBus.Service.Server\0aboutToQuit\0\0"
-    "query\0QDBusVariant\0quit\0Q_NOREPLY\0"
-    "value"
+    "Pong\0D-Bus Interface\0QtDBus.Service.Server\0"
+    "aboutToQuit\0\0query\0QDBusVariant\0quit\0"
+    "Q_NOREPLY\0value"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_ServerClass[] = {
+static const uint qt_meta_data_Pong[] = {
 
  // content:
        8,       // revision
        0,       // classname
        1,   14, // classinfo
-       4,   16, // methods
-       1,   44, // properties
+       3,   16, // methods
+       1,   36, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
@@ -67,18 +66,16 @@ static const uint qt_meta_data_ServerClass[] = {
        1,    2,
 
  // signals: name, argc, parameters, tag, flags
-       3,    0,   36,    4, 0x06 /* Public */,
+       3,    0,   31,    4, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,   37,    4, 0x0a /* Public */,
-       5,    1,   40,    4, 0x0a /* Public */,
-       7,    0,   43,    8, 0x0a /* Public */,
+       5,    1,   32,    4, 0x0a /* Public */,
+       7,    0,   35,    8, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
 
  // slots: parameters
-    0x80000000 | 6, QMetaType::QByteArray,    5,
     0x80000000 | 6, QMetaType::QString,    5,
     QMetaType::Void,
 
@@ -88,25 +85,23 @@ static const uint qt_meta_data_ServerClass[] = {
        0        // eod
 };
 
-void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void Pong::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        auto *_t = static_cast<ServerClass *>(_o);
+        auto *_t = static_cast<Pong *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->aboutToQuit(); break;
-        case 1: { QDBusVariant _r = _t->query((*reinterpret_cast< const QByteArray(*)>(_a[1])));
+        case 1: { QDBusVariant _r = _t->query((*reinterpret_cast< const QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
-        case 2: { QDBusVariant _r = _t->query((*reinterpret_cast< const QString(*)>(_a[1])));
-            if (_a[0]) *reinterpret_cast< QDBusVariant*>(_a[0]) = std::move(_r); }  break;
-        case 3: _t->quit(); break;
+        case 2: _t->quit(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (ServerClass::*)();
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&ServerClass::aboutToQuit)) {
+            using _t = void (Pong::*)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&Pong::aboutToQuit)) {
                 *result = 0;
                 return;
             }
@@ -114,7 +109,7 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
     }
 #ifndef QT_NO_PROPERTIES
     else if (_c == QMetaObject::ReadProperty) {
-        auto *_t = static_cast<ServerClass *>(_o);
+        auto *_t = static_cast<Pong *>(_o);
         Q_UNUSED(_t)
         void *_v = _a[0];
         switch (_id) {
@@ -122,7 +117,7 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         default: break;
         }
     } else if (_c == QMetaObject::WriteProperty) {
-        auto *_t = static_cast<ServerClass *>(_o);
+        auto *_t = static_cast<Pong *>(_o);
         Q_UNUSED(_t)
         void *_v = _a[0];
         switch (_id) {
@@ -134,42 +129,42 @@ void ServerClass::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
 #endif // QT_NO_PROPERTIES
 }
 
-QT_INIT_METAOBJECT const QMetaObject ServerClass::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject Pong::staticMetaObject = { {
     &QDBusAbstractAdaptor::staticMetaObject,
-    qt_meta_stringdata_ServerClass.data,
-    qt_meta_data_ServerClass,
+    qt_meta_stringdata_Pong.data,
+    qt_meta_data_Pong,
     qt_static_metacall,
     nullptr,
     nullptr
 } };
 
 
-const QMetaObject *ServerClass::metaObject() const
+const QMetaObject *Pong::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *ServerClass::qt_metacast(const char *_clname)
+void *Pong::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_ServerClass.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_Pong.stringdata0))
         return static_cast<void*>(this);
     return QDBusAbstractAdaptor::qt_metacast(_clname);
 }
 
-int ServerClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int Pong::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QDBusAbstractAdaptor::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 4;
+        _id -= 3;
     }
 #ifndef QT_NO_PROPERTIES
    else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
@@ -192,7 +187,7 @@ int ServerClass::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void ServerClass::aboutToQuit()
+void Pong::aboutToQuit()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }

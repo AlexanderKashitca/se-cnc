@@ -1,11 +1,9 @@
-#------------------------------------------------------------------------------
 QT -= gui
 QT += dbus
-#------------------------------------------------------------------------------
-CONFIG += c++11
-CONFIG += console
+
+CONFIG += c++11 console
 CONFIG -= app_bundle
-#------------------------------------------------------------------------------
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -18,20 +16,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-            ../../../src/server/server.cpp \
-            main.cpp
-HEADERS += \
-            ../../../src/motion/motion_service.h \
-            ../../../src/server/server.h \
-            ../../../src/server/server_common.h
+        main.cpp \
+        pong.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/bin/lib
-DEPENDPATH  += /home/evil/Programming/Qt/se-cnc/bin/lib
-LIBS        += -L/home/evil/Programming/Qt/se-cnc/bin/lib/ -ldirect
-
-
+HEADERS += \
+    common.h \
+    pong.h

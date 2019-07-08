@@ -14,6 +14,12 @@ MotionDirectClass::MotionDirectClass()
     }
 }
 ///-----------------------------------------------------------------------------
+MotionDirectClass::~MotionDirectClass()
+{
+    library.unload();
+    MotionIO.~MotionIOClass();
+}
+///-----------------------------------------------------------------------------
 bool MotionDirectClass::getFtdiLibraryLoad()
 {
     return(_ftdiLibraryLoad);
