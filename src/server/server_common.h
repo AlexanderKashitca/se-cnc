@@ -18,7 +18,8 @@ enum
     ENUM_KMotionLockRecovery,
     ENUM_ReleaseToken,
     ENUM_ServiceConsole,
-    ENUM_SetConsole
+    ENUM_SetConsole,
+    ENUM_Echo
 };
 ///-----------------------------------------------------------------------------
 enum

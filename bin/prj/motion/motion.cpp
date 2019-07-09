@@ -688,206 +688,72 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
 }
 ///-----------------------------------------------------------------------------
 
-/// ping server part
-#if 0
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
-#include <stdio.h>
-
-#include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
-#include <QtCore/QDebug>
-#include <QtCore/QProcess>
-#include <QtDBus/QtDBus>
-
-#include "ping-common.h"
-#include "complexping.h"
-
-void Ping::start(const QString &name)
-{
-    if (name != SERVICE_NAME)
-        return;
-
-    // open stdin for reading
-    qstdin.open(stdin, QIODevice::ReadOnly);
-
-    // find our remote
-    iface = new QDBusInterface(SERVICE_NAME, "/", "org.example.QtDBus.ComplexPong.Pong",
-                               QDBusConnection::sessionBus(), this);
-    if(!iface->isValid())
-    {
-        fprintf(stderr, "%s\n",
-                qPrintable(QDBusConnection::sessionBus().lastError().message()));
-        QCoreApplication::instance()->quit();
-    }
-
-    connect(iface, SIGNAL(aboutToQuit()), QCoreApplication::instance(), SLOT(quit()));
-
-    while (true) {
-        printf("Ask your question: ");
-
-        QString line = QString::fromLocal8Bit(qstdin.readLine()).trimmed();
-        if (line.isEmpty()) {
-            iface->call("quit");
-            return;
-        } else if (line == "value") {
-            QVariant reply = iface->property("value");
-            if (!reply.isNull())
-                printf("value = %s\n", qPrintable(reply.toString()));
-        } else if (line.startsWith("value=")) {
-            iface->setProperty("value", line.mid(6));
-        } else {
-            QDBusReply<QDBusVariant> reply = iface->call("query", line);
-            if (reply.isValid())
-                printf("Reply was: %s\n", qPrintable(reply.value().variant().toString()));
-        }
-
-        if (iface->lastError().isValid())
-            fprintf(stderr, "Call failed: %s\n", qPrintable(iface->lastError().message()));
-    }
-}
-
-int main(int argc, char **argv)
-{
-    QCoreApplication app(argc, argv);
-
-    if (!QDBusConnection::sessionBus().isConnected()) {
-        fprintf(stderr, "Cannot connect to the D-Bus session bus.\n"
-                "To start it, run:\n"
-                "\teval `dbus-launch --auto-syntax`\n");
-        return 1;
-    }
-
-    QDBusServiceWatcher serviceWatcher(SERVICE_NAME, QDBusConnection::sessionBus(),
-                                       QDBusServiceWatcher::WatchForRegistration);
-
-    Ping ping;
-    QObject::connect(&serviceWatcher, &QDBusServiceWatcher::serviceRegistered,
-                     &ping, &Ping::start);
-
-    QProcess pong;
-    pong.start("./complexpong");
-
-    app.exec();
-}
-
-/// HEDER PART
-/// /****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
-#ifndef COMPLEXPING_H
-#define COMPLEXPING_H
-
-#include <QtCore/QObject>
-#include <QtCore/QFile>
-#include <QtDBus/QDBusInterface>
-
-class Ping: public QObject
-{
-    Q_OBJECT
-public slots:
-    void start(const QString &);
-public:
-    QFile qstdin;
-    QDBusInterface *iface;
-};
-
-#endif
-
-
-#endif
+///-----------------------------------------------------------------------------
+/// send message from motion to server
+///int pipe(const char *s, int n, char *r, int *m)
+///{
+///
+///    unsigned char Reply = 0xAA;
+///    QString ErrorMsg;
+///    bool ReceivedErrMsg = false;
+///    static int EntryCount = 0;
+///
+///    if(_serverMessDisplayed)
+///        return 1;
+///
+///    try
+///    {
+///        _pipeMutex->lock();
+///        EntryCount++;
+///        PipeFile.Write(s,n); /// Send the request
+///        for (;;)
+///        {
+///            /// ответ от сервера
+///            /// *m - количество прочитаных байт в буфере r
+///            *m = PipeFile.Read(r, MAX_LINE+1);     // Get the response
+///            /// парсинг первого байта ответа
+///            // the first byte of the response is the destination
+///            // currently DEST_NORMAL, DEST_CONSOLE
+///            if(*r == DEST_CONSOLE)
+///            {
+///                PipeFile.Write(&Reply, 1);     // Send an ACK back to server
+///                // send it to the console if someone registered a callback
+///                if (consoleHandler)
+///                    consoleHandler(r+1);
+///            }
+///            else
+///            if(*r == DEST_ERRMSG)
+///            {
+///                PipeFile.Write(&Reply, 1);     // Send an ACK back to server
+///                // because callback might throw an exception, delay doing the User Callback
+///                // until everything is received back from the Server and we clean up
+///                ErrorMsg=r+1;
+///                ReceivedErrMsg=true;
+///            }
+///            else
+///            {
+///                break;
+///            }
+///        }
+///        EntryCount--;
+///        _pipeMutex->Unlock();
+///    }
+///
+///    catch (CFileException *e)
+///    {
+///        e->Delete();  // to avoid memory leak
+///        EntryCount--;
+///        if (_serverMessDisplayed) return 1;
+///        _serverMessDisplayed=TRUE;
+///        DoErrMsg("Unable to Connect to KMotion Server");
+///        _pipeMutex->Unlock();
+///        exit(1);
+///    }
+///
+///    if (ReceivedErrMsg)
+///    {
+///        DoErrMsg(ErrorMsg);
+///    }
+///    return 0;
+///}
+///-----------------------------------------------------------------------------

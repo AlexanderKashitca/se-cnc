@@ -16,7 +16,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DDIRECT_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I../../prj/direct -I. -I/usr/local/lib -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -730,7 +730,7 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
+	g++ -pipe -O2 -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all:
 compiler_moc_header_clean:
@@ -753,9 +753,9 @@ common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h
 
 motion_io.o: ../../../src/motion/motion_io.cpp ../../../src/motion/common.h \
 		../../../src/motion/motion_io.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -777,47 +777,14 @@ motion_io.o: ../../../src/motion/motion_io.cpp ../../../src/motion/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../../src/ftdi/ftd2xx.h \
 		../../../src/ftdi/WinTypes.h \
@@ -878,21 +845,6 @@ direct.o: ../../prj/direct/direct.cpp ../../prj/direct/direct.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		../../prj/direct/direct_global.h \
 		../../../src/motion/motion_io.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
 		../../../src/ftdi/ftd2xx.h \

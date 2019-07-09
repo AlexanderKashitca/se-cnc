@@ -2,7 +2,6 @@
 #ifndef MOTION_IO_H
 #define MOTION_IO_H
 ///-----------------------------------------------------------------------------
-#include <QDebug>
 #include <QString>
 #include <QMutex>
 ///-----------------------------------------------------------------------------
@@ -15,7 +14,7 @@
 ///-----------------------------------------------------------------------------
 #define NO_SEMOTION_TIMEOUT false /// useful for debugging
 ///-----------------------------------------------------------------------------
-typedef int SERVER_CONSOLE_HANDLER(int board,const char *buf);
+typedef int SERVER_CONSOLE_HANDLER(const char *buf);
 ///-----------------------------------------------------------------------------
 class MotionIOClass
 {
@@ -29,7 +28,6 @@ class MotionIOClass
         bool    _connected;
 
         int     errorMessageBox(const char *s);
-        int     errorMessageBox(QString const s);
         DWORD   getCurrentTimeMs(void);
         int     sleep(DWORD miliseconds);
         bool    requestedDeviceAvail(QString *reason);
@@ -43,6 +41,8 @@ class MotionIOClass
         int     readLineTimeOutRaw(char *buf,int TimeOutms);
         int     readBytesAvailable(char *RxBuffer,int maxbytes,DWORD *BytesReceived,int timeout_ms = 0);
         int     readSendNextLine(FILE *fr);
+
+        void inline charToUpper(char* mass,unsigned int length);
     protected:
         int     _token;
         char    _saveChars[MAX_LINE + 1];
@@ -72,15 +72,6 @@ class MotionIOClass
         int     writeLine(const char *s);
         int     serviceConsole();
         int     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
-
-/*
-        int     mapBoardToIndex(int BoardID);
-        int     listLocations(int *nlocations,int *list);
-        void    waitToken(char *CallerID = nullptr);
-        const char* getErrMsg();
-        void    clearErrMsg();
-        int     nInstances();
- */
 };
 ///-----------------------------------------------------------------------------
 #endif /// MOTION_IO_H

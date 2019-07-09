@@ -3,6 +3,7 @@
 #-------------------------------------------------------------------------------
 
 QT      -= gui
+CONFIG  += c++11
 TARGET   = direct
 TEMPLATE = lib
 DEFINES += DIRECT_LIBRARY

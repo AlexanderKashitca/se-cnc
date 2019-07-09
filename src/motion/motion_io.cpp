@@ -37,12 +37,6 @@ int MotionIOClass::errorMessageBox(const char *s)
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionIOClass::errorMessageBox(QString const s)
-{
-    qDebug() << s << endl;
-    return 0;
-}
-///-----------------------------------------------------------------------------
 DWORD MotionIOClass::getCurrentTimeMs()
 {
     qint64  time_us;
@@ -160,7 +154,7 @@ int MotionIOClass::connect()
     _saveChars[0] = 0; /// start anew
     if(!requestedDeviceAvail(&reason))
     {
-        errorMessageBox(reason);
+        errorMessageBox(reason.toStdString().c_str());
         return 1;
     }
     /// FT_ListDevices OK, number of devices connected is in numDevs
@@ -215,6 +209,17 @@ int MotionIOClass::connect()
 /// if the line is not console data, check for "Ready",
 /// if it is "Ready" send it to the console and return SE_MOTION_READY;
 /// otherwise send it to the console
+void MotionIOClass::charToUpper(char* mass,unsigned int length)
+{
+    unsigned int i;
+    for(i = 0;i < length;i++,mass++)
+    {
+        if(*mass >= 'a' && *mass <= 'z')
+        {
+            *mass = *mass - 32;
+        }
+    }
+}
 int MotionIOClass::checkForReady()
 {
 	char buf[257];
@@ -241,7 +246,7 @@ int MotionIOClass::checkForReady()
                         beg = buf;
                     }
 					strncpy(copy,beg,255);
-///                    strupr(copy);
+                    charToUpper(&copy[0],257); /// strupr(copy);
                     /// check for "Error"
                     if(strstr(copy,"ERROR") != nullptr)
                     { /// error, send to console
@@ -489,7 +494,7 @@ int MotionIOClass::flushInputBuffer()
             _nonRespondingCount++;
             if (_nonRespondingCount == CONNECT_TRIES)
             {
-                errorMessageBox("KMotion present but not responding\r\r"
+                errorMessageBox("SEMotion present but not responding\r\r"
                                 "Correct problem and restart application");
             }
             return 1;
@@ -544,7 +549,7 @@ int MotionIOClass::logToConsole(char *s)
 {
     if(ConsoleHandler)
     {
-        ConsoleHandler(0,s);
+        ConsoleHandler(s);
     }
     return 0;
 }

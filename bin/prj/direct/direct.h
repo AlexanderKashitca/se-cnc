@@ -17,7 +17,7 @@ class DIRECTSHARED_EXPORT MotionDirectClass
                 MotionDirectClass(const MotionDirectClass&) = delete;
                ~MotionDirectClass();
         bool    getFtdiLibraryLoad();
-        int     mapBoardToIndex(int BoardID);
+        ///int     mapBoardToIndex(int BoardID);
         int     writeLineReadLine(const char *s,char *response);
         int     writeLine(const char *s);
         int     writeLineWithEcho(const char *s);

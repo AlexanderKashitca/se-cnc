@@ -39,59 +39,58 @@ bool MotionDirectClass::getFtdiLibraryLoad()
 //
 // If a new Board Identifier is encountered the first available MotionIO
 // object is assigned to it
-int MotionDirectClass::mapBoardToIndex(int BoardID)
-{
-/*
-    int i;
-    if(BoardID <= 0 && BoardID >= -15)
-    { /// simply use the BoardID as the object
-        return -BoardID;
-    }
-    /// if requested BoardID is specified as a USB location
-    /// first scan all objects to see if one is already connected
-    /// to that USB location
-    for(i = 0;i < MAX_BOARDS;i++)
-    {
-        if(MotionIO.BoardIDAssigned &&
-           MotionIO.m_Connected &&
-           MotionIO.USB_Loc_ID == BoardID
-        )
-        { /// found previously assigned matching Location use it
-            return i;
-        }
-    }
-    for(i = 0;i < MAX_BOARDS;i++)
-    {
-        if(MotionIO.BoardIDAssigned)
-        {
-            if(MotionIO.USB_Loc_ID == BoardID)
-            { /// found previously assigned matching object, return it
-                return i;
-            }
-        }
-    }
-    /// BoardID never before encountered
-//    MotionIO.Mutex->lock(); /// better lock while assigning objects
-    /// find an available object to handle it
-    for(i = 0;i < MAX_BOARDS;i++)
-    {
-        if(!MotionIO.BoardIDAssigned)
-        {
-            break;
-        }
-    }
-    if(i == MAX_BOARDS)
-    {
+///int MotionDirectClass::mapBoardToIndex(int BoardID)
+///{
+///
+///    int i;
+///    if(BoardID <= 0 && BoardID >= -15)
+///    { /// simply use the BoardID as the object
+///        return -BoardID;
+///    }
+///    /// if requested BoardID is specified as a USB location
+///    /// first scan all objects to see if one is already connected
+///    /// to that USB location
+///    for(i = 0;i < MAX_BOARDS;i++)
+///    {
+///        if(MotionIO.BoardIDAssigned &&
+///           MotionIO.m_Connected &&
+///           MotionIO.USB_Loc_ID == BoardID
+///        )
+///        { /// found previously assigned matching Location use it
+///            return i;
+///        }
+///    }
+///    for(i = 0;i < MAX_BOARDS;i++)
+///    {
+///        if(MotionIO.BoardIDAssigned)
+///        {
+///            if(MotionIO.USB_Loc_ID == BoardID)
+///            { /// found previously assigned matching object, return it
+///                return i;
+///            }
+///        }
+///    }
+///    /// BoardID never before encountered
+///    MotionIO.Mutex->lock(); /// better lock while assigning objects
+///    /// find an available object to handle it
+///    for(i = 0;i < MAX_BOARDS;i++)
+///    {
+///        if(!MotionIO.BoardIDAssigned)
+///        {
+///            break;
+///        }
+///    }
+///    if(i == MAX_BOARDS)
+///    {
 ///		AfxMessageBox("Fatal Error: Too Many Board IDs used",MB_ICONSTOP|MB_OK);
-//        MotionIO.Mutex->unlock();
-        exit(1);
-    }
-    MotionIO.BoardIDAssigned = true;
-    MotionIO.USB_Loc_ID = BoardID; /// assign the ID
-//    MotionIO.Mutex->unlock();
-    return i;
-*/
-}
+///     MotionIO.Mutex->unlock();
+///        exit(1);
+///    }
+///    MotionIO.BoardIDAssigned = true;
+///    MotionIO.USB_Loc_ID = BoardID; /// assign the ID
+/////    MotionIO.Mutex->unlock();
+///    return i;
+///}
 ///-----------------------------------------------------------------------------
 int MotionDirectClass::listLocations(int *nlocations, int *list)
 {

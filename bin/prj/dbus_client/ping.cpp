@@ -83,23 +83,26 @@ void Ping::start(const QString &name)
         printf("Ask your question: ");
 
         QString line = QString::fromLocal8Bit(qstdin.readLine()).trimmed();
-        if (line.isEmpty()) {
-            iface->call("quit");
-            return;
-        } else if (line == "value") {
-            QVariant reply = iface->property("value");
-            if (!reply.isNull())
-                printf("value = %s\n", qPrintable(reply.toString()));
-        } else if (line.startsWith("value=")) {
-            iface->setProperty("value", line.mid(6));
-        } else {
-            QDBusReply<QDBusVariant> reply = iface->call("query", line);
-            if (reply.isValid())
-                printf("Reply was: %s\n", qPrintable(reply.value().variant().toString()));
-        }
+        QByteArray ba = "TEST SEND BBYTE ARRAY";
+        QDBusReply<QByteArray> response = iface->call("query",ba);
+        printf("Reply was: %s\n", qPrintable(ba));
 
-        if (iface->lastError().isValid())
-            fprintf(stderr, "Call failed: %s\n", qPrintable(iface->lastError().message()));
+        ///if (line.isEmpty()) {
+        ///    iface->call("quit");
+        ///    return;
+        ///} else if (line == "value") {
+        ///    QVariant reply = iface->property("value");
+        ///    if (!reply.isNull())
+        ///        printf("value = %s\n", qPrintable(reply.toString()));
+        ///} else if (line.startsWith("value=")) {
+        ///    iface->setProperty("value", line.mid(6));
+        ///} else {
+        ///    QDBusReply<QDBusVariant> reply = iface->call("query", line);
+        ///    if (reply.isValid())
+        ///        printf("Reply was: %s\n", qPrintable(reply.value().variant().toString()));
+        ///}
+        ///if (iface->lastError().isValid())
+        ///    fprintf(stderr, "Call failed: %s\n", qPrintable(iface->lastError().message()));
     }
 }
 
