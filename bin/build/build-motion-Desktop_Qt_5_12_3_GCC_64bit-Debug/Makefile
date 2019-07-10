@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DMOTION_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_TESTLIB_LIB -DQT_DBUS_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/evil/Programming/Qt/se-cnc/bin/build/build-motion-Desktop_Qt_5_12_3_GCC_64bit-Debug"'
+DEFINES       = -DMOTION_LIBRARY -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_DBUS_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/motion -I. -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtTest -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../prj/motion -I. -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = motion1.0.0
 DISTDIR = /home/evil/Programming/Qt/se-cnc/bin/build/build-motion-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/motion1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/evil/Qt/5.12.3/gcc_64/lib -shared -Wl,-soname,libmotion.so.1
-LIBS          = $(SUBLIBS) -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Test -lQt5DBus -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5DBus -lQt5Core -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -54,10 +54,11 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../../src/motion/common.cpp \
 		../../../src/motion/hirestimer.cpp \
-		../../prj/motion/motion.cpp 
+		../../prj/motion/motion.cpp moc_server.cpp
 OBJECTS       = common.o \
 		hirestimer.o \
-		motion.o
+		motion.o \
+		moc_server.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -247,7 +248,6 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -480,7 +480,6 @@ Makefile: ../../prj/motion/motion.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -489,7 +488,6 @@ Makefile: ../../prj/motion/motion.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/motion/motion.pro \
-		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Test.prl \
 		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5DBus.prl \
 		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile ../../prj/motion/motion.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
@@ -682,7 +680,6 @@ Makefile: ../../prj/motion/motion.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbuscommon.pri:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusinterfaces.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/dbusadaptors.prf:
-/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/testlib_defines.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf:
@@ -691,7 +688,6 @@ Makefile: ../../prj/motion/motion.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf:
 ../../prj/motion/motion.pro:
-/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Test.prl:
 /home/evil/Qt/5.12.3/gcc_64/lib/libQt5DBus.prl:
 /home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
@@ -743,29 +739,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_server.cpp
 compiler_moc_header_clean:
-compiler_moc_objc_header_make_all:
-compiler_moc_objc_header_clean:
-compiler_moc_source_make_all:
-compiler_moc_source_clean:
-compiler_yacc_decl_make_all:
-compiler_yacc_decl_clean:
-compiler_yacc_impl_make_all:
-compiler_yacc_impl_clean:
-compiler_lex_make_all:
-compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
-
-####### Compile
-
-common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h \
-		../../../src/ftdi/ftd2xx.h \
-		../../../src/ftdi/WinTypes.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/hirestimer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+	-$(DEL_FILE) moc_server.cpp
+moc_server.cpp: ../../../src/server/server.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QObject \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -787,17 +768,81 @@ common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/QDBusAbstractAdaptor \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qdbusabstractadaptor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qtdbusglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/QDBusVariant \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qdbusextratypes.h \
+		../../../src/server/server_common.h \
+		../../prj/direct/direct.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLibrary \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		../../prj/direct/direct_global.h \
+		../../../src/motion/motion_io.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMutex \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/motion_service.h \
+		moc_predefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/bin/moc
+	/home/evil/Qt/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/Qt/se-cnc/bin/build/build-motion-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++ -I/home/evil/Programming/Qt/se-cnc/bin/prj/motion -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtDBus -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../../src/server/server.h -o moc_server.cpp
+
+compiler_moc_objc_header_make_all:
+compiler_moc_objc_header_clean:
+compiler_moc_source_make_all:
+compiler_moc_source_clean:
+compiler_yacc_decl_make_all:
+compiler_yacc_decl_clean:
+compiler_yacc_impl_make_all:
+compiler_yacc_impl_clean:
+compiler_lex_make_all:
+compiler_lex_clean:
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
+
+####### Compile
+
+common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/motion/common.cpp
 
 hirestimer.o: ../../../src/motion/hirestimer.cpp ../../../src/motion/hirestimer.h \
@@ -899,13 +944,21 @@ motion.o: ../../prj/motion/motion.cpp ../../prj/motion/motion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
 		../../prj/direct/direct_global.h \
 		../../../src/motion/motion_io.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		../../../src/ftdi/ftd2xx.h \
+		../../../src/ftdi/WinTypes.h \
+		../../../src/dsp/PC-DSP.h \
+		../../../src/motion/common.h \
+		../../../src/server/server.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QObject \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/QDBusAbstractAdaptor \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qdbusabstractadaptor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qtdbusglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
@@ -913,15 +966,14 @@ motion.o: ../../prj/motion/motion.cpp ../../prj/motion/motion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		../../../src/ftdi/ftd2xx.h \
-		../../../src/ftdi/WinTypes.h \
-		../../../src/dsp/PC-DSP.h \
-		../../../src/motion/common.h \
-		../../../src/motion/hirestimer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QElapsedTimer \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
-		../../../src/server/server.h
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/QDBusVariant \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDBus/qdbusextratypes.h \
+		../../../src/server/server_common.h \
+		../../../src/motion/motion_service.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o motion.o ../../prj/motion/motion.cpp
+
+moc_server.o: moc_server.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_server.o moc_server.cpp
 
 ####### Install
 

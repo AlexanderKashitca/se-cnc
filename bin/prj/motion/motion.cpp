@@ -1,6 +1,9 @@
 ///-----------------------------------------------------------------------------
 #include "motion.h"
-#include "../../../src/server/server.h"
+///-----------------------------------------------------------------------------
+
+
+
 ///-----------------------------------------------------------------------------
 extern QString MainPathDLL;
 extern QString MainPath;
@@ -25,7 +28,7 @@ MotionClass::MotionClass(int boardID)
     _serverMessDisplayed = false;
     _errMessageDisplayed = false;
 
-    _pipeMutex = new QMutex();
+    _mutex = new QMutex();
 
     consoleHandler = nullptr;
     errMsgHandler = nullptr;
@@ -43,10 +46,10 @@ MotionClass::~MotionClass()
 ///            Sleep(100);  // give some time for Server to close
 ///        }
     }
-    delete _pipeMutex;
+    delete _mutex;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::WriteLineReadLine(const char *s, char *response)
+int MotionClass::writeLineReadLine(const char *s, char *response)
 {
     /// Send Code, board, string -- Get Dest (byte), Result (int), and string
     char d[MAX_LINE + 1];
@@ -70,17 +73,17 @@ int MotionClass::WriteLineReadLine(const char *s, char *response)
     return result;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::WriteLine(const char *s)
+int MotionClass::writeLine(const char *s)
 {
     return pipeCmdStr(ENUM_WriteLine,s);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::WriteLineWithEcho(const char *s)
+int MotionClass::writeLineWithEcho(const char *s)
 {
     return pipeCmdStr(ENUM_WriteLineWithEcho,s);
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::ReadLineTimeOut(char *response, int TimeOutms)
+int MotionClass::readLineTimeOut(char *response, int TimeOutms)
 {
     /// Send Code, _boardID, timeout -- Get Dest, Result (int), and string
     char d[MAX_LINE + 1];
@@ -97,7 +100,7 @@ int MotionClass::ReadLineTimeOut(char *response, int TimeOutms)
     return result;
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::ListLocations(int *nlocations, int *list)
+int MotionClass::listLocations(int *nlocations, int *list)
 {
     /// Send Code -- Get Dest, Result (int), nlocations (int), List (ints)
     char d[MAX_LINE + 1];
@@ -179,13 +182,13 @@ int MotionClass::waitToken(bool display_msg, int TimeOut_ms, char *CallerID)
         /// rather than leaving it random.  Also make
         /// sure we have everything before we proceed
         /// so we don't get stuck somewhere (deadlocked)
-        if(!_pipeMutex->tryLock(TimeOut_ms))
+        if(!_mutex->tryLock(TimeOut_ms))
         {
             return SE_MOTION_IN_USE;
         }
         if(Timer.Elapsed_Seconds() > 2.0 * TimeOut_ms * 0.001)
         {
-            _pipeMutex->unlock();
+            _mutex->unlock();
             return SE_MOTION_IN_USE;
         }
         if(count++)
@@ -195,7 +198,7 @@ int MotionClass::waitToken(bool display_msg, int TimeOut_ms, char *CallerID)
         result = motionLock(CallerID);
         if(result == SE_MOTION_IN_USE)
         {
-            _pipeMutex->unlock();
+            _mutex->unlock();
         }
     }
     while(result == SE_MOTION_IN_USE);
@@ -215,7 +218,7 @@ int MotionClass::waitToken(bool display_msg, int TimeOut_ms, char *CallerID)
     }
     if(result != SE_MOTION_LOCKED)
     { /// keep the pipe if we have the token
-        _pipeMutex->unlock();
+        _mutex->unlock();
     }
     return result;
 }
@@ -223,7 +226,7 @@ int MotionClass::waitToken(bool display_msg, int TimeOut_ms, char *CallerID)
 void MotionClass::releaseToken()
 {
     pipeCmd(ENUM_ReleaseToken);
-    _pipeMutex->unlock();      // also release the pipe
+    _mutex->unlock();      // also release the pipe
 }
 ///-----------------------------------------------------------------------------
 int  MotionClass::ServiceConsole()
@@ -297,12 +300,12 @@ int MotionClass::pipe(const char *s, int n, char *r, int *m)
     ///    LPTSTR lpszPipename = "\\\\.\\pipe\\kmotionpipe";
     try
     {
-        _pipeMutex->lock();
+        _mutex->lock();
         if(EntryCount > 0)
         {
             int Result = SE_MOTION_IN_USE;
             memcpy(r + 1,&Result,sizeof(Result));
-            _pipeMutex->unlock();
+            _mutex->unlock();
             return 1;
         }
         EntryCount++;
@@ -328,7 +331,7 @@ int MotionClass::pipe(const char *s, int n, char *r, int *m)
                     if (_serverMessDisplayed) return 1;
                     _serverMessDisplayed=TRUE;
                     DoErrMsg("Unable to Connect to KMotion Server");
-                    _pipeMutex->Unlock();
+                    _mutex->Unlock();
                     exit(1);
                 }
             }
@@ -370,7 +373,7 @@ int MotionClass::pipe(const char *s, int n, char *r, int *m)
 
         EntryCount--;
 
-        _pipeMutex->Unlock();
+        _mutex->Unlock();
     }
     catch (CFileException *e)
     {
@@ -379,7 +382,7 @@ int MotionClass::pipe(const char *s, int n, char *r, int *m)
         if (_serverMessDisplayed) return 1;
         _serverMessDisplayed=TRUE;
         DoErrMsg("Unable to Connect to KMotion Server");
-        _pipeMutex->Unlock();
+        _mutex->Unlock();
         exit(1);
     }
 
@@ -703,7 +706,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
 ///
 ///    try
 ///    {
-///        _pipeMutex->lock();
+///        _mutex->lock();
 ///        EntryCount++;
 ///        PipeFile.Write(s,n); /// Send the request
 ///        for (;;)
@@ -736,7 +739,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
 ///            }
 ///        }
 ///        EntryCount--;
-///        _pipeMutex->Unlock();
+///        _mutex->Unlock();
 ///    }
 ///
 ///    catch (CFileException *e)
@@ -746,7 +749,7 @@ int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
 ///        if (_serverMessDisplayed) return 1;
 ///        _serverMessDisplayed=TRUE;
 ///        DoErrMsg("Unable to Connect to KMotion Server");
-///        _pipeMutex->Unlock();
+///        _mutex->Unlock();
 ///        exit(1);
 ///    }
 ///

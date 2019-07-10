@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#if 0
 #include "SetupTracker.h"
 #include "HiResTimer.h"
 
@@ -180,3 +180,4 @@ int CSetupTracker::AdvanceState(int sequence_number)
 	}
 }
 
+#endif

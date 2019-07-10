@@ -2,10 +2,9 @@
 # Project created by QtCreator 2019-06-14T12:42:44 -----------------------------
 #-------------------------------------------------------------------------------
 
-QT       += testlib dbus
+QT       += dbus
 QT       -= gui
-
-TARGET = motion
+TARGET   = motion
 TEMPLATE = lib
 
 DEFINES += MOTION_LIBRARY
