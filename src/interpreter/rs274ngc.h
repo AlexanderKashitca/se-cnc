@@ -282,20 +282,20 @@ and is not represented here
 */
 
 typedef struct setup_struct {
-    double AA_axis_offset;	// A-axis g92 offset
-    double AA_current;		// current A-axis position
+    double AA_axis_offset;      // A-axis g92 offset
+    double AA_current;          // current A-axis position
     double AA_origin_offset;	// A-axis origin offset
-	double BB_axis_offset;	// B-axis g92offset
-	double BB_current;		// current B-axis position
+    double BB_axis_offset;      // B-axis g92offset
+    double BB_current;          // current B-axis position
 	double BB_origin_offset;	// B-axis origin offset
-	double CC_axis_offset;	// C-axis g92offset
-	double CC_current;		// current C-axis position
+    double CC_axis_offset;  	// C-axis g92offset
+    double CC_current;      	// current C-axis position
 	double CC_origin_offset;	// C-axis origin offset
-	double UU_axis_offset;	// U-axis g92offset
-	double UU_current;		// current U-axis position
+    double UU_axis_offset;  	// U-axis g92offset
+    double UU_current;          // current U-axis position
 	double UU_origin_offset;	// U-axis origin offset
-	double VV_axis_offset;	// V-axis g92offset
-	double VV_current;		// current V-axis position
+    double VV_axis_offset;  	// V-axis g92offset
+    double VV_current;          // current V-axis position
 	double VV_origin_offset;	// V-axis origin offset
 	int active_g_codes[RS274NGC_ACTIVE_G_CODES];	// array of active G
     // codes
@@ -316,22 +316,22 @@ typedef struct setup_struct {
     double cutter_comp_radius;	// current cutter compensation radius
     int cutter_comp_side;	// current cutter compensation side
     double cycle_cc;		// cc-value (normal) for canned cycles
-    double cycle_i;		// i-value for canned cycles
-    double cycle_j;		// j-value for canned cycles
-    double cycle_k;		// k-value for canned cycles
-    int cycle_l;		// l-value for canned cycles
-    double cycle_p;		// p-value (dwell) for canned cycles
-    double cycle_q;		// q-value for canned cycles
-    double cycle_r;		// r-value for canned cycles
+    double cycle_i;     	// i-value for canned cycles
+    double cycle_j;     	// j-value for canned cycles
+    double cycle_k;     	// k-value for canned cycles
+    int cycle_l;        	// l-value for canned cycles
+    double cycle_p;     	// p-value (dwell) for canned cycles
+    double cycle_q;     	// q-value for canned cycles
+    double cycle_r;     	// r-value for canned cycles
     DISTANCE_MODE distance_mode;	// absolute or incremental
-    int feed_mode;		// G_93 (inverse time) or G_94 units/min or G_95 units/rev
-    ON_OFF feed_override;	// whether feed override is enabled
+    int feed_mode;      	// G_93 (inverse time) or G_94 units/min or G_95 units/rev
+    ON_OFF feed_override;   // whether feed override is enabled
     double feed_rate;		// feed rate in current units/min
-    ON_OFF flood;		// whether flood coolant is on
+    ON_OFF flood;       	// whether flood coolant is on
     int length_offset_index;	// for use with tool length offsets
     CANON_UNITS length_units;	// millimeters or inches
-    ON_OFF mist;		// whether mist coolant is on
-    int motion_mode;		// active G-code for motion
+    ON_OFF mist;        	// whether mist coolant is on
+    int motion_mode;        // active G-code for motion
     int origin_index;		// active origin (1=G54 to 9=G59.3)
 	CANON_UNITS length_units_of_origin;	// millimeters or inches
 	double origin_offset_x;	// origin offset x
