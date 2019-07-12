@@ -1,3 +1,22 @@
+/************************************************************************
+  DISCLAIMER:
+  This software was produced by the National Institute of Standards
+  and Technology (NIST), an agency of the U.S. government, and by statute
+  is not subject to copyright in the United States.  Recipients of this
+  software assume all responsibility associated with its operation,
+  modification, maintenance, and subsequent redistribution.
+
+  See NIST Administration Manual 4.09.07 b and Appendix I.
+************************************************************************/
+
+default_rs274ngc.var
+
+This is the default variables file for the rs274ngc interpreter.
+All parameters are initialized to zero, except 5220, which is initialized
+to one, since it must be in the range from one to nine. All the parameters
+in this file are required parameters. A variables file missing any one
+of these parameters will cause an error message in the interpreter.
+
 5161	0.000000
 5162	0.000000
 5163	0.000000
@@ -16,7 +35,7 @@
 5214	0.000000
 5215	0.000000
 5216	0.000000
-5220	1.000000
+5220	1.000000  initialized to one
 5221	0.000000
 5222	0.000000
 5223	0.000000
