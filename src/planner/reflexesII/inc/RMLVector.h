@@ -49,8 +49,8 @@
 //  ----------------------------------------------------------
 
 
-#ifndef __RMLVector__
-#define __RMLVector__
+#ifndef RML_VECTOR
+#define RML_VECTOR
 
 
 #include <string.h>
@@ -571,4 +571,4 @@ typedef RMLVector<bool>     RMLBoolVector;
 
 
 
-#endif
+#endif /// RML_VECTOR

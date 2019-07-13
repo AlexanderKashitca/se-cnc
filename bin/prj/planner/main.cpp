@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+#include <QDebug>
 //  ---------------------- Doxygen info ----------------------
 //! \file 01_RMLPositionSampleApplication.cpp
 //!
@@ -52,7 +53,7 @@
 // defines
 
 #define CYCLE_TIME_IN_SECONDS                   0.001
-#define NUMBER_OF_DOFS                          3
+#define NUMBER_OF_DOFS                          1//3
 
 
 //*************************************************************************
@@ -72,25 +73,18 @@ int main(int argc, char *argv[])
     // ********************************************************************
     // Variable declarations and definitions
 
-    int                         ResultValue                 =   0       ;
-
-    ReflexxesAPI                *RML                        =   NULL    ;
-
-    RMLPositionInputParameters  *IP                         =   NULL    ;
-
-    RMLPositionOutputParameters *OP                         =   NULL    ;
-
-    RMLPositionFlags            Flags                                   ;
+    int                         ResultValue = 0;
+    ReflexxesAPI                *RML = nullptr;
+    RMLPositionInputParameters  *IP  = nullptr;
+    RMLPositionOutputParameters *OP  = nullptr;
+    RMLPositionFlags            Flags;
 
     // ********************************************************************
     // Creating all relevant objects of the Type II Reflexxes Motion Library
 
-    RML =   new ReflexxesAPI(                   NUMBER_OF_DOFS
-                                            ,   CYCLE_TIME_IN_SECONDS   );
-
-    IP  =   new RMLPositionInputParameters(     NUMBER_OF_DOFS          );
-
-    OP  =   new RMLPositionOutputParameters(    NUMBER_OF_DOFS          );
+    RML = new ReflexxesAPI(NUMBER_OF_DOFS,CYCLE_TIME_IN_SECONDS);
+    IP  = new RMLPositionInputParameters(NUMBER_OF_DOFS);
+    OP  = new RMLPositionOutputParameters(NUMBER_OF_DOFS);
 
     // ********************************************************************
     // Set-up a timer with a period of one millisecond
@@ -103,7 +97,7 @@ int main(int argc, char *argv[])
     printf("This example demonstrates the most basic use of the    \n"  );
     printf("Reflexxes API (class ReflexxesAPI) using the position- \n"  );
     printf("based Type II Online Trajectory Generation algorithm.  \n\n");
-    printf("Copyright (C) 2014 Google, Inc.                      \n"  );
+    printf("Copyright (C) 2014 Google, Inc.                        \n"  );
     printf("-------------------------------------------------------\n"  );
 
     // ********************************************************************
@@ -121,9 +115,9 @@ int main(int argc, char *argv[])
     // an array of NUMBER_OF_DOFS double values), such that the Reflexxes
     // Library can be used in a universal way.
 
-    IP->CurrentPositionVector->VecData      [0] =    100.0      ;
-    IP->CurrentPositionVector->VecData      [1] =      0.0      ;
-    IP->CurrentPositionVector->VecData      [2] =     50.0      ;
+    IP->CurrentPositionVector->VecData      [0] =    0.0      ;
+    IP->CurrentPositionVector->VecData      [1] =    0.0      ;
+    IP->CurrentPositionVector->VecData      [2] =    0.0      ;
 
     IP->CurrentVelocityVector->VecData      [0] =    100.0      ;
     IP->CurrentVelocityVector->VecData      [1] =   -220.0      ;
@@ -145,17 +139,17 @@ int main(int argc, char *argv[])
     IP->MaxJerkVector->VecData              [1] =    300.0      ;
     IP->MaxJerkVector->VecData              [2] =    200.0      ;
 
-    IP->TargetPositionVector->VecData       [0] =   -600.0      ;
-    IP->TargetPositionVector->VecData       [1] =   -200.0      ;
-    IP->TargetPositionVector->VecData       [2] =   -350.0      ;
+    IP->TargetPositionVector->VecData       [0] =   -10.0      ;
+    IP->TargetPositionVector->VecData       [1] =   -10.0      ;
+    IP->TargetPositionVector->VecData       [2] =   -10.0      ;
 
     IP->TargetVelocityVector->VecData       [0] =    50.0       ;
     IP->TargetVelocityVector->VecData       [1] =   -50.0       ;
     IP->TargetVelocityVector->VecData       [2] =  -200.0       ;
 
     IP->SelectionVector->VecData            [0] =   true        ;
-    IP->SelectionVector->VecData            [1] =   true        ;
-    IP->SelectionVector->VecData            [2] =   true        ;
+    IP->SelectionVector->VecData            [1] =   false        ;
+    IP->SelectionVector->VecData            [2] =   false        ;
 
     // Checking the input parameters (optional)
     if (IP->CheckForValidity())
@@ -213,6 +207,14 @@ int main(int argc, char *argv[])
         *IP->CurrentPositionVector      =   *OP->NewPositionVector      ;
         *IP->CurrentVelocityVector      =   *OP->NewVelocityVector      ;
         *IP->CurrentAccelerationVector  =   *OP->NewAccelerationVector  ;
+
+        //qDebug() << "CurrentPositionVector     - " << *OP->NewPositionVector->VecData;
+        //qDebug() << "CurrentVelocityVector     - " << *OP->NewVelocityVector->VecData;
+        //qDebug() << "CurrentAccelerationVector - " << *OP->NewAccelerationVector->VecData;
+        //qDebug() << endl;
+        //OP->Echo();
+        IP->Echo();
+
     }
 
     // ********************************************************************

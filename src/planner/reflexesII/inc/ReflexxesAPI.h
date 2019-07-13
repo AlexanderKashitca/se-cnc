@@ -1,48 +1,7 @@
-//  ---------------------- Doxygen info ----------------------
-//! \file ReflexxesAPI.h
-//!
-//! \brief
-//! Header file for the class ReflexxesAPI (API of the Reflexxes Motion Libraries)
-//!
-//! \copydetails ReflexxesAPI
-//!
-//! \date March 2014
-//!
-//! \version 1.2.6
-//!
-//! \author Torsten Kroeger, <info@reflexxes.com> \n
-//!
-//! \copyright Copyright (C) 2014 Google, Inc.
-//! \n
-//! \n
-//! <b>GNU Lesser General Public License</b>
-//! \n
-//! \n
-//! This file is part of the Type II Reflexxes Motion Library.
-//! \n\n
-//! The Type II Reflexxes Motion Library is free software: you can redistribute
-//! it and/or modify it under the terms of the GNU Lesser General Public License
-//! as published by the Free Software Foundation, either version 3 of the
-//! License, or (at your option) any later version.
-//! \n\n
-//! The Type II Reflexxes Motion Library is distributed in the hope that it
-//! will be useful, but WITHOUT ANY WARRANTY; without even the implied
-//! warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-//! the GNU Lesser General Public License for more details.
-//! \n\n
-//! You should have received a copy of the GNU Lesser General Public License
-//! along with the Type II Reflexxes Motion Library. If not, see
-//! <http://www.gnu.org/licenses/>.
-//  ----------------------------------------------------------
-//   For a convenient reading of this file's source code,
-//   please use a tab width of four characters.
-//  ----------------------------------------------------------
-
-
-#ifndef __ReflexxesAPI__
-#define __ReflexxesAPI__
-
-
+///-----------------------------------------------------------------------------
+#ifndef REFLEXXES_API
+#define REFLEXXES_API
+///-----------------------------------------------------------------------------
 #include <RMLPositionInputParameters.h>
 #include <RMLPositionOutputParameters.h>
 #include <RMLPositionFlags.h>
@@ -50,7 +9,7 @@
 #include <RMLVelocityOutputParameters.h>
 #include <RMLVelocityFlags.h>
 #include <RMLVector.h>
-
+///-----------------------------------------------------------------------------
 
 //  ---------------------- Doxygen info ----------------------
 //! \class ReflexxesAPI
@@ -703,4 +662,4 @@ protected:
 };  // class ReflexxesAPI
 
 
-#endif
+#endif /// REFLEXXES_API

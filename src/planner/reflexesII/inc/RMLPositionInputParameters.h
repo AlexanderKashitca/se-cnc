@@ -143,9 +143,9 @@ public:
         delete  this->TargetPositionVector                  ;
         delete  this->AlternativeTargetVelocityVector       ;
 
-        this->MaxVelocityVector                 =   NULL    ;
-        this->TargetPositionVector              =   NULL    ;
-        this->AlternativeTargetVelocityVector   =   NULL    ;
+        this->MaxVelocityVector                 =   nullptr;
+        this->TargetPositionVector              =   nullptr;
+        this->AlternativeTargetVelocityVector   =   nullptr;
     }
 
 
