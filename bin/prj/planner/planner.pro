@@ -1,8 +1,10 @@
 #--------------------------------------------------------------------------------
 QT -= gui
+QT += widgets
+QT += datavisualization
 #--------------------------------------------------------------------------------
-CONFIG += c++14
-CONFIG += console
+CONFIG += c++11
+CONFIG -= console
 CONFIG -= app_bundle
 #--------------------------------------------------------------------------------
 # The following define makes your compiler emit warnings if you use
@@ -45,7 +47,8 @@ SOURCES += \
             ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
             ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
             ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
-            main.cpp
+            main.cpp \
+            widget.cpp
 
 HEADERS += \
             ../../../src/planner/reflexesII/inc/RMLFlags.h \
@@ -73,7 +76,8 @@ HEADERS += \
             ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h \
             ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h \
             ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h \
-            ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h
+            ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h \
+            widget.h
 
 #--------------------------------------------------------------------------------
 # Default rules for deployment.
@@ -83,3 +87,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 #--------------------------------------------------------------------------------
 INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/inc
 INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/src
+
+FORMS += \
+    widget.ui

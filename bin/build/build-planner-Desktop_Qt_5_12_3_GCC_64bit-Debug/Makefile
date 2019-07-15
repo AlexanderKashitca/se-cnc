@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_DATAVISUALIZATION_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -std=gnu++1y -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/planner -I. -I../../../src/planner/reflexesII/inc -I../../../src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+INCPATH       = -I../../prj/planner -I. -I../../../src/planner/reflexesII/inc -I../../../src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = planner1.0.0
 DISTDIR = /home/evil/Programming/Qt/se-cnc/bin/build/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/planner1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/evil/Qt/5.12.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/home/evil/Qt/5.12.3/gcc_64/lib -lQt5Widgets -lQt5DataVisualization -lQt5Gui -lQt5Core -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -80,7 +80,8 @@ SOURCES       = ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
-		../../prj/planner/main.cpp 
+		../../prj/planner/main.cpp \
+		../../prj/planner/widget.cpp moc_widget.cpp
 OBJECTS       = ReflexxesAPI.o \
 		TypeIIRMLCalculatePositionalExtrems.o \
 		TypeIIRMLDecisionTree1A.o \
@@ -109,7 +110,9 @@ OBJECTS       = ReflexxesAPI.o \
 		TypeIIRMLVelocityIsPhaseSynchronizationPossible.o \
 		TypeIIRMLVelocityMethods.o \
 		TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o \
-		main.o
+		main.o \
+		widget.o \
+		moc_widget.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -296,6 +299,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf \
+		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/uic.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -328,7 +333,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h \
 		../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h \
 		../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h \
-		../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
+		../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h \
+		../../prj/planner/widget.h ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp \
@@ -356,7 +362,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
-		../../prj/planner/main.cpp
+		../../prj/planner/main.cpp \
+		../../prj/planner/widget.cpp
 QMAKE_TARGET  = planner
 DESTDIR       = 
 TARGET        = planner
@@ -365,7 +372,7 @@ TARGET        = planner
 first: all
 ####### Build rules
 
-planner:  $(OBJECTS)  
+planner: ui_widget.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++/qmake.conf /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
@@ -554,6 +561,8 @@ Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linu
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf \
+		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/uic.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -562,6 +571,9 @@ Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linu
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/planner/planner.pro \
+		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Widgets.prl \
+		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5DataVisualization.prl \
+		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Gui.prl \
 		/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile ../../prj/planner/planner.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf:
@@ -750,6 +762,8 @@ Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linu
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qt.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/resources.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/moc.prf:
+/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf:
+/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/uic.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/unix/thread.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/qmake_use.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/file_copies.prf:
@@ -758,6 +772,9 @@ Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linu
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf:
 /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf:
 ../../prj/planner/planner.pro:
+/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Widgets.prl:
+/home/evil/Qt/5.12.3/gcc_64/lib/libQt5DataVisualization.prl:
+/home/evil/Qt/5.12.3/gcc_64/lib/libQt5Gui.prl:
 /home/evil/Qt/5.12.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../../prj/planner/planner.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
@@ -774,8 +791,9 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/reflexesII/inc/RMLFlags.h ../../../src/planner/reflexesII/inc/RMLInputParameters.h ../../../src/planner/reflexesII/inc/RMLOutputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionFlags.h ../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionOutputParameters.h ../../../src/planner/reflexesII/inc/RMLVector.h ../../../src/planner/reflexesII/inc/RMLVelocityFlags.h ../../../src/planner/reflexesII/inc/RMLVelocityInputParameters.h ../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h ../../../src/planner/reflexesII/inc/ReflexxesAPI.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1A.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1B.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1C.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree2.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisions.h ../../../src/planner/reflexesII/inc/TypeIIRMLMath.h ../../../src/planner/reflexesII/inc/TypeIIRMLPolynomial.h ../../../src/planner/reflexesII/inc/TypeIIRMLPosition.h ../../../src/planner/reflexesII/inc/TypeIIRMLQuicksort.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp ../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1C.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisions.cpp ../../../src/planner/reflexesII/src/TypeIIRMLFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPolynomial.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPosition.cpp ../../../src/planner/reflexesII/src/TypeIIRMLQuicksort.cpp ../../../src/planner/reflexesII/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep3.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocity.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../prj/planner/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/reflexesII/inc/RMLFlags.h ../../../src/planner/reflexesII/inc/RMLInputParameters.h ../../../src/planner/reflexesII/inc/RMLOutputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionFlags.h ../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionOutputParameters.h ../../../src/planner/reflexesII/inc/RMLVector.h ../../../src/planner/reflexesII/inc/RMLVelocityFlags.h ../../../src/planner/reflexesII/inc/RMLVelocityInputParameters.h ../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h ../../../src/planner/reflexesII/inc/ReflexxesAPI.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1A.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1B.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1C.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree2.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisions.h ../../../src/planner/reflexesII/inc/TypeIIRMLMath.h ../../../src/planner/reflexesII/inc/TypeIIRMLPolynomial.h ../../../src/planner/reflexesII/inc/TypeIIRMLPosition.h ../../../src/planner/reflexesII/inc/TypeIIRMLQuicksort.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h ../../prj/planner/widget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp ../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1C.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisions.cpp ../../../src/planner/reflexesII/src/TypeIIRMLFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPolynomial.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPosition.cpp ../../../src/planner/reflexesII/src/TypeIIRMLQuicksort.cpp ../../../src/planner/reflexesII/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep3.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocity.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../prj/planner/main.cpp ../../prj/planner/widget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../prj/planner/widget.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -805,21 +823,419 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
-	g++ -pipe -g -std=gnu++1y -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_widget.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_widget.cpp
+moc_widget.cpp: ../../prj/planner/widget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmargins.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrect.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpalette.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcolor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgb.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgba64.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbrush.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpolygon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qregion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatastream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtransform.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainterpath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixelformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qkeysequence.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurlquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector2d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualization \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualizationDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCore \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCoreDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventloop.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracttransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydataops.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydatapointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasictimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbitarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraymatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatetime.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborcommon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregularexpression.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/quuid.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcbormap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfloat16.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcollator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineparser.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcryptographichash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdiriterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeasingcurve.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qendian.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventtransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qexception.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfactoryinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileselector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QObject \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QStringList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfinalstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfutureinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrunnable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresultstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturewatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhistorystate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qidentityproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qisenum.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsondocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibraryinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversionnumber.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlinkedlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlockfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qloggingcategory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetaobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimetype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qoperatingsystemversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpauseanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpluginloader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocess.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpropertyanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariantanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qqueue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrandom.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qreadwritelock.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresource.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsavefile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopeguard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsettings.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedmemory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignalmapper.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignaltransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsocketnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstack.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstandardpaths.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstatemachine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstorageinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlistmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporarydir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporaryfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextcodec.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthread.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadpool.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadstorage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimeline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimezone.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtranslator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypetraits.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwaitcondition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwineventnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qxmlstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcoreversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGui \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGuiDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qglyphrun.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrawfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontdatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessible.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessiblebridge.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbackingstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMargins \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRect \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qicon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbitmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qclipboard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdesktopservices.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdrag.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qguiapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qinputmethod.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengineplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimageiohandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qoffscreensurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qt_windows.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengles2ext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglcontext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QScopedPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QSurfaceFormat \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglversionfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengldebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglextrafunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglframebufferobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpixeltransferoptions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSharedDataPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglshaderprogram.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltexture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltextureblitter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix3x3 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix4x4 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltimerquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglvertexarrayobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDeviceWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevicewindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDevice \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLContext \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QImage \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagedpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagelayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagesize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpdfwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpicture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpictureformatplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmapcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrasterwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qscreen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSize \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSizeF \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTransform \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsessionmanager.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstandarditemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstatictext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstylehints.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentfragment.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtexttable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvalidator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qdatavisualizationglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dbars.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dgraph.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dtheme.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QLinearGradient \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QFont \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QColor \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWheelEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMouseEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTouchEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLFunctions \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLocale \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QVector \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcategory3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbar3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QQuaternion \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstractdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatter3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurface3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3ditem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dlabel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QCustom3DItem \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dvolume.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qheightmapsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QAbstractItemModel \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRegExp \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qlogvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtouch3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qutils.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOffscreenSurface \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
+		moc_predefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/bin/moc
+	/home/evil/Qt/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/Qt/se-cnc/bin/build/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++ -I/home/evil/Programming/Qt/se-cnc/bin/prj/planner -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/inc -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../prj/planner/widget.h -o moc_widget.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
+compiler_uic_make_all: ui_widget.h
+compiler_uic_clean:
+	-$(DEL_FILE) ui_widget.h
+ui_widget.h: ../../prj/planner/widget.ui \
+		/home/evil/Qt/5.12.3/gcc_64/bin/uic
+	/home/evil/Qt/5.12.3/gcc_64/bin/uic ../../prj/planner/widget.ui -o ui_widget.h
+
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -1167,8 +1583,10 @@ TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o: ../../../src/planner/reflexesI
 		../../../src/planner/reflexesII/inc/RMLFlags.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp
 
-main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
+main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -1190,6 +1608,9 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QC
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
@@ -1219,21 +1640,342 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QC
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventloop.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs_win.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmargins.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrect.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpalette.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcolor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgb.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgba64.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbrush.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpolygon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qregion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatastream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtransform.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainterpath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixelformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qkeysequence.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurlquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector2d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qguiapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qinputmethod.h \
+		../../prj/planner/widget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualization \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualizationDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCore \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCoreDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracttransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydataops.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydatapointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasictimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbitarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraymatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatetime.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborcommon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregularexpression.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/quuid.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcbormap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfloat16.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcollator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineparser.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcryptographichash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdiriterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeasingcurve.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qendian.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventtransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qexception.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfactoryinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileselector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QObject \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QStringList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfinalstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfutureinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrunnable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresultstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturewatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhistorystate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qidentityproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qisenum.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsondocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibraryinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversionnumber.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlinkedlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlockfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qloggingcategory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetaobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimetype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qoperatingsystemversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpauseanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpluginloader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocess.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpropertyanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariantanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qqueue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrandom.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qreadwritelock.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresource.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsavefile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopeguard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsettings.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedmemory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignalmapper.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignaltransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsocketnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstack.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstandardpaths.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstatemachine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstorageinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlistmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporarydir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporaryfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextcodec.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthread.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadpool.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadstorage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimeline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimezone.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtranslator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypetraits.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwaitcondition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwineventnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qxmlstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcoreversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGui \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGuiDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qglyphrun.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrawfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontdatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessible.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessiblebridge.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbackingstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMargins \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRect \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qicon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbitmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qclipboard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdesktopservices.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdrag.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengineplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimageiohandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qoffscreensurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qt_windows.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengles2ext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglcontext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QScopedPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QSurfaceFormat \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglversionfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengldebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglextrafunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglframebufferobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpixeltransferoptions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSharedDataPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglshaderprogram.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltexture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltextureblitter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix3x3 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix4x4 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltimerquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglvertexarrayobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDeviceWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevicewindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDevice \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLContext \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QImage \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagedpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagelayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagesize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpdfwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpicture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpictureformatplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmapcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrasterwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qscreen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSize \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSizeF \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTransform \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsessionmanager.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstandarditemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstatictext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstylehints.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentfragment.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtexttable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvalidator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qdatavisualizationglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dbars.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dgraph.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dtheme.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QLinearGradient \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QFont \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QColor \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWheelEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMouseEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTouchEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLFunctions \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLocale \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QVector \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcategory3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbar3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QQuaternion \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstractdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatter3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurface3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3ditem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dlabel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QCustom3DItem \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dvolume.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qheightmapsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QAbstractItemModel \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRegExp \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qlogvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtouch3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qutils.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOffscreenSurface \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QMessageBox \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qmessagebox.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qdialog.h \
 		../../../src/planner/reflexesII/inc/ReflexxesAPI.h \
 		../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h \
 		../../../src/planner/reflexesII/inc/RMLInputParameters.h \
@@ -1246,6 +1988,413 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QC
 		../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h \
 		../../../src/planner/reflexesII/inc/RMLVelocityFlags.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../prj/planner/main.cpp
+
+widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgets-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmargins.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrect.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpalette.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcolor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgb.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrgba64.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbrush.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpolygon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qregion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatastream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtransform.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainterpath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixelformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontmetrics.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qkeysequence.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qevent.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qurlquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector2d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualization \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QtDataVisualizationDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCore \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtCoreDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventloop.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstractstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qabstracttransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydataops.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydatapointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasictimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbitarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraymatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdatetime.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborcommon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregularexpression.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/quuid.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcbormap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcborstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfloat16.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcollator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcommandlineparser.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcryptographichash.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qelapsedtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdiriterator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeasingcurve.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qendian.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qeventtransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qexception.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfactoryinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfileselector.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QObject \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QStringList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfilesystemwatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfinalstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfutureinterface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrunnable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresultstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturesynchronizer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfuturewatcher.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhistorystate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qidentityproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qisenum.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonarray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonvalue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsondocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qjsonobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibrary.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlibraryinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversionnumber.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlinkedlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlockfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qloggingcategory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmessageauthenticationcode.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetaobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimedatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmimetype.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectcleanuphandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qoperatingsystemversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qparallelanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpauseanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpointer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpluginloader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocess.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpropertyanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariantanimation.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qqueue.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrandom.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qreadwritelock.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qresource.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsavefile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedvaluerollback.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopeguard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsequentialanimationgroup.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsettings.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedmemory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignalmapper.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsignaltransition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsocketnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsortfilterproxymodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstack.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstandardpaths.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstate.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstatemachine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstorageinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlistmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemsemaphore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporarydir.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtemporaryfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextboundaryfinder.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextcodec.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthread.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadpool.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qthreadstorage.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimeline.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtimezone.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtranslator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypetraits.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwaitcondition.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qwineventnotifier.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qxmlstream.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcoreversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGui \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QtGuiDepends \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qabstracttextdocumentlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextoption.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qglyphrun.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrawfont.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qfontdatabase.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextcursor.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocument.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessible.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessiblebridge.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qaccessibleplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbackingstore.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QMargins \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRect \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qicon.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qbitmap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qclipboard.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdesktopservices.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qdrag.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericmatrix.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qguiapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qinputmethod.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qiconengineplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimageiohandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qoffscreensurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengl.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qt_windows.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengles2ext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglbuffer.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglcontext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QScopedPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QSurfaceFormat \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglversionfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengldebug.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglextrafunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglfunctions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglframebufferobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglpixeltransferoptions.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSharedDataPointer \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglshaderprogram.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltexture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltextureblitter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix3x3 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMatrix4x4 \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopengltimerquery.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglvertexarrayobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qopenglwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDeviceWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintdevicewindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWindow \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QPaintDevice \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLContext \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QImage \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagedpaintdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagelayout.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpagesize.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpaintengine.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpainter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpdfwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpicture.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpictureformatplugin.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpixmapcache.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qrasterwindow.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qscreen.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QList \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSize \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QSizeF \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTransform \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsessionmanager.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstandarditemmodel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstatictext.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qstylehints.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qsyntaxhighlighter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentfragment.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextdocumentwriter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtextlist.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtexttable.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvalidator.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtguiversion.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qdatavisualizationglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dbars.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dgraph.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dtheme.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QLinearGradient \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QFont \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QColor \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QWheelEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QMouseEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QTouchEvent \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOpenGLFunctions \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QLocale \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QVector \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcategory3daxis.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbar3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QQuaternion \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstractdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qbardataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatter3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qscatterdataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dsurface.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurface3dseries.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qsurfacedataitem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3ditem.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dlabel.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/QCustom3DItem \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qcustom3dvolume.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qheightmapsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelbardataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QAbstractItemModel \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QRegExp \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelscatterdataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qitemmodelsurfacedataproxy.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qlogvalue3daxisformatter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtouch3dinputhandler.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qutils.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOffscreenSurface \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
+		ui_widget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QVariant \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QCheckBox \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qcheckbox.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsView \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qscrollarea.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qframe.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QPushButton \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qpushbutton.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widget.o ../../prj/planner/widget.cpp
+
+moc_widget.o: moc_widget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_widget.o moc_widget.cpp
 
 ####### Install
 

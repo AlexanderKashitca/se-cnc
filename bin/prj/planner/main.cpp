@@ -1,5 +1,13 @@
-#include <QCoreApplication>
+#include <QApplication>
+#include "widget.h"
 #include <QDebug>
+
+
+#include <QtDataVisualization>
+#include <QtWidgets/QMessageBox>
+
+//using namespace QtDataVisualization;
+
 //  ---------------------- Doxygen info ----------------------
 //! \file 01_RMLPositionSampleApplication.cpp
 //!
@@ -68,8 +76,16 @@
 //*************************************************************************
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
+    Widget w;
+    w.show();
 
+
+
+    //! [0]
+
+
+    qDebug() << "exit from w.show();" << endl;
     // ********************************************************************
     // Variable declarations and definitions
 
@@ -221,9 +237,9 @@ int main(int argc, char *argv[])
     // Deleting the objects of the Reflexxes Motion Library end terminating
     // the process
 
-    delete  RML         ;
-    delete  IP          ;
-    delete  OP          ;
+    delete  RML;
+    delete  IP;
+    delete  OP;
 
     return a.exec();
 }
