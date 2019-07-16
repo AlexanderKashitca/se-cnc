@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_DATAVISUALIZATION_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/planner -I. -I../../../src/planner/reflexesII/inc -I../../../src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../../prj/planner -I. -I../../../src/planner/reflexesII/inc -I../../../src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/evil/Qt/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -372,7 +372,7 @@ TARGET        = planner
 first: all
 ####### Build rules
 
-planner:  $(OBJECTS)  
+planner: ui_mainform.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../../prj/planner/planner.pro /home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++/qmake.conf /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
@@ -793,6 +793,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../src/planner/reflexesII/inc/RMLFlags.h ../../../src/planner/reflexesII/inc/RMLInputParameters.h ../../../src/planner/reflexesII/inc/RMLOutputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionFlags.h ../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionOutputParameters.h ../../../src/planner/reflexesII/inc/RMLVector.h ../../../src/planner/reflexesII/inc/RMLVelocityFlags.h ../../../src/planner/reflexesII/inc/RMLVelocityInputParameters.h ../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h ../../../src/planner/reflexesII/inc/ReflexxesAPI.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1A.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1B.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1C.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree2.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisions.h ../../../src/planner/reflexesII/inc/TypeIIRMLMath.h ../../../src/planner/reflexesII/inc/TypeIIRMLPolynomial.h ../../../src/planner/reflexesII/inc/TypeIIRMLPosition.h ../../../src/planner/reflexesII/inc/TypeIIRMLQuicksort.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h ../../prj/planner/widget.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp ../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1C.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisions.cpp ../../../src/planner/reflexesII/src/TypeIIRMLFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPolynomial.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPosition.cpp ../../../src/planner/reflexesII/src/TypeIIRMLQuicksort.cpp ../../../src/planner/reflexesII/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep3.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocity.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../prj/planner/main.cpp ../../prj/planner/widget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../prj/planner/mainform.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -1226,15 +1227,20 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all:
+compiler_uic_make_all: ui_mainform.h
 compiler_uic_clean:
+	-$(DEL_FILE) ui_mainform.h
+ui_mainform.h: ../../prj/planner/mainform.ui \
+		/home/evil/Qt/5.12.3/gcc_64/bin/uic
+	/home/evil/Qt/5.12.3/gcc_64/bin/uic ../../prj/planner/mainform.ui -o ui_mainform.h
+
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 

@@ -2,6 +2,8 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 ///-----------------------------------------------------------------------------
+#if 0
+
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QtDataVisualization>
@@ -43,6 +45,7 @@ private:
     float   _curveDivider;
     QFont   _font;
 };
+#endif
 ///-----------------------------------------------------------------------------
 #endif // WIDGET_H
 ///-----------------------------------------------------------------------------
