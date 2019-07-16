@@ -88,5 +88,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/inc
 INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/src
 
-FORMS += \
-    widget.ui
+FORMS +=

@@ -1,19 +1,16 @@
+///-----------------------------------------------------------------------------
 #ifndef WIDGET_H
 #define WIDGET_H
-
+///-----------------------------------------------------------------------------
 #include <QWidget>
 #include <QGraphicsScene>
-
 #include <QtDataVisualization>
-
-///#include <QtDataVisualization/q3dscatter.h>
-///#include <QtDataVisualization/qabstract3dseries.h>
-///#include <QtGui/QFont>
-
-namespace Ui {
-class Widget;
+///-----------------------------------------------------------------------------
+namespace Ui
+{
+    class Widget;
 }
-
+///-----------------------------------------------------------------------------
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -46,5 +43,6 @@ private:
     float   _curveDivider;
     QFont   _font;
 };
-
+///-----------------------------------------------------------------------------
 #endif // WIDGET_H
+///-----------------------------------------------------------------------------

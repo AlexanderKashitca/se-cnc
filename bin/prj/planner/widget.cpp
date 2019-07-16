@@ -4,14 +4,7 @@
 ///-----------------------------------------------------------------------------
 #include <QDebug>
 ///-----------------------------------------------------------------------------
-Widget::Widget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Widget),
-    _style(QtDataVisualization::QAbstract3DSeries::MeshSphere),
-    _fontSize(40.0f),
-    _smooth(true),
-    _itemCount(900),
-    _curveDivider(3.0F)
+Widget::Widget(QWidget *parent) : QWidget(parent),ui(new Ui::Widget)
 {
     ///-------------------------------------------------------------------------
     ui->setupUi(this);
@@ -37,7 +30,9 @@ Widget::Widget(QWidget *parent) :
     ///-------------------------------------------------------------------------
     _scene = new QGraphicsScene;
 
-    ui->mainWidget = QWidget::createWindowContainer(_graph);
+///    ui->mainWidget = QWidget::createWindowContainer(_graph);
+
+    ui->plot->
 
 
     //    ui->Widget::plannerGraphicsView->setScene(_scene);  // Устанавливаем графическую сцену в plannerGraphicsView
