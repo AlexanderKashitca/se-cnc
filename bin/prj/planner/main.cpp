@@ -1,12 +1,8 @@
 #include <QApplication>
-#include "widget.h"
+#include "mainform.h"
 #include <QDebug>
 
 
-#include <QtDataVisualization>
-#include <QtWidgets/QMessageBox>
-
-//using namespace QtDataVisualization;
 
 //  ---------------------- Doxygen info ----------------------
 //! \file 01_RMLPositionSampleApplication.cpp
@@ -61,7 +57,7 @@
 // defines
 
 #define CYCLE_TIME_IN_SECONDS                   0.001
-#define NUMBER_OF_DOFS                          1//3
+#define NUMBER_OF_DOFS                          3
 
 
 //*************************************************************************
@@ -76,9 +72,18 @@
 //*************************************************************************
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    //Widget w;
-    //w.show();
+    QApplication app(argc, argv);
+    mainForm form;
+  ///  form.show();
+
+QVector<QVector3D> vector;
+vector.clear();
+
+QVector3D vector3d;
+float point = 0.0F;
+float _x;
+float _y;
+float _z;
 
 
 
@@ -96,17 +101,14 @@ int main(int argc, char *argv[])
     RMLPositionFlags            Flags;
 
     // ********************************************************************
-    // Creating all relevant objects of the Type II Reflexxes Motion Library
-
+    /// Creating all relevant objects of the Type II Reflexxes Motion Library
     RML = new ReflexxesAPI(NUMBER_OF_DOFS,CYCLE_TIME_IN_SECONDS);
     IP  = new RMLPositionInputParameters(NUMBER_OF_DOFS);
     OP  = new RMLPositionOutputParameters(NUMBER_OF_DOFS);
-
-    // ********************************************************************
-    // Set-up a timer with a period of one millisecond
-    // (not implemented in this example in order to keep it simple)
-    // ********************************************************************
-
+    /// ********************************************************************
+    /// Set-up a timer with a period of one millisecond
+    /// (not implemented in this example in order to keep it simple)
+    /// ********************************************************************
     printf("-------------------------------------------------------\n"  );
     printf("Reflexxes Motion Libraries                             \n"  );
     printf("Example: 01_RMLPositionSampleApplication               \n\n");
@@ -115,21 +117,19 @@ int main(int argc, char *argv[])
     printf("based Type II Online Trajectory Generation algorithm.  \n\n");
     printf("Copyright (C) 2014 Google, Inc.                        \n"  );
     printf("-------------------------------------------------------\n"  );
-
-    // ********************************************************************
-    // Set-up the input parameters
-
-    // In this test program, arbitrary values are chosen. If executed on a
-    // real robot or mechanical system, the position is read and stored in
-    // an RMLPositionInputParameters::CurrentPositionVector vector object.
-    // For the very first motion after starting the controller, velocities
-    // and acceleration are commonly set to zero. The desired target state
-    // of motion and the motion constraints depend on the robot and the
-    // current task/application.
-    // The internal data structures make use of native C data types
-    // (e.g., IP->CurrentPositionVector->VecData is a pointer to
-    // an array of NUMBER_OF_DOFS double values), such that the Reflexxes
-    // Library can be used in a universal way.
+    /// ********************************************************************
+    /// Set-up the input parameters
+    /// In this test program, arbitrary values are chosen. If executed on a
+    /// real robot or mechanical system, the position is read and stored in
+    /// an RMLPositionInputParameters::CurrentPositionVector vector object.
+    /// For the very first motion after starting the controller, velocities
+    /// and acceleration are commonly set to zero. The desired target state
+    /// of motion and the motion constraints depend on the robot and the
+    /// current task/application.
+    /// The internal data structures make use of native C data types
+    /// (e.g., IP->CurrentPositionVector->VecData is a pointer to
+    /// an array of NUMBER_OF_DOFS double values), such that the Reflexxes
+    /// Library can be used in a universal way.
 
     IP->CurrentPositionVector->VecData      [0] =    0.0      ;
     IP->CurrentPositionVector->VecData      [1] =    0.0      ;
@@ -155,19 +155,18 @@ int main(int argc, char *argv[])
     IP->MaxJerkVector->VecData              [1] =    300.0      ;
     IP->MaxJerkVector->VecData              [2] =    200.0      ;
 
-    IP->TargetPositionVector->VecData       [0] =   -10.0      ;
-    IP->TargetPositionVector->VecData       [1] =   -10.0      ;
-    IP->TargetPositionVector->VecData       [2] =   -10.0      ;
+    IP->TargetPositionVector->VecData       [0] =   -100.0      ;
+    IP->TargetPositionVector->VecData       [1] =   -100.0      ;
+    IP->TargetPositionVector->VecData       [2] =   -100.0      ;
 
     IP->TargetVelocityVector->VecData       [0] =    50.0       ;
-    IP->TargetVelocityVector->VecData       [1] =   -50.0       ;
-    IP->TargetVelocityVector->VecData       [2] =  -200.0       ;
+    IP->TargetVelocityVector->VecData       [1] =    50.0       ;
+    IP->TargetVelocityVector->VecData       [2] =   200.0       ;
 
     IP->SelectionVector->VecData            [0] =   true        ;
-    IP->SelectionVector->VecData            [1] =   false        ;
-    IP->SelectionVector->VecData            [2] =   false        ;
-
-    // Checking the input parameters (optional)
+    IP->SelectionVector->VecData            [1] =   true        ;
+    IP->SelectionVector->VecData            [2] =   true        ;
+    /// Checking the input parameters (optional)
     if (IP->CheckForValidity())
     {
         printf("Input values are valid!\n");
@@ -176,50 +175,47 @@ int main(int argc, char *argv[])
     {
         printf("Input values are INVALID!\n");
     }
-
-    // ********************************************************************
-    // Starting the control loop
-
-    while (ResultValue != ReflexxesAPI::RML_FINAL_STATE_REACHED)
+    /// ********************************************************************
+    /// Starting the control loop
+    while(ResultValue != ReflexxesAPI::RML_FINAL_STATE_REACHED)
     {
-
-        // ****************************************************************
-        // Wait for the next timer tick
-        // (not implemented in this example in order to keep it simple)
-        // ****************************************************************
-
-        // Calling the Reflexxes OTG algorithm
-        ResultValue =   RML->RMLPosition(       *IP
-                                            ,   OP
-                                            ,   Flags       );
-
-        if (ResultValue < 0)
+        ///****************************************************************
+        /// Wait for the next timer tick
+        /// (not implemented in this example in order to keep it simple)
+        /// ****************************************************************
+        _x = IP->CurrentPositionVector->VecData[0];
+        _y = IP->CurrentPositionVector->VecData[1];
+        _z = IP->CurrentPositionVector->VecData[2];
+        vector3d.setX(_x);
+        vector3d.setY(_y);
+        vector3d.setZ(_z);
+        vector.push_back(vector3d);
+        /// Calling the Reflexxes OTG algorithm
+        ResultValue = RML->RMLPosition(*IP,OP,Flags);
+        if(ResultValue < 0)
         {
             printf("An error occurred (%d).\n", ResultValue );
             break;
         }
-        else {
+        else
+        {
             printf("Result value = (%d).\n", ResultValue );
         }
+        /// ****************************************************************
+        /// Here, the new state of motion, that is
+        /// - OP->NewPositionVector
+        /// - OP->NewVelocityVector
+        /// - OP->NewAccelerationVector
+        /// can be used as input values for lower level controllers. In the
+        /// most simple case, a position controller in actuator space is
+        /// used, but the computed state can be applied to many other
+        /// controllers (e.g., Cartesian impedance controllers,
+        /// operational space controllers).
+        /// ****************************************************************
 
-        // ****************************************************************
-        // Here, the new state of motion, that is
-        //
-        // - OP->NewPositionVector
-        // - OP->NewVelocityVector
-        // - OP->NewAccelerationVector
-        //
-        // can be used as input values for lower level controllers. In the
-        // most simple case, a position controller in actuator space is
-        // used, but the computed state can be applied to many other
-        // controllers (e.g., Cartesian impedance controllers,
-        // operational space controllers).
-        // ****************************************************************
-
-        // ****************************************************************
-        // Feed the output values of the current control cycle back to
-        // input values of the next control cycle
-
+        /// ****************************************************************
+        /// Feed the output values of the current control cycle back to
+        /// input values of the next control cycle
         *IP->CurrentPositionVector      =   *OP->NewPositionVector      ;
         *IP->CurrentVelocityVector      =   *OP->NewVelocityVector      ;
         *IP->CurrentAccelerationVector  =   *OP->NewAccelerationVector  ;
@@ -231,7 +227,30 @@ int main(int argc, char *argv[])
         //OP->Echo();
         IP->Echo();
 
+
+
+
+
     }
+
+
+
+
+
+
+///    for(int i = 0;i < 10;i++)
+///    {
+///        vector3d.setX(point);
+///        vector3d.setY(point);
+///        vector3d.setZ(point);
+///        point = point + 0.1F;
+///        vector.push_back(vector3d);
+///    }
+
+
+
+    form.plotAddData(vector);
+    form.plotShow(true);
 
     // ********************************************************************
     // Deleting the objects of the Reflexxes Motion Library end terminating
@@ -241,5 +260,5 @@ int main(int argc, char *argv[])
     delete  IP;
     delete  OP;
 
-    return a.exec();
+    return app.exec();
 }

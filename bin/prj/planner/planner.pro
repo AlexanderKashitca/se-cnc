@@ -1,5 +1,6 @@
 #--------------------------------------------------------------------------------
 QT -= gui
+QT += core
 QT += widgets
 QT += datavisualization
 #--------------------------------------------------------------------------------
@@ -48,7 +49,7 @@ SOURCES += \
             ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
             ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
             main.cpp \
-            widget.cpp
+            mainform.cpp
 
 HEADERS += \
             ../../../src/planner/reflexesII/inc/RMLFlags.h \
@@ -77,7 +78,7 @@ HEADERS += \
             ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h \
             ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h \
             ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h \
-            widget.h
+            mainform.h
 
 #--------------------------------------------------------------------------------
 # Default rules for deployment.

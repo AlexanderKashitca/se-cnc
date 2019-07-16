@@ -11,34 +11,55 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Form
+class Ui_mainForm
 {
 public:
+    QGraphicsView *graphicsView;
+    QPushButton *showPlanner3D;
+    QPushButton *closePlanner3D;
+    QPushButton *clearPlaner3D;
 
-    void setupUi(QWidget *Form)
+    void setupUi(QWidget *mainForm)
     {
-        if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
-        Form->resize(400, 300);
+        if (mainForm->objectName().isEmpty())
+            mainForm->setObjectName(QString::fromUtf8("mainForm"));
+        mainForm->resize(803, 662);
+        graphicsView = new QGraphicsView(mainForm);
+        graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+        graphicsView->setGeometry(QRect(180, 200, 256, 192));
+        showPlanner3D = new QPushButton(mainForm);
+        showPlanner3D->setObjectName(QString::fromUtf8("showPlanner3D"));
+        showPlanner3D->setGeometry(QRect(480, 490, 80, 25));
+        closePlanner3D = new QPushButton(mainForm);
+        closePlanner3D->setObjectName(QString::fromUtf8("closePlanner3D"));
+        closePlanner3D->setGeometry(QRect(590, 490, 80, 25));
+        clearPlaner3D = new QPushButton(mainForm);
+        clearPlaner3D->setObjectName(QString::fromUtf8("clearPlaner3D"));
+        clearPlaner3D->setGeometry(QRect(360, 560, 80, 25));
 
-        retranslateUi(Form);
+        retranslateUi(mainForm);
 
-        QMetaObject::connectSlotsByName(Form);
+        QMetaObject::connectSlotsByName(mainForm);
     } // setupUi
 
-    void retranslateUi(QWidget *Form)
+    void retranslateUi(QWidget *mainForm)
     {
-        Form->setWindowTitle(QApplication::translate("Form", "Form", nullptr));
+        mainForm->setWindowTitle(QApplication::translate("mainForm", "Form", nullptr));
+        showPlanner3D->setText(QApplication::translate("mainForm", "show plot", nullptr));
+        closePlanner3D->setText(QApplication::translate("mainForm", "close plot", nullptr));
+        clearPlaner3D->setText(QApplication::translate("mainForm", "clear plot", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Form: public Ui_Form {};
+    class mainForm: public Ui_mainForm {};
 } // namespace Ui
 
 QT_END_NAMESPACE

@@ -925,7 +925,7 @@ public:
     {
         unsigned int        i   =   0;
 
-        if (FileHandler == NULL)
+        if (FileHandler == nullptr)
         {
             return;
         }

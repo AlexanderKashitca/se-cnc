@@ -81,7 +81,7 @@ SOURCES       = ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
 		../../prj/planner/main.cpp \
-		../../prj/planner/widget.cpp moc_widget.cpp
+		../../prj/planner/mainform.cpp moc_mainform.cpp
 OBJECTS       = ReflexxesAPI.o \
 		TypeIIRMLCalculatePositionalExtrems.o \
 		TypeIIRMLDecisionTree1A.o \
@@ -111,8 +111,8 @@ OBJECTS       = ReflexxesAPI.o \
 		TypeIIRMLVelocityMethods.o \
 		TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o \
 		main.o \
-		widget.o \
-		moc_widget.o
+		mainform.o \
+		moc_mainform.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -334,7 +334,7 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h \
 		../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h \
 		../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h \
-		../../prj/planner/widget.h ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
+		../../prj/planner/mainform.h ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp \
@@ -363,7 +363,7 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp \
 		../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
 		../../prj/planner/main.cpp \
-		../../prj/planner/widget.cpp
+		../../prj/planner/mainform.cpp
 QMAKE_TARGET  = planner
 DESTDIR       = 
 TARGET        = planner
@@ -791,8 +791,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/reflexesII/inc/RMLFlags.h ../../../src/planner/reflexesII/inc/RMLInputParameters.h ../../../src/planner/reflexesII/inc/RMLOutputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionFlags.h ../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionOutputParameters.h ../../../src/planner/reflexesII/inc/RMLVector.h ../../../src/planner/reflexesII/inc/RMLVelocityFlags.h ../../../src/planner/reflexesII/inc/RMLVelocityInputParameters.h ../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h ../../../src/planner/reflexesII/inc/ReflexxesAPI.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1A.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1B.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1C.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree2.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisions.h ../../../src/planner/reflexesII/inc/TypeIIRMLMath.h ../../../src/planner/reflexesII/inc/TypeIIRMLPolynomial.h ../../../src/planner/reflexesII/inc/TypeIIRMLPosition.h ../../../src/planner/reflexesII/inc/TypeIIRMLQuicksort.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h ../../prj/planner/widget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp ../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1C.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisions.cpp ../../../src/planner/reflexesII/src/TypeIIRMLFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPolynomial.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPosition.cpp ../../../src/planner/reflexesII/src/TypeIIRMLQuicksort.cpp ../../../src/planner/reflexesII/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep3.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocity.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../prj/planner/main.cpp ../../prj/planner/widget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/reflexesII/inc/RMLFlags.h ../../../src/planner/reflexesII/inc/RMLInputParameters.h ../../../src/planner/reflexesII/inc/RMLOutputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionFlags.h ../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h ../../../src/planner/reflexesII/inc/RMLPositionOutputParameters.h ../../../src/planner/reflexesII/inc/RMLVector.h ../../../src/planner/reflexesII/inc/RMLVelocityFlags.h ../../../src/planner/reflexesII/inc/RMLVelocityInputParameters.h ../../../src/planner/reflexesII/inc/RMLVelocityOutputParameters.h ../../../src/planner/reflexesII/inc/ReflexxesAPI.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1A.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1B.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree1C.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisionTree2.h ../../../src/planner/reflexesII/inc/TypeIIRMLDecisions.h ../../../src/planner/reflexesII/inc/TypeIIRMLMath.h ../../../src/planner/reflexesII/inc/TypeIIRMLPolynomial.h ../../../src/planner/reflexesII/inc/TypeIIRMLPosition.h ../../../src/planner/reflexesII/inc/TypeIIRMLQuicksort.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep1Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2Profiles.h ../../../src/planner/reflexesII/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/planner/reflexesII/inc/TypeIIRMLVelocity.h ../../prj/planner/mainform.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/reflexesII/src/ReflexxesAPI.cpp ../../../src/planner/reflexesII/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1A.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1B.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree1C.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisionTree2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLDecisions.cpp ../../../src/planner/reflexesII/src/TypeIIRMLFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPolynomial.cpp ../../../src/planner/reflexesII/src/TypeIIRMLPosition.cpp ../../../src/planner/reflexesII/src/TypeIIRMLQuicksort.cpp ../../../src/planner/reflexesII/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep1Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2Profiles.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/planner/reflexesII/src/TypeIIRMLStep3.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocity.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocityMethods.cpp ../../../src/planner/reflexesII/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../prj/planner/main.cpp ../../prj/planner/mainform.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../prj/planner/mainform.ui $(DISTDIR)/
 
 
@@ -825,10 +825,10 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_widget.cpp
+compiler_moc_header_make_all: moc_mainform.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_widget.cpp
-moc_widget.cpp: ../../prj/planner/widget.h \
+	-$(DEL_FILE) moc_mainform.cpp
+moc_mainform.cpp: ../../prj/planner/mainform.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qwidget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -932,6 +932,8 @@ moc_widget.cpp: ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector2d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
@@ -1096,7 +1098,6 @@ moc_widget.cpp: ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
@@ -1168,7 +1169,6 @@ moc_widget.cpp: ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
@@ -1216,7 +1216,7 @@ moc_widget.cpp: ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
 		moc_predefs.h \
 		/home/evil/Qt/5.12.3/gcc_64/bin/moc
-	/home/evil/Qt/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/Qt/se-cnc/bin/build/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++ -I/home/evil/Programming/Qt/se-cnc/bin/prj/planner -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/inc -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../prj/planner/widget.h -o moc_widget.cpp
+	/home/evil/Qt/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/Qt/se-cnc/bin/build/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt/5.12.3/gcc_64/mkspecs/linux-g++ -I/home/evil/Programming/Qt/se-cnc/bin/prj/planner -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/inc -I/home/evil/Programming/Qt/se-cnc/src/planner/reflexesII/src -I/home/evil/Qt/5.12.3/gcc_64/include -I/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../prj/planner/mainform.h -o moc_mainform.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1692,8 +1692,10 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qguiapplication.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qinputmethod.h \
-		../../prj/planner/widget.h \
+		../../prj/planner/mainform.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
@@ -1854,7 +1856,6 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
@@ -1926,7 +1927,6 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
@@ -1973,9 +1973,6 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QMessageBox \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qmessagebox.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qdialog.h \
 		../../../src/planner/reflexesII/inc/ReflexxesAPI.h \
 		../../../src/planner/reflexesII/inc/RMLPositionInputParameters.h \
 		../../../src/planner/reflexesII/inc/RMLInputParameters.h \
@@ -1989,7 +1986,7 @@ main.o: ../../prj/planner/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtWidgets
 		../../../src/planner/reflexesII/inc/RMLVelocityFlags.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../prj/planner/main.cpp
 
-widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
+mainform.o: ../../prj/planner/mainform.cpp ../../prj/planner/mainform.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QWidget \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qwidget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
@@ -2093,6 +2090,8 @@ widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector2d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsScene \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qpen.h \
@@ -2257,7 +2256,6 @@ widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagereader.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qimagewriter.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmatrix4x4.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector3d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qvector4d.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qquaternion.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/qmovie.h \
@@ -2329,7 +2327,6 @@ widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dscene.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dcamera.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dobject.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QVector3D \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/q3dlight.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qabstract3dinputhandler.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QPoint \
@@ -2375,11 +2372,23 @@ widget.o: ../../prj/planner/widget.cpp ../../prj/planner/widget.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtGui/QOffscreenSurface \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widget.o ../../prj/planner/widget.cpp
+		ui_mainform.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QVariant \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QApplication \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qapplication.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QGraphicsView \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qgraphicsview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qscrollarea.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qframe.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/QPushButton \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qpushbutton.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtWidgets/qabstractbutton.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainform.o ../../prj/planner/mainform.cpp
 
-moc_widget.o: moc_widget.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_widget.o moc_widget.cpp
+moc_mainform.o: moc_mainform.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainform.o moc_mainform.cpp
 
 ####### Install
 
