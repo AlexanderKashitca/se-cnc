@@ -52,8 +52,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../prj/plannerTrajectory/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../../../src/plannerTrajectory/tp.c \
+		../../prj/plannerTrajectory/main.cpp 
+OBJECTS       = tp.o \
+		main.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -247,7 +249,8 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/plannerTrajectory/plannerTrajectory.pro  ../../prj/plannerTrajectory/main.cpp
+		../../prj/plannerTrajectory/plannerTrajectory.pro ../../../src/plannerTrajectory/tp.h ../../../src/plannerTrajectory/tp.c \
+		../../prj/plannerTrajectory/main.cpp
 QMAKE_TARGET  = plannerTrajectory
 DESTDIR       = 
 TARGET        = plannerTrajectory
@@ -665,7 +668,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/plannerTrajectory/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/plannerTrajectory/tp.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/plannerTrajectory/tp.c ../../prj/plannerTrajectory/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -712,6 +716,10 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+tp.o: ../../../src/plannerTrajectory/tp.c ../../../src/plannerTrajectory/tp.h \
+		../../../src/plannerTrajectory/tp_types.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o tp.o ../../../src/plannerTrajectory/tp.c
 
 main.o: ../../prj/plannerTrajectory/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
