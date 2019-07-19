@@ -1,0 +1,217 @@
+///-----------------------------------------------------------------------------
+#ifndef COMMAND_H
+#define COMMAND_H
+///-----------------------------------------------------------------------------
+#include <QString>
+///-----------------------------------------------------------------------------
+int convertToIndex(QString);
+int commandGeneral(int);
+///-----------------------------------------------------------------------------
+typedef enum
+{
+    GENERAL,
+    EDM,
+    FLAME_CUTTING,
+    GRINDING,
+    LASER_BEAM,
+    MILLING,
+    PUNCHING,
+    TURNING,
+    WIRE_EDM,
+    PROBING,
+    DRAFTING_PLOTTING
+}MACHINE_TYPE;
+
+///-----------------------------------------------------------------------------
+static QString command_general[] =
+{
+    "ADAPTV",
+    "AIR",
+    "APPLY",
+    "AUXFUN",
+    "BREAK",
+    "CALSUB",
+    "CLAMP",
+    "CLDATA",
+    "COUPLE",
+    "CUTCOM",
+    "DEFSUB",
+    "DELAY",
+    "DISPLY",
+    "END",
+    "ENDSUB",
+    "FEDRAT",
+    "GOHOME",
+    "GOPARK",
+    "HOMEPT",
+    "INCLUD",
+    "INSERT",
+    "LEADER",
+    "LIMIT",
+    "LOCATE",
+    "LPRINT",
+    "MACHIN",
+    "MATERL",
+    "MCHFIN",
+    "MCHTOL",
+    "MODE",
+    "MOVETO",
+    "OPSKIP",
+    "OPSTOP",
+    "ORIGIN",
+    "PARKPT",
+    "PARTNO",
+    "PPFUN",
+    "PPRINT",
+    "PPTIME",
+    "PREFUN",
+    "RAPID",
+    "RESET",
+    "REWIND",
+    "SAFPOS",
+    "SEQNO",
+    "STOP",
+    "SYNCTR",
+    "TLLIFE",
+    "TMARK",
+    "TRANS"
+};
+///-----------------------------------------------------------------------------
+static QString command_edm[] =
+{
+    "APPLY",
+    "CUTCOM",
+    "FLUSH",
+    "GENRTR",
+    "LOAD",
+    "OP",
+    "SELECT",
+    "SPINDL",
+    "TOOLNO",
+    "UNLOAD"
+};
+///-----------------------------------------------------------------------------
+static QString command_flame_cutting[] =
+{
+    "APPLY",
+    "ASSIST",
+    "CLDIST",
+    "PIERCE",
+    "TORCH"
+};
+///-----------------------------------------------------------------------------
+static QString command_grinding[] =
+{
+    "APPLY",
+    "DRESS"
+};
+///-----------------------------------------------------------------------------
+static QString command_laser_beam[] =
+{
+    "APPLY",
+    "ASSIST",
+    "CLDIST",
+    "CYCLE",
+    "PIERCE"
+};
+///-----------------------------------------------------------------------------
+static QString command_milling[] =
+{
+    "APPLY",
+    "ARCSLP",
+    "CLAMP",
+    "CLEARP",
+    "COOLNT",
+    "CUTCOM",
+    "CYCLE",
+    "HEAD",
+    "INDPOS",
+    "LINTOL",
+    "LOAD",
+    "ORIGIN",
+    "RETRCT",
+    "ROTATE",
+    "SELECT",
+    "SPINDL",
+    "TOOLNO",
+    "UNLOAD"
+};
+///-----------------------------------------------------------------------------
+static QString command_punching[] =
+{
+    "APPLY",
+    "CLAMP",
+    "CYCLE",
+    "LOAD",
+    "PIERCE",
+    "SELECT",
+    "TOOLNO",
+    "UNLOAD"
+};
+///-----------------------------------------------------------------------------
+static QString command_turning[] =
+{
+    "APPLY",
+    "BARFED",
+    "CATCHR",
+    "CHUCK",
+    "CLAMP",
+    "COOLNT",
+    "COUPLE",
+    "CUTCOM",
+    "DEFCON",
+    "LOAD",
+    "MODE",
+    "OP",
+    "PITCH",
+    "SAFETY",
+    "SELECT",
+    "SPINDL",
+    "STAN",
+    "STDYRS",
+    "TLSTCK",
+    "TOOLNO",
+    "TURRET",
+    "UNLOAD"
+};
+///-----------------------------------------------------------------------------
+static QString command_wire_edm[] =
+{
+    "APPLY",
+    "CLDIST",
+    "CUTCOM",
+    "CYCLE",
+    "FLUSH",
+    "GENRTR",
+    "LOAD",
+    "ORIGIN",
+    "SELECT",
+    "STAN",
+    "TOOLNO",
+    "UNLOAD"
+};
+///-----------------------------------------------------------------------------
+static QString command_probing[] =
+{
+    "APPLY",
+    "LOAD",
+    "MODE",
+    "PROBE",
+    "SELECT",
+    "TOOLNO",
+    "UNLOAD",
+    "VERIFY"
+};
+///-----------------------------------------------------------------------------
+static QString command_drafting_plotting[] =
+{
+    "DRAFT",
+    "LETTER",
+    "OVPLOT",
+    "PENDWN",
+    "PENUP",
+    "PPLOT"
+};
+///-----------------------------------------------------------------------------
+#endif /// COMMAND_H
+///-----------------------------------------------------------------------------

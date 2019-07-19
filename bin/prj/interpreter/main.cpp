@@ -1,17 +1,16 @@
-
-#if 0
-
-#include "rs274ngc.h"
-#include "rs274ngc_return.h"
-
-#include "driver.h"
-
+///-----------------------------------------------------------------------------
+#include <QCoreApplication>
+#include <QDebug>
+///-----------------------------------------------------------------------------
+#include "../../../src/rs274ngc/rs274ngc.h"
+#include "../../../src/rs274ngc/driver.h"
+#include "../../../src/rs274ngc/rs274ngc_return.h"
+///-----------------------------------------------------------------------------
 extern CANON_TOOL_TABLE _tools[];   /* in canon.cpp */
 extern int _tool_max;               /* in canon.cpp */
 extern char _parameter_file_name[]; /* in canon.cpp */
-
 FILE * _outfile;      /* where to print, set in main */
-
+///-----------------------------------------------------------------------------
 /*
 
 This file contains the source code for an emulation of using the six-axis
@@ -31,7 +30,6 @@ Called by:
   interpret_from_file
   interpret_from_keyboard
   main
-
 This
 
 1. calls rs274ngc_error_text to get the text of the error message whose
@@ -57,20 +55,20 @@ void report_error( /* ARGUMENTS                            */
 
   rs274ngc_error_text(error_code, buffer, 5); /* for coverage of code */
   rs274ngc_error_text(error_code, buffer, RS274NGC_TEXT_SIZE);
-  fprintf(stderr, "%s\n", 
-	  ((buffer[0] IS 0) ? "Unknown error, bad error code" : buffer));
+  fprintf(stderr, "%s\n",
+      ((buffer[0] == 0) ? "Unknown error, bad error code" : buffer));
   rs274ngc_line_text(buffer, RS274NGC_TEXT_SIZE);
   fprintf(stderr, "%s\n", buffer);
-  if (print_stack IS ON)
+  if (print_stack == ON)
     {
-      for (k SET_TO 0; ; k++)
-	{
-	  rs274ngc_stack_name(k, buffer, RS274NGC_TEXT_SIZE);
-	  if (buffer[0] ISNT 0)
-	    fprintf(stderr, "%s\n", buffer);
-	  else
-	    break;
-	}
+      for (k = 0; ; k++)
+    {
+      rs274ngc_stack_name(k, buffer, RS274NGC_TEXT_SIZE);
+      if (buffer[0] != 0)
+        fprintf(stderr, "%s\n", buffer);
+      else
+        break;
+    }
     }
 }
 
@@ -106,26 +104,25 @@ int interpret_from_keyboard(  /* ARGUMENTS                 */
   char line[RS274NGC_TEXT_SIZE];
   int status;
 
-  for(; ;)
+    for(; ;)
     {
-      printf("READ => ");
-      gets(line);
-      if (strcmp (line, "quit") IS 0)
-	return 0;
-      status SET_TO rs274ngc_read(line);
-      if ((status IS RS274NGC_EXECUTE_FINISH) AND (block_delete IS ON));
-      else if (status IS RS274NGC_ENDFILE);
-      else if ((status ISNT RS274NGC_EXECUTE_FINISH) AND
-	       (status ISNT RS274NGC_OK))
-	report_error(status, print_stack);
-      else
-	{
-	  status SET_TO rs274ngc_execute();
-	  if ((status IS RS274NGC_EXIT) OR
-	      (status IS RS274NGC_EXECUTE_FINISH));
-	  else if (status ISNT RS274NGC_OK)
-	    report_error(status, print_stack);
-	}
+        printf("READ => ");
+        gets(line);
+        if(strcmp (line, "quit") == 0)
+            return 0;
+        status = rs274ngc_read(line);
+        if((status == RS274NGC_EXECUTE_FINISH) && (block_delete == ON));
+        else if (status == RS274NGC_ENDFILE);
+        else if ((status != RS274NGC_EXECUTE_FINISH) &&
+            (status != RS274NGC_OK))
+        report_error(status, print_stack);
+        else
+        {
+            status = rs274ngc_execute();
+            if ((status == RS274NGC_EXIT) || (status == RS274NGC_EXECUTE_FINISH));
+            else if (status != RS274NGC_OK)
+                report_error(status, print_stack);
+        }
     }
 }
 
@@ -172,61 +169,61 @@ int interpret_from_file( /* ARGUMENTS                  */
 
   for(; ;)
     {
-      status SET_TO rs274ngc_read(NULL);
-      if ((status IS RS274NGC_EXECUTE_FINISH) AND (block_delete IS ON))
-	continue;
-      else if (status IS RS274NGC_ENDFILE)
-	break;
-      if ((status ISNT RS274NGC_OK) AND    // should not be EXIT
-	  (status ISNT RS274NGC_EXECUTE_FINISH))
-	{
-	  report_error(status, print_stack);
-	  if ((status IS NCE_FILE_ENDED_WITH_NO_PERCENT_SIGN) OR
-	      (do_next IS 2)) /* 2 means stop */
-	    {
-	      status SET_TO 1;
-	      break;
-	    }
-	  else if (do_next IS 1) /* 1 means MDI */
-	    {
-	      fprintf(stderr, "starting MDI\n");
-	      interpret_from_keyboard(block_delete, print_stack);
-	      fprintf(stderr, "continue program? y/n =>");
-	      gets(line);
-	      if (line[0] ISNT 'y')
-		{
-		  status SET_TO 1;
-		  break;
-		}
-	      else
-		continue;
-	    }
-	  else /* if do_next IS 0 -- 0 means continue */
-	    continue;
-	}
-      status SET_TO rs274ngc_execute();
-      if ((status ISNT RS274NGC_OK) AND
-	  (status ISNT RS274NGC_EXIT) AND
-	  (status ISNT RS274NGC_EXECUTE_FINISH))
-	{
-	  report_error(status, print_stack);
-	  status SET_TO 1;
-	  if (do_next IS 1) /* 1 means MDI */
-	    {
-	      fprintf(stderr, "starting MDI\n");
-	      interpret_from_keyboard(block_delete, print_stack);
-	      fprintf(stderr, "continue program? y/n =>");
-	      gets(line);
-	      if (line[0] ISNT 'y')
-		break;
-	    }
-	  else if (do_next IS 2) /* 2 means stop */
-	    break;
-	}
-      else if (status IS RS274NGC_EXIT)
-	break;
+      status = rs274ngc_read(NULL);
+      if ((status == RS274NGC_EXECUTE_FINISH) && (block_delete == ON))
+    continue;
+      else if (status == RS274NGC_ENDFILE)
+    break;
+      if ((status != RS274NGC_OK) &&    // should not be EXIT
+      (status != RS274NGC_EXECUTE_FINISH))
+    {
+      report_error(status, print_stack);
+      if ((status == NCE_FILE_ENDED_WITH_NO_PERCENT_SIGN) ||
+          (do_next == 2)) /* 2 means stop */
+        {
+          status = 1;
+          break;
+        }
+      else if (do_next == 1) /* 1 means MDI */
+        {
+          fprintf(stderr, "starting MDI\n");
+          interpret_from_keyboard(block_delete, print_stack);
+          fprintf(stderr, "continue program? y/n =>");
+          gets(line);
+          if (line[0] != 'y')
+        {
+          status = 1;
+          break;
+        }
+          else
+        continue;
+        }
+      else /* if do_next IS 0 -- 0 means continue */
+        continue;
     }
-  return ((status IS 1) ? 1 : 0);
+      status = rs274ngc_execute();
+      if ((status != RS274NGC_OK) &&
+      (status != RS274NGC_EXIT) &&
+      (status != RS274NGC_EXECUTE_FINISH))
+    {
+      report_error(status, print_stack);
+      status = 1;
+      if (do_next == 1) /* 1 means MDI */
+        {
+          fprintf(stderr, "starting MDI\n");
+          interpret_from_keyboard(block_delete, print_stack);
+          fprintf(stderr, "continue program? y/n =>");
+          gets(line);
+          if (line[0] != 'y')
+        break;
+        }
+      else if (do_next == 2) /* 2 means stop */
+        break;
+    }
+      else if (status == RS274NGC_EXIT)
+    break;
+    }
+  return ((status == 1) ? 1 : 0);
 }
 
 /************************************************************************/
@@ -274,53 +271,53 @@ int read_tool_file(  /* ARGUMENTS         */
   double offset;
   double diameter;
 
-  if (file_name[0] IS 0) /* ask for name if given name is empty string */
+  if (file_name[0] == 0) /* ask for name if given name is empty string */
     {
       fprintf(stderr, "name of tool file => ");
       gets(buffer);
-      tool_file_port SET_TO fopen(buffer, "r");
+      tool_file_port = fopen(buffer, "r");
     }
   else
-      tool_file_port SET_TO fopen(file_name, "r");
-  if (tool_file_port IS NULL)
+      tool_file_port = fopen(file_name, "r");
+  if (tool_file_port == nullptr)
     {
       fprintf(stderr, "Cannot open %s\n",
-	      ((file_name[0] IS 0) ? buffer : file_name));
+          ((file_name[0] == 0) ? buffer : file_name));
       return 1;
     }
   for(;;)    /* read and discard header, checking for blank line */
     {
-      if (fgets(buffer, 1000, tool_file_port) IS NULL)
-	{
-	  fprintf(stderr, "Bad tool file format\n");
-	  return 1;
-	}
-      else if (buffer[0] IS '\n')
-	break;
-    }
-  
-  for (slot SET_TO 0; slot <= _tool_max; slot++) /* initialize */
+      if (fgets(buffer, 1000, tool_file_port) == nullptr)
     {
-      _tools[slot].id SET_TO -1;
-      _tools[slot].length SET_TO 0;
-      _tools[slot].diameter SET_TO 0;
+      fprintf(stderr, "Bad tool file format\n");
+      return 1;
     }
-  for (; (fgets(buffer, 1000, tool_file_port) ISNT NULL); )
+      else if (buffer[0] == '\n')
+    break;
+    }
+
+  for (slot = 0; slot <= _tool_max; slot++) /* initialize */
+    {
+      _tools[slot].id = -1;
+      _tools[slot].length = 0;
+      _tools[slot].diameter = 0;
+    }
+  for (; (fgets(buffer, 1000, tool_file_port) != nullptr); )
     {
       if (sscanf(buffer, "%d %d %lf %lf", &slot,
-		 &tool_id, &offset, &diameter) < 4)
-	{
-	  fprintf(stderr, "Bad input line \"%s\" in tool file\n", buffer);
-	  return 1;
-	}
-      if ((slot < 0) OR (slot > _tool_max)) /* zero and max both OK */
-	{
-	  fprintf(stderr, "Out of range tool slot number %d\n", slot);
-	  return 1;
-	}
-      _tools[slot].id SET_TO tool_id;
-      _tools[slot].length SET_TO offset;
-      _tools[slot].diameter SET_TO diameter;
+         &tool_id, &offset, &diameter) < 4)
+    {
+      fprintf(stderr, "Bad input line \"%s\" in tool file\n", buffer);
+      return 1;
+    }
+      if ((slot < 0) || (slot > _tool_max)) /* zero and max both OK */
+    {
+      fprintf(stderr, "Out of range tool slot number %d\n", slot);
+      return 1;
+    }
+      _tools[slot].id = tool_id;
+      _tools[slot].length = offset;
+      _tools[slot].diameter = diameter;
     }
   fclose(tool_file_port);
   return 0;
@@ -349,8 +346,8 @@ int designate_parameter_file(char * file_name)
 
   fprintf(stderr, "name of parameter file => ");
   gets(file_name);
-  test_port SET_TO fopen(file_name, "r");
-  if (test_port IS NULL)
+  test_port = fopen(file_name, "r");
+  if (test_port == NULL)
     {
       fprintf(stderr, "Cannot open %s\n", file_name);
       return 1;
@@ -407,40 +404,40 @@ int adjust_error_handling(
       fprintf(stderr, "enter a number:\n");
       fprintf(stderr, "1 = done with error handling\n");
       fprintf(stderr, "2 = %sprint stack on error\n",
-	      ((*print_stack IS ON) ? "do not " : ""));
-      if (args IS 3)
-	{
-	  if (*do_next IS 0) /* 0 means continue */
-	    fprintf(stderr, 
-		    "3 = stop on error (do not continue)\n");
-	  else /* if do_next IS 2 -- 2 means stopping on error */
-	    fprintf(stderr, 
-		    "3 = continue on error (do not stop)\n");
-	}
-      else if (args IS 2)
-	{
-	  if (*do_next IS 0) /* 0 means continue */
-	    fprintf(stderr, 
-		    "3 = mdi on error (do not continue or stop)\n");
-	  else if (*do_next IS 1) /* 1 means MDI */
-	    fprintf(stderr, 
-		    "3 = stop on error (do not mdi or continue)\n");
-	  else /* if do_next IS 2 -- 2 means stopping on error */
-	    fprintf(stderr, 
-		    "3 = continue on error (do not stop or mdi)\n");
-	}
+          ((*print_stack == ON) ? "do not " : ""));
+      if (args == 3)
+    {
+      if (*do_next == 0) /* 0 means continue */
+        fprintf(stderr,
+            "3 = stop on error (do not continue)\n");
+      else /* if do_next IS 2 -- 2 means stopping on error */
+        fprintf(stderr,
+            "3 = continue on error (do not stop)\n");
+    }
+      else if (args == 2)
+    {
+      if (*do_next == 0) /* 0 means continue */
+        fprintf(stderr,
+            "3 = mdi on error (do not continue or stop)\n");
+      else if (*do_next == 1) /* 1 means MDI */
+        fprintf(stderr,
+            "3 = stop on error (do not mdi or continue)\n");
+      else /* if do_next IS 2 -- 2 means stopping on error */
+        fprintf(stderr,
+            "3 = continue on error (do not stop or mdi)\n");
+    }
       fprintf(stderr, "enter choice => ");
       gets(buffer);
-      if (sscanf(buffer, "%d", &choice) ISNT 1)
-	continue;
-      if (choice IS 1)
-	break;
-      else if (choice IS 2)
-	*print_stack SET_TO ((*print_stack IS OFF) ? ON : OFF);
-      else if ((choice IS 3) AND (args IS 3))
-	*do_next SET_TO ((*do_next IS 0) ? 2 : 0);
-      else if ((choice IS 3) AND (args IS 2))
-	*do_next SET_TO ((*do_next IS 2) ? 0 : (*do_next + 1));
+      if (sscanf(buffer, "%d", &choice) != 1)
+    continue;
+      if (choice == 1)
+    break;
+      else if (choice == 2)
+    *print_stack = ((*print_stack == OFF) ? ON : OFF);
+      else if ((choice == 3) && (args == 3))
+    *do_next = ((*do_next == 0) ? 2 : 0);
+      else if ((choice == 3) && (args == 2))
+    *do_next = ((*do_next == 2) ? 0 : (*do_next + 1));
     }
   return 0;
 }
@@ -515,8 +512,10 @@ redirected and the user does not see them.
 
 */
 
-main (int argc, char ** argv)
+int main(int argc, char *argv[])
 {
+    QCoreApplication app(argc, argv);
+
   int status;
   int choice;
   int do_next; /* 0=continue, 1=mdi, 2=stop */
@@ -526,7 +525,7 @@ main (int argc, char ** argv)
   int gees[RS274NGC_ACTIVE_G_CODES];
   int ems[RS274NGC_ACTIVE_M_CODES];
   double sets[RS274NGC_ACTIVE_SETTINGS];
-  char default_name[] SET_TO "rs274ngc.var";
+  char default_name[] = "rs274ngc.var";
   int print_stack;
 
   if (argc > 3)
@@ -536,13 +535,13 @@ main (int argc, char ** argv)
       fprintf(stderr, "   or \"%s <input file> <output file>\"\n", argv[0]);
       exit(1);
     }
-  
-  do_next SET_TO 2;  /* 2=stop */
-  block_delete SET_TO OFF;
-  print_stack SET_TO OFF;
-  tool_flag SET_TO 0;
+
+  do_next = 2;  /* 2=stop */
+  block_delete = OFF;
+  print_stack = OFF;
+  tool_flag = 0;
   strcpy(_parameter_file_name, default_name);
-  _outfile SET_TO stdout; /* may be reset below */
+  _outfile = stdout; /* may be reset below */
 
   for(; ;)
     {
@@ -551,64 +550,64 @@ main (int argc, char ** argv)
       fprintf(stderr, "2 = choose parameter file ...\n");
       fprintf(stderr, "3 = read tool file ...\n");
       fprintf(stderr, "4 = turn block delete switch %s\n",
-	      ((block_delete IS OFF) ? "ON" : "OFF"));
+          ((block_delete == OFF) ? "ON" : "OFF"));
       fprintf(stderr, "5 = adjust error handling...\n");
       fprintf(stderr, "enter choice => ");
       gets(buffer);
-      if (sscanf(buffer, "%d", &choice) ISNT 1)
-	continue;
-      if (choice IS 1)
-	break;
-      else if (choice IS 2)
-	{
-	  if (designate_parameter_file(_parameter_file_name) ISNT 0)
-	    exit(1);
-	}
-      else if (choice IS 3)
-	{
-	  if (read_tool_file("") ISNT 0)
-	    exit(1);
-	  tool_flag SET_TO 1;
-	}
-      else if (choice IS 4)
-	block_delete SET_TO ((block_delete IS OFF) ? ON : OFF);
-      else if (choice IS 5)
-	adjust_error_handling(argc, &print_stack, &do_next);
+      if (sscanf(buffer, "%d", &choice) != 1)
+    continue;
+      if (choice == 1)
+    break;
+      else if (choice == 2)
+    {
+      if (designate_parameter_file(_parameter_file_name) != 0)
+        exit(1);
+    }
+      else if (choice == 3)
+    {
+      if (read_tool_file("") != 0)
+        exit(1);
+      tool_flag = 1;
+    }
+      else if (choice == 4)
+    block_delete = ((block_delete == OFF) ? ON : OFF);
+      else if (choice == 5)
+    adjust_error_handling(argc, &print_stack, &do_next);
     }
   fprintf(stderr, "executing\n");
-  if (tool_flag IS 0)
+  if (tool_flag == 0)
     {
-      if (read_tool_file("rs274ngc.tool_default") ISNT 0)
-	exit(1);
-    }
-    
-  if (argc IS 3)
-    {
-      _outfile SET_TO fopen(argv[2], "w");
-      if (_outfile IS NULL)
-	{
-	  fprintf(stderr, "could not open output file %s\n", argv[2]);
-	  exit(1);
-	}
+      if (read_tool_file("rs274ngc.tool_default") != 0)
+    exit(1);
     }
 
-  if ((status SET_TO rs274ngc_init()) ISNT RS274NGC_OK)
+  if (argc == 3)
+    {
+      _outfile = fopen(argv[2], "w");
+      if (_outfile == nullptr)
+    {
+      fprintf(stderr, "could not open output file %s\n", argv[2]);
+      exit(1);
+    }
+    }
+
+  if ((status = rs274ngc_init()) != RS274NGC_OK)
     {
       report_error(status, print_stack);
       exit(1);
     }
 
-  if (argc IS 1)
-    status SET_TO interpret_from_keyboard(block_delete, print_stack);
+  if (argc == 1)
+    status = interpret_from_keyboard(block_delete, print_stack);
   else /* if (argc IS 2 or argc IS 3) */
     {
-      status SET_TO rs274ngc_open(argv[1]);
-      if (status ISNT RS274NGC_OK) /* do not need to close since not open */
-	{
-	  report_error(status, print_stack);
-	  exit(1);
-	}
-      status SET_TO interpret_from_file(do_next, block_delete, print_stack);
+      status = rs274ngc_open(argv[1]);
+      if (status != RS274NGC_OK) /* do not need to close since not open */
+    {
+      report_error(status, print_stack);
+      exit(1);
+    }
+      status = interpret_from_file(do_next, block_delete, print_stack);
       rs274ngc_file_name(buffer, 5);  /* called to exercise the function */
       rs274ngc_file_name(buffer, 79); /* called to exercise the function */
       rs274ngc_close();
@@ -619,8 +618,8 @@ main (int argc, char ** argv)
   rs274ngc_active_m_codes(ems);   /* called to exercise the function */
   rs274ngc_active_settings(sets); /* called to exercise the function */
   rs274ngc_exit(); /* saves parameters */
-  exit(status);
-}
 
-/***********************************************************************/
-#endif
+    qDebug() << "exit status - " << status << endl; /// exit(status);
+  return app.exec();
+
+}

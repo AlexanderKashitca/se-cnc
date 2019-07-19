@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     mainForm form;
-  ///  form.show();
+    form.show();
 
 QVector<QVector3D> vector;
 vector.clear();
@@ -136,24 +136,24 @@ float _z;
     IP->CurrentPositionVector->VecData      [2] =    0.0      ;
 
     IP->CurrentVelocityVector->VecData      [0] =    100.0      ;
-    IP->CurrentVelocityVector->VecData      [1] =   -220.0      ;
-    IP->CurrentVelocityVector->VecData      [2] =    -50.0      ;
+    IP->CurrentVelocityVector->VecData      [1] =    100.0      ;
+    IP->CurrentVelocityVector->VecData      [2] =    100.0      ;
 
-    IP->CurrentAccelerationVector->VecData  [0] =   -150.0      ;
-    IP->CurrentAccelerationVector->VecData  [1] =    250.0      ;
-    IP->CurrentAccelerationVector->VecData  [2] =    -50.0      ;
+    IP->CurrentAccelerationVector->VecData  [0] =    100.0      ;
+    IP->CurrentAccelerationVector->VecData  [1] =    100.0      ;
+    IP->CurrentAccelerationVector->VecData  [2] =    100.0      ;
 
-    IP->MaxVelocityVector->VecData          [0] =    300.0      ;
+    IP->MaxVelocityVector->VecData          [0] =    100.0      ;
     IP->MaxVelocityVector->VecData          [1] =    100.0      ;
-    IP->MaxVelocityVector->VecData          [2] =    300.0      ;
+    IP->MaxVelocityVector->VecData          [2] =    100.0      ;
 
-    IP->MaxAccelerationVector->VecData      [0] =    300.0      ;
-    IP->MaxAccelerationVector->VecData      [1] =    200.0      ;
+    IP->MaxAccelerationVector->VecData      [0] =    100.0      ;
+    IP->MaxAccelerationVector->VecData      [1] =    100.0      ;
     IP->MaxAccelerationVector->VecData      [2] =    100.0      ;
 
-    IP->MaxJerkVector->VecData              [0] =    400.0      ;
-    IP->MaxJerkVector->VecData              [1] =    300.0      ;
-    IP->MaxJerkVector->VecData              [2] =    200.0      ;
+    IP->MaxJerkVector->VecData              [0] =    100.0      ;
+    IP->MaxJerkVector->VecData              [1] =    100.0      ;
+    IP->MaxJerkVector->VecData              [2] =    100.0      ;
 
     IP->TargetPositionVector->VecData       [0] =   -100.0      ;
     IP->TargetPositionVector->VecData       [1] =   -100.0      ;
@@ -161,7 +161,7 @@ float _z;
 
     IP->TargetVelocityVector->VecData       [0] =    50.0       ;
     IP->TargetVelocityVector->VecData       [1] =    50.0       ;
-    IP->TargetVelocityVector->VecData       [2] =   200.0       ;
+    IP->TargetVelocityVector->VecData       [2] =    50.0       ;
 
     IP->SelectionVector->VecData            [0] =   true        ;
     IP->SelectionVector->VecData            [1] =   true        ;
