@@ -53,11 +53,9 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../../src/rs274ngc/canon_pre.cpp \
-		../../../src/rs274ngc/driver.cpp \
 		../../../src/rs274ngc/rs274ngc_pre.cpp \
 		../../prj/rs274ngc/main.cpp 
 OBJECTS       = canon_pre.o \
-		driver.o \
 		rs274ngc_pre.o \
 		main.o
 DIST          = ../../../src/rs274ngc/rs274ngc.tool_default \
@@ -260,7 +258,6 @@ DIST          = ../../../src/rs274ngc/rs274ngc.tool_default \
 		../../../src/rs274ngc/driver.h \
 		../../../src/rs274ngc/rs274ngc.h \
 		../../../src/rs274ngc/rs274ngc_return.h ../../../src/rs274ngc/canon_pre.cpp \
-		../../../src/rs274ngc/driver.cpp \
 		../../../src/rs274ngc/rs274ngc_pre.cpp \
 		../../prj/rs274ngc/main.cpp
 QMAKE_TARGET  = rs274ngc
@@ -681,7 +678,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../src/rs274ngc/canon.h ../../../src/rs274ngc/canon_pre.h ../../../src/rs274ngc/driver.h ../../../src/rs274ngc/rs274ngc.h ../../../src/rs274ngc/rs274ngc_return.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/rs274ngc/canon_pre.cpp ../../../src/rs274ngc/driver.cpp ../../../src/rs274ngc/rs274ngc_pre.cpp ../../prj/rs274ngc/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/rs274ngc/canon_pre.cpp ../../../src/rs274ngc/rs274ngc_pre.cpp ../../prj/rs274ngc/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -732,12 +729,6 @@ compiler_clean: compiler_moc_predefs_clean
 canon_pre.o: ../../../src/rs274ngc/canon_pre.cpp ../../../src/rs274ngc/canon_pre.h \
 		../../../src/rs274ngc/canon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o canon_pre.o ../../../src/rs274ngc/canon_pre.cpp
-
-driver.o: ../../../src/rs274ngc/driver.cpp ../../../src/rs274ngc/rs274ngc.h \
-		../../../src/rs274ngc/canon.h \
-		../../../src/rs274ngc/rs274ngc_return.h \
-		../../../src/rs274ngc/driver.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o driver.o ../../../src/rs274ngc/driver.cpp
 
 rs274ngc_pre.o: ../../../src/rs274ngc/rs274ngc_pre.cpp ../../../src/rs274ngc/rs274ngc.h \
 		../../../src/rs274ngc/canon.h \

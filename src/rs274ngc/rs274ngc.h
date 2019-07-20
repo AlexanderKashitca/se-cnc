@@ -30,13 +30,13 @@
 /*   COMPILER MACROS  */
 /**********************/
 
-///#define AND              &&
-///#define IS               ==
-///#define ISNT             !=
+#define AND              &&
+#define IS               ==
+#define ISNT             !=
 #define MAX(x, y)        ((x) > (y) ? (x) : (y))
-///#define NOT              !
-///#define OR               ||
-///#define SET_TO           =
+#define NOT              !
+#define OR               ||
+#define SET_TO           =
 
 #ifndef TRUE
 #define TRUE             1

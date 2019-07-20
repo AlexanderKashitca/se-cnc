@@ -28,68 +28,62 @@ ZX-plane of the machine.
 #define CC
 
 ///-----------------------------------------------------------------------------
-typedef int CANON_PLANE;
-#define CANON_PLANE_XY 1
-#define CANON_PLANE_YZ 2
-#define	CANON_PLANE_XZ 3
+typedef enum
+{
+    CANON_PLANE_XY = 1,
+    CANON_PLANE_YZ = 2,
+    CANON_PLANE_XZ = 3
+}CANON_PLANE;
 
-typedef int CANON_UNITS;
-enum
+typedef enum
 {
     CANON_UNITS_INCHES = 1,
     CANON_UNITS_MM     = 2,
     CANON_UNITS_CM     = 3
-};
+}CANON_UNITS;
 
-
-typedef int CANON_MOTION_MODE;
-enum
+typedef enum
 {
     CANON_EXACT_STOP = 1,
     CANON_EXACT_PATH = 2,
     CANON_CONTINUOUS = 3
-};
+}CANON_MOTION_MODE;
 
+typedef enum
+{
+    CANON_SYNCHED     = 1,
+    CANON_INDEPENDENT = 2
+}CANON_SPEED_FEED_MODE;
 
-typedef int CANON_SPEED_FEED_MODE;
-#define CANON_SYNCHED 1
-#define CANON_INDEPENDENT 2
+typedef enum
+{
+    CANON_STOPPED          = 1,
+    CANON_CLOCKWISE        = 2,
+    CANON_COUNTERCLOCKWISE = 3
+}CANON_DIRECTION;
 
-typedef int CANON_DIRECTION;
-#define CANON_STOPPED 1
-#define CANON_CLOCKWISE 2
-#define CANON_COUNTERCLOCKWISE 3
+typedef enum
+{
+    CANON_WORKPIECE = 1,
+    CANON_XYZ = 2
+}CANON_FEED_REFERENCE;
 
-typedef int CANON_FEED_REFERENCE;
-#define CANON_WORKPIECE 1
-#define CANON_XYZ 2
+typedef enum
+{
+    CANON_SIDE_RIGHT = 1,
+    CANON_SIDE_LEFT  = 2,
+    CANON_SIDE_OFF   = 3
+}CANON_SIDE;
 
-typedef int CANON_SIDE;
-#define CANON_SIDE_RIGHT 1
-#define CANON_SIDE_LEFT 2
-#define CANON_SIDE_OFF 3
-
-typedef int CANON_AXIS;
-#define CANON_AXIS_X 1
-#define CANON_AXIS_Y 2
-#define CANON_AXIS_Z 3
-#define CANON_AXIS_A 4
-#define CANON_AXIS_B 5
-#define CANON_AXIS_C 6
-
-/* Currently using the typedefs above rather than the enums below 
-typedef enum {CANON_PLANE_XY, CANON_PLANE_YZ, CANON_PLANE_XZ} CANON_PLANE;
-typedef enum {CANON_UNITS_INCHES, CANON_UNITS_MM, CANON_UNITS_CM} CANON_UNITS;
-typedef enum {CANON_EXACT_STOP, CANON_EXACT_PATH, CANON_CONTINUOUS}
-             CANON_MOTION_MODE;
-typedef enum {CANON_SYNCHED, CANON_INDEPENDENT} CANON_SPEED_FEED_MODE;
-typedef enum {CANON_STOPPED, CANON_CLOCKWISE, CANON_COUNTERCLOCKWISE}
-             CANON_DIRECTION;
-typedef enum {CANON_WORKPIECE, CANON_XYZ} CANON_FEED_REFERENCE;
-typedef enum {CANON_SIDE_RIGHT, CANON_SIDE_LEFT, CANON_SIDE_OFF} CANON_SIDE;
-typedef enum {CANON_AXIS_X, CANON_AXIS_Y, CANON_AXIS_Z, CANON_AXIS_A,
-	      CANON_AXIS_B, CANON_AXIS_C} CANON_AXIS;
-*/
+typedef enum
+{
+    CANON_AXIS_X = 1,
+    CANON_AXIS_Y = 2,
+    CANON_AXIS_Z = 3,
+    CANON_AXIS_A = 4,
+    CANON_AXIS_B = 5,
+    CANON_AXIS_C = 6
+}CANON_AXIS;
 
 struct CANON_VECTOR
 {
@@ -101,40 +95,14 @@ struct CANON_VECTOR
 struct CANON_POSITION
 {
   CANON_POSITION() {}
-  CANON_POSITION(double _x, double _y, double _z
-#ifdef AA
-		, double _a
-#endif
-#ifdef BB 
-                , double _b
-#endif
-#ifdef CC
-                , double _c
-#endif
-)
+  CANON_POSITION(double _x,double _y,double _z,double _a,double _b,double _c)
   {
     x = _x; y = _y; z = _z;
-#ifdef AA
-    a = _a; 
-#endif
-#ifdef BB
-    b = _b;
-#endif
-#ifdef CC
-    c = _c;
-#endif
+    a = _a; b = _b; c = _c;
+
   }
-  double x, y, z
-#ifdef AA
-       , a
-#endif
-#ifdef BB
-       , b
-#endif
-#ifdef CC
-       , c
-#endif
-;};
+  double x,y,z,a,b,c;
+};
 
 /* Tools are numbered 1..CANON_TOOL_MAX, with tool 0 meaning no tool. */
 #define CANON_TOOL_MAX 128	// max size of carousel handled
@@ -155,28 +123,9 @@ extern void INIT_CANON();
 /* Representation */
 
 extern void SET_ORIGIN_OFFSETS(
- double x, double y, double z
-#ifdef AA
- , double a
-#else
-#ifdef ALL_AXES
- , double a
-#endif
-#endif
-#ifdef BB
- , double b
-#else
-#ifdef ALL_AXES
- , double b
-#endif
-#endif
-#ifdef CC
- , double c
-#else
-#ifdef ALL_AXES
- , double c
-#endif
-#endif
+    double x, double y, double z,
+    double a, double b, double c
+
 );
 
 /* Offset the origin to the point with absolute coordinates x, y, z,
@@ -206,27 +155,9 @@ made. */
 
 extern void STRAIGHT_TRAVERSE(
  double x, double y, double z
-#ifdef AA
  , double a_position
-#else
-#ifdef ALL_AXES
- , double a_position
-#endif
-#endif
-#ifdef BB
  , double b_position
-#else
-#ifdef ALL_AXES
- , double b_position
-#endif
-#endif
-#ifdef CC
  , double c_position
-#else
-#ifdef ALL_AXES
- , double c_position
-#endif
-#endif
 );
 /*
 
@@ -337,10 +268,8 @@ for the same motions.
 extern void SET_MOTION_CONTROL_MODE(CANON_MOTION_MODE mode);
 
 /*
-
 This sets the motion control mode to one of: CANON_EXACT_STOP,
 CANON_EXACT_PATH, or CANON_CONTINUOUS.
-
 */
 
 extern void SET_CUTTER_RADIUS_COMPENSATION(double radius);
@@ -363,33 +292,15 @@ extern void STOP_SPEED_FEED_SYNCH();
 /* Machining Functions */
 
 extern void ARC_FEED(
- double first_end,
- double second_end,
- double first_axis,
- double second_axis,
- int rotation,
- double axis_end_point
-#ifdef AA
- , double a_position
-#else
-#ifdef ALL_AXES
- , double a_position
-#endif
-#endif
-#ifdef BB
- , double b_position
-#else
-#ifdef ALL_AXES
- , double b_position
-#endif
-#endif
-#ifdef CC
- , double c_position
-#else
-#ifdef ALL_AXES
- , double c_position
-#endif
-#endif
+    double first_end,
+    double second_end,
+    double first_axis,
+    double second_axis,
+    int rotation,
+    double axis_end_point,
+    double a_position,
+    double b_position,
+    double c_position
 );
 
 /* Move in a helical arc from the current location at the existing feed
@@ -445,27 +356,9 @@ a point moving along the arc has of its total motion.
 
 extern void STRAIGHT_FEED(
  double x, double y, double z
-#ifdef AA
  , double a_position
-#else
-#ifdef ALL_AXES
- , double a_position
-#endif
-#endif
-#ifdef BB
  , double b_position
-#else
-#ifdef ALL_AXES
- , double b_position
-#endif
-#endif
-#ifdef CC
  , double c_position
-#else
-#ifdef ALL_AXES
- , double c_position
-#endif
-#endif
 );
 
 /* Move at existing feed rate so that at any time during the move,
@@ -474,27 +367,9 @@ The meanings of the parameters is the same as for STRAIGHT_TRAVERSE.*/
 
 extern void STRAIGHT_PROBE (
  double x, double y, double z
-#ifdef AA
  , double a_position
-#else
-#ifdef ALL_AXES
- , double a_position
-#endif
-#endif
-#ifdef BB
  , double b_position
-#else
-#ifdef ALL_AXES
- , double b_position
-#endif
-#endif
-#ifdef CC
  , double c_position
-#else
-#ifdef ALL_AXES
- , double c_position
-#endif
-#endif
 );
 
 /* Perform a probing operation. This is a temporary addition to the

@@ -18,6 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 #-------------------------------------------------------------------------------
 SOURCES += \
+            ../../../src/interpreter/cannon_out.cpp \
+            ../../../src/interpreter/interpreter.cpp \
             ../../../src/interpreter/parser_g_code.cpp \
             ../../../src/interpreter/canon_pre.cpp \
             ../../../src/interpreter/rs274ngc_errors.cpp \
@@ -30,6 +32,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 #-------------------------------------------------------------------------------
 HEADERS += \
+            ../../../src/interpreter/cannon_out.h \
+            ../../../src/interpreter/interpreter.h \
             ../../../src/interpreter/parser_g_code.h \
             ../../../src/interpreter/canon.h \
             ../../../src/interpreter/canon_pre.h \

@@ -17,7 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         ../../../src/rs274ngc/canon_pre.cpp \
-        ../../../src/rs274ngc/driver.cpp \
         ../../../src/rs274ngc/rs274ngc_errors.cpp \
         ../../../src/rs274ngc/rs274ngc_pre.cpp \
         main.cpp

@@ -52,11 +52,15 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../../src/interpreter/parser_g_code.cpp \
+SOURCES       = ../../../src/interpreter/cannon_out.cpp \
+		../../../src/interpreter/interpreter.cpp \
+		../../../src/interpreter/parser_g_code.cpp \
 		../../../src/interpreter/canon_pre.cpp \
 		../../../src/interpreter/rs274ngc_pre.cpp \
 		../../prj/interpreter/main.cpp 
-OBJECTS       = parser_g_code.o \
+OBJECTS       = cannon_out.o \
+		interpreter.o \
+		parser_g_code.o \
 		canon_pre.o \
 		rs274ngc_pre.o \
 		main.o
@@ -256,12 +260,16 @@ DIST          = ../../../src/interpreter/rs274ngc.tool_default \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/interpreter/interpreter.pro ../../../src/interpreter/parser_g_code.h \
+		../../prj/interpreter/interpreter.pro ../../../src/interpreter/cannon_out.h \
+		../../../src/interpreter/interpreter.h \
+		../../../src/interpreter/parser_g_code.h \
 		../../../src/interpreter/canon.h \
 		../../../src/interpreter/canon_pre.h \
 		../../../src/interpreter/driver.h \
 		../../../src/interpreter/rs274ngc.h \
-		../../../src/interpreter/rs274ngc_return.h ../../../src/interpreter/parser_g_code.cpp \
+		../../../src/interpreter/rs274ngc_return.h ../../../src/interpreter/cannon_out.cpp \
+		../../../src/interpreter/interpreter.cpp \
+		../../../src/interpreter/parser_g_code.cpp \
 		../../../src/interpreter/canon_pre.cpp \
 		../../../src/interpreter/rs274ngc_pre.cpp \
 		../../prj/interpreter/main.cpp
@@ -682,8 +690,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/parser_g_code.h ../../../src/interpreter/canon.h ../../../src/interpreter/canon_pre.h ../../../src/interpreter/driver.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_return.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/parser_g_code.cpp ../../../src/interpreter/canon_pre.cpp ../../../src/interpreter/rs274ngc_pre.cpp ../../prj/interpreter/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/cannon_out.h ../../../src/interpreter/interpreter.h ../../../src/interpreter/parser_g_code.h ../../../src/interpreter/canon.h ../../../src/interpreter/canon_pre.h ../../../src/interpreter/driver.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_return.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/cannon_out.cpp ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/parser_g_code.cpp ../../../src/interpreter/canon_pre.cpp ../../../src/interpreter/rs274ngc_pre.cpp ../../prj/interpreter/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -730,6 +738,13 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+cannon_out.o: ../../../src/interpreter/cannon_out.cpp ../../../src/interpreter/cannon_out.h \
+		../../../src/interpreter/canon.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o cannon_out.o ../../../src/interpreter/cannon_out.cpp
+
+interpreter.o: ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/interpreter.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o interpreter.o ../../../src/interpreter/interpreter.cpp
 
 parser_g_code.o: ../../../src/interpreter/parser_g_code.cpp ../../../src/interpreter/parser_g_code.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \

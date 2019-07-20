@@ -18,11 +18,6 @@
 #include <stdio.h>
 #include <string.h>
 ///-----------------------------------------------------------------------------
-///#define==
-///#define====
-///#define AND &&
-///#define OR ||
-
 /* where to print */
 extern FILE * _outfile;
 
