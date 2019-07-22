@@ -10,12 +10,10 @@ class CannonOutClass
         CannonOutClass();
         CannonOutClass(const CannonOutClass&);
 
-
-
         /* reads world model data into the canonical interface */
-        void INIT_CANON();
+        void InitCanon();
         /* Representation */
-        void SET_ORIGIN_OFFSETS(
+        void SetOroginOffsets(
             double x, double y, double z,
             double a, double b, double c
         );
@@ -23,19 +21,19 @@ class CannonOutClass
         a, b, and c. Values of x, y, z, a, b, and c are real numbers. The units
         are whatever length units are being used at the time this command is
         given. */
-        void USE_LENGTH_UNITS(CANON_UNITS u);
+        void UseLengthUnits(CANON_UNITS u);
         /* Use the specified units for length. Conceptually, the units must
         be either inches or millimeters. */
-        void SELECT_PLANE(CANON_PLANE pl);
+        void SelectPlane(CANON_PLANE pl);
         /* Use the plane designated by selected_plane as the selected plane.
            Conceptually, the selected_plane must be the XY-plane, the XZ-plane, or
            the YZ-plane. */
         /* Free Space Motion */
-        void SET_TRAVERSE_RATE(double rate);
+        void SetTraverseRate(double rate);
         /* Set the traverse rate that will be used when the spindle traverses. It
         is expected that no cutting will occur while a traverse move is being
         made. */
-        void STRAIGHT_TRAVERSE(
+        void StaightTraverse(
          double x, double y, double z
          , double a_position
          , double b_position
@@ -60,7 +58,7 @@ class CannonOutClass
 
         /* Machining Attributes */
 
-         void SET_FEED_RATE(double rate);
+         void SetFeedRate(double rate);
 
         /*
 
@@ -93,7 +91,7 @@ class CannonOutClass
 
         */
 
-         void SET_FEED_REFERENCE(CANON_FEED_REFERENCE reference);
+         void SetFeedReference(CANON_FEED_REFERENCE reference);
 
         /*
 
@@ -146,33 +144,33 @@ class CannonOutClass
 
         */
 
-         void SET_MOTION_CONTROL_MODE(CANON_MOTION_MODE mode);
+         void SetMotionControlMode(CANON_MOTION_MODE mode);
 
         /*
         This sets the motion control mode to one of: CANON_EXACT_STOP,
         CANON_EXACT_PATH, or CANON_CONTINUOUS.
         */
 
-         void SET_CUTTER_RADIUS_COMPENSATION(double radius);
+         void SetCutterRadiusCompensation(double radius);
 
         /* Set the radius to use when performing cutter radius compensation. */
 
-         void START_CUTTER_RADIUS_COMPENSATION(int direction);
+         void StartCutterRadiusCompensation(int direction);
 
         /* Conceptually, the direction must be left (meaning the cutter
         stays to the left of the programmed path) or right. */
 
-         void STOP_CUTTER_RADIUS_COMPENSATION();
+         void StopCutterRadiusCompensation();
 
         /* Do not apply cutter radius compensation when executing spindle
         translation commands. */
 
-         void START_SPEED_FEED_SYNCH();
-         void STOP_SPEED_FEED_SYNCH();
+         void StartSpeedFeedSynch();
+         void StopSpeedFeedSynch();
 
         /* Machining Functions */
 
-         void ARC_FEED(
+         void ArcFeed(
             double first_end,
             double second_end,
             double first_axis,
@@ -235,7 +233,7 @@ class CannonOutClass
 
         */
 
-         void STRAIGHT_FEED(
+         void StraightFeed(
          double x, double y, double z
          , double a_position
          , double b_position
@@ -246,7 +244,7 @@ class CannonOutClass
         all axes have covered the same proportion of their required motion.
         The meanings of the parameters is the same as for STRAIGHT_TRAVERSE.*/
 
-         void STRAIGHT_PROBE (
+         void StraightProbe(
          double x, double y, double z
          , double a_position
          , double b_position
@@ -258,52 +256,52 @@ class CannonOutClass
         When the operation is finished, all axes should be back where they
         started. */
 
-         void STOP();
+         void Stop();
 
         /* stop motion after current feed */
 
-         void DWELL(double seconds);
+         void Dwell(double seconds);
 
         /* freeze x,y,z for a time */
 
         /* Spindle Functions */
 
-         void SPINDLE_RETRACT_TRAVERSE();
+         void SpindleRetractTraverse();
 
         /* Retract the spindle at traverse rate to the fully retracted position. */
 
-         void START_SPINDLE_CLOCKWISE();
+         void StartSpindleClockwise();
 
         /* Turn the spindle clockwise at the currently set speed rate. If the
         spindle is already turning that way, this command has no effect. */
 
-         void START_SPINDLE_COUNTERCLOCKWISE();
+         void StartSpindleCounterClockwise();
 
         /* Turn the spindle counterclockwise at the currently set speed rate. If
         the spindle is already turning that way, this command has no effect. */
 
-         void SET_SPINDLE_SPEED(double r);
+         void SetSpindleSpeed(double r);
 
         /* Set the spindle speed that will be used when the spindle is turning.
         This is usually given in rpm and refers to the rate of spindle
         rotation. If the spindle is already turning and is at a different
         speed, change to the speed given with this command. */
 
-         void STOP_SPINDLE_TURNING();
+         void StopSpindleTurning();
 
         /* Stop the spindle from turning. If the spindle is already stopped, this
         command may be given, but it will have no effect. */
 
-         void SPINDLE_RETRACT();
-         void ORIENT_SPINDLE(double orientation, CANON_DIRECTION direction);
-         void LOCK_SPINDLE_Z();
-         void USE_SPINDLE_FORCE();
-         void USE_NO_SPINDLE_FORCE();
+         void SpindleRetract();
+         void OrientSpindle(double orientation, CANON_DIRECTION direction);
+         void LockSpindleZ();
+         void UseSpindleForce();
+         void UseNoSpindleForce();
 
         /* Tool Functions */
-         void USE_TOOL_LENGTH_OFFSET(double length);
+         void UseToolLengthOffset(double length);
 
-         void CHANGE_TOOL(int slot); /* slot is slot number */
+         void ChangeTool(int slot); /* slot is slot number */
 
         /* It is assumed that each cutting tool in the machine is assigned to a
         slot (intended to correspond to a slot number in a tool carousel).
@@ -336,11 +334,11 @@ class CannonOutClass
         before the change_tool command, and the value of slot must be the slot
         number of the selected tool. */
 
-         void SELECT_TOOL(int i); /* i is slot number */
+         void SelectTool(int i); /* i is slot number */
 
         /* Miscellaneous Functions */
 
-         void CLAMP_AXIS(CANON_AXIS axis);
+         void ClampAxis(CANON_AXIS axis);
 
         /* Clamp the given axis. If the machining center does not have a clamp
         for that axis, this command should result in an error condition in the
@@ -349,31 +347,31 @@ class CannonOutClass
         An attempt to move an axis while it is clamped should result in an
         error condition in the controller. */
 
-         void COMMENT(char *s);
+         void Comment(char *s);
 
         /* This function has no physical effect. If commands are being printed or
         logged, the comment command is printed or logged, including the string
         which is the value of comment_text. This serves to allow formal
         comments at specific locations in programs or command files. */
 
-         void DISABLE_FEED_OVERRIDE();
-         void ENABLE_FEED_OVERRIDE();
-         void DISABLE_SPEED_OVERRIDE();
-         void ENABLE_SPEED_OVERRIDE();
-         void FLOOD_OFF();
+         void DisableFeedOverride();
+         void EnableFeedOverride();
+         void DisableSpeedOverride();
+         void EnableSpeedOverride();
+         void FloodOff();
         /* Turn flood coolant off. */
-         void FLOOD_ON();
+         void FloodOn();
         /* Turn flood coolant on. */
 
-        void MESSAGE(char *s);
+        void Message(char *s);
 
-        void MIST_OFF();
+        void MistOff();
         /* Turn mist coolant off. */
 
-        void MIST_ON();
+        void MistOn();
         /* Turn mist coolant on. */
 
-        void PALLET_SHUTTLE();
+        void PalletShuttle();
 
         /* If the machining center has a pallet shuttle mechanism (a mechanism
         which switches the position of two pallets), this command should cause
@@ -383,22 +381,22 @@ class CannonOutClass
         If the machining center does not have a pallet shuttle, this command
         should result in an error condition in the controller. */
 
-        void TURN_PROBE_OFF();
-        void TURN_PROBE_ON();
+        void TurnProbeOff();
+        void TurnProbeOn();
 
-        void UNCLAMP_AXIS(CANON_AXIS axis);
+        void UnclampAxis(CANON_AXIS axis);
 
         /* Unclamp the given axis. If the machining center does not have a clamp
         for that axis, this command should result in an error condition in the
         controller. */
 
         /* NURB Functions */
-        void NURB_KNOT_VECTOR(); /* double knot values, -1.0 signals done */
-        void NURB_CONTROL_POINT(int i, double x, double y, double z, double w );
-        void NURB_FEED(double sStart, double sEnd);
+        void NurbKnotVector(); /* double knot values, -1.0 signals done */
+        void NurbControlPoint(int i, double x, double y, double z, double w );
+        void NurbFeed(double sStart, double sEnd);
 
         /* Program Functions */
-        void OPTIONAL_PROGRAM_STOP();
+        void OptionalProgramStop();
 
         /* If the machining center has an optional stop switch, and it is on
         when this command is read from a program, stop executing the program
@@ -408,11 +406,11 @@ class CannonOutClass
         already (such as when the interpreter is being used with keyboard
         input), this command has no effect. */
 
-        void PROGRAM_END();
+        void ProgramEnd();
         /* If a program is being read, stop executing the program and be prepared
         to accept a new program or to be shut down. */
 
-        void PROGRAM_STOP();
+        void ProgramStop();
         /* If this command is read from a program, stop executing the program at
         this point, but be prepared to resume with the next line of the
         program. If commands are being executed with a stop after each one
