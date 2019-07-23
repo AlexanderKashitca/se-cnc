@@ -1,14 +1,58 @@
 ///-----------------------------------------------------------------------------
-#ifndef CANNON_OUT_H
-#define CANNON_OUT_H
+#ifndef CANNON_IN_OUT_H
+#define CANNON_IN_OUT_H
 ///-----------------------------------------------------------------------------
 #include "canon.h"
+
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 ///-----------------------------------------------------------------------------
-class CannonOutClass
+class CannonInOutClass
 {
+    private :
+        static CANON_PLANE       _active_plane;
+        static int               _active_slot;
+        static double            _feed_rate;
+        static int               _flood;
+        static double            _length_unit_factor;  /* 1 for MM 25.4 for inch */
+        static CANON_UNITS       _length_unit_type;
+        static int               _line_number;
+        static int               _mist;
+        static CANON_MOTION_MODE _motion_mode;
+        static double            _probe_position_a;
+        static double            _probe_position_b;
+        static double            _probe_position_c;
+        static double            _probe_position_x;
+        static double            _probe_position_y;
+        static double            _probe_position_z;
+        static double            _program_origin_a;
+        static double            _program_origin_b;
+        static double            _program_origin_c;
+        static double            _program_origin_x;
+        static double            _program_origin_y;
+        static double            _program_origin_z;
+        static double            _program_position_a;
+        static double            _program_position_b;
+        static double            _program_position_c;
+        static double            _program_position_x;
+        static double            _program_position_y;
+        static double            _program_position_z;
+        static double            _spindle_speed;
+        static CANON_DIRECTION   _spindle_turning;
+        static double            _traverse_rate;
     public:
-        CannonOutClass();
-        CannonOutClass(const CannonOutClass&);
+        char _parameter_file_name[100];          /// Not static.Driver writes
+        int              _tool_max = 68;         /// Not static. Driver reads
+        CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Not static. Driver writes
+    private:
+        void print_nc_line_number();
+        FILE* _outfile;
+
+    public:
+        CannonInOutClass();
+        CannonInOutClass(const CannonInOutClass&);
+        ~CannonInOutClass();
 
         /* reads world model data into the canonical interface */
         void InitCanon();
@@ -21,10 +65,10 @@ class CannonOutClass
         a, b, and c. Values of x, y, z, a, b, and c are real numbers. The units
         are whatever length units are being used at the time this command is
         given. */
-        void UseLengthUnits(CANON_UNITS u);
+        void UseLengthUnits(CANON_UNITS in_unit);
         /* Use the specified units for length. Conceptually, the units must
         be either inches or millimeters. */
-        void SelectPlane(CANON_PLANE pl);
+        void SelectPlane(CANON_PLANE in_plane);
         /* Use the plane designated by selected_plane as the selected plane.
            Conceptually, the selected_plane must be the XY-plane, the XZ-plane, or
            the YZ-plane. */
@@ -421,5 +465,5 @@ class CannonOutClass
 
 };
 ///-----------------------------------------------------------------------------
-#endif /// CANNON_OUT_H
+#endif /// CANNON_IN_OUT_H
 ///-----------------------------------------------------------------------------

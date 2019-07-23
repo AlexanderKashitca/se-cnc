@@ -1,17 +1,104 @@
 ///-----------------------------------------------------------------------------
-#include "cannon_out.h"
+#include "cannon_in_out.h"
 ///-----------------------------------------------------------------------------
-CannonOutClass::CannonOutClass()
+
+///-----------------------------------------------------------------------------
+/**
+ * @note static inicialization
+ */
+int CannonInOutClass::_active_slot = 1;
+int CannonInOutClass::_flood = 0;
+int CannonInOutClass::_line_number = 1;
+int CannonInOutClass::_mist = 0;
+double CannonInOutClass::_feed_rate = 0.0;
+double CannonInOutClass::_length_unit_factor = 1;
+double CannonInOutClass::_probe_position_a = 0.0;
+double CannonInOutClass::_probe_position_b = 0.0;
+double CannonInOutClass::_probe_position_c = 0.0;
+double CannonInOutClass::_probe_position_x = 0.0;
+double CannonInOutClass::_probe_position_y = 0.0;
+double CannonInOutClass::_probe_position_z = 0.0;
+double CannonInOutClass::_program_origin_a = 0.0;
+double CannonInOutClass::_program_origin_b = 0.0;
+double CannonInOutClass::_program_origin_c = 0.0;
+double CannonInOutClass::_program_origin_x = 0.0;
+double CannonInOutClass::_program_origin_y = 0.0;
+double CannonInOutClass::_program_origin_z = 0.0;
+double CannonInOutClass::_program_position_a = 0.0;
+double CannonInOutClass::_program_position_b = 0.0;
+double CannonInOutClass::_program_position_c = 0.0;
+double CannonInOutClass::_program_position_x = 0.0;
+double CannonInOutClass::_program_position_y = 0.0;
+double CannonInOutClass::_program_position_z = 0.0;
+double CannonInOutClass::_spindle_speed = 0.0;
+double CannonInOutClass::_traverse_rate = 0.0;
+
+CANON_DIRECTION   CannonInOutClass::_spindle_turning = CANON_STOPPED;
+CANON_MOTION_MODE CannonInOutClass::_motion_mode = CANON_CONTINUOUS;
+CANON_UNITS       CannonInOutClass::_length_unit_type = CANON_UNITS_MM;
+CANON_PLANE       CannonInOutClass::_active_plane = CANON_PLANE_XY;
+///-----------------------------------------------------------------------------
+CannonInOutClass::CannonInOutClass()
+{
+    _outfile = new FILE;
+}
+///-----------------------------------------------------------------------------
+CannonInOutClass::~CannonInOutClass()
+{
+    delete _outfile;
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::InitCanon()
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::InitCanon()
-{
 
+extern void rs274ngc_line_text(char* line_text,int max_size);
+
+void CannonInOutClass::print_nc_line_number()
+{
+#if 0
+  char text[256];
+  int k;
+  int m;
+
+  rs274ngc_line_text(text, 256);
+  for (k=0;
+       ((k < 256) &&
+    ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));
+       k++);
+  if ((k < 256)&&((text[k]=='n')||(text[k]=='N')))
+    {
+      fputc('N', _outfile);
+      for (k++, m=0;
+       ((k < 256)&&(text[k] >= '0')&&(text[k] <= '9'));
+       k++, m++)
+    fputc(text[k], _outfile);
+      for (; m < 6; m++)
+    fputc(' ', _outfile);
+    }
+  else if (k < 256)
+    fprintf(_outfile, "N..... ");
+#endif
 }
+
+void PRINT0(const char* control)
+{
+//    fprintf(_outfile,"%5d ",_line_number++);
+//    print_nc_line_number();
+//    fprintf(_outfile, control);
+}
+
+void PRINT1(const char* control,const char* arg1)
+{
+//    fprintf(_outfile, "%5d ", _line_number++);
+//    print_nc_line_number();
+//    fprintf(_outfile, control, arg1);
+}
+
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetOroginOffsets(double x,double y,double z,double a,double b,double c)
+void CannonInOutClass::SetOroginOffsets(double x,double y,double z,double a,double b,double c)
 {
     fprintf(_outfile, "%5d ", _line_number++);
     print_nc_line_number();
@@ -38,7 +125,7 @@ void CannonOutClass::SetOroginOffsets(double x,double y,double z,double a,double
     _program_origin_c = c;  /*CC*/
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::UseLengthUnits(CANON_UNITS u)
+void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
 {
     if (in_unit==CANON_UNITS_INCHES)
       {
@@ -74,7 +161,7 @@ void CannonOutClass::UseLengthUnits(CANON_UNITS u)
       PRINT0("USE_LENGTH_UNITS(UNKNOWN)\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SelectPlane(CANON_PLANE in_plane)
+void CannonInOutClass::SelectPlane(CANON_PLANE in_plane)
 {
     PRINT1("SELECT_PLANE(CANON_PLANE_%s)\n",
        ((in_plane==CANON_PLANE_XY) ? "XY" :
@@ -83,13 +170,13 @@ void CannonOutClass::SelectPlane(CANON_PLANE in_plane)
     _active_plane=in_plane;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetTraverseRate(double rate)
+void CannonInOutClass::SetTraverseRate(double rate)
 {
-    PRINT1("SET_TRAVERSE_RATE(%.4f)\n", rate);
+///    PRINT1("SET_TRAVERSE_RATE(%.4f)\n", rate);
     _traverse_rate = rate;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StaightTraverse(double x,double y,double z,double a_position,double b_position,double c_position)
+void CannonInOutClass::StaightTraverse(double x,double y,double z,double a,double b,double c)
 {
     fprintf(_outfile, "%5d ", _line_number++);
     print_nc_line_number();
@@ -110,19 +197,19 @@ void CannonOutClass::StaightTraverse(double x,double y,double z,double a_positio
     _program_position_c=c; /*CC*/
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetFeedRate(double rate)
+void CannonInOutClass::SetFeedRate(double rate)
 {
-    PRINT1("SET_FEED_RATE(%.4f)\n", rate);
+//    PRINT1("SET_FEED_RATE(%.4f)\n", rate);
     _feed_rate=rate;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetFeedReference(CANON_FEED_REFERENCE reference)
+void CannonInOutClass::SetFeedReference(CANON_FEED_REFERENCE reference)
 {
     PRINT1("SET_FEED_REFERENCE(%s)\n",
        (reference==CANON_WORKPIECE) ? "CANON_WORKPIECE" : "CANON_XYZ");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetMotionControlMode(CANON_MOTION_MODE mode)
+void CannonInOutClass::SetMotionControlMode(CANON_MOTION_MODE mode)
 {
     if (mode==CANON_EXACT_STOP)
       {
@@ -143,43 +230,43 @@ void CannonOutClass::SetMotionControlMode(CANON_MOTION_MODE mode)
       PRINT0("SET_MOTION_CONTROL_MODE(UNKNOWN)\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetCutterRadiusCompensation(double radius)
+void CannonInOutClass::SetCutterRadiusCompensation(double radius)
 {
-PRINT1("SET_CUTTER_RADIUS_COMPENSATION(%.4f)\n", radius);
+///PRINT1("SET_CUTTER_RADIUS_COMPENSATION(%.4f)\n", radius);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StartCutterRadiusCompensation(int direction)
+void CannonInOutClass::StartCutterRadiusCompensation(int side)
 {
     PRINT1("START_CUTTER_RADIUS_COMPENSATION(%s)\n",
         (side==CANON_SIDE_LEFT)  ? "LEFT"  :
         (side==CANON_SIDE_RIGHT) ? "RIGHT" : "UNKNOWN");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StopCutterRadiusCompensation()
+void CannonInOutClass::StopCutterRadiusCompensation()
 {
 PRINT0 ("STOP_CUTTER_RADIUS_COMPENSATION()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StartSpeedFeedSynch()
+void CannonInOutClass::StartSpeedFeedSynch()
 {
 PRINT0 ("START_SPEED_FEED_SYNCH()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StopSpeedFeedSynch()
+void CannonInOutClass::StopSpeedFeedSynch()
 {
 PRINT0 ("STOP_SPEED_FEED_SYNCH()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::ArcFeed(
+void CannonInOutClass::ArcFeed(
     double first_end,
     double second_end,
     double first_axis,
     double second_axis,
     int rotation,
     double axis_end_point,
-    double a_position,
-    double b_position,
-    double c_position
+    double a,
+    double b,
+    double c
 )
 {
     fprintf(_outfile, "%5d ", _line_number++);
@@ -217,11 +304,11 @@ void CannonOutClass::ArcFeed(
     _program_position_c=c; /*CC*/
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StraightFeed(
+void CannonInOutClass::StraightFeed(
  double x, double y, double z
- , double a_position
- , double b_position
- , double c_position
+ , double a
+ , double b
+ , double c
 )
 {
     fprintf(_outfile, "%5d ", _line_number++);
@@ -243,11 +330,11 @@ void CannonOutClass::StraightFeed(
     _program_position_c=c; /*CC*/
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StraightProbe(
+void CannonInOutClass::StraightProbe(
  double x, double y, double z
- , double a_position
- , double b_position
- , double c_position
+ , double a
+ , double b
+ , double c
 )
 {
     double distance;
@@ -293,93 +380,93 @@ void CannonOutClass::StraightProbe(
     _program_position_c=c; /*CC*/
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::Stop()
+void CannonInOutClass::Stop()
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::Dwell(double seconds)
+void CannonInOutClass::Dwell(double seconds)
 {
-PRINT1("DWELL(%.4f)\n", seconds);
+///PRINT1("DWELL(%.4f)\n", seconds);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SpindleRetractTraverse()
+void CannonInOutClass::SpindleRetractTraverse()
 {
     PRINT0("SPINDLE_RETRACT_TRAVERSE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StartSpindleClockwise()
+void CannonInOutClass::StartSpindleClockwise()
 {
     PRINT0("START_SPINDLE_CLOCKWISE()\n");
     _spindle_turning=((_spindle_speed==0.0) ? CANON_STOPPED :
                                          CANON_CLOCKWISE);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StartSpindleCounterClockwise()
+void CannonInOutClass::StartSpindleCounterClockwise()
 {
     PRINT0("START_SPINDLE_COUNTERCLOCKWISE()\n");
     _spindle_turning=((_spindle_speed==0.0) ? CANON_STOPPED :
                                          CANON_COUNTERCLOCKWISE);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SetSpindleSpeed(double rpm)
+void CannonInOutClass::SetSpindleSpeed(double rpm)
 {
-    PRINT1("SET_SPINDLE_SPEED(%.4f)\n", rpm);
+////    PRINT1("SET_SPINDLE_SPEED(%.4f)\n", rpm);
     _spindle_speed = rpm;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::StopSpindleTurning()
+void CannonInOutClass::StopSpindleTurning()
 {
     PRINT0("STOP_SPINDLE_TURNING()\n");
     _spindle_turning=CANON_STOPPED;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::SpindleRetract()
+void CannonInOutClass::SpindleRetract()
 {
 PRINT0("SPINDLE_RETRACT()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::OrientSpindle(double orientation, CANON_DIRECTION direction)
+void CannonInOutClass::OrientSpindle(double orientation, CANON_DIRECTION direction)
 {
-    PRINT2("ORIENT_SPINDLE(%.4f, %s)\n", orientation,
-        (direction==CANON_CLOCKWISE) ? "CANON_CLOCKWISE" :
-                                             "CANON_COUNTERCLOCKWISE");
+///    PRINT2("ORIENT_SPINDLE(%.4f, %s)\n", orientation,
+///        (direction==CANON_CLOCKWISE) ? "CANON_CLOCKWISE" :
+///                                             "CANON_COUNTERCLOCKWISE");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::LockSpindleZ()
-{
-
-}
-///-----------------------------------------------------------------------------
-void CannonOutClass::UseSpindleForce()
+void CannonInOutClass::LockSpindleZ()
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::UseNoSpindleForce()
+void CannonInOutClass::UseSpindleForce()
+{
+
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::UseNoSpindleForce()
 {
 PRINT0("USE_NO_SPINDLE_FORCE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::UseToolLengthOffset(double length)
+void CannonInOutClass::UseToolLengthOffset(double length)
 {
-PRINT1("USE_TOOL_LENGTH_OFFSET(%.4f)\n", length);
+///PRINT1("USE_TOOL_LENGTH_OFFSET(%.4f)\n", length);
 }
 ///-----------------------------------------------------------------------------
 /* slot is slot number */
-void CannonOutClass::ChangeTool(int slot)
+void CannonInOutClass::ChangeTool(int slot)
 {
-    PRINT1("CHANGE_TOOL(%d)\n", slot);
+//    PRINT1("CHANGE_TOOL(%d)\n", slot);
     _active_slot=slot;
 }
 ///-----------------------------------------------------------------------------
 /* i is slot number */
-void CannonOutClass::SelectTool(int slot)
+void CannonInOutClass::SelectTool(int slot)
 {
-PRINT1("SELECT_TOOL(%d)\n", slot);
+///PRINT1("SELECT_TOOL(%d)\n", slot);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::ClampAxis(CANON_AXIS axis)
+void CannonInOutClass::ClampAxis(CANON_AXIS axis)
 {
     PRINT1("CLAMP_AXIS(%s)\n",
         (axis==CANON_AXIS_X) ? "CANON_AXIS_X" :
@@ -389,76 +476,76 @@ void CannonOutClass::ClampAxis(CANON_AXIS axis)
         (axis==CANON_AXIS_C) ? "CANON_AXIS_C" : "UNKNOWN");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::Comment(char *s)
+void CannonInOutClass::Comment(char *s)
 {
 PRINT1("COMMENT(\"%s\")\n", s);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::DisableFeedOverride()
+void CannonInOutClass::DisableFeedOverride()
 {
 PRINT0("DISABLE_FEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::EnableFeedOverride()
+void CannonInOutClass::EnableFeedOverride()
 {
 PRINT0("ENABLE_FEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::DisableSpeedOverride()
+void CannonInOutClass::DisableSpeedOverride()
 {
 PRINT0("DISABLE_SPEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::EnableSpeedOverride()
+void CannonInOutClass::EnableSpeedOverride()
 {
 PRINT0("ENABLE_SPEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::FloodOff()
+void CannonInOutClass::FloodOff()
 {
     PRINT0("FLOOD_OFF()\n");
     _flood=0;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::FloodOn()
+void CannonInOutClass::FloodOn()
 {
     PRINT0("FLOOD_ON()\n");
     _flood=1;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::Message(char *s)
+void CannonInOutClass::Message(char *s)
 {
 PRINT1("MESSAGE(\"%s\")\n", s);
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::MistOff()
+void CannonInOutClass::MistOff()
 {
     PRINT0("MIST_OFF()\n");
     _mist=0;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::MistOn()
+void CannonInOutClass::MistOn()
 {
     PRINT0("MIST_ON()\n");
     _mist=1;
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::PalletShuttle()
+void CannonInOutClass::PalletShuttle()
 {
 PRINT0("PALLET_SHUTTLE()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::TurnProbeOff()
+void CannonInOutClass::TurnProbeOff()
 {
 PRINT0("TURN_PROBE_OFF()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::TurnProbeOn()
+void CannonInOutClass::TurnProbeOn()
 {
 PRINT0("TURN_PROBE_ON()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::UnclampAxis(CANON_AXIS axis)
+void CannonInOutClass::UnclampAxis(CANON_AXIS axis)
 {
     PRINT1("UNCLAMP_AXIS(%s)\n",
         (axis==CANON_AXIS_X) ? "CANON_AXIS_X" :
@@ -470,147 +557,33 @@ void CannonOutClass::UnclampAxis(CANON_AXIS axis)
 }
 ///-----------------------------------------------------------------------------
 /* double knot values, -1.0 signals done */
-void CannonOutClass::NurbKnotVector()
+void CannonInOutClass::NurbKnotVector()
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::NurbControlPoint(int i, double x, double y, double z, double w )
+void CannonInOutClass::NurbControlPoint(int i, double x, double y, double z, double w )
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::NurbFeed(double sStart, double sEnd)
+void CannonInOutClass::NurbFeed(double sStart, double sEnd)
 {
 
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::OptionalProgramStop()
+void CannonInOutClass::OptionalProgramStop()
 {
 PRINT0("OPTIONAL_PROGRAM_STOP()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::ProgramEnd()
+void CannonInOutClass::ProgramEnd()
 {
 PRINT0("PROGRAM_END()\n");
 }
 ///-----------------------------------------------------------------------------
-void CannonOutClass::ProgramStop()
+void CannonInOutClass::ProgramStop()
 {
 PRINT0("PROGRAM_STOP()\n");
 }
-///-----------------------------------------------------------------------------
-
-
-
-///-----------------------------------------------------------------------------
-
-/* Canonical "Do it" functions
-
-This==a set of dummy definitions for the canonical machining functions
-given in canon.hh. These functions just print themselves and, if necessary,
-update the dummy world model. On each output line==printed:
-1. an output line number (sequential, starting with 1).
-2. an input line number read from the input (or ... if not provided).
-3. a printed representation of the function call which was made.
-
-If an interpreter which makes these calls==compiled with this set of
-definitions, it can be used as a translator by redirecting output from
-stdout to a file.
-
-*/
-
-
-#if 1
-
-extern void rs274ngc_line_text(char * line_text, int max_size);
-
-void print_nc_line_number()
-{
-  char text[256];
-  int k;
-  int m;
-
-  rs274ngc_line_text(text, 256);
-  for (k=0;
-       ((k < 256) &&
-    ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));
-       k++);
-  if ((k < 256)&&((text[k]=='n')||(text[k]=='N')))
-    {
-      fputc('N', _outfile);
-      for (k++, m=0;
-       ((k < 256)&&(text[k] >= '0')&&(text[k] <= '9'));
-       k++, m++)
-    fputc(text[k], _outfile);
-      for (; m < 6; m++)
-    fputc(' ', _outfile);
-    }
-  else if (k < 256)
-    fprintf(_outfile, "N..... ");
-}
-///-----------------------------------------------------------------------------
-#define PRINT0(control) if (1)                        \
-          {fprintf(_outfile, "%5d ", _line_number++); \
-           print_nc_line_number();                    \
-           fprintf(_outfile, control);                \
-          }/// else
-#define PRINT1(control, arg1) if (1)                  \
-          {fprintf(_outfile, "%5d ", _line_number++); \
-           print_nc_line_number();                    \
-           fprintf(_outfile, control, arg1);          \
-          }/// else
-#define PRINT2(control, arg1, arg2) if (1)            \
-          {fprintf(_outfile, "%5d ", _line_number++); \
-           print_nc_line_number();                    \
-           fprintf(_outfile, control, arg1, arg2);    \
-          }/// else
-#define PRINT3(control, arg1, arg2, arg3) if (1)         \
-          {fprintf(_outfile, "%5d ", _line_number++);    \
-           print_nc_line_number();                       \
-           fprintf(_outfile, control, arg1, arg2, arg3); \
-          }/// else
-#define PRINT4(control, arg1, arg2, arg3, arg4) if (1)         \
-          {fprintf(_outfile, "%5d ", _line_number++);          \
-           print_nc_line_number();                             \
-           fprintf(_outfile, control, arg1, arg2, arg3, arg4); \
-          }/// else
-#define PRINT5(control, arg1, arg2, arg3, arg4, arg5) if (1)         \
-          {fprintf(_outfile, "%5d ", _line_number++);                \
-           print_nc_line_number();                                   \
-           fprintf(_outfile, control, arg1, arg2, arg3, arg4, arg5); \
-          }/// else
-#define PRINT6(control, arg1, arg2, arg3, arg4, arg5, arg6) if (1)         \
-          {fprintf(_outfile, "%5d ", _line_number++);                      \
-           print_nc_line_number();                                         \
-           fprintf(_outfile, control, arg1, arg2, arg3, arg4, arg5, arg6); \
-          }/// else
-#define PRINT7(control, arg1, arg2, arg3, arg4, arg5, arg6, arg7) if (1) \
-          {fprintf(_outfile, "%5d ", _line_number++);                    \
-           print_nc_line_number();                                       \
-           fprintf(_outfile, control,                                    \
-                           arg1, arg2, arg3, arg4, arg5, arg6, arg7);    \
-          }/// else
-#define PRINT10(control,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10) \
-          if (1)                                                            \
-          {fprintf(_outfile, "%5d ", _line_number++);                       \
-           print_nc_line_number();                                          \
-           fprintf(_outfile, control,                                       \
-                   arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);     \
-          }/// else
-
-#endif
-
-///-----------------------------------------------------------------------------
-
-///-----------------------------------------------------------------------------
-/*
-void PARAMETRIC_2D_CURVE_FEED(FunctionPtr f1, FunctionPtr f2,
-                  double start_parameter_value,
-                  double end_parameter_value) {}
-
-void PARAMETRIC_3D_CURVE_FEED(FunctionPtr xfcn, FunctionPtr yfcn,
-    FunctionPtr zfcn, double start_parameter_value,
-                  double end_parameter_value) {}
-*/
 ///-----------------------------------------------------------------------------
