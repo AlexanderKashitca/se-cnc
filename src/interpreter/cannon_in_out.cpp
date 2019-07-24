@@ -1,7 +1,6 @@
 ///-----------------------------------------------------------------------------
 #include "cannon_in_out.h"
-///-----------------------------------------------------------------------------
-
+#include "rs274ngc.h"
 ///-----------------------------------------------------------------------------
 /**
  * @note static inicialization
@@ -37,20 +36,15 @@ CANON_DIRECTION   CannonInOutClass::_spindle_turning = CANON_STOPPED;
 CANON_MOTION_MODE CannonInOutClass::_motion_mode = CANON_CONTINUOUS;
 CANON_UNITS       CannonInOutClass::_length_unit_type = CANON_UNITS_MM;
 CANON_PLANE       CannonInOutClass::_active_plane = CANON_PLANE_XY;
-///-----------------------------------------------------------------------------
+
+int   CannonInOutClass::_tool_max = 68;         /// Not static. Driver reads
+FILE* CannonInOutClass::_outfile = nullptr;
+char  CannonInOutClass::_parameter_file_name[100];          /// Not static.Driver writes
+CANON_TOOL_TABLE CannonInOutClass::_tools[CANON_TOOL_MAX]; /// Not static. Driver writes
+
 void CannonInOutClass::SetOutFile(FILE* file)
 {
     _outfile = file;
-}
-
-CannonInOutClass::CannonInOutClass()
-{
-    _outfile = new FILE;
-}
-///-----------------------------------------------------------------------------
-CannonInOutClass::~CannonInOutClass()
-{
-    delete _outfile;
 }
 ///-----------------------------------------------------------------------------
 /* Representation */
@@ -60,49 +54,40 @@ void CannonInOutClass::InitCanon()
 }
 ///-----------------------------------------------------------------------------
 
-extern void rs274ngc_line_text(char* line_text,int max_size);
 
 void CannonInOutClass::print_nc_line_number()
 {
-#if 0
-  char text[256];
-  int k;
-  int m;
-
-  rs274ngc_line_text(text, 256);
-  for (k=0;
-       ((k < 256) &&
-    ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));
-       k++);
-  if ((k < 256)&&((text[k]=='n')||(text[k]=='N')))
+    char text[256];
+    int k;
+    int m;
+    rs274ngcClass::rs274ngc_line_text(text, 256);
+    for(k=0;((k < 256) && ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));k++);
+    if((k < 256)&&((text[k]=='n')||(text[k]=='N')))
     {
-      fputc('N', _outfile);
-      for (k++, m=0;
-       ((k < 256)&&(text[k] >= '0')&&(text[k] <= '9'));
-       k++, m++)
-    fputc(text[k], _outfile);
-      for (; m < 6; m++)
-    fputc(' ', _outfile);
+        fputc('N',_outfile);
+        for(k++, m=0;((k < 256)&&(text[k] >= '0')&&(text[k] <= '9'));k++, m++)
+            fputc(text[k],_outfile);
+        for(;m < 6; m++)
+            fputc(' ',_outfile);
     }
-  else if (k < 256)
-    fprintf(_outfile, "N..... ");
-#endif
+    else
+        if(k < 256)
+            fprintf(_outfile,"N..... ");
 }
-
+///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT0(const char* control)
 {
     fprintf(_outfile,"%5d ",_line_number++);
     print_nc_line_number();
     fprintf(_outfile,control);
 }
-
+///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,const char* arg1)
 {
-    fprintf(_outfile, "%5d ", _line_number++);
+    fprintf(_outfile,"%5d ",_line_number++);
     print_nc_line_number();
-    fprintf(_outfile, control, arg1);
+    fprintf(_outfile,control,arg1);
 }
-
 ///-----------------------------------------------------------------------------
 /* Offset the origin to the point with absolute coordinates x, y, z,
 a, b, and c. Values of x, y, z, a, b, and c are real numbers. The units
@@ -570,7 +555,7 @@ void CannonInOutClass::Stop()
 /* freeze x,y,z for a time */
 void CannonInOutClass::Dwell(double seconds)
 {
-///PRINT1("DWELL(%.4f)\n", seconds);
+///PRINT1("DWELL(%.4f)\n",(float)seconds);
 }
 ///-----------------------------------------------------------------------------
 /* Retract the spindle at traverse rate to the fully retracted position. */
@@ -959,7 +944,7 @@ double CannonInOutClass::GetExternalOriginZ()
  */
 void CannonInOutClass::GetExternalParameterFileName(char * file_name,int max_size)
 {
-    if(static_cast<int>(strlen(_parameter_file_name)) < max_size)
+    if(strlen(_parameter_file_name) < max_size)
         strcpy(file_name, _parameter_file_name);
     else
         file_name[0]=0;

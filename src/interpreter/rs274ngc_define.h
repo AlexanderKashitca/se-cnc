@@ -2,29 +2,10 @@
 #ifndef RS274NGC_DEFINE_H
 #define RS274NGC_DEFINE_H
 ///-----------------------------------------------------------------------------
-/*
-  rs274ngc.hh
-  Declarations for the rs274abc translator.
-*/
-
-/**********************/
-/* INCLUDE DIRECTIVES */
-/**********************/
-
 #include <stdio.h>
 #include "canon.h"
-
-/**********************/
-/*   COMPILER MACROS  */
-/**********************/
-
-///#define AND              &&
-///#define IS               ==
-///#define ISNT             !=
+///-----------------------------------------------------------------------------
 #define MAX(x, y)        ((x) > (y) ? (x) : (y))
-///#define NOT              !
-///#define OR               ||
-///#define SET_TO           =
 
 #ifndef TRUE
 #define TRUE             1
@@ -183,18 +164,12 @@ typedef enum {R_PLANE, OLD_Z} RETRACT_MODE;
 typedef int ON_OFF;
 
 typedef struct block_struct {
-#ifdef AA
   ON_OFF   a_flag;
   double   a_number;
-#endif
-#ifdef BB
   ON_OFF   b_flag;
   double   b_number;
-#endif
-#ifdef CC
   ON_OFF   c_flag;
   double   c_number;
-#endif
   char     comment[256];
   int      d_number;
   double   f_number;
@@ -241,21 +216,15 @@ and is not represented here
 
 typedef struct setup_struct
 {
-#ifdef AA
     double AA_axis_offset;             // A-axis g92 offset
     double AA_current;                 // current A-axis position
     double AA_origin_offset;           // A-axis origin offset
-#endif
-#ifdef BB
     double BB_axis_offset;             // B-axis g92 offset
     double BB_current;                 // current B-axis position
     double BB_origin_offset;           // B-axis origin offset
-#endif
-#ifdef CC
     double CC_axis_offset;             // C-axis g92 offset
     double CC_current;                 // current C-axis position
     double CC_origin_offset;           // C-axis origin offset
-#endif
     int active_g_codes[RS274NGC_ACTIVE_G_CODES];     // array of active G codes
     int active_m_codes[RS274NGC_ACTIVE_M_CODES];     // array of active M codes
     double active_settings[RS274NGC_ACTIVE_SETTINGS];    // array of feed, speed, etc.
@@ -320,7 +289,7 @@ typedef struct setup_struct
     int tool_table_index;              // tool index used with cutter comp
     double traverse_rate;              // rate for traverse motions
 }setup;
-typedef setup * setup_pointer;
+typedef setup* setup_pointer;
 /// pointer to function that reads
 typedef int (*read_function_pointer) (char *,int *,block_pointer,double *);
 ///-----------------------------------------------------------------------------

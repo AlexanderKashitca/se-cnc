@@ -10,6 +10,7 @@
 class CannonInOutClass
 {
     private :
+        /// static member
         static CANON_PLANE       _active_plane;
         static int               _active_slot;
         static double            _feed_rate;
@@ -40,38 +41,39 @@ class CannonInOutClass
         static double            _spindle_speed;
         static CANON_DIRECTION   _spindle_turning;
         static double            _traverse_rate;
+        ///
+        static void print_nc_line_number();
+        static FILE* _outfile;
     public:
-        char _parameter_file_name[100];          /// Not static.Driver writes
-        int              _tool_max = 68;         /// Not static. Driver reads
-        CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Not static. Driver writes
 
 
-        void SetOutFile(FILE* file);
-    private:
-        void print_nc_line_number();
-        FILE* _outfile;
 
     public:
-        CannonInOutClass();
-        CannonInOutClass(const CannonInOutClass&);
-        ~CannonInOutClass();
+        //CannonInOutClass();
+        //CannonInOutClass(const CannonInOutClass&);
+        //virtual ~CannonInOutClass();
+
+static         char _parameter_file_name[100];          /// Not static.Driver writes
+static         int              _tool_max;/// = 68;         /// Not static. Driver reads
+static         CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Not static. Driver writes
+static         void SetOutFile(FILE* file);
 
 
-        void InitCanon();
-        void SetOriginOffsets(double x,double y,double z,double a,double b,double c);
-        void UseLengthUnits(CANON_UNITS in_unit);
-        void SelectPlane(CANON_PLANE in_plane);
-        void SetTraverseRate(double rate);
-        void StraightTraverse(double x,double y,double z,double a_position,double b_position,double c_position);
-        void SetFeedRate(double rate);
-        void SetFeedReference(CANON_FEED_REFERENCE reference);
-        void SetMotionControlMode(CANON_MOTION_MODE mode);
-        void SetCutterRadiusCompensation(double radius);
-        void StartCutterRadiusCompensation(int direction);
-        void StopCutterRadiusCompensation();
-        void StartSpeedFeedSynch();
-        void StopSpeedFeedSynch();
-        void ArcFeed(
+        static void InitCanon();
+        static void SetOriginOffsets(double x,double y,double z,double a,double b,double c);
+        static void UseLengthUnits(CANON_UNITS in_unit);
+        static void SelectPlane(CANON_PLANE in_plane);
+        static void SetTraverseRate(double rate);
+        static void StraightTraverse(double x,double y,double z,double a_position,double b_position,double c_position);
+        static void SetFeedRate(double rate);
+        static void SetFeedReference(CANON_FEED_REFERENCE reference);
+        static void SetMotionControlMode(CANON_MOTION_MODE mode);
+        static void SetCutterRadiusCompensation(double radius);
+        static void StartCutterRadiusCompensation(int direction);
+        static void StopCutterRadiusCompensation();
+        static void StartSpeedFeedSynch();
+        static void StopSpeedFeedSynch();
+        static void ArcFeed(
             double first_end,
             double second_end,
             double first_axis,
@@ -82,86 +84,86 @@ class CannonInOutClass
             double b_position,
             double c_position
         );
-        void StraightFeed(double x,double y,double z,double a_position,double b_position,double c_position);
-        void StraightProbe(double x,double y,double z,double a_position,double b_position,double c_position);
-        void Stop();
-        void Dwell(double seconds);
-        void SpindleRetractTraverse();
-        void StartSpindleClockwise();
-        void StartSpindleCounterClockwise();
-        void SetSpindleSpeed(double r);
-        void StopSpindleTurning();
-        void SpindleRetract();
-        void OrientSpindle(double orientation, CANON_DIRECTION direction);
-        void LockSpindleZ();
-        void UseSpindleForce();
-        void UseNoSpindleForce();
-        void UseToolLengthOffset(double length);
-        void ChangeTool(int slot);
-        void SelectTool(int i);
-        void ClampAxis(CANON_AXIS axis);
-        void Comment(char *s);
-        void DisableFeedOverride();
-        void EnableFeedOverride();
-        void DisableSpeedOverride();
-        void EnableSpeedOverride();
-        void FloodOff();
-        void FloodOn();
-        void Message(char *s);
-        void MistOff();
-        void MistOn();
-        void PalletShuttle();
-        void TurnProbeOff();
-        void TurnProbeOn();
-        void UnclampAxis(CANON_AXIS axis);
+        static void StraightFeed(double x,double y,double z,double a_position,double b_position,double c_position);
+        static void StraightProbe(double x,double y,double z,double a_position,double b_position,double c_position);
+        static void Stop();
+        static void Dwell(double seconds);
+        static void SpindleRetractTraverse();
+        static void StartSpindleClockwise();
+        static void StartSpindleCounterClockwise();
+        static void SetSpindleSpeed(double r);
+        static void StopSpindleTurning();
+        static void SpindleRetract();
+        static void OrientSpindle(double orientation, CANON_DIRECTION direction);
+        static void LockSpindleZ();
+        static void UseSpindleForce();
+        static void UseNoSpindleForce();
+        static void UseToolLengthOffset(double length);
+        static void ChangeTool(int slot);
+        static void SelectTool(int i);
+        static void ClampAxis(CANON_AXIS axis);
+        static void Comment(char *s);
+        static void DisableFeedOverride();
+        static void EnableFeedOverride();
+        static void DisableSpeedOverride();
+        static void EnableSpeedOverride();
+        static void FloodOff();
+        static void FloodOn();
+        static void Message(char *s);
+        static void MistOff();
+        static void MistOn();
+        static void PalletShuttle();
+        static void TurnProbeOff();
+        static void TurnProbeOn();
+        static void UnclampAxis(CANON_AXIS axis);
         /* NURB Functions */
-        void NurbKnotVector(); /* double knot values, -1.0 signals done */
-        void NurbControlPoint(int i,double x,double y,double z,double w);
-        void NurbFeed(double sStart,double sEnd);
-        void OptionalProgramStop();
-        void ProgramEnd();
-        void ProgramStop();
+        static void NurbKnotVector(); /* double knot values, -1.0 signals done */
+        static void NurbControlPoint(int i,double x,double y,double z,double w);
+        static void NurbFeed(double sStart,double sEnd);
+        static void OptionalProgramStop();
+        static void ProgramEnd();
+        static void ProgramStop();
         /// input part
-        double GetExternalAngleUnitFactor();
-        double GetExternalFeedRate();
-        int GetExternalFlood();
-        double GetExternalLengthUnitFactor();
-        CANON_UNITS GetExternalLengthUnitType();
-        int GetExternalMist();
-        CANON_MOTION_MODE GetExternalMotionControlMode();
-        double GetExternalOriginA();
-        double GetExternalOriginB();
-        double GetExternalOriginC();
-        double GetExternalOriginX();
-        double GetExternalOriginY();
-        double GetExternalOriginZ();
-        void GetExternalParameterFileName(char * filename, int max_size);
-        CANON_PLANE GetExternalPlane();
-        double GetExternalPositionA();
-        double GetExternalPositionB();
-        double GetExternalPositionC();
-        double GetExternalPositionX();
-        double GetExternalPositionY();
-        double GetExternalPositionZ();
-        double GetExternalProbePositionA();
-        double GetExternalProbePositionB();
-        double GetExternalProbePositionC();
-        double GetExternalProbePositionX();
-        double GetExternalProbePositionY();
-        double GetExternalProbePositionZ();
-        double GetExternalProbeValue();
-        int GetExternalQueueEmpty();
-        double GetExternalSpeed();
-        CANON_DIRECTION GetExternalSpindle();
+        static double GetExternalAngleUnitFactor();
+        static double GetExternalFeedRate();
+        static int GetExternalFlood();
+        static double GetExternalLengthUnitFactor();
+        static CANON_UNITS GetExternalLengthUnitType();
+        static int GetExternalMist();
+        static CANON_MOTION_MODE GetExternalMotionControlMode();
+        static double GetExternalOriginA();
+        static double GetExternalOriginB();
+        static double GetExternalOriginC();
+        static double GetExternalOriginX();
+        static double GetExternalOriginY();
+        static double GetExternalOriginZ();
+        static void GetExternalParameterFileName(char * filename, int max_size);
+        static CANON_PLANE GetExternalPlane();
+        static double GetExternalPositionA();
+        static double GetExternalPositionB();
+        static double GetExternalPositionC();
+        static double GetExternalPositionX();
+        static double GetExternalPositionY();
+        static double GetExternalPositionZ();
+        static double GetExternalProbePositionA();
+        static double GetExternalProbePositionB();
+        static double GetExternalProbePositionC();
+        static double GetExternalProbePositionX();
+        static double GetExternalProbePositionY();
+        static double GetExternalProbePositionZ();
+        static double GetExternalProbeValue();
+        static int GetExternalQueueEmpty();
+        static double GetExternalSpeed();
+        static CANON_DIRECTION GetExternalSpindle();
         // returns current tool length offset
-        double GET_EXTERNAL_TOOL_LENGTH_OFFSET();
-        int GetExternalToolMax();
-        int GetExternalToolSlot();
-        CANON_TOOL_TABLE GetExternalToolTable(int pocket);
-        double GetExternalTraverseRate();
+        static double GET_EXTERNAL_TOOL_LENGTH_OFFSET();
+        static int GetExternalToolMax();
+        static int GetExternalToolSlot();
+        static CANON_TOOL_TABLE GetExternalToolTable(int pocket);
+        static double GetExternalTraverseRate();
         ///---------------------------------------------------------------------
-        void PRINT0(const char* control);
-        void PRINT1(const char* control,const char* arg1);
+        static void PRINT0(const char* control);
+        static void PRINT1(const char* control,const char* arg1);
 };
 ///-----------------------------------------------------------------------------
 #endif /// CANNON_IN_OUT_H

@@ -4,14 +4,8 @@
 ///-----------------------------------------------------------------------------
 #include "../../../src/interpreter/rs274ngc.h"
 ///-----------------------------------------------------------------------------
-rs274ngcClass rs274ngc;
-
-
-///-----------------------------------------------------------------------------
-extern CANON_TOOL_TABLE _tools[];   /* in canon.cpp */
-extern int _tool_max;               /* in canon.cpp */
-extern char _parameter_file_name[]; /* in canon.cpp */
-FILE * _outfile;      /* where to print, set in main */
+rs274ngcClass    rs274ngc;
+CannonInOutClass io;
 ///-----------------------------------------------------------------------------
 /*
 
@@ -298,11 +292,11 @@ int read_tool_file(  /* ARGUMENTS         */
     break;
     }
 
-  for (slot = 0; slot <= rs274ngc._tool_max; slot++) /* initialize */
+  for (slot = 0; slot <= io._tool_max; slot++) /* initialize */
     {
-      rs274ngc._tools[slot].id = -1;
-      rs274ngc._tools[slot].length = 0;
-      rs274ngc._tools[slot].diameter = 0;
+      io._tools[slot].id = -1;
+      io._tools[slot].length = 0;
+      io._tools[slot].diameter = 0;
     }
   for (; (fgets(buffer, 1000, tool_file_port) != nullptr); )
     {
@@ -312,14 +306,14 @@ int read_tool_file(  /* ARGUMENTS         */
       fprintf(stderr, "Bad input line \"%s\" in tool file\n", buffer);
       return 1;
     }
-      if ((slot < 0) || (slot > rs274ngc._tool_max)) /* zero and max both OK */
+      if ((slot < 0) || (slot > io._tool_max)) /* zero and max both OK */
     {
       fprintf(stderr, "Out of range tool slot number %d\n", slot);
       return 1;
     }
-      rs274ngc._tools[slot].id = tool_id;
-      rs274ngc._tools[slot].length = offset;
-      rs274ngc._tools[slot].diameter = diameter;
+      io._tools[slot].id = tool_id;
+      io._tools[slot].length = offset;
+      io._tools[slot].diameter = diameter;
     }
   fclose(tool_file_port);
   return 0;
@@ -474,8 +468,8 @@ int main(int argc, char *argv[])
   block_delete = OFF;
   print_stack = OFF;
   tool_flag = 0;
-  strcpy(rs274ngc._parameter_file_name, default_name);
-  rs274ngc.SetOutFile(stdout); /* may be reset below */
+  strcpy(io._parameter_file_name, default_name);
+  io.SetOutFile(stdout); /* may be reset below */
 
 
 
@@ -496,7 +490,7 @@ int main(int argc, char *argv[])
     break;
       else if (choice == 2)
     {
-      if (designate_parameter_file(rs274ngc._parameter_file_name) != 0)
+      if (designate_parameter_file(io._parameter_file_name) != 0)
         exit(1);
     }
       else if (choice == 3)
@@ -532,7 +526,7 @@ int main(int argc, char *argv[])
 */
   if ((status = rs274ngc.rs274ngc_init()) != RS274NGC_OK)
     {
-//      report_error(status, print_stack);
+      report_error(status, print_stack);
       exit(1);
     }
 
