@@ -21,24 +21,19 @@ SOURCES += \
             ../../../src/interpreter/cannon_in_out.cpp \
             ../../../src/interpreter/interpreter.cpp \
             ../../../src/interpreter/parser_g_code.cpp \
-            ../../../src/interpreter/canon_pre.cpp \
-            ../../../src/interpreter/rs274ngc_errors.cpp \
-            ../../../src/interpreter/rs274ngc_pre.cpp \
+#            ../../../src/interpreter/canon_pre.cpp \
+            ../../../src/interpreter/rs274ngc.cpp \
+#            ../../../src/interpreter/rs274ngc_pre.cpp \
             main.cpp
-#-------------------------------------------------------------------------------
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 #-------------------------------------------------------------------------------
 HEADERS += \
             ../../../src/interpreter/cannon_in_out.h \
             ../../../src/interpreter/interpreter.h \
             ../../../src/interpreter/parser_g_code.h \
             ../../../src/interpreter/canon.h \
-            ../../../src/interpreter/canon_pre.h \
-            ../../../src/interpreter/driver.h \
+#            ../../../src/interpreter/canon_pre.h \
             ../../../src/interpreter/rs274ngc.h \
+            ../../../src/interpreter/rs274ngc_define.h \
             ../../../src/interpreter/rs274ngc_return.h
 
 #-------------------------------------------------------------------------------
@@ -46,4 +41,9 @@ DISTFILES += \
             ../../../src/interpreter/rs274ngc.tool_default \
             ../../../src/interpreter/rs274ngc.var \
             ../../../src/interpreter/rs274ngc_tool
+#-------------------------------------------------------------------------------
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 #-------------------------------------------------------------------------------

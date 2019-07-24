@@ -2,9 +2,11 @@
 #include <QCoreApplication>
 #include <QDebug>
 ///-----------------------------------------------------------------------------
-#include "../../../src/rs274ngc/rs274ngc.h"
-#include "../../../src/rs274ngc/driver.h"
-#include "../../../src/rs274ngc/rs274ngc_return.h"
+#include "../../../src/interpreter/rs274ngc.h"
+///-----------------------------------------------------------------------------
+rs274ngcClass rs274ngc;
+
+
 ///-----------------------------------------------------------------------------
 extern CANON_TOOL_TABLE _tools[];   /* in canon.cpp */
 extern int _tool_max;               /* in canon.cpp */
@@ -53,17 +55,17 @@ void report_error( /* ARGUMENTS                            */
   char buffer[RS274NGC_TEXT_SIZE];
   int k;
 
-  rs274ngc_error_text(error_code, buffer, 5); /* for coverage of code */
-  rs274ngc_error_text(error_code, buffer, RS274NGC_TEXT_SIZE);
+  rs274ngc.rs274ngc_error_text(error_code, buffer, 5); /* for coverage of code */
+  rs274ngc.rs274ngc_error_text(error_code, buffer, RS274NGC_TEXT_SIZE);
   fprintf(stderr, "%s\n",
       ((buffer[0] == 0) ? "Unknown error, bad error code" : buffer));
-  rs274ngc_line_text(buffer, RS274NGC_TEXT_SIZE);
+  rs274ngc.rs274ngc_line_text(buffer, RS274NGC_TEXT_SIZE);
   fprintf(stderr, "%s\n", buffer);
   if (print_stack == ON)
     {
       for (k = 0; ; k++)
     {
-      rs274ngc_stack_name(k, buffer, RS274NGC_TEXT_SIZE);
+      rs274ngc.rs274ngc_stack_name(k, buffer, RS274NGC_TEXT_SIZE);
       if (buffer[0] != 0)
         fprintf(stderr, "%s\n", buffer);
       else
@@ -110,7 +112,7 @@ int interpret_from_keyboard(  /* ARGUMENTS                 */
         gets(line);
         if(strcmp (line, "quit") == 0)
             return 0;
-        status = rs274ngc_read(line);
+        status = rs274ngc.rs274ngc_read(line);
         if((status == RS274NGC_EXECUTE_FINISH) && (block_delete == ON));
         else if (status == RS274NGC_ENDFILE);
         else if ((status != RS274NGC_EXECUTE_FINISH) &&
@@ -118,7 +120,7 @@ int interpret_from_keyboard(  /* ARGUMENTS                 */
         report_error(status, print_stack);
         else
         {
-            status = rs274ngc_execute();
+            status = rs274ngc.rs274ngc_execute();
             if ((status == RS274NGC_EXIT) || (status == RS274NGC_EXECUTE_FINISH));
             else if (status != RS274NGC_OK)
                 report_error(status, print_stack);
@@ -169,7 +171,7 @@ int interpret_from_file( /* ARGUMENTS                  */
 
   for(; ;)
     {
-      status = rs274ngc_read(NULL);
+      status = rs274ngc.rs274ngc_read(nullptr);
       if ((status == RS274NGC_EXECUTE_FINISH) && (block_delete == ON))
     continue;
       else if (status == RS274NGC_ENDFILE)
@@ -201,7 +203,7 @@ int interpret_from_file( /* ARGUMENTS                  */
       else /* if do_next IS 0 -- 0 means continue */
         continue;
     }
-      status = rs274ngc_execute();
+      status = rs274ngc.rs274ngc_execute();
       if ((status != RS274NGC_OK) &&
       (status != RS274NGC_EXIT) &&
       (status != RS274NGC_EXECUTE_FINISH))
@@ -296,11 +298,11 @@ int read_tool_file(  /* ARGUMENTS         */
     break;
     }
 
-  for (slot = 0; slot <= _tool_max; slot++) /* initialize */
+  for (slot = 0; slot <= rs274ngc._tool_max; slot++) /* initialize */
     {
-      _tools[slot].id = -1;
-      _tools[slot].length = 0;
-      _tools[slot].diameter = 0;
+      rs274ngc._tools[slot].id = -1;
+      rs274ngc._tools[slot].length = 0;
+      rs274ngc._tools[slot].diameter = 0;
     }
   for (; (fgets(buffer, 1000, tool_file_port) != nullptr); )
     {
@@ -310,19 +312,18 @@ int read_tool_file(  /* ARGUMENTS         */
       fprintf(stderr, "Bad input line \"%s\" in tool file\n", buffer);
       return 1;
     }
-      if ((slot < 0) || (slot > _tool_max)) /* zero and max both OK */
+      if ((slot < 0) || (slot > rs274ngc._tool_max)) /* zero and max both OK */
     {
       fprintf(stderr, "Out of range tool slot number %d\n", slot);
       return 1;
     }
-      _tools[slot].id = tool_id;
-      _tools[slot].length = offset;
-      _tools[slot].diameter = diameter;
+      rs274ngc._tools[slot].id = tool_id;
+      rs274ngc._tools[slot].length = offset;
+      rs274ngc._tools[slot].diameter = diameter;
     }
   fclose(tool_file_port);
   return 0;
 }
-
 /************************************************************************/
 
 /* designate_parameter_file
@@ -347,7 +348,7 @@ int designate_parameter_file(char * file_name)
   fprintf(stderr, "name of parameter file => ");
   gets(file_name);
   test_port = fopen(file_name, "r");
-  if (test_port == NULL)
+  if (test_port == nullptr)
     {
       fprintf(stderr, "Cannot open %s\n", file_name);
       return 1;
@@ -355,7 +356,6 @@ int designate_parameter_file(char * file_name)
   fclose(test_port);
   return 0;
 }
-
 /************************************************************************/
 
 /* adjust_error_handling
@@ -442,79 +442,13 @@ int adjust_error_handling(
   return 0;
 }
 
-/************************************************************************/
 
-/* main
-
-The executable exits with either 0 (under all conditions not listed
-below) or 1 (under the following conditions):
-1. A fatal error occurs while interpreting from a file.
-2. Read_tool_file fails.
-3. An error occurs in rs274ngc_init.
-
-***********************************************************************
-
-Here are three ways in which the rs274abc executable may be called.
-Any other sort of call to the executable will cause an error message
-to be printed and the interpreter will not run. Other executables
-may be called similarly.
-
-1. If the rs274abc stand-alone executable is called with no arguments,
-input is taken from the keyboard, and an error in the input does not
-cause the rs274abc executable to exit.
-
-EXAMPLE:
-
-1A. To interpret from the keyboard, enter:
-
-rs274abc
-
-***********************************************************************
-
-2. If the executable is called with one argument, the argument is
-taken to be the name of an NC file and the file is interpreted as
-described in the documentation of interpret_from_file.
-
-
-EXAMPLES:
-
-2A. To interpret the file "cds.abc" and read the results on the
-screen, enter:
-
-rs274abc cds.abc
-
-2B. To interpret the file "cds.abc" and print the results in the file
-"cds.prim", enter:
-
-rs274abc cds.abc > cds.prim
-
-***********************************************************************
-
-Whichever way the executable is called, this gives the user several
-choices before interpretation starts
-
-1 = start interpreting
-2 = choose parameter file
-3 = read tool file ...
-4 = turn block delete switch ON
-5 = adjust error handling...
-
-Interpretation starts when option 1 is chosen. Until that happens, the
-user is repeatedly given the five choices listed above.  Item 4
-toggles between "turn block delete switch ON" and "turn block delete
-switch OFF".  See documentation of adjust_error_handling regarding
-what option 5 does.
-
-User instructions are printed to stderr (with fprintf) so that output
-can be redirected to a file. When output is redirected and user
-instructions are printed to stdout (with printf), the instructions get
-redirected and the user does not see them.
-
-*/
-
+///-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+
+
 
   int status;
   int choice;
@@ -540,8 +474,10 @@ int main(int argc, char *argv[])
   block_delete = OFF;
   print_stack = OFF;
   tool_flag = 0;
-  strcpy(_parameter_file_name, default_name);
-  _outfile = stdout; /* may be reset below */
+  strcpy(rs274ngc._parameter_file_name, default_name);
+  rs274ngc.SetOutFile(stdout); /* may be reset below */
+
+
 
   for(; ;)
     {
@@ -560,7 +496,7 @@ int main(int argc, char *argv[])
     break;
       else if (choice == 2)
     {
-      if (designate_parameter_file(_parameter_file_name) != 0)
+      if (designate_parameter_file(rs274ngc._parameter_file_name) != 0)
         exit(1);
     }
       else if (choice == 3)
@@ -574,13 +510,16 @@ int main(int argc, char *argv[])
       else if (choice == 5)
     adjust_error_handling(argc, &print_stack, &do_next);
     }
+
   fprintf(stderr, "executing\n");
+
+
   if (tool_flag == 0)
     {
       if (read_tool_file("rs274ngc.tool_default") != 0)
     exit(1);
     }
-
+/*
   if (argc == 3)
     {
       _outfile = fopen(argv[2], "w");
@@ -590,10 +529,10 @@ int main(int argc, char *argv[])
       exit(1);
     }
     }
-
-  if ((status = rs274ngc_init()) != RS274NGC_OK)
+*/
+  if ((status = rs274ngc.rs274ngc_init()) != RS274NGC_OK)
     {
-      report_error(status, print_stack);
+//      report_error(status, print_stack);
       exit(1);
     }
 
@@ -601,25 +540,35 @@ int main(int argc, char *argv[])
     status = interpret_from_keyboard(block_delete, print_stack);
   else /* if (argc IS 2 or argc IS 3) */
     {
-      status = rs274ngc_open(argv[1]);
+      status = rs274ngc.rs274ngc_open(argv[1]);
       if (status != RS274NGC_OK) /* do not need to close since not open */
     {
       report_error(status, print_stack);
       exit(1);
     }
       status = interpret_from_file(do_next, block_delete, print_stack);
-      rs274ngc_file_name(buffer, 5);  /* called to exercise the function */
-      rs274ngc_file_name(buffer, 79); /* called to exercise the function */
-      rs274ngc_close();
+      rs274ngc.rs274ngc_file_name(buffer, 5);  /* called to exercise the function */
+      rs274ngc.rs274ngc_file_name(buffer, 79); /* called to exercise the function */
+      rs274ngc.rs274ngc_close();
     }
-  rs274ngc_line_length();         /* called to exercise the function */
-  rs274ngc_sequence_number();     /* called to exercise the function */
-  rs274ngc_active_g_codes(gees);  /* called to exercise the function */
-  rs274ngc_active_m_codes(ems);   /* called to exercise the function */
-  rs274ngc_active_settings(sets); /* called to exercise the function */
-  rs274ngc_exit(); /* saves parameters */
+  rs274ngc.rs274ngc_line_length();         /* called to exercise the function */
+  rs274ngc.rs274ngc_sequence_number();     /* called to exercise the function */
+  rs274ngc.rs274ngc_active_g_codes(gees);  /* called to exercise the function */
+  rs274ngc.rs274ngc_active_m_codes(ems);   /* called to exercise the function */
+  rs274ngc.rs274ngc_active_settings(sets); /* called to exercise the function */
+  rs274ngc.rs274ngc_exit(); /* saves parameters */
 
     qDebug() << "exit status - " << status << endl; /// exit(status);
-  return app.exec();
+
+
+
+
+
+
+
+
+
+
+    return app.exec();
 
 }
