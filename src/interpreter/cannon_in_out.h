@@ -7,6 +7,11 @@
 #include <stdio.h>
 #include <string.h>
 ///-----------------------------------------------------------------------------
+enum
+{
+    PARAMETER_FILE_NAME_SIZE = 255
+};
+///-----------------------------------------------------------------------------
 class CannonInOutClass
 {
     private :
@@ -45,18 +50,16 @@ class CannonInOutClass
         static void print_nc_line_number();
         static FILE* _outfile;
     public:
+        static char _parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Driver writes
+        static int  _tool_max;                          /// Driver reads
+        static CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Driver writes
+        static void SetOutFile(FILE* file);
+
+        ///CannonInOutClass();
+        ///CannonInOutClass(const CannonInOutClass&);
+        ///virtual ~CannonInOutClass();
 
 
-
-    public:
-        //CannonInOutClass();
-        //CannonInOutClass(const CannonInOutClass&);
-        //virtual ~CannonInOutClass();
-
-static         char _parameter_file_name[100];          /// Not static.Driver writes
-static         int              _tool_max;/// = 68;         /// Not static. Driver reads
-static         CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Not static. Driver writes
-static         void SetOutFile(FILE* file);
 
 
         static void InitCanon();

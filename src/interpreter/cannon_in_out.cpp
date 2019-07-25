@@ -39,7 +39,7 @@ CANON_PLANE       CannonInOutClass::_active_plane = CANON_PLANE_XY;
 
 int   CannonInOutClass::_tool_max = 68;         /// Not static. Driver reads
 FILE* CannonInOutClass::_outfile = nullptr;
-char  CannonInOutClass::_parameter_file_name[100];          /// Not static.Driver writes
+char  CannonInOutClass::_parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Not static.Driver writes
 CANON_TOOL_TABLE CannonInOutClass::_tools[CANON_TOOL_MAX]; /// Not static. Driver writes
 
 void CannonInOutClass::SetOutFile(FILE* file)

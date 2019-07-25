@@ -15,6 +15,25 @@
   return error_code;                                   \
   } else return error_code
 
+
+
+#define CYCLE_MACRO(call) for (repeat = block->l_number; \
+                   repeat > 0;                    \
+                   repeat--)                      \
+     {                                                        \
+       aa = (aa + aa_increment);                         \
+       bb = (bb + bb_increment);                         \
+       cycle_traverse(plane, aa, bb, old_cc);                 \
+       if (old_cc != r)                                     \
+         cycle_traverse(plane, aa, bb, r);                    \
+       CHP(call,&status,name);                                             \
+         old_cc = clear_cc;                                \
+     }
+
+
+
+
+
 //#define CHK(bad, error_code) if (bad) {             \
 //  _setup.stack_index = 0;                      \
 //  strcpy(_setup.stack[_setup.stack_index++], name); \
@@ -2821,19 +2840,6 @@ does  ! require checking that the original z-position == above r.
 The rotary axes may  ! move during a canned cycle.
 
 */
-
-#define CYCLE_MACRO(call) for (repeat = block->l_number; \
-                   repeat > 0;                    \
-                   repeat--)                      \
-     {                                                        \
-       aa = (aa + aa_increment);                         \
-       bb = (bb + bb_increment);                         \
-       cycle_traverse(plane, aa, bb, old_cc);                 \
-       if (old_cc != r)                                     \
-         cycle_traverse(plane, aa, bb, r);                    \
-       CHP(call,&status,name);                                             \
-       old_cc = clear_cc;                                \
-     }
 
 int rs274ngcClass::convert_cycle_xy(  /* ARGUMENTS                                 */
  int motion,             /* a g-code between G_81 && G_89, a canned cycle */
@@ -9015,12 +9021,12 @@ int rs274ngcClass::write_m_codes( /* ARGUMENTS                                  
   emz = settings->active_m_codes;
   emz[0] = settings->sequence_number;                /* 0 seq number  */
   emz[1] =
-    (block == NULL) ? -1 : block->m_modes[4];             /* 1 stopping    */
+    (block == nullptr) ? -1 : block->m_modes[4];             /* 1 stopping    */
   emz[2] =
     (settings->spindle_turning == CANON_STOPPED) ? 5 :    /* 2 spindle     */
     (settings->spindle_turning == CANON_CLOCKWISE) ? 3 : 4;
   emz[3] =                                           /* 3 tool change */
-    (block == NULL) ? -1 : block->m_modes[6];
+    (block == nullptr) ? -1 : block->m_modes[6];
   emz[4] =                                           /* 4 mist        */
     (settings->mist == ON) ? 7 :
     (settings->flood == ON) ? -1 : 9;
@@ -9221,8 +9227,7 @@ int rs274ngcClass::rs274ngc_init() /* NO ARGUMENTS */
   CHP(rs274ngc_restore_parameters(filename),&status,name);
   pars = _setup.parameters;
   _setup.origin_index = (int)(pars[5220] + 0.0001);
-  CHK(((_setup.origin_index < 1) || (_setup.origin_index > 9)),
-      NCE_COORDINATE_SYSTEM_INDEX_PARAMETER_5220_OUT_OF_RANGE,name);
+  CHK(((_setup.origin_index < 1) || (_setup.origin_index > 9)),NCE_COORDINATE_SYSTEM_INDEX_PARAMETER_5220_OUT_OF_RANGE,name);
   k = (5200 + (_setup.origin_index * 20));
   CannonInOutClass::SetOriginOffsets((pars[k + 1] + pars[5211]),
              (pars[k + 2] + pars[5212]),
@@ -9296,8 +9301,8 @@ int rs274ngcClass::rs274ngc_init() /* NO ARGUMENTS */
   _setup.tool_table_index = 1;
 //_setup.traverse_rate set in rs274ngc_synch
 
-  write_g_codes((block_pointer)NULL, &_setup);
-  write_m_codes((block_pointer)NULL, &_setup);
+  write_g_codes((block_pointer)nullptr, &_setup);
+  write_m_codes((block_pointer)nullptr, &_setup);
   write_settings(&_setup);
 
   // Synch rest of settings to external world
@@ -9600,7 +9605,7 @@ int rs274ngcClass::rs274ngc_restore_parameters( /* ARGUMENTS                    
 
   // open original for reading
   infile = fopen(filename, "r");
-  CHK((infile == NULL), NCE_UNABLE_TO_OPEN_FILE,name);
+  CHK((infile == nullptr), NCE_UNABLE_TO_OPEN_FILE,name);
 
   pars = _setup.parameters;
   k = 0;
@@ -9608,7 +9613,7 @@ int rs274ngcClass::rs274ngc_restore_parameters( /* ARGUMENTS                    
   required = _required_parameters[index++];
   while (feof(infile) == 0)
     {
-      if (fgets(line, 256, infile) == NULL)
+      if (fgets(line, 256, infile) == nullptr)
     {
       break;
     }
