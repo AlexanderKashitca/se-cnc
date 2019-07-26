@@ -46,6 +46,11 @@ void CannonInOutClass::SetOutFile(FILE* file)
 {
     _outfile = file;
 }
+
+CANON_UNITS CannonInOutClass::GetLengthUnitType()
+{
+    return(_length_unit_type);
+}
 ///-----------------------------------------------------------------------------
 /* Representation */
 void CannonInOutClass::InitCanon()
@@ -60,19 +65,26 @@ void CannonInOutClass::print_nc_line_number()
     char text[256];
     int k;
     int m;
-    rs274ngcClass::rs274ngc_line_text(text, 256);
+    rs274ngcClass::rs274ngc_line_text(text,256);
     for(k=0;((k < 256) && ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));k++);
     if((k < 256)&&((text[k]=='n')||(text[k]=='N')))
     {
         fputc('N',_outfile);
-        for(k++, m=0;((k < 256)&&(text[k] >= '0')&&(text[k] <= '9'));k++, m++)
+        for(k++,m = 0;((k < 256) && (text[k] >= '0') && (text[k] <= '9'));k++,m++)
+        {
             fputc(text[k],_outfile);
-        for(;m < 6; m++)
+        }
+        for(;m < 6;m++)
+        {
             fputc(' ',_outfile);
+        }
     }
     else
         if(k < 256)
+        {
             fprintf(_outfile,"N..... ");
+        }
+    fflush(_outfile);
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT0(const char* control)
@@ -115,8 +127,12 @@ void CannonInOutClass::SetOriginOffsets(double x,double y,double z,double a,doub
     _program_origin_c = c;
 }
 ///-----------------------------------------------------------------------------
-/* Use the specified units for length. Conceptually, the units must
-be either inches or millimeters. */
+/**
+ * @brief CannonInOutClass::UseLengthUnits
+ * @param in_unit - CANON_UNITS_INCHES or CANON_UNITS_MM
+ * @note Use the specified units for length. Conceptually, the units must
+ *        be either inches or millimeters.
+ */
 void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
 {
     if (in_unit==CANON_UNITS_INCHES)

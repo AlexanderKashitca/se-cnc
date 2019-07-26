@@ -24,17 +24,23 @@ class InterpreterClass
         QString _parameter_file;
         QString _program_in_file;
         QString _program_out_file;
-
-        int    _tool_flag;
-        int    _gees[RS274NGC_ACTIVE_G_CODES];
-        int    _ems[RS274NGC_ACTIVE_M_CODES];
-        double _sets[RS274NGC_ACTIVE_SETTINGS];
+        FILE*   _output_program_file;
+        int     _tool_flag;
+        int     _gees[RS274NGC_ACTIVE_G_CODES];
+        int     _ems[RS274NGC_ACTIVE_M_CODES];
+        double  _sets[RS274NGC_ACTIVE_SETTINGS];
+        bool    _debug;
+        INTERPRETER_STATE LoadFromFile(int print_stack);
+        void ReportError(int error_code,int print_stack);
 
     public :
-        FILE*  _output_progra_file;
-
         InterpreterClass();
+        ~InterpreterClass();
         InterpreterClass(const InterpreterClass&);
+
+        void OnDebug();
+        void OffDebug();
+        void SetTolerance(double tolerance);
 
         INTERPRETER_STATE SetToolFile(QString file_path,QString file_name);
         INTERPRETER_STATE SetParameterFile(QString file_path,QString file_name);

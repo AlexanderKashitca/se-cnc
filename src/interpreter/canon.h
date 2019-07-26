@@ -48,7 +48,6 @@ typedef enum
     CANON_SIDE_LEFT  = 2,
     CANON_SIDE_OFF   = 3
 }CANON_SIDE;
-
 typedef enum
 {
     CANON_AXIS_X = 1,
@@ -58,14 +57,15 @@ typedef enum
     CANON_AXIS_B = 5,
     CANON_AXIS_C = 6
 }CANON_AXIS;
-
+/*
 struct CANON_VECTOR
 {
   CANON_VECTOR() {}
   CANON_VECTOR(double _x, double _y, double _z) {x = _x; y = _y; z = _z;}
   double x, y, z;
 };
-
+*/
+/*
 struct CANON_POSITION
 {
   CANON_POSITION() {}
@@ -76,10 +76,14 @@ struct CANON_POSITION
   }
   double x,y,z,a,b,c;
 };
-
-/* Tools are numbered 1..CANON_TOOL_MAX, with tool 0 meaning no tool. */
-#define CANON_TOOL_MAX 128	// max size of carousel handled
-#define CANON_TOOL_ENTRY_LEN 256 // how long each file line can be
+*/
+/**
+ * @brief CANON_TOOL_MAX - max size of carousel handled
+ * @brief CANON_TOOL_ENTRY_LEN - how long each file line can be
+ * @note Tools are numbered 1..CANON_TOOL_MAX, with tool 0 meaning no tool.
+ */
+const int CANON_TOOL_MAX       = 128;
+const int CANON_TOOL_ENTRY_LEN = 256;
 
 struct CANON_TOOL_TABLE
 {

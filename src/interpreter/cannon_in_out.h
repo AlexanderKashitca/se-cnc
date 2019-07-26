@@ -50,18 +50,12 @@ class CannonInOutClass
         static void print_nc_line_number();
         static FILE* _outfile;
     public:
+        static CANON_UNITS GetLengthUnitType();
         static char _parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Driver writes
         static int  _tool_max;                          /// Driver reads
         static CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Driver writes
         static void SetOutFile(FILE* file);
-
-        ///CannonInOutClass();
-        ///CannonInOutClass(const CannonInOutClass&);
-        ///virtual ~CannonInOutClass();
-
-
-
-
+        ///*********************************************************************
         static void InitCanon();
         static void SetOriginOffsets(double x,double y,double z,double a,double b,double c);
         static void UseLengthUnits(CANON_UNITS in_unit);
@@ -126,7 +120,7 @@ class CannonInOutClass
         static void OptionalProgramStop();
         static void ProgramEnd();
         static void ProgramStop();
-        /// input part
+        /// input part *********************************************************
         static double GetExternalAngleUnitFactor();
         static double GetExternalFeedRate();
         static int GetExternalFlood();
@@ -164,9 +158,10 @@ class CannonInOutClass
         static int GetExternalToolSlot();
         static CANON_TOOL_TABLE GetExternalToolTable(int pocket);
         static double GetExternalTraverseRate();
-        ///---------------------------------------------------------------------
+        ///*********************************************************************
         static void PRINT0(const char* control);
         static void PRINT1(const char* control,const char* arg1);
+        ///*********************************************************************
 };
 ///-----------------------------------------------------------------------------
 #endif /// CANNON_IN_OUT_H

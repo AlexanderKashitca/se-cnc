@@ -54,18 +54,13 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../../src/interpreter/cannon_in_out.cpp \
 		../../../src/interpreter/interpreter.cpp \
-		../../../src/interpreter/parser_g_code.cpp \
 		../../../src/interpreter/rs274ngc.cpp \
 		../../prj/interpreter/main.cpp 
 OBJECTS       = cannon_in_out.o \
 		interpreter.o \
-		parser_g_code.o \
 		rs274ngc.o \
 		main.o
-DIST          = ../../../src/interpreter/rs274ngc.tool_default \
-		../../../src/interpreter/rs274ngc.var \
-		../../../src/interpreter/rs274ngc_tool \
-		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
+DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/sanitize.conf \
@@ -260,13 +255,11 @@ DIST          = ../../../src/interpreter/rs274ngc.tool_default \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/interpreter/interpreter.pro ../../../src/interpreter/cannon_in_out.h \
 		../../../src/interpreter/interpreter.h \
-		../../../src/interpreter/parser_g_code.h \
 		../../../src/interpreter/canon.h \
 		../../../src/interpreter/rs274ngc.h \
 		../../../src/interpreter/rs274ngc_define.h \
 		../../../src/interpreter/rs274ngc_return.h ../../../src/interpreter/cannon_in_out.cpp \
 		../../../src/interpreter/interpreter.cpp \
-		../../../src/interpreter/parser_g_code.cpp \
 		../../../src/interpreter/rs274ngc.cpp \
 		../../prj/interpreter/main.cpp
 QMAKE_TARGET  = interpreter
@@ -686,8 +679,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/cannon_in_out.h ../../../src/interpreter/interpreter.h ../../../src/interpreter/parser_g_code.h ../../../src/interpreter/canon.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_define.h ../../../src/interpreter/rs274ngc_return.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/interpreter/cannon_in_out.cpp ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/parser_g_code.cpp ../../../src/interpreter/rs274ngc.cpp ../../prj/interpreter/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/cannon_in_out.h ../../../src/interpreter/interpreter.h ../../../src/interpreter/canon.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_define.h ../../../src/interpreter/rs274ngc_return.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/interpreter/cannon_in_out.cpp ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/rs274ngc.cpp ../../prj/interpreter/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -847,79 +840,9 @@ interpreter.o: ../../../src/interpreter/interpreter.cpp ../../../src/interpreter
 		../../../src/interpreter/canon.h \
 		../../../src/interpreter/rs274ngc_return.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		../../../src/interpreter/cannon_in_out.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o interpreter.o ../../../src/interpreter/interpreter.cpp
-
-parser_g_code.o: ../../../src/interpreter/parser_g_code.cpp ../../../src/interpreter/parser_g_code.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiodevice.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qiterator.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpair.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringlist.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qregexp.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmetatype.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QTextStream \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtextstream.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlocale.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvariant.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qdebug.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qhash.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qvector.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qpoint.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qshareddata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../src/interpreter/cannon_in_out.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QDebug
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser_g_code.o ../../../src/interpreter/parser_g_code.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o interpreter.o ../../../src/interpreter/interpreter.cpp
 
 rs274ngc.o: ../../../src/interpreter/rs274ngc.cpp ../../../src/interpreter/rs274ngc.h \
 		../../../src/interpreter/rs274ngc_define.h \
@@ -1026,7 +949,18 @@ main.o: ../../prj/interpreter/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCor
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qset.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../src/interpreter/interpreter.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QFile \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfile.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qfiledevice.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QTextStream \
+		../../../src/interpreter/rs274ngc.h \
+		../../../src/interpreter/rs274ngc_define.h \
+		../../../src/interpreter/canon.h \
+		../../../src/interpreter/rs274ngc_return.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		../../../src/interpreter/cannon_in_out.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../prj/interpreter/main.cpp
 
 ####### Install

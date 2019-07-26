@@ -49,8 +49,8 @@
 #define RS274NGC_TEXT_SIZE 256
 
 /* numerical constants */
-#define TOLERANCE_INCH 0.0002
-#define TOLERANCE_MM 0.002
+#define TOLERANCE_INCH  0.0002
+#define TOLERANCE_MM    0.002
 #define TOLERANCE_CONCAVE_CORNER 0.01 /* angle threshold for concavity for
 					 cutter compensation, in radians */
 #define TINY 1e-12 /* for arc_data_r */
@@ -345,7 +345,92 @@ typedef setup * setup_pointer;
 
 // pointer to function that reads
 typedef int (*read_function_pointer) (char *, int *, block_pointer, double *);
+/*************************************************************************/
+/*
 
+Interface functions to call to tell the interpreter what to do.
+Return values indicate status of execution.
+These functions may change the state of the interpreter.
+
+*/
+
+// close the currently open NC code file
+extern int rs274ngc_close();
+
+// execute a line of NC code
+extern int rs274ngc_execute();
+
+// stop running
+extern int rs274ngc_exit();
+
+// get ready to run
+extern int rs274ngc_init();
+
+// load a tool table
+extern int rs274ngc_load_tool_table();
+
+// open a file of NC code
+extern int rs274ngc_open(const char *filename);
+
+// read the mdi or the next line of the open NC code file
+extern int rs274ngc_read(const char * mdi = 0);
+
+// reset yourself
+extern int rs274ngc_reset();
+
+// restore interpreter variables from a file
+extern int rs274ngc_restore_parameters(const char * filename);
+
+// save interpreter variables to file
+extern int rs274ngc_save_parameters(const char * filename,
+const double parameters[]);
+
+// synchronize your internal model with the external world
+extern int rs274ngc_synch();
+
+/*************************************************************************/
+/*
+
+Interface functions to call to get information from the interpreter.
+If a function has a return value, the return value contains the information.
+If a function returns nothing, information is copied into one of the
+arguments to the function. These functions do not change the state of
+the interpreter.
+
+*/
+
+// copy active G codes into array [0]..[11]
+extern void rs274ngc_active_g_codes(int * codes);
+
+// copy active M codes into array [0]..[6]
+extern void rs274ngc_active_m_codes(int * codes);
+
+// copy active F, S settings into array [0]..[2]
+extern void rs274ngc_active_settings(double * settings);
+
+// copy the text of the error message whose number is error_code into the
+// error_text array, but stop at max_size if the text is longer.
+extern void rs274ngc_error_text(int error_code, char * error_text,
+int max_size);
+
+// copy the name of the currently open file into the file_name array,
+// but stop at max_size if the name is longer
+extern void rs274ngc_file_name(char * file_name, int max_size);
+
+// return the length of the most recently read line
+extern int rs274ngc_line_length();
+
+// copy the text of the most recently read line into the line_text array,
+// but stop at max_size if the text is longer
+extern void rs274ngc_line_text(char * line_text, int max_size);
+
+// return the current sequence number (how many lines read)
+extern int rs274ngc_sequence_number();
+
+// copy the function name from the stack_index'th position of the
+// function call stack at the time of the most recent error into
+// the function name string, but stop at max_size if the name is longer
+extern void rs274ngc_stack_name(int stack_index, char * function_name,int max_size);
 ///-----------------------------------------------------------------------------
 #endif
 ///-----------------------------------------------------------------------------

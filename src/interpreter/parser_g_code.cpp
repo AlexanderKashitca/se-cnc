@@ -23,7 +23,10 @@ bool ParserClDataClass::open(QString file_path,QString file_name)
     QString file_name_in;
 
     _filename = file_name;
-    file_name_in  = file_path + "/" + file_name;
+    file_name_in.clear();
+    file_name_in.append(file_path);
+    file_name_in.append("/");
+    file_name_in.append(file_name);
 
     if(!QFile::exists(file_name_in))
     {
@@ -43,8 +46,6 @@ bool ParserClDataClass::parse()
     QString command;
     QTextStream in(_file_in);
 
-
-
     while(!in.atEnd())
     {
         line = in.readLine();
@@ -59,11 +60,7 @@ bool ParserClDataClass::parse()
         ///    }
         ///}
 
-
-
-
     }
-
     return(true);
 }
 ///-----------------------------------------------------------------------------

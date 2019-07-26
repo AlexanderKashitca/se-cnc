@@ -21,14 +21,20 @@ class rs274ngcClass
     public:
         rs274ngcClass();
 
+        static void SetTolerance(double tolerance);
     private:
+
+        static double TOLERANCE_INCH;
+        static double TOLERANCE_MM;
+        static double TOLERANCE_CONCAVE_CORNER;
+
         /* There are four global variables. The first three are _gees, _ems,
         and _readers. The last one, declared here, == for interpreter settings */
 
-
-        static int ERM(int,const char* const);
-        static int CHK(int bad,int error_code,const char* const name);
-        static int CHP(int try_this,int* status,const char* const name);
+        static const int _gees[];
+        static const int _ems[];
+        static const read_function_pointer _readers[];
+        static const int _required_parameters[];
 
         static int arc_data_comp_ijk(int move,int side,double tool_radius,double current_x,double current_y, double end_x, double end_y,          double i_number,double j_number,double* center_x,double* center_y,int* turn,double tolerance);
         static int arc_data_comp_r(int move,int side,double tool_radius,double current_x,double current_y, double end_x, double end_y,          double big_radius,double* center_x,double* center_y,int* turn);
@@ -162,7 +168,7 @@ class rs274ngcClass
         static void rs274ngc_active_m_codes(int * codes);
         static void rs274ngc_active_settings(double * settings);
         static void rs274ngc_error_text(int error_code, char * error_text,int max_size);
-        static void rs274ngc_file_name(char * file_name, int max_size);
+        static void rs274ngc_file_name(char* file_name, int max_size);
         static int  rs274ngc_line_length();
         static void rs274ngc_line_text(char * line_text, int max_size);
         static int  rs274ngc_sequence_number();

@@ -5,71 +5,90 @@
 #include <stdio.h>
 #include "canon.h"
 ///-----------------------------------------------------------------------------
-#define MAX(x, y)        ((x) > (y) ? (x) : (y))
+#ifndef MAX
+    #define MAX(x, y)        ((x) > (y) ? (x) : (y))
+#endif
 
 #ifndef TRUE
-#define TRUE             1
+    #define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE            0
+    #define FALSE 0
 #endif
 
-#define RS274NGC_TEXT_SIZE 256
-
-/* numerical constants */
-#define TOLERANCE_INCH 0.0002
-#define TOLERANCE_MM 0.002
-#define TOLERANCE_CONCAVE_CORNER 0.01 /* angle threshold for concavity for
-                     cutter compensation, in radians */
-#define TINY 1e-12 /* for arc_data_r */
-#define UNKNOWN 1e-20
-#define TWO_PI  6.2831853071795864
+#ifndef TWO_PI
+    #define TWO_PI  6.2831853071795864
+#endif
 
 #ifndef PI
-#define PI      3.1415926535897932
+    #define PI      3.1415926535897932
 #endif
 
 #ifndef PI2
-#define PI2     1.5707963267948966
+    #define PI2     1.5707963267948966
 #endif
 
-// array sizes
-#define RS274NGC_ACTIVE_G_CODES 12
-#define RS274NGC_ACTIVE_M_CODES 7
-#define RS274NGC_ACTIVE_SETTINGS 3
+/**
+ * @brief RS274NGC_TEXT_SIZE
+ * @brief TINY - for arc_data_r
+ * @brief UNKNOWN
+ * @brief RS274NGC_MAX_PARAMETERS - number of parameters in parameter table
+ * @brief MAX_EMS - max number of m codes on one line
+ */
+const int    RS274NGC_TEXT_SIZE = 256;
+const double TINY    = 1e-12;
+const double UNKNOWN = 1e-20;
+const int    RS274NGC_MAX_PARAMETERS = 5400;
+const int    MAX_EMS = 4;
 
-// name of parameter file for saving/restoring interpreter variables
+/// array sizes
+const int RS274NGC_ACTIVE_G_CODES  = 12;
+const int RS274NGC_ACTIVE_M_CODES  = 7;
+const int RS274NGC_ACTIVE_SETTINGS = 3;
+
+/// name of parameter file for saving/restoring interpreter variables
 #define RS274NGC_PARAMETER_FILE_NAME_DEFAULT "rs274ngc.var"
 #define RS274NGC_PARAMETER_FILE_BACKUP_SUFFIX ".bak"
 
-// max number of m codes on one line
-#define MAX_EMS  4
+/**
+ * @brief MM_PER_INCH
+ * @brief INCH_PER_MM
+ * @note English - Metric conversion (long number keeps error buildup down)
+ */
+const double MM_PER_INCH = 25.4;
+const double INCH_PER_MM = 0.039370078740157477;
 
-// English - Metric conversion (long number keeps error buildup down)
-#define MM_PER_INCH 25.4
-#define INCH_PER_MM 0.039370078740157477
+/**
+ * @brief OFF
+ * @brief ON
+ * @note on-off switch settings
+ */
+const int OFF = 0;
+const int ON  = 1;
 
-// on-off switch settings
-#define OFF 0
-#define ON 1
+/**
+ * @brief UNITS_PER_MINUTE
+ * @brief INVERSE_TIME
+ * @note feed_mode
+ */
+const int UNITS_PER_MINUTE = 0;
+const int INVERSE_TIME     = 1;
 
-// feed_mode
-#define UNITS_PER_MINUTE 0
-#define INVERSE_TIME 1
+/**
+ * @brief RIGHT
+ * @brief LEFT
+ * @note cutter radius compensation mode, OFF already defined to 0
+ *  not using CANON_SIDE since interpreter handles cutter radius comp
+ */
+const int RIGHT = 1;
+const int LEFT  = 2;
 
-// cutter radius compensation mode, OFF already defined to 0
-// not using CANON_SIDE since interpreter handles cutter radius comp
-#define RIGHT 1
-#define LEFT 2
-
-// number of parameters in parameter table
-#define RS274NGC_MAX_PARAMETERS 5400
-
-// unary operations
-// These are not enums because the "&" operator is used in
-// reading the operation names and is illegal with an enum
-
+/**
+ * @note unary operations These are not enums because
+ *  the "&" operator is used in reading the operation
+ *  names and is illegal with an enum
+ */
 #define ABS 1
 #define ACOS 2
 #define ASIN 3
@@ -83,7 +102,6 @@
 #define SIN 11
 #define SQRT 12
 #define TAN 13
-
 
 /// binary operations
 #define NO_OPERATION 0
@@ -150,20 +168,29 @@
 #define G_94   940
 #define G_98   980
 #define G_99   990
+///-----------------------------------------------------------------------------
+/**
+ * @note distance_mode
+ */
+typedef enum
+{
+    MODE_ABSOLUTE,
+    MODE_INCREMENTAL
+} DISTANCE_MODE;
 
-/**********************/
-/*      TYPEDEFS      */
-/**********************/
-
-/* distance_mode */
-typedef enum {MODE_ABSOLUTE, MODE_INCREMENTAL} DISTANCE_MODE;
-
-/* retract_mode for cycles */
-typedef enum {R_PLANE, OLD_Z} RETRACT_MODE;
+/**
+ * @note retract_mode for cycles
+ */
+typedef enum
+{
+    R_PLANE,
+    OLD_Z
+} RETRACT_MODE;
 
 typedef int ON_OFF;
 
-typedef struct block_struct {
+typedef struct block_struct
+{
   ON_OFF   a_flag;
   double   a_number;
   ON_OFF   b_flag;
@@ -201,19 +228,16 @@ typedef struct block_struct {
 } block;
 
 typedef block * block_pointer;
-
-/*
-The current_x, current_y, and current_z are the location of the tool
-in the current coordinate system. current_x and current_y differ from
-program_x and program_y when cutter radius compensation is on.
-current_z is the position of the tool tip in program coordinates when
-tool length compensation is using the actual tool length; it is the
-position of the spindle when tool length is zero.
-In a setup, the axis_offset values are set by g92 and the origin_offset
-values are set by g54 - g59.3. The net origin offset uses both values
-and is not represented here
-*/
-
+///-----------------------------------------------------------------------------
+/// The current_x, current_y, and current_z are the location of the tool
+/// in the current coordinate system. current_x and current_y differ from
+/// program_x and program_y when cutter radius compensation is on.
+/// current_z is the position of the tool tip in program coordinates when
+/// tool length compensation is using the actual tool length; it is the
+/// position of the spindle when tool length is zero.
+/// In a setup, the axis_offset values are set by g92 and the origin_offset
+/// values are set by g54 - g59.3. The net origin offset uses both values
+/// and is not represented here
 typedef struct setup_struct
 {
     double AA_axis_offset;             // A-axis g92 offset
