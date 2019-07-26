@@ -21,6 +21,16 @@ InterpreterClass::~InterpreterClass()
     delete _output_program_file;
 }
 ///-----------------------------------------------------------------------------
+void InterpreterClass::OnDebug()
+{
+    _debug = true;
+}
+///-----------------------------------------------------------------------------
+void InterpreterClass::OffDebug()
+{
+    _debug = false;
+}
+///-----------------------------------------------------------------------------
 /**
  * @brief InterpreterClass::SetTolerance
  * @param tolerance
