@@ -24,7 +24,7 @@ class InterpreterClass
         QString _parameter_file;
         QString _program_in_file;
         QString _program_out_file;
-        FILE*   _output_program_file;
+        QFile*  _output_program_file;
         int     _tool_flag;
         int     _gees[RS274NGC_ACTIVE_G_CODES];
         int     _ems[RS274NGC_ACTIVE_M_CODES];
@@ -35,7 +35,7 @@ class InterpreterClass
 
     public :
         InterpreterClass();
-        ~InterpreterClass();
+        virtual ~InterpreterClass();
         InterpreterClass(const InterpreterClass&);
 
         void OnDebug();

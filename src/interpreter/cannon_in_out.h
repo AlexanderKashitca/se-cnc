@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <string.h>
 ///-----------------------------------------------------------------------------
+#include <QFile>
+#include <QTextStream>
+///-----------------------------------------------------------------------------
 enum
 {
     PARAMETER_FILE_NAME_SIZE = 255
@@ -48,13 +51,13 @@ class CannonInOutClass
         static double            _traverse_rate;
         ///
         static void print_nc_line_number();
-        static FILE* _outfile;
+        static QFile* _outfile;
     public:
         static CANON_UNITS GetLengthUnitType();
         static char _parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Driver writes
         static int  _tool_max;                          /// Driver reads
         static CANON_TOOL_TABLE _tools[CANON_TOOL_MAX]; /// Driver writes
-        static void SetOutFile(FILE* file);
+        static void SetOutFile(QFile* file);
         ///*********************************************************************
         static void InitCanon();
         static void SetOriginOffsets(double x,double y,double z,double a,double b,double c);
@@ -161,6 +164,9 @@ class CannonInOutClass
         ///*********************************************************************
         static void PRINT0(const char* control);
         static void PRINT1(const char* control,const char* arg1);
+        static void PRINT1(const char* control,double* arg1);
+        static void PRINT1(const char* control,int* arg1);
+        static void PRINT2(const char* control,double* arg1,const char* arg2);
         ///*********************************************************************
 };
 ///-----------------------------------------------------------------------------

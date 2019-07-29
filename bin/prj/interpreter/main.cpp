@@ -33,8 +33,9 @@ int main(int argc, char *argv[])
         ipterpreter.SetTolerance(2.0);
         ipterpreter.Execute();
     }
-
-
+    else{
+        qDebug() << "Status - " << status << endl;
+    }
     return app.exec();
 }
 ///-----------------------------------------------------------------------------

@@ -184,7 +184,6 @@ int TypeIIRMLPosition::GetNextStateOfMotion(    const RMLPositionInputParameters
                                              ,  const RMLPositionFlags              &Flags)
 {
     bool                        StartANewCalculation            =   false;
-
     unsigned int                i                               =   0;
 
     if  (   (OutputValues   ==  nullptr)

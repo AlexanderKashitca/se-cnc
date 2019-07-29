@@ -20,6 +20,7 @@ class rs274ngcClass
 {
     public:
         rs274ngcClass();
+        virtual ~rs274ngcClass();
 
         static void SetTolerance(double tolerance);
     private:

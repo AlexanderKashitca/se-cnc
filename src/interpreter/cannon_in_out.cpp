@@ -38,11 +38,11 @@ CANON_UNITS       CannonInOutClass::_length_unit_type = CANON_UNITS_MM;
 CANON_PLANE       CannonInOutClass::_active_plane = CANON_PLANE_XY;
 
 int   CannonInOutClass::_tool_max = 68;         /// Not static. Driver reads
-FILE* CannonInOutClass::_outfile = nullptr;
+QFile* CannonInOutClass::_outfile = nullptr;
 char  CannonInOutClass::_parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Not static.Driver writes
 CANON_TOOL_TABLE CannonInOutClass::_tools[CANON_TOOL_MAX]; /// Not static. Driver writes
 
-void CannonInOutClass::SetOutFile(FILE* file)
+void CannonInOutClass::SetOutFile(QFile* file)
 {
     _outfile = file;
 }
@@ -62,6 +62,9 @@ void CannonInOutClass::InitCanon()
 
 void CannonInOutClass::print_nc_line_number()
 {
+    QTextStream stream(_outfile);
+    QString data_char;
+
     char text[256];
     int k;
     int m;
@@ -69,36 +72,86 @@ void CannonInOutClass::print_nc_line_number()
     for(k=0;((k < 256) && ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));k++);
     if((k < 256)&&((text[k]=='n')||(text[k]=='N')))
     {
-        fputc('N',_outfile);
+        ///fputc('N',_outfile);
+        data_char = 'N';
+        stream << data_char;
+
         for(k++,m = 0;((k < 256) && (text[k] >= '0') && (text[k] <= '9'));k++,m++)
         {
-            fputc(text[k],_outfile);
+            data_char = text[k];
+            stream << data_char;
+            ///fputc(text[k],_outfile);
         }
         for(;m < 6;m++)
         {
-            fputc(' ',_outfile);
+            data_char = ' ';
+            stream << data_char;
+            ///fputc(' ',_outfile);
         }
     }
     else
         if(k < 256)
         {
-            fprintf(_outfile,"N..... ");
+            data_char = "N..... ";
+            stream << data_char;
         }
-    fflush(_outfile);
+    _outfile->flush();
+    ///fflush(_outfile);
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT0(const char* control)
 {
-    fprintf(_outfile,"%5d ",_line_number++);
+    QString line_int  = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile,control);
+    stream << control;
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,const char* arg1)
 {
-    fprintf(_outfile,"%5d ",_line_number++);
+    QString data_char = arg1;
+    QString line_int  = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile,control,arg1);
+    stream << control << "("<< data_char << ")\n";
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::PRINT1(const char* control,double* arg1)
+{
+    QString data_double = QString::number(*arg1);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
+    print_nc_line_number();
+    stream << control << "("<< data_double << ")\n";
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::PRINT1(const char* control,int* arg1)
+{
+    QString data_int = QString::number(*arg1);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
+    print_nc_line_number();
+    stream << control << "("<< data_int << ")\n";
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::PRINT2(const char* control,double* arg1,const char* arg2)
+{
+    QString data_char   = QString::number(*arg2);
+    QString data_double = QString::number(*arg1);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
+    print_nc_line_number();
+    stream << control << "("<< data_double << "," << data_char << ")\n";
 }
 ///-----------------------------------------------------------------------------
 /* Offset the origin to the point with absolute coordinates x, y, z,
@@ -107,12 +160,20 @@ are whatever length units are being used at the time this command is
 given. */
 void CannonInOutClass::SetOriginOffsets(double x,double y,double z,double a,double b,double c)
 {
-    fprintf(_outfile, "%5d ", _line_number++);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile, "SET_ORIGIN_OFFSETS(%.4f, %.4f, %.4f"
-           ", %.4f"", %.4f"", %.4f"
-           ")\n",x,y,z,a,b,c
-           );
+    stream << "SET_ORIGIN_OFFSETS"
+           << "("
+           << x  << " ,"
+           << y  << " ,"
+           << z  << " ,"
+           << a  << " ,"
+           << b  << " ,"
+           << c  << ")\n";
+
     _program_position_x = _program_position_x + _program_origin_x - x;
     _program_position_y = _program_position_y + _program_origin_y - y;
     _program_position_z = _program_position_z + _program_origin_z - z;
@@ -174,7 +235,7 @@ void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
    the YZ-plane. */
 void CannonInOutClass::SelectPlane(CANON_PLANE in_plane)
 {
-    PRINT1("SELECT_PLANE(CANON_PLANE_%s)\n",
+    PRINT1("SELECT_PLANE",
        ((in_plane==CANON_PLANE_XY) ? "XY" :
             (in_plane==CANON_PLANE_YZ) ? "YZ" :
         (in_plane==CANON_PLANE_XZ) ? "XZ" : "UNKNOWN"));
@@ -190,7 +251,7 @@ void CannonInOutClass::SelectPlane(CANON_PLANE in_plane)
  */
 void CannonInOutClass::SetTraverseRate(double rate)
 {
-///    PRINT1("SET_TRAVERSE_RATE(%.4f)\n", rate);
+    PRINT1("SET_TRAVERSE_RATE(%.4f)\n",&rate);
     _traverse_rate = rate;
 }
 ///-----------------------------------------------------------------------------
@@ -210,19 +271,34 @@ the tool move counterclockwise from the point of view of the
 workpiece.
 
 */
+/**
+ * @brief CannonInOutClass::StraightTraverse
+ * @param x
+ * @param y
+ * @param z
+ * @param a
+ * @param b
+ * @param c
+ */
 void CannonInOutClass::StraightTraverse(double x,double y,double z,double a,double b,double c)
 {
-    fprintf(_outfile, "%5d ", _line_number++);
+//    fprintf(_outfile,"%5d ",_line_number++);
+//    print_nc_line_number();
+//    fprintf(_outfile,"STRAIGHT_TRAVERSE(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile, "STRAIGHT_TRAVERSE(%.4f, %.4f, %.4f"
-           ", %.4f"
-           ", %.4f"
-           ", %.4f"
-           ")\n", x, y, z
-           , a
-           , b
-           , c
-           );
+    stream << "STRAIGHT_TRAVERSE"
+           << "("
+           << x  << " ,"
+           << y  << " ,"
+           << z  << " ,"
+           << a  << " ,"
+           << b  << " ,"
+           << c  << ")\n";
+
     _program_position_x = x;
     _program_position_y = y;
     _program_position_z = z;
@@ -263,7 +339,7 @@ C. For motion involving one or more of the XYZ axes (with or without
 */
 void CannonInOutClass::SetFeedRate(double rate)
 {
-//    PRINT1("SET_FEED_RATE(%.4f)\n", rate);
+    PRINT1("SET_FEED_RATE",&rate);
     _feed_rate = rate;
 }
 ///-----------------------------------------------------------------------------
@@ -319,7 +395,7 @@ for the same motions.
 */
 void CannonInOutClass::SetFeedReference(CANON_FEED_REFERENCE reference)
 {
-    PRINT1("SET_FEED_REFERENCE(%s)\n",
+    PRINT1("SET_FEED_REFERENCE",
        (reference == CANON_WORKPIECE) ? "CANON_WORKPIECE" : "CANON_XYZ");
 }
 ///-----------------------------------------------------------------------------
@@ -351,7 +427,7 @@ void CannonInOutClass::SetMotionControlMode(CANON_MOTION_MODE mode)
 /* Set the radius to use when performing cutter radius compensation. */
 void CannonInOutClass::SetCutterRadiusCompensation(double radius)
 {
-///PRINT1("SET_CUTTER_RADIUS_COMPENSATION(%.4f)\n", radius);
+    PRINT1("SET_CUTTER_RADIUS_COMPENSATION(%.4f)\n",&radius);
 }
 ///-----------------------------------------------------------------------------
 /* Conceptually, the direction must be left (meaning the cutter
@@ -367,17 +443,17 @@ void CannonInOutClass::StartCutterRadiusCompensation(int side)
 translation commands. */
 void CannonInOutClass::StopCutterRadiusCompensation()
 {
-PRINT0 ("STOP_CUTTER_RADIUS_COMPENSATION()\n");
+    PRINT0 ("STOP_CUTTER_RADIUS_COMPENSATION()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::StartSpeedFeedSynch()
 {
-PRINT0 ("START_SPEED_FEED_SYNCH()\n");
+    PRINT0 ("START_SPEED_FEED_SYNCH()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::StopSpeedFeedSynch()
 {
-PRINT0 ("STOP_SPEED_FEED_SYNCH()\n");
+    PRINT0 ("STOP_SPEED_FEED_SYNCH()\n");
 }
 ///-----------------------------------------------------------------------------
 /* Move in a helical arc from the current location at the existing feed
@@ -443,18 +519,34 @@ void CannonInOutClass::ArcFeed(
     double c
 )
 {
-    fprintf(_outfile, "%5d ", _line_number++);
+//    fprintf(_outfile, "%5d ", _line_number++);
+//    print_nc_line_number();
+//    fprintf(_outfile, "ARC_FEED(%.4f, %.4f, %.4f, %.4f, %d, %.4f"
+//           ", %.4f" /*AA*/
+//           ", %.4f" /*BB*/
+//           ", %.4f" /*CC*/
+//           ")\n", first_end, second_end, first_axis, second_axis,
+//       rotation, axis_end_point
+//       , a /*AA*/
+//           , b /*BB*/
+//           , c /*CC*/
+//       );
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile, "ARC_FEED(%.4f, %.4f, %.4f, %.4f, %d, %.4f"
-           ", %.4f" /*AA*/
-           ", %.4f" /*BB*/
-           ", %.4f" /*CC*/
-           ")\n", first_end, second_end, first_axis, second_axis,
-       rotation, axis_end_point
-       , a /*AA*/
-           , b /*BB*/
-           , c /*CC*/
-       );
+    stream << "STRAIGHT_TRAVERSE"
+           << "("
+           << first_end       << " ,"
+           << second_end      << " ,"
+           << first_axis      << " ,"
+           << second_axis     << " ,"
+           << rotation        << " ,"
+           << axis_end_point  << " ,"
+           << a               << " ,"
+           << b               << " ,"
+           << c               << ")\n";
 
     if (_active_plane==CANON_PLANE_XY)
       {
@@ -489,23 +581,30 @@ void CannonInOutClass::StraightFeed(
  , double c
 )
 {
-    fprintf(_outfile, "%5d ", _line_number++);
+///    fprintf(_outfile,"%5d ",_line_number++);
+///    print_nc_line_number();
+///    fprintf(_outfile,"STRAIGHT_FEED(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
+
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile, "STRAIGHT_FEED(%.4f, %.4f, %.4f"
-           ", %.4f" /*AA*/
-           ", %.4f" /*BB*/
-           ", %.4f" /*CC*/
-           ")\n", x, y, z
-           , a /*AA*/
-           , b /*BB*/
-           , c /*CC*/
-           );
-    _program_position_x=x;
-    _program_position_y=y;
-    _program_position_z=z;
-    _program_position_a=a; /*AA*/
-    _program_position_b=b; /*BB*/
-    _program_position_c=c; /*CC*/
+    stream << "STRAIGHT_FEED"
+           << "("
+           << x << " ,"
+           << y << " ,"
+           << z << " ,"
+           << a << " ,"
+           << b << " ,"
+           << c << ")\n";
+
+    _program_position_x = x;
+    _program_position_y = y;
+    _program_position_z = z;
+    _program_position_a = a;
+    _program_position_b = b;
+    _program_position_c = c;
 }
 ///-----------------------------------------------------------------------------
 /* Perform a probing operation. This is a temporary addition to the
@@ -527,23 +626,29 @@ void CannonInOutClass::StraightProbe(
     dy=(_program_position_y - y);
     dz=(_program_position_z - z);
     distance=sqrt((dx * dx) + (dy * dy) + (dz * dz));
-   fprintf(_outfile, "%5d ", _line_number++);
+///   fprintf(_outfile,"%5d ",_line_number++);
+///    print_nc_line_number();
+///    fprintf(_outfile, "STRAIGHT_PROBE(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
+    QString line_int = QString::number(_line_number);
+    QTextStream stream(_outfile);
+    stream << line_int << "\t";
+    _line_number++;
     print_nc_line_number();
-    fprintf(_outfile, "STRAIGHT_PROBE(%.4f, %.4f, %.4f"
-           ", %.4f" /*AA*/
-           ", %.4f" /*BB*/
-           ", %.4f" /*CC*/
-           ")\n", x, y, z
-           , a /*AA*/
-           , b /*BB*/
-           , c /*CC*/
-           );
-    _probe_position_x=x;
-    _probe_position_y=y;
-    _probe_position_z=z;
-    _probe_position_a=a; /*AA*/
-    _probe_position_b=b; /*BB*/
-    _probe_position_c=c; /*CC*/
+    stream << "STRAIGHT_PROBE"
+           << "("
+           << x << " ,"
+           << y << " ,"
+           << z << " ,"
+           << a << " ,"
+           << b << " ,"
+           << c << ")\n";
+
+    _probe_position_x = x;
+    _probe_position_y = y;
+    _probe_position_z = z;
+    _probe_position_a = a;
+    _probe_position_b = b;
+    _probe_position_c = c;
     if (distance == 0.0)
       {
         ///_program_position_x=_program_position_x;
@@ -552,14 +657,14 @@ void CannonInOutClass::StraightProbe(
       }
     else
       {
-        backoff=((_length_unit_type==CANON_UNITS_MM) ? 0.254 : 0.01);
-        _program_position_x=(x + (backoff * (dx / distance)));
-        _program_position_y=(y + (backoff * (dy / distance)));
-        _program_position_z=(z + (backoff * (dz / distance)));
+        backoff = ((_length_unit_type==CANON_UNITS_MM) ? 0.254 : 0.01);
+        _program_position_x = (x + (backoff * (dx / distance)));
+        _program_position_y = (y + (backoff * (dy / distance)));
+        _program_position_z = (z + (backoff * (dz / distance)));
       }
-    _program_position_a=a; /*AA*/
-    _program_position_b=b; /*BB*/
-    _program_position_c=c; /*CC*/
+    _program_position_a = a;
+    _program_position_b = b;
+    _program_position_c = c;
 }
 ///-----------------------------------------------------------------------------
 /* stop motion after current feed */
@@ -571,7 +676,7 @@ void CannonInOutClass::Stop()
 /* freeze x,y,z for a time */
 void CannonInOutClass::Dwell(double seconds)
 {
-///PRINT1("DWELL(%.4f)\n",(float)seconds);
+    PRINT1("DWELL(%.4f)\n",&seconds);
 }
 ///-----------------------------------------------------------------------------
 /* Retract the spindle at traverse rate to the fully retracted position. */
@@ -585,8 +690,10 @@ spindle is already turning that way, this command has no effect. */
 void CannonInOutClass::StartSpindleClockwise()
 {
     PRINT0("START_SPINDLE_CLOCKWISE()\n");
-    _spindle_turning=((_spindle_speed==0.0) ? CANON_STOPPED :
-                                         CANON_CLOCKWISE);
+    if(_spindle_speed == 0.0)
+        _spindle_turning = CANON_STOPPED;
+    else
+        _spindle_turning = CANON_CLOCKWISE;
 }
 ///-----------------------------------------------------------------------------
 /* Turn the spindle counterclockwise at the currently set speed rate. If
@@ -594,8 +701,10 @@ the spindle is already turning that way, this command has no effect. */
 void CannonInOutClass::StartSpindleCounterClockwise()
 {
     PRINT0("START_SPINDLE_COUNTERCLOCKWISE()\n");
-    _spindle_turning=((_spindle_speed==0.0) ? CANON_STOPPED :
-                                         CANON_COUNTERCLOCKWISE);
+    if(_spindle_speed == 0.0)
+        _spindle_turning = CANON_STOPPED;
+    else
+        _spindle_turning = CANON_COUNTERCLOCKWISE;
 }
 ///-----------------------------------------------------------------------------
 /* Set the spindle speed that will be used when the spindle is turning.
@@ -604,7 +713,7 @@ rotation. If the spindle is already turning and is at a different
 speed, change to the speed given with this command. */
 void CannonInOutClass::SetSpindleSpeed(double rpm)
 {
-////    PRINT1("SET_SPINDLE_SPEED(%.4f)\n", rpm);
+    PRINT1("SET_SPINDLE_SPEED",&rpm);
     _spindle_speed = rpm;
 }
 ///-----------------------------------------------------------------------------
@@ -618,14 +727,15 @@ void CannonInOutClass::StopSpindleTurning()
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::SpindleRetract()
 {
-PRINT0("SPINDLE_RETRACT()\n");
+    PRINT0("SPINDLE_RETRACT()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::OrientSpindle(double orientation, CANON_DIRECTION direction)
 {
-///    PRINT2("ORIENT_SPINDLE(%.4f, %s)\n", orientation,
-///        (direction==CANON_CLOCKWISE) ? "CANON_CLOCKWISE" :
-///                                             "CANON_COUNTERCLOCKWISE");
+    if(direction == CANON_CLOCKWISE)
+        PRINT2("ORIENT_SPINDLE(%.4f, %s)\n",&orientation,"CANON_CLOCKWISE");
+    else
+        PRINT2("ORIENT_SPINDLE(%.4f, %s)\n",&orientation,"CANON_COUNTERCLOCKWISE");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::LockSpindleZ()
@@ -640,12 +750,12 @@ void CannonInOutClass::UseSpindleForce()
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::UseNoSpindleForce()
 {
-PRINT0("USE_NO_SPINDLE_FORCE()\n");
+    PRINT0("USE_NO_SPINDLE_FORCE()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::UseToolLengthOffset(double length)
 {
-///PRINT1("USE_TOOL_LENGTH_OFFSET(%.4f)\n", length);
+    PRINT1("USE_TOOL_LENGTH_OFFSET",&length);
 }
 ///-----------------------------------------------------------------------------
 /* It is assumed that each cutting tool in the machine is assigned to a
@@ -682,14 +792,14 @@ number of the selected tool. */
 /* slot is slot number */
 void CannonInOutClass::ChangeTool(int slot)
 {
-//    PRINT1("CHANGE_TOOL(%d)\n", slot);
+    PRINT1("CHANGE_TOOL",&slot);
     _active_slot=slot;
 }
 ///-----------------------------------------------------------------------------
 /* i is slot number */
 void CannonInOutClass::SelectTool(int slot)
 {
-///PRINT1("SELECT_TOOL(%d)\n", slot);
+    PRINT1("SELECT_TOOL",&slot);
 }
 ///-----------------------------------------------------------------------------
 /* Clamp the given axis. If the machining center does not have a clamp
@@ -700,7 +810,7 @@ An attempt to move an axis while it is clamped should result in an
 error condition in the controller. */
 void CannonInOutClass::ClampAxis(CANON_AXIS axis)
 {
-    PRINT1("CLAMP_AXIS(%s)\n",
+    PRINT1("CLAMP_AXISn",
         (axis==CANON_AXIS_X) ? "CANON_AXIS_X" :
         (axis==CANON_AXIS_Y) ? "CANON_AXIS_Y" :
         (axis==CANON_AXIS_Z) ? "CANON_AXIS_Z" :
@@ -714,27 +824,27 @@ which is the value of comment_text. This serves to allow formal
 comments at specific locations in programs or command files. */
 void CannonInOutClass::Comment(char *s)
 {
-PRINT1("COMMENT(\"%s\")\n", s);
+    PRINT1("COMMENT", s);
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::DisableFeedOverride()
 {
-PRINT0("DISABLE_FEED_OVERRIDE()\n");
+    PRINT0("DISABLE_FEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::EnableFeedOverride()
 {
-PRINT0("ENABLE_FEED_OVERRIDE()\n");
+    PRINT0("ENABLE_FEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::DisableSpeedOverride()
 {
-PRINT0("DISABLE_SPEED_OVERRIDE()\n");
+    PRINT0("DISABLE_SPEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::EnableSpeedOverride()
 {
-PRINT0("ENABLE_SPEED_OVERRIDE()\n");
+    PRINT0("ENABLE_SPEED_OVERRIDE()\n");
 }
 ///-----------------------------------------------------------------------------
 /* Turn flood coolant off. */
@@ -753,7 +863,7 @@ void CannonInOutClass::FloodOn()
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::Message(char *s)
 {
-PRINT1("MESSAGE(\"%s\")\n", s);
+    PRINT1("MESSAGE(\"%s\")\n",s);
 }
 ///-----------------------------------------------------------------------------
 /* Turn mist coolant off. */
@@ -779,17 +889,17 @@ If the machining center does not have a pallet shuttle, this command
 should result in an error condition in the controller. */
 void CannonInOutClass::PalletShuttle()
 {
-PRINT0("PALLET_SHUTTLE()\n");
+    PRINT0("PALLET_SHUTTLE()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::TurnProbeOff()
 {
-PRINT0("TURN_PROBE_OFF()\n");
+    PRINT0("TURN_PROBE_OFF()\n");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::TurnProbeOn()
 {
-PRINT0("TURN_PROBE_ON()\n");
+    PRINT0("TURN_PROBE_ON()\n");
 }
 ///-----------------------------------------------------------------------------
 /* Unclamp the given axis. If the machining center does not have a clamp
@@ -831,14 +941,14 @@ already (such as when the interpreter is being used with keyboard
 input), this command has no effect. */
 void CannonInOutClass::OptionalProgramStop()
 {
-PRINT0("OPTIONAL_PROGRAM_STOP()\n");
+    PRINT0("OPTIONAL_PROGRAM_STOP()\n");
 }
 ///-----------------------------------------------------------------------------
 /* If a program is being read, stop executing the program and be prepared
 to accept a new program or to be shut down. */
 void CannonInOutClass::ProgramEnd()
 {
-PRINT0("PROGRAM_END()\n");
+    PRINT0("PROGRAM_END()\n");
 }
 ///-----------------------------------------------------------------------------
 /* If this command is read from a program, stop executing the program at
@@ -848,7 +958,7 @@ already (such as when the interpreter is being used with keyboard
 input), this command has no effect. */
 void CannonInOutClass::ProgramStop()
 {
-PRINT0("PROGRAM_STOP()\n");
+    PRINT0("PROGRAM_STOP()\n");
 }
 ///-----------------------------------------------------------------------------
 

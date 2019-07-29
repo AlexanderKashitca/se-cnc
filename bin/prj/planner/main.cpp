@@ -155,9 +155,9 @@ float _z;
     IP->MaxJerkVector->VecData              [1] =    100.0      ;
     IP->MaxJerkVector->VecData              [2] =    100.0      ;
 
-    IP->TargetPositionVector->VecData       [0] =   -100.0      ;
-    IP->TargetPositionVector->VecData       [1] =   -100.0      ;
-    IP->TargetPositionVector->VecData       [2] =   -100.0      ;
+    IP->TargetPositionVector->VecData       [0] =   100.0      ;
+    IP->TargetPositionVector->VecData       [1] =   100.0      ;
+    IP->TargetPositionVector->VecData       [2] =   100.0      ;
 
     IP->TargetVelocityVector->VecData       [0] =    50.0       ;
     IP->TargetVelocityVector->VecData       [1] =    50.0       ;

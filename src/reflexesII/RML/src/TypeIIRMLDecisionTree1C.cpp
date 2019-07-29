@@ -75,17 +75,15 @@ void TypeIIRMLMath::TypeIIRMLDecisionTree1C(    const double    &CurrentPosition
     }
     else
     {
-        NegateStep1(        &ThisCurrentPosition
-                        ,   &ThisCurrentVelocity
-                        ,   &ThisTargetPosition
-                        ,   &ThisTargetVelocity );
-
+        NegateStep1(&ThisCurrentPosition,
+                    &ThisCurrentVelocity,
+                    &ThisTargetPosition,
+                    &ThisTargetVelocity );
         goto MDecision_1C__002;
     }
     // ********************************************************************
 MDecision_1C__002:
-    if (Decision_1C__002(       ThisCurrentVelocity
-                            ,   MaxVelocity         ))
+    if (Decision_1C__002(ThisCurrentVelocity,MaxVelocity))
     {
         goto MDecision_1C__003;
     }

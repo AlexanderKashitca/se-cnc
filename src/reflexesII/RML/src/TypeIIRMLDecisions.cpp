@@ -257,7 +257,7 @@ bool TypeIIRMLMath::Decision_1B__007(       const double &CurrentPosition
 //************************************************************************************
 // Decision_1C__001()
 
-bool TypeIIRMLMath::Decision_1C__001(       const double &CurrentVelocity)
+bool TypeIIRMLMath::Decision_1C__001(const double &CurrentVelocity)
 {
     return(Decision_1A__001(CurrentVelocity));
 }

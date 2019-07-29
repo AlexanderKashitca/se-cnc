@@ -227,12 +227,17 @@ void rs274ngcClass::SetTolerance(double tolerance)
     {
         TOLERANCE_MM = tolerance;
     }
-    else {
+    else{
         TOLERANCE_INCH = tolerance;
     }
 }
 ///-----------------------------------------------------------------------------
 rs274ngcClass::rs274ngcClass()
+{
+
+}
+///-----------------------------------------------------------------------------
+rs274ngcClass::~rs274ngcClass()
 {
 
 }
@@ -3614,56 +3619,58 @@ int rs274ngcClass::convert_home( /* ARGUMENTS                                */
   double CC_end2;       /*CC*/
   double * parameters;
 
-  parameters = settings->parameters;
-  find_ends(block,settings,&end_x,&end_y,
-        &end_z
-,&AA_end
-,&BB_end
-,&CC_end
-);
+    parameters = settings->parameters;
+    find_ends(block,settings,&end_x,&end_y,&end_z,&AA_end,&BB_end,&CC_end);
 
-  CHK((settings->cutter_comp_side != OFF),
-      NCE_CANNOT_USE_G28_OR_G30_WITH_CUTTER_RADIUS_COMP);
-  CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end, BB_end, CC_end);
-  if(move == G_28)
+    CHK((settings->cutter_comp_side != OFF),NCE_CANNOT_USE_G28_OR_G30_WITH_CUTTER_RADIUS_COMP);
+    CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end, BB_end, CC_end);
+    if(move == G_28)
     {
-      find_relative
-    (parameters[5161],parameters[5162],parameters[5163],
-     parameters[5164], /*AA*/
-     parameters[5165], /*BB*/
-         parameters[5166], /*CC*/
-         &end_x,&end_y,&end_z,&AA_end2,&BB_end2,&CC_end2,settings);
+        find_relative(
+                        parameters[5161],
+                        parameters[5162],
+                        parameters[5163],
+                        parameters[5164],
+                        parameters[5165],
+                        parameters[5166],
+                        &end_x,
+                        &end_y,
+                        &end_z,
+                        &AA_end2,
+                        &BB_end2,
+                        &CC_end2,
+                        settings);
     }
-  else if(move == G_30)
+    else if(move == G_30)
     {
-      find_relative
-    (parameters[5181],parameters[5182],parameters[5183],
-     parameters[5184], /*AA*/
-     parameters[5185], /*BB*/
-         parameters[5186], /*CC*/
-         &end_x,&end_y,&end_z
-,&AA_end2
-,&BB_end2
-,&CC_end2
-,settings);
+        find_relative(
+                        parameters[5181],
+                        parameters[5182],
+                        parameters[5183],
+                        parameters[5184],
+                        parameters[5185],
+                        parameters[5186],
+                        &end_x,
+                        &end_y,
+                        &end_z,
+                        &AA_end2,
+                        &BB_end2,
+                        &CC_end2,
+                        settings);
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G28_OR_G30);
-  CannonInOutClass::StraightTraverse(end_x,end_y,end_z
-,		    AA_end
-, BB_end
-, CC_end
-);
-  settings->current_x = end_x;
-  settings->current_y = end_y;
-  settings->current_z = end_z;
-  settings->AA_current = AA_end2;       /*AA*/
-  settings->BB_current = BB_end2;       /*BB*/
-  settings->CC_current = CC_end2;       /*CC*/
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_G28_OR_G30);
+    CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end,BB_end,CC_end);
+    settings->current_x  = end_x;
+    settings->current_y  = end_y;
+    settings->current_z  = end_z;
+    settings->AA_current = AA_end2;
+    settings->BB_current = BB_end2;
+    settings->CC_current = CC_end2;
+    return RS274NGC_OK;
 }
+///-----------------------------------------------------------------------------
 
-/****************************************************************************/
 
 /* convert_length_units
 
@@ -4580,84 +4587,76 @@ point == the same as the current point,the feed rate would be
 calculated as zero otherwise.
 
 */
-
-int rs274ngcClass::convert_straight( /* ARGUMENTS                                */
- int move,                  /* either G_0 or G_1                        */
- block_pointer block,       /* pointer to a block of RS274 instructions */
- setup_pointer settings)     /* pointer to machine settings              */
+/**
+ * @brief rs274ngcClass::convert_straight
+ * @param move     - either G_0 or G_1
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_straight(int move,block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_straight";
-  double end_x;
-  double end_y;
-  double end_z;
-  double AA_end;        /*AA*/
-  double BB_end;        /*BB*/
-  double CC_end;        /*CC*/
-  int status;
+    static char name[] = "convert_straight";
+    double end_x;
+    double end_y;
+    double end_z;
+    double AA_end;
+    double BB_end;
+    double CC_end;
+    int status;
 
-  if(move == G_1)
+    if(move == G_1)
     {
-      if(settings->feed_mode == UNITS_PER_MINUTE)
-    {
-      CHK((settings->feed_rate == 0.0),
-          NCE_CANNOT_DO_G1_WITH_ZERO_FEED_RATE);
+        if(settings->feed_mode == UNITS_PER_MINUTE)
+        {
+            CHK((settings->feed_rate == 0.0),NCE_CANNOT_DO_G1_WITH_ZERO_FEED_RATE);
+        }
+        else if(settings->feed_mode == INVERSE_TIME)
+        {
+            CHK((block->f_number == -1.0),NCE_F_WORD_MISSING_WITH_INVERSE_TIME_G1_MOVE);
+        }
     }
-      else if(settings->feed_mode == INVERSE_TIME)
+    settings->motion_mode = move;
+    find_ends(block,settings,&end_x,&end_y,&end_z,&AA_end,&BB_end,&CC_end);
+    if(
+       (settings->cutter_comp_side != OFF) && ///  ! "IS ON"
+       (settings->cutter_comp_radius > 0.0))  /// radius always == >= 0
     {
-      CHK((block->f_number == -1.0),
-          NCE_F_WORD_MISSING_WITH_INVERSE_TIME_G1_MOVE);
+        CHK((block->g_modes[0] == G_53),NCE_CANNOT_USE_G53_WITH_CUTTER_RADIUS_COMP);
+        if(settings->program_x == UNKNOWN)
+        {
+            status = convert_straight_comp1(move,block,settings,end_x,end_y,end_z,AA_end,BB_end,CC_end);
+            CHP(status);
+        }
+        else
+        {
+            status = convert_straight_comp2(move,block,settings,end_x,end_y,end_z,AA_end,BB_end,CC_end);
+            CHP(status);
+        }
     }
-    }
-
-  settings->motion_mode = move;
-  find_ends(block,settings,&end_x,&end_y,
-        &end_z
-,&AA_end
-,&BB_end
-,&CC_end
-);
-  if((settings->cutter_comp_side != OFF) && /*  ! "IS ON" */
-      (settings->cutter_comp_radius > 0.0))     /* radius always == >= 0 */
+    else if(move == G_0)
     {
-      CHK((block->g_modes[0] == G_53),
-      NCE_CANNOT_USE_G53_WITH_CUTTER_RADIUS_COMP);
-      if(settings->program_x == UNKNOWN)
-    {
-      status = convert_straight_comp1(move,block,settings,end_x,end_y,end_z,AA_end,BB_end,CC_end);
-      CHP(status);
-    }
-      else
-    {
-      status = convert_straight_comp2 (move,block,settings,end_x,end_y,end_z,AA_end,BB_end,CC_end);
-      CHP(status);
-    }
-    }
-  else if(move == G_0)
-    {
-      CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end, BB_end, CC_end);
+      CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end,BB_end,CC_end);
       settings->current_x = end_x;
       settings->current_y = end_y;
     }
-  else if(move == G_1)
+    else if(move == G_1)
     {
-      if(settings->feed_mode == INVERSE_TIME)
-    inverse_time_rate_straight
-      (end_x,end_y,end_z,AA_end,BB_end,CC_end,block,settings);
-      CannonInOutClass::StraightFeed(end_x,end_y,end_z,AA_end,BB_end, CC_end);
-      settings->current_x = end_x;
-      settings->current_y = end_y;
+        if(settings->feed_mode == INVERSE_TIME)
+            inverse_time_rate_straight(end_x,end_y,end_z,AA_end,BB_end,CC_end,block,settings);
+        CannonInOutClass::StraightFeed(end_x,end_y,end_z,AA_end,BB_end, CC_end);
+        settings->current_x = end_x;
+        settings->current_y = end_y;
     }
   else
     ERM(NCE_BUG_CODE_NOT_G0_OR_G1);
-
-  settings->current_z = end_z;
-  settings->AA_current = AA_end;                           /*AA*/
-  settings->BB_current = BB_end;                           /*BB*/
-  settings->CC_current = CC_end;                           /*CC*/
-  return RS274NGC_OK;
+    settings->current_z = end_z;
+    settings->AA_current = AA_end;
+    settings->BB_current = BB_end;
+    settings->CC_current = CC_end;
+    return RS274NGC_OK;
 }
-
-/****************************************************************************/
+///-----------------------------------------------------------------------------
 
 /* convert_straight_comp1
 

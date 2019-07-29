@@ -8,6 +8,7 @@ static CannonInOutClass io;
 ///-----------------------------------------------------------------------------
 InterpreterClass::InterpreterClass()
 {
+    _debug  = true;
     _tool_file.clear();
     _parameter_file.clear();
     _program_in_file.clear();
@@ -17,7 +18,7 @@ InterpreterClass::InterpreterClass()
 ///-----------------------------------------------------------------------------
 InterpreterClass::~InterpreterClass()
 {
-    fclose(_output_program_file);
+    _output_program_file->close();
     delete _output_program_file;
 }
 ///-----------------------------------------------------------------------------
@@ -109,13 +110,16 @@ INTERPRETER_STATE InterpreterClass::SetProgramOutFile(QString file_path,QString 
     }
 
     ///_output_progra_file = stdout;
-    _output_program_file = new FILE;
+    _output_program_file = new QFile;
     if(_output_program_file == nullptr)
     {
         return(INTERPRETER_FILE_ERROR);
     }
-    _output_program_file = fopen(_program_out_file.toStdString().c_str(),"w");
-
+    _output_program_file->setFileName(_program_out_file);
+    if(!_output_program_file->open(QIODevice::WriteOnly))
+    {
+        return(INTERPRETER_FILE_NOT_CREATE);
+    }
     io.SetOutFile(_output_program_file);
     file_out.close();
     return(INTERPRETER_OK);
