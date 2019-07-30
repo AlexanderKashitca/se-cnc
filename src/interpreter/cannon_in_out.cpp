@@ -70,23 +70,19 @@ void CannonInOutClass::print_nc_line_number()
     int m;
     rs274ngcClass::rs274ngc_line_text(text,256);
     for(k=0;((k < 256) && ((text[k]=='\t')||(text[k]==' ')||(text[k]=='/')));k++);
-    if((k < 256)&&((text[k]=='n')||(text[k]=='N')))
+    if((k < 256) && ((text[k] == 'n') || (text[k] == 'N')))
     {
-        ///fputc('N',_outfile);
         data_char = 'N';
         stream << data_char;
-
         for(k++,m = 0;((k < 256) && (text[k] >= '0') && (text[k] <= '9'));k++,m++)
         {
             data_char = text[k];
             stream << data_char;
-            ///fputc(text[k],_outfile);
         }
         for(;m < 6;m++)
         {
             data_char = ' ';
             stream << data_char;
-            ///fputc(' ',_outfile);
         }
     }
     else
@@ -96,7 +92,6 @@ void CannonInOutClass::print_nc_line_number()
             stream << data_char;
         }
     _outfile->flush();
-    ///fflush(_outfile);
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT0(const char* control)
@@ -106,7 +101,7 @@ void CannonInOutClass::PRINT0(const char* control)
     stream << line_int << "\t";
     _line_number++;
     print_nc_line_number();
-    stream << control;
+    stream << control << '\n';
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,const char* arg1)
@@ -198,7 +193,7 @@ void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
 {
     if (in_unit==CANON_UNITS_INCHES)
       {
-        PRINT0("USE_LENGTH_UNITS(CANON_UNITS_INCHES)\n");
+        PRINT0("USE_LENGTH_UNITS(CANON_UNITS_INCHES");
         if (_length_unit_type==CANON_UNITS_MM)
       {
         _length_unit_type=CANON_UNITS_INCHES;
@@ -213,7 +208,7 @@ void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
       }
     else if (in_unit == CANON_UNITS_MM)
       {
-        PRINT0("USE_LENGTH_UNITS(CANON_UNITS_MM)\n");
+        PRINT0("USE_LENGTH_UNITS(CANON_UNITS_MM)");
         if (_length_unit_type == CANON_UNITS_INCHES)
       {
         _length_unit_type   = CANON_UNITS_MM;
@@ -227,7 +222,7 @@ void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
       }
       }
     else
-      PRINT0("USE_LENGTH_UNITS(UNKNOWN)\n");
+      PRINT0("USE_LENGTH_UNITS(UNKNOWN)");
 }
 ///-----------------------------------------------------------------------------
 /* Use the plane designated by selected_plane as the selected plane.
@@ -235,11 +230,15 @@ void CannonInOutClass::UseLengthUnits(CANON_UNITS in_unit)
    the YZ-plane. */
 void CannonInOutClass::SelectPlane(CANON_PLANE in_plane)
 {
-    PRINT1("SELECT_PLANE",
-       ((in_plane==CANON_PLANE_XY) ? "XY" :
-            (in_plane==CANON_PLANE_YZ) ? "YZ" :
-        (in_plane==CANON_PLANE_XZ) ? "XZ" : "UNKNOWN"));
-    _active_plane=in_plane;
+    if(in_plane==CANON_PLANE_XY)
+        PRINT1("SELECT_PLANE","XY");
+    else if(in_plane==CANON_PLANE_YZ)
+        PRINT1("SELECT_PLANE","YZ");
+    else if(in_plane==CANON_PLANE_XZ)
+        PRINT1("SELECT_PLANE","XZ");
+    else
+        PRINT1("SELECT_PLANE","UNKNOWN");
+    _active_plane = in_plane;
 }
 ///-----------------------------------------------------------------------------
 /**
@@ -251,7 +250,7 @@ void CannonInOutClass::SelectPlane(CANON_PLANE in_plane)
  */
 void CannonInOutClass::SetTraverseRate(double rate)
 {
-    PRINT1("SET_TRAVERSE_RATE(%.4f)\n",&rate);
+    PRINT1("SET_TRAVERSE_RATE",&rate);
     _traverse_rate = rate;
 }
 ///-----------------------------------------------------------------------------
@@ -292,11 +291,11 @@ void CannonInOutClass::StraightTraverse(double x,double y,double z,double a,doub
     print_nc_line_number();
     stream << "STRAIGHT_TRAVERSE"
            << "("
-           << x  << " ,"
-           << y  << " ,"
-           << z  << " ,"
-           << a  << " ,"
-           << b  << " ,"
+           << x  << ","
+           << y  << ","
+           << z  << ","
+           << a  << ","
+           << b  << ","
            << c  << ")\n";
 
     _program_position_x = x;
@@ -395,8 +394,10 @@ for the same motions.
 */
 void CannonInOutClass::SetFeedReference(CANON_FEED_REFERENCE reference)
 {
-    PRINT1("SET_FEED_REFERENCE",
-       (reference == CANON_WORKPIECE) ? "CANON_WORKPIECE" : "CANON_XYZ");
+    if(reference == CANON_WORKPIECE)
+        PRINT1("SET_FEED_REFERENCE","CANON_WORKPIECE");
+    else
+        PRINT1("SET_FEED_REFERENCE","CANON_XYZ");
 }
 ///-----------------------------------------------------------------------------
 /*
@@ -407,53 +408,56 @@ void CannonInOutClass::SetMotionControlMode(CANON_MOTION_MODE mode)
 {
     if (mode==CANON_EXACT_STOP)
       {
-        PRINT0("SET_MOTION_CONTROL_MODE(CANON_EXACT_STOP)\n");
+        PRINT0("SET_MOTION_CONTROL_MODE(CANON_EXACT_STOP)");
         _motion_mode = CANON_EXACT_STOP;
       }
     else if (mode == CANON_EXACT_PATH)
       {
-        PRINT0("SET_MOTION_CONTROL_MODE(CANON_EXACT_PATH)\n");
+        PRINT0("SET_MOTION_CONTROL_MODE(CANON_EXACT_PATH)");
         _motion_mode=CANON_EXACT_PATH;
       }
     else if (mode == CANON_CONTINUOUS)
       {
-        PRINT0("SET_MOTION_CONTROL_MODE(CANON_CONTINUOUS)\n");
+        PRINT0("SET_MOTION_CONTROL_MODE(CANON_CONTINUOUS)");
         _motion_mode = CANON_CONTINUOUS;
       }
     else
-      PRINT0("SET_MOTION_CONTROL_MODE(UNKNOWN)\n");
+      PRINT0("SET_MOTION_CONTROL_MODE(UNKNOWN)");
 }
 ///-----------------------------------------------------------------------------
 /* Set the radius to use when performing cutter radius compensation. */
 void CannonInOutClass::SetCutterRadiusCompensation(double radius)
 {
-    PRINT1("SET_CUTTER_RADIUS_COMPENSATION(%.4f)\n",&radius);
+    PRINT1("SET_CUTTER_RADIUS_COMPENSATION",&radius);
 }
 ///-----------------------------------------------------------------------------
 /* Conceptually, the direction must be left (meaning the cutter
 stays to the left of the programmed path) or right. */
 void CannonInOutClass::StartCutterRadiusCompensation(int side)
 {
-    PRINT1("START_CUTTER_RADIUS_COMPENSATION(%s)\n",
-        (side==CANON_SIDE_LEFT)  ? "LEFT"  :
-        (side==CANON_SIDE_RIGHT) ? "RIGHT" : "UNKNOWN");
+    if(side == CANON_SIDE_LEFT)
+        PRINT1("START_CUTTER_RADIUS_COMPENSATION","LEFT");
+    else if(side == CANON_SIDE_RIGHT)
+        PRINT1("START_CUTTER_RADIUS_COMPENSATION","RIGHT");
+    else
+        PRINT1("START_CUTTER_RADIUS_COMPENSATION","UNKNOWN");
 }
 ///-----------------------------------------------------------------------------
 /* Do not apply cutter radius compensation when executing spindle
 translation commands. */
 void CannonInOutClass::StopCutterRadiusCompensation()
 {
-    PRINT0 ("STOP_CUTTER_RADIUS_COMPENSATION()\n");
+    PRINT0("STOP_CUTTER_RADIUS_COMPENSATION()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::StartSpeedFeedSynch()
 {
-    PRINT0 ("START_SPEED_FEED_SYNCH()\n");
+    PRINT0("START_SPEED_FEED_SYNCH()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::StopSpeedFeedSynch()
 {
-    PRINT0 ("STOP_SPEED_FEED_SYNCH()\n");
+    PRINT0("STOP_SPEED_FEED_SYNCH()");
 }
 ///-----------------------------------------------------------------------------
 /* Move in a helical arc from the current location at the existing feed
@@ -536,39 +540,39 @@ void CannonInOutClass::ArcFeed(
     stream << line_int << "\t";
     _line_number++;
     print_nc_line_number();
-    stream << "STRAIGHT_TRAVERSE"
+    stream << "ARC_FEED"
            << "("
-           << first_end       << " ,"
-           << second_end      << " ,"
-           << first_axis      << " ,"
-           << second_axis     << " ,"
-           << rotation        << " ,"
-           << axis_end_point  << " ,"
-           << a               << " ,"
-           << b               << " ,"
+           << first_end       << ","
+           << second_end      << ","
+           << first_axis      << ","
+           << second_axis     << ","
+           << rotation        << ","
+           << axis_end_point  << ","
+           << a               << ","
+           << b               << ","
            << c               << ")\n";
 
     if (_active_plane==CANON_PLANE_XY)
       {
-        _program_position_x=first_end;
-        _program_position_y=second_end;
-        _program_position_z=axis_end_point;
+        _program_position_x = first_end;
+        _program_position_y = second_end;
+        _program_position_z = axis_end_point;
       }
-    else if (_active_plane==CANON_PLANE_YZ)
+    else if (_active_plane == CANON_PLANE_YZ)
       {
-        _program_position_x=axis_end_point;
-        _program_position_y=first_end;
-        _program_position_z=second_end;
+        _program_position_x = axis_end_point;
+        _program_position_y = first_end;
+        _program_position_z = second_end;
       }
     else /* if (_active_plane==CANON_PLANE_XZ) */
       {
-        _program_position_x=second_end;
-        _program_position_y=axis_end_point;
-        _program_position_z=first_end;
+        _program_position_x = second_end;
+        _program_position_y = axis_end_point;
+        _program_position_z = first_end;
       }
-    _program_position_a=a; /*AA*/
-    _program_position_b=b; /*BB*/
-    _program_position_c=c; /*CC*/
+    _program_position_a = a;
+    _program_position_b = b;
+    _program_position_c = c;
 }
 ///-----------------------------------------------------------------------------
 /* Move at existing feed rate so that at any time during the move,
@@ -592,11 +596,11 @@ void CannonInOutClass::StraightFeed(
     print_nc_line_number();
     stream << "STRAIGHT_FEED"
            << "("
-           << x << " ,"
-           << y << " ,"
-           << z << " ,"
-           << a << " ,"
-           << b << " ,"
+           << x << ","
+           << y << ","
+           << z << ","
+           << a << ","
+           << b << ","
            << c << ")\n";
 
     _program_position_x = x;
@@ -636,11 +640,11 @@ void CannonInOutClass::StraightProbe(
     print_nc_line_number();
     stream << "STRAIGHT_PROBE"
            << "("
-           << x << " ,"
-           << y << " ,"
-           << z << " ,"
-           << a << " ,"
-           << b << " ,"
+           << x << ","
+           << y << ","
+           << z << ","
+           << a << ","
+           << b << ","
            << c << ")\n";
 
     _probe_position_x = x;
@@ -676,20 +680,20 @@ void CannonInOutClass::Stop()
 /* freeze x,y,z for a time */
 void CannonInOutClass::Dwell(double seconds)
 {
-    PRINT1("DWELL(%.4f)\n",&seconds);
+    PRINT1("DWELL",&seconds);
 }
 ///-----------------------------------------------------------------------------
 /* Retract the spindle at traverse rate to the fully retracted position. */
 void CannonInOutClass::SpindleRetractTraverse()
 {
-    PRINT0("SPINDLE_RETRACT_TRAVERSE()\n");
+    PRINT0("SPINDLE_RETRACT_TRAVERSE()");
 }
 ///-----------------------------------------------------------------------------
 /* Turn the spindle clockwise at the currently set speed rate. If the
 spindle is already turning that way, this command has no effect. */
 void CannonInOutClass::StartSpindleClockwise()
 {
-    PRINT0("START_SPINDLE_CLOCKWISE()\n");
+    PRINT0("START_SPINDLE_CLOCKWISE()");
     if(_spindle_speed == 0.0)
         _spindle_turning = CANON_STOPPED;
     else
@@ -700,7 +704,7 @@ void CannonInOutClass::StartSpindleClockwise()
 the spindle is already turning that way, this command has no effect. */
 void CannonInOutClass::StartSpindleCounterClockwise()
 {
-    PRINT0("START_SPINDLE_COUNTERCLOCKWISE()\n");
+    PRINT0("START_SPINDLE_COUNTERCLOCKWISE()");
     if(_spindle_speed == 0.0)
         _spindle_turning = CANON_STOPPED;
     else
@@ -721,21 +725,21 @@ void CannonInOutClass::SetSpindleSpeed(double rpm)
 command may be given, but it will have no effect. */
 void CannonInOutClass::StopSpindleTurning()
 {
-    PRINT0("STOP_SPINDLE_TURNING()\n");
+    PRINT0("STOP_SPINDLE_TURNING");
     _spindle_turning=CANON_STOPPED;
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::SpindleRetract()
 {
-    PRINT0("SPINDLE_RETRACT()\n");
+    PRINT0("SPINDLE_RETRACT");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::OrientSpindle(double orientation, CANON_DIRECTION direction)
 {
     if(direction == CANON_CLOCKWISE)
-        PRINT2("ORIENT_SPINDLE(%.4f, %s)\n",&orientation,"CANON_CLOCKWISE");
+        PRINT2("ORIENT_SPINDLE",&orientation,"CANON_CLOCKWISE");
     else
-        PRINT2("ORIENT_SPINDLE(%.4f, %s)\n",&orientation,"CANON_COUNTERCLOCKWISE");
+        PRINT2("ORIENT_SPINDLE",&orientation,"CANON_COUNTERCLOCKWISE");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::LockSpindleZ()
@@ -750,7 +754,7 @@ void CannonInOutClass::UseSpindleForce()
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::UseNoSpindleForce()
 {
-    PRINT0("USE_NO_SPINDLE_FORCE()\n");
+    PRINT0("USE_NO_SPINDLE_FORCE()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::UseToolLengthOffset(double length)
@@ -810,12 +814,16 @@ An attempt to move an axis while it is clamped should result in an
 error condition in the controller. */
 void CannonInOutClass::ClampAxis(CANON_AXIS axis)
 {
-    PRINT1("CLAMP_AXISn",
-        (axis==CANON_AXIS_X) ? "CANON_AXIS_X" :
-        (axis==CANON_AXIS_Y) ? "CANON_AXIS_Y" :
-        (axis==CANON_AXIS_Z) ? "CANON_AXIS_Z" :
-        (axis==CANON_AXIS_A) ? "CANON_AXIS_A" :
-        (axis==CANON_AXIS_C) ? "CANON_AXIS_C" : "UNKNOWN");
+    switch(axis)
+    {
+        case CANON_AXIS_X : PRINT1("CLAMP_AXIS","CANON_AXIS_X"); break;
+        case CANON_AXIS_Y : PRINT1("CLAMP_AXIS","CANON_AXIS_Y"); break;
+        case CANON_AXIS_Z : PRINT1("CLAMP_AXIS","CANON_AXIS_Z"); break;
+        case CANON_AXIS_A : PRINT1("CLAMP_AXIS","CANON_AXIS_A"); break;
+        case CANON_AXIS_B : PRINT1("CLAMP_AXIS","CANON_AXIS_B"); break;
+        case CANON_AXIS_C : PRINT1("CLAMP_AXIS","CANON_AXIS_C"); break;
+        default : PRINT1("CLAMP_AXIS","UNKNOWN");
+    }
 }
 ///-----------------------------------------------------------------------------
 /* This function has no physical effect. If commands are being printed or
@@ -824,59 +832,59 @@ which is the value of comment_text. This serves to allow formal
 comments at specific locations in programs or command files. */
 void CannonInOutClass::Comment(char *s)
 {
-    PRINT1("COMMENT", s);
+    PRINT1("COMMENT",s);
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::DisableFeedOverride()
 {
-    PRINT0("DISABLE_FEED_OVERRIDE()\n");
+    PRINT0("DISABLE_FEED_OVERRIDE()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::EnableFeedOverride()
 {
-    PRINT0("ENABLE_FEED_OVERRIDE()\n");
+    PRINT0("ENABLE_FEED_OVERRIDE()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::DisableSpeedOverride()
 {
-    PRINT0("DISABLE_SPEED_OVERRIDE()\n");
+    PRINT0("DISABLE_SPEED_OVERRIDE()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::EnableSpeedOverride()
 {
-    PRINT0("ENABLE_SPEED_OVERRIDE()\n");
+    PRINT0("ENABLE_SPEED_OVERRIDE()");
 }
 ///-----------------------------------------------------------------------------
 /* Turn flood coolant off. */
 void CannonInOutClass::FloodOff()
 {
-    PRINT0("FLOOD_OFF()\n");
+    PRINT0("FLOOD_OFF()");
     _flood=0;
 }
 ///-----------------------------------------------------------------------------
 /* Turn flood coolant on. */
 void CannonInOutClass::FloodOn()
 {
-    PRINT0("FLOOD_ON()\n");
+    PRINT0("FLOOD_ON()");
     _flood=1;
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::Message(char *s)
 {
-    PRINT1("MESSAGE(\"%s\")\n",s);
+    PRINT1("MESSAGE",s);
 }
 ///-----------------------------------------------------------------------------
 /* Turn mist coolant off. */
 void CannonInOutClass::MistOff()
 {
-    PRINT0("MIST_OFF()\n");
+    PRINT0("MIST_OFF()");
     _mist = 0;
 }
 ///-----------------------------------------------------------------------------
 /* Turn mist coolant on. */
 void CannonInOutClass::MistOn()
 {
-    PRINT0("MIST_ON()\n");
+    PRINT0("MIST_ON()");
     _mist = 1;
 }
 ///-----------------------------------------------------------------------------
@@ -889,17 +897,17 @@ If the machining center does not have a pallet shuttle, this command
 should result in an error condition in the controller. */
 void CannonInOutClass::PalletShuttle()
 {
-    PRINT0("PALLET_SHUTTLE()\n");
+    PRINT0("PALLET_SHUTTLE()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::TurnProbeOff()
 {
-    PRINT0("TURN_PROBE_OFF()\n");
+    PRINT0("TURN_PROBE_OFF()");
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::TurnProbeOn()
 {
-    PRINT0("TURN_PROBE_ON()\n");
+    PRINT0("TURN_PROBE_ON()");
 }
 ///-----------------------------------------------------------------------------
 /* Unclamp the given axis. If the machining center does not have a clamp
@@ -907,13 +915,16 @@ for that axis, this command should result in an error condition in the
 controller. */
 void CannonInOutClass::UnclampAxis(CANON_AXIS axis)
 {
-    PRINT1("UNCLAMP_AXIS(%s)\n",
-        (axis==CANON_AXIS_X) ? "CANON_AXIS_X" :
-        (axis==CANON_AXIS_Y) ? "CANON_AXIS_Y" :
-        (axis==CANON_AXIS_Z) ? "CANON_AXIS_Z" :
-        (axis==CANON_AXIS_A) ? "CANON_AXIS_A" :
-        (axis==CANON_AXIS_B) ? "CANON_AXIS_B" :
-        (axis==CANON_AXIS_C) ? "CANON_AXIS_C" : "UNKNOWN");
+    switch(axis)
+    {
+        case CANON_AXIS_X : PRINT1("UNCLAMP_AXIS","CANON_AXIS_X"); break;
+        case CANON_AXIS_Y : PRINT1("UNCLAMP_AXIS","CANON_AXIS_Y"); break;
+        case CANON_AXIS_Z : PRINT1("UNCLAMP_AXIS","CANON_AXIS_Z"); break;
+        case CANON_AXIS_A : PRINT1("UNCLAMP_AXIS","CANON_AXIS_A"); break;
+        case CANON_AXIS_B : PRINT1("UNCLAMP_AXIS","CANON_AXIS_B"); break;
+        case CANON_AXIS_C : PRINT1("UNCLAMP_AXIS","CANON_AXIS_C"); break;
+        default : PRINT1("UNCLAMP_AXIS","UNKNOWN");
+    }
 }
 ///-----------------------------------------------------------------------------
 /* double knot values, -1.0 signals done */
@@ -941,14 +952,14 @@ already (such as when the interpreter is being used with keyboard
 input), this command has no effect. */
 void CannonInOutClass::OptionalProgramStop()
 {
-    PRINT0("OPTIONAL_PROGRAM_STOP()\n");
+    PRINT0("OPTIONAL_PROGRAM_STOP()");
 }
 ///-----------------------------------------------------------------------------
 /* If a program is being read, stop executing the program and be prepared
 to accept a new program or to be shut down. */
 void CannonInOutClass::ProgramEnd()
 {
-    PRINT0("PROGRAM_END()\n");
+    PRINT0("PROGRAM_END()");
 }
 ///-----------------------------------------------------------------------------
 /* If this command is read from a program, stop executing the program at
@@ -958,7 +969,7 @@ already (such as when the interpreter is being used with keyboard
 input), this command has no effect. */
 void CannonInOutClass::ProgramStop()
 {
-    PRINT0("PROGRAM_STOP()\n");
+    PRINT0("PROGRAM_STOP()");
 }
 ///-----------------------------------------------------------------------------
 
