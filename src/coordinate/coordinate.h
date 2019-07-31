@@ -5,8 +5,7 @@
 #include <linux/limits.h> /// MAX_PATH
 #define MAX_PATH PATH_MAX
 ///-----------------------------------------------------------------------------
-#include "../motion/motion.h"
-
+#include "../motion/direct.h"
 ///-----------------------------------------------------------------------------
 
 
@@ -99,46 +98,90 @@ enum
 ///-----------------------------------------------------------------------------
 class CoordMotionClass
 {
+    private:
+        MotionDirectClass* _motion;
+
+        bool _halt;
+        bool _abort;
+        bool _simulate;
+
+
+        double _feedRateOverride;
+        double _feedRateRapidOverride;
+        double _hardwareFRORange;
+        double _spindleRateOverride;
+
+        int putWriteLineBuffer(QString s,double Time);
+        int flushWriteLineBuffer();
+        int clearWriteLineBuffer();
+        int launchCoordMotion();
+
 
 
     public:
         CoordMotionClass();
-        CoordMotionClass(const CoordMotionClass&);
+        CoordMotionClass(const CoordMotionClass&) = delete;
+        void operator= (const CoordMotionClass&)  = delete;
         ~CoordMotionClass();
+
+
+        /// state
+        void setAbort();
+        void clearAbort();
+        bool getAbort();
+        void setHalt();
+        void clearHalt();
+        bool getHalt();
+
+        int setMotionCmd(const char *s,BOOL FlushBeforeUnbufferedOperation);
+
+        int     CheckMotionHalt(bool Coord);
+        int WaitForMoveXYZABCFinished();
+        int WaitForSegmentsFinished(BOOL NoErrorOnDisable = FALSE);
+        int DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation);
+        int DoKMotionBufCmd(const char *s,int sequence_number=-1);
+        int FlushSegments();
+        int LaunchCoordMotion();
+        int OutputSegment(int iseg);
+        int DownloadDoneSegments();
+        int SetAxisDefinitions(int x, int y, int z, int a, int b, int c);
+        int SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v);
+        int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c);
+        int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v);
+        int GetRapidSettings();
+        int GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
+        int GetDestination(int axis, double *d);
+        int GetPosition(int axis, double *d);
+        int GetAxisDone(int axis, int *r);
+        void    SetFeedRateOverride(double v);
+        void SetFeedRateRapidOverride(double v);
+        int FlushWriteLineBuffer();
+        int ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev);
+        int GetSpindleRPS(float &speed);
 
     /*
         ///KinematicsClass *Kinematics;
         void    DownloadInit();
-        int     CheckMotionHalt(bool Coord);
+
         int     ExecutionStop();
         double  GetFeedRateOverride();
         double  GetFeedRateRapidOverride();
         double  GetSpindleRateOverride();
-        void    SetFeedRateOverride(double v);
-        void SetFeedRateRapidOverride(double v);
+
         void SetHardwareFRORange(double v);
 	double GetHardwareFRORange();
 	void SetSpindleRateOverride(double v);
-	int GetDestination(int axis, double *d);
-	int GetPosition(int axis, double *d);
-	int GetAxisDone(int axis, int *r);
+
+
 
     CoordMotionClass(MotionClass *KMotionDLL = new MotionClass(0));
     virtual ~CoordMotionClass();
 
-	void SetAbort();
-	void ClearAbort();
-	bool GetAbort();
 
-	void SetHalt();
-	void ClearHalt();
-	bool GetHalt();
 
-	int FlushSegments();
-	int WaitForSegmentsFinished(BOOL NoErrorOnDisable = FALSE);
-	int WaitForMoveXYZABCFinished();
-	int DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation);
-	int DoKMotionBufCmd(const char *s,int sequence_number=-1);
+
+
+
 	MOTION_PARAMS *GetMotionParams();
 
 	int MeasurePointAppendToFile(const char *name);
@@ -195,8 +238,8 @@ class CoordMotionClass
 	void SetStraightFeedCallback(STRAIGHT_FEED_CALLBACK_SIX_AXIS *p);
 	void SetArcFeedCallback(ARC_FEED_CALLBACK *p);
 	void SetArcFeedCallback(ARC_FEED_SIX_AXIS_CALLBACK *p);
-	int DownloadDoneSegments();
-	int OutputSegment(int iseg);
+
+
 	int DoSpecialCommand(int iseg);
 	int DoSpecialInitialCommands();
 	void DoSegmentCallbacks(int i0, int n);
@@ -246,10 +289,8 @@ class CoordMotionClass
 	double m_StoppedMidx, m_StoppedMidy, m_StoppedMidz, m_StoppedMida, m_StoppedMidb, m_StoppedMidc, m_StoppedMidu, m_StoppedMidv;
 	double m_StoppedMachinex, m_StoppedMachiney, m_StoppedMachinez, m_StoppedMachinea, m_StoppedMachineb, m_StoppedMachinec, m_StoppedMachineu, m_StoppedMachinev;
 
-	int SetAxisDefinitions(int x, int y, int z, int a, int b, int c);
-	int SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v);
-	int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c);
-	int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v);
+
+
 	bool m_DefineCS_valid;
 	int x_axis,y_axis,z_axis,a_axis,b_axis,c_axis,u_axis,v_axis;  // map board channel number to interperter axis 
 
@@ -262,16 +303,14 @@ class CoordMotionClass
 
 	void SetTPParams();
 
-    int GetRapidSettings();
-    int GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
+
 	bool RapidParamsDirty;
 
 	void SetPreviouslyStoppedAtSeg(SEGMENT *segs_to_check,int i);
 	
 	double FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, BOOL *PureAngle);
 	double FeedRateDistance(double dx, double dy, double dz, double da, double db, double dc, double du, double dv, BOOL *PureAngle);
-	int ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev);
-	int GetSpindleRPS(float &speed);
+
 
 	bool m_TapCycleInProgress;
 
@@ -293,10 +332,10 @@ private:
     QString WriteLineBuffer;
 	double WriteLineBufferTime;
     int PutWriteLineBuffer(QString s, double Time);
-	int FlushWriteLineBuffer();
+
 	int ClearWriteLineBuffer();
 	int CommitPendingSegments(bool RapidMode);
-	int LaunchCoordMotion();
+
 	int UpdateRealTimeState(double T);
 	void DetermineSoftwareHardwareFRO(double &HW, double &SW);
     */
