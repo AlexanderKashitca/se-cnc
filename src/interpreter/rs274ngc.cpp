@@ -179,7 +179,7 @@ const int rs274ngcClass::_required_parameters[] =
     5161,5162,5163,5164,5165,5166, /// G28 home
     5181,5182,5183,5184,5185,5186, /// G30 home
     5211,5212,5213,5214,5215,5216, /// G92 offsets
-    5220,                               /// selected coordinate
+    5220,                          /// selected coordinate
     5221,5222,5223,5224,5225,5226, /// coordinate system 1
     5241,5242,5243,5244,5245,5246, /// coordinate system 2
     5261,5262,5263,5264,5265,5266, /// coordinate system 3
@@ -3797,10 +3797,13 @@ This does nothing with m0,m1,m2,m30,or m60 (which are handled in
 convert_stop).
 
 */
-
-int rs274ngcClass::convert_m(    /* ARGUMENTS                                    */
- block_pointer block,   /* pointer to a block of RS274/NGC instructions */
- setup_pointer settings) /* pointer to machine settings                  */
+/**
+ * @brief rs274ngcClass::convert_m
+ * @param block    - pointer to a block of RS274/NGC instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_m(block_pointer block,setup_pointer settings)
 {
   static char name[] = "convert_m";
   int status;
@@ -3903,11 +3906,14 @@ modal group 0),it == executed. The other two in modal group 0 (G4 and
 G53) are executed elsewhere.
 
 */
-
-int rs274ngcClass::convert_modal_0( /* ARGUMENTS                                    */
- int code,                 /* G code,must be from group 0                 */
- block_pointer block,      /* pointer to a block of RS274/NGC instructions */
- setup_pointer settings)    /* pointer to machine settings                  */
+/**
+ * @brief rs274ngcClass::convert_modal_0
+ * @param code     - G code,must be from group 0
+ * @param block    - pointer to a block of RS274/NGC instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_modal_0(int code,block_pointer block,setup_pointer settings)
 {
   static char name[] = "convert_modal_0";
   int status;
@@ -3953,41 +3959,43 @@ Side effects:
 Called by: convert_g.
 
 */
-
-int rs274ngcClass::convert_motion( /* ARGUMENTS                                 */
- int motion,              /* g_code for a line,arc,canned cycle      */
- block_pointer block,     /* pointer to a block of RS274 instructions  */
- setup_pointer settings)   /* pointer to machine settings               */
+/**
+ * @brief rs274ngcClass::convert_motion
+ * @param motion   - g_code for a line,arc,canned cycle
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_motion(int motion,block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_motion";
-  int status;
+    static char name[] = "convert_motion";
+    int status;
 
-  if((motion == G_0) || (motion == G_1))
+    if((motion == G_0) || (motion == G_1))
     {
       CHP(convert_straight(motion,block,settings));
     }
-  else if((motion == G_3) || (motion == G_2))
+    else if((motion == G_3) || (motion == G_2))
     {
       CHP(convert_arc(motion,block,settings));
     }
-  else if(motion == G_38_2)
+    else if(motion == G_38_2)
     {
       CHP(convert_probe(block,settings));
     }
-  else if(motion == G_80)
+    else if(motion == G_80)
     {
-#ifdef DEBUG_EMC
-      CannonInOutClass::Comment("interpreter: motion mode set to none");
-#endif
-      settings->motion_mode = G_80;
+        #ifdef DEBUG_EMC
+            CannonInOutClass::Comment("interpreter: motion mode set to none");
+        #endif
+        settings->motion_mode = G_80;
     }
-  else if((motion > G_80) && (motion < G_90))
+    else if((motion > G_80) && (motion < G_90))
     {
-      CHP(convert_cycle(motion,block,settings));
+        CHP(convert_cycle(motion,block,settings));
     }
   else
-    ERM(NCE_BUG_UNKNOWN_MOTION_CODE);
-
+        ERM(NCE_BUG_UNKNOWN_MOTION_CODE);
   return RS274NGC_OK;
 }
 
@@ -4027,50 +4035,44 @@ rs274ngc_read or rs274ngc_execute) will result in updating the
 current position by calls to get_external_position_x,etc.
 
 */
-
-int rs274ngcClass::convert_probe( /* ARGUMENTS                                */
- block_pointer block,    /* pointer to a block of RS274 instructions */
- setup_pointer settings)  /* pointer to machine settings              */
+/**
+ * @brief rs274ngcClass::convert_probe
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_probe(block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_probe";
-  double distance;
-  double end_x;
-  double end_y;
-  double end_z;
-  double AA_end;        /*AA*/
-  double BB_end;        /*BB*/
-  double CC_end;        /*CC*/
+    static char name[] = "convert_probe";
+    double distance;
+    double end_x;
+    double end_y;
+    double end_z;
+    double AA_end;
+    double BB_end;
+    double CC_end;
 
-  CHK((((block->x_flag == OFF) && (block->y_flag == OFF))  &&
-       (block->z_flag == OFF)),NCE_X_Y_AND_Z_WORDS_ALL_MISSING_WITH_G38_2);
-  CHK((settings->feed_mode == INVERSE_TIME),
-      NCE_CANNOT_PROBE_IN_INVERSE_TIME_FEED_MODE);
-  CHK((settings->cutter_comp_side != OFF),
-      NCE_CANNOT_PROBE_WITH_CUTTER_RADIUS_COMP_ON);
-  CHK((settings->feed_rate == 0.0),NCE_CANNOT_PROBE_WITH_ZERO_FEED_RATE);
-  find_ends(block,settings,&end_x,&end_y,
-        &end_z
-,&AA_end
-,&BB_end
-,&CC_end
-);
-  if(0
-      || (AA_end != settings->AA_current)    /*AA*/
-      || (BB_end != settings->BB_current)    /*BB*/
-      || (CC_end != settings->CC_current)    /*CC*/
+    CHK((((block->x_flag == OFF) && (block->y_flag == OFF)) && (block->z_flag == OFF)),NCE_X_Y_AND_Z_WORDS_ALL_MISSING_WITH_G38_2);
+    CHK((settings->feed_mode == INVERSE_TIME),NCE_CANNOT_PROBE_IN_INVERSE_TIME_FEED_MODE);
+    CHK((settings->cutter_comp_side != OFF),NCE_CANNOT_PROBE_WITH_CUTTER_RADIUS_COMP_ON);
+    CHK((settings->feed_rate == 0.0),NCE_CANNOT_PROBE_WITH_ZERO_FEED_RATE);
+    find_ends(block,settings,&end_x,&end_y,&end_z,&AA_end,&BB_end,&CC_end);
+    if(0
+        || (AA_end != settings->AA_current)
+        || (BB_end != settings->BB_current)
+        || (CC_end != settings->CC_current)
       )
     ERM(NCE_CANNOT_MOVE_ROTARY_AXES_DURING_PROBING);
-  distance = sqrt(pow((settings->current_x - end_x),2) +
+    distance = sqrt(pow((settings->current_x - end_x),2) +
                pow((settings->current_y - end_y),2) +
                pow((settings->current_z - end_z),2));
-  CHK((distance < ((settings->length_units == CANON_UNITS_MM) ? 0.254 : 0.01)),
-      NCE_START_POINT_TOO_CLOSE_TO_PROBE_POINT);
-  CannonInOutClass::TurnProbeOn();
-  CannonInOutClass::StraightProbe(end_x,end_y,end_z,AA_end, BB_end, CC_end);
-  CannonInOutClass::TurnProbeOff();
-  settings->motion_mode = G_38_2;
-  settings->probe_flag = ON;
-  return RS274NGC_OK;
+    CHK((distance < ((settings->length_units == CANON_UNITS_MM) ? 0.254 : 0.01)),NCE_START_POINT_TOO_CLOSE_TO_PROBE_POINT);
+    CannonInOutClass::TurnProbeOn();
+    CannonInOutClass::StraightProbe(end_x,end_y,end_z,AA_end, BB_end, CC_end);
+    CannonInOutClass::TurnProbeOff();
+    settings->motion_mode = G_38_2;
+    settings->probe_flag = ON;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4093,29 +4095,32 @@ retract mode,so no command setting the retract mode == generated in
 this function.
 
 */
-
-int rs274ngcClass::convert_retract_mode( /* ARGUMENTS                             */
- int g_code,             /* g_code being executed (must be G_98 or G_99) */
- setup_pointer settings)  /* pointer to machine settings                  */
+/**
+ * @brief rs274ngcClass::convert_retract_mode
+ * @param g_code   - g_code being executed (must be G_98 or G_99
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_retract_mode(int g_code,setup_pointer settings)
 {
-  static char name[] = "convert_retract_mode";
-  if(g_code == G_98)
+    static char name[] = "convert_retract_mode";
+    if(g_code == G_98)
     {
-#ifdef DEBUG_EMC
-      CannonInOutClass::Comment("interpreter: retract mode set to old_z");
-#endif
-      settings->retract_mode = OLD_Z;
+        #ifdef DEBUG_EMC
+            CannonInOutClass::Comment("interpreter: retract mode set to old_z");
+        #endif
+        settings->retract_mode = OLD_Z;
     }
-  else if(g_code == G_99)
+    else if(g_code == G_99)
     {
-#ifdef DEBUG_EMC
-      CannonInOutClass::Comment("interpreter: retract mode set to r_plane");
-#endif
-      settings->retract_mode = R_PLANE;
+        #ifdef DEBUG_EMC
+            CannonInOutClass::Comment("interpreter: retract mode set to r_plane");
+        #endif
+        settings->retract_mode = R_PLANE;
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G98_OR_G99);
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_G98_OR_G99);
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4150,110 +4155,98 @@ int rs274ngcClass::convert_setup( /* ARGUMENTS                                  
  block_pointer block,    /* pointer to a block of RS274/NGC instructions */
  setup_pointer settings)  /* pointer to machine settings                  */
 {
-  static char name[] = "convert_setup";
-  double x;
-  double y;
-  double z;
-  double a;  /*AA*/
-  double b;  /*BB*/
-  double c;  /*CC*/
-  double * parameters;
-  int p_int;
+    static char name[] = "convert_setup";
+    double x;
+    double y;
+    double z;
+    double a;
+    double b;
+    double c;
+    double * parameters;
+    int p_int;
 
-  parameters = settings->parameters;
-  p_int = (int)(block->p_number + 0.0001);
+    parameters = settings->parameters;
+    p_int = (int)(block->p_number + 0.0001);
 
-  if(block->x_flag == ON)
+    if(block->x_flag == ON)
     {
-      x = block->x_number;
-      parameters[5201 + (p_int * 20)] = x;
+        x = block->x_number;
+        parameters[5201 + (p_int * 20)] = x;
     }
-  else
-    x = parameters[5201 + (p_int * 20)];
-
-  if(block->y_flag == ON)
+    else
+        x = parameters[5201 + (p_int * 20)];
+    if(block->y_flag == ON)
     {
-      y = block->y_number;
-      parameters[5202 + (p_int * 20)] = y;
+        y = block->y_number;
+        parameters[5202 + (p_int * 20)] = y;
     }
-  else
-    y = parameters[5202 + (p_int * 20)];
-  if(block->z_flag == ON)
+    else
+        y = parameters[5202 + (p_int * 20)];
+    if(block->z_flag == ON)
     {
-      z = block->z_number;
-      parameters[5203 + (p_int * 20)] = z;
+        z = block->z_number;
+        parameters[5203 + (p_int * 20)] = z;
     }
-  else
-   z = parameters[5203 + (p_int * 20)];
-
-  if(block->a_flag == ON)
+    else
+        z = parameters[5203 + (p_int * 20)];
+    if(block->a_flag == ON)
     {
-      a = block->a_number;
-      parameters[5204 + (p_int * 20)] = a;
+        a = block->a_number;
+        parameters[5204 + (p_int * 20)] = a;
     }
-  else
-    a = parameters[5204 + (p_int * 20)];
-
-  if(block->b_flag == ON)
+    else
+        a = parameters[5204 + (p_int * 20)];
+    if(block->b_flag == ON)
     {
-      b = block->b_number;
-      parameters[5205 + (p_int * 20)] = b;
+        b = block->b_number;
+        parameters[5205 + (p_int * 20)] = b;
     }
-  else
-    b = parameters[5205 + (p_int * 20)];
-
-  if(block->c_flag == ON)
+    else
+        b = parameters[5205 + (p_int * 20)];
+    if(block->c_flag == ON)
     {
-      c = block->c_number;
-      parameters[5206 + (p_int * 20)] = c;
+        c = block->c_number;
+        parameters[5206 + (p_int * 20)] = c;
     }
-  else
-    c = parameters[5206 + (p_int * 20)];
-
-/* axis offsets could be included in the two sets of calculations for
-   current_x,current_y,etc.,but do  ! need to be because the results
-   would be the same. They would be added in then subtracted out. */
-  if(p_int == settings->origin_index) /* system == currently used */
+    else
+        c = parameters[5206 + (p_int * 20)];
+    // axis offsets could be included in the two sets of calculations for
+    // current_x,current_y,etc.,but do  ! need to be because the results
+    // would be the same. They would be added in then subtracted out.
+    if(p_int == settings->origin_index) // system == currently used
     {
-      settings->current_x =
-    (settings->current_x + settings->origin_offset_x);
-      settings->current_y =
-    (settings->current_y + settings->origin_offset_y);
-      settings->current_z =
-    (settings->current_z + settings->origin_offset_z);
-      settings->AA_current =                                        /*AA*/
-    (settings->AA_current + settings->AA_origin_offset);             /*AA*/
-      settings->BB_current =                                        /*BB*/
-    (settings->BB_current + settings->BB_origin_offset);             /*BB*/
-      settings->CC_current =                                        /*CC*/
-    (settings->CC_current + settings->CC_origin_offset);             /*CC*/
+        settings->current_x = (settings->current_x + settings->origin_offset_x);
+        settings->current_y = (settings->current_y + settings->origin_offset_y);
+        settings->current_z = (settings->current_z + settings->origin_offset_z);
+        settings->AA_current = (settings->AA_current + settings->AA_origin_offset);
+        settings->BB_current = (settings->BB_current + settings->BB_origin_offset);
+        settings->CC_current = (settings->CC_current + settings->CC_origin_offset);
 
-      settings->origin_offset_x = x;
-      settings->origin_offset_y = y;
-      settings->origin_offset_z = z;
-      settings->AA_origin_offset = a;                               /*AA*/
-      settings->BB_origin_offset = b;                               /*BB*/
-      settings->CC_origin_offset = c;                               /*CC*/
-      settings->current_x = (settings->current_x - x);
-      settings->current_y = (settings->current_y - y);
-      settings->current_z = (settings->current_z - z);
-      settings->AA_current = (settings->AA_current - a);            /*AA*/
-      settings->BB_current = (settings->BB_current - b);            /*BB*/
-      settings->CC_current = (settings->CC_current - c);            /*CC*/
+        settings->origin_offset_x = x;
+        settings->origin_offset_y = y;
+        settings->origin_offset_z = z;
+        settings->AA_origin_offset = a;
+        settings->BB_origin_offset = b;
+        settings->CC_origin_offset = c;
+        settings->current_x = (settings->current_x - x);
+        settings->current_y = (settings->current_y - y);
+        settings->current_z = (settings->current_z - z);
+        settings->AA_current = (settings->AA_current - a);
+        settings->BB_current = (settings->BB_current - b);
+        settings->CC_current = (settings->CC_current - c);
 
       CannonInOutClass::SetOriginOffsets(x + settings->axis_offset_x,
-             y + settings->axis_offset_y,
-             z + settings->axis_offset_z
-,			 a + settings->AA_axis_offset
-,			 b + settings->BB_axis_offset
-,			 c + settings->CC_axis_offset
-);
+                                         y + settings->axis_offset_y,
+                                         z + settings->axis_offset_z,
+                                         a + settings->AA_axis_offset,
+                                         b + settings->BB_axis_offset,
+                                         c + settings->CC_axis_offset);
     }
 #ifdef DEBUG_EMC
-  else
-    CannonInOutClass::Comment("interpreter: setting coordinate system origin");
+    else
+        CannonInOutClass::Comment("interpreter: setting coordinate system origin");
 #endif
-  return RS274NGC_OK;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4275,34 +4268,35 @@ Side effects:
 Called by: convert_g.
 
 */
-
-int rs274ngcClass::convert_set_plane( /* ARGUMENTS                    */
- int g_code,                 /* must be G_17,G_18,or G_19  */
- setup_pointer settings)      /* pointer to machine settings  */
+/**
+ * @brief rs274ngcClass::convert_set_plane
+ * @param g_code   - must be G_17,G_18,or G_19
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_set_plane(int g_code,setup_pointer settings)
 {
-  static char name[] = "convert_set_plane";
-  if(g_code == G_17)
+    static char name[] = "convert_set_plane";
+    if(g_code == G_17)
     {
-      CannonInOutClass::SelectPlane(CANON_PLANE_XY);
-      settings->plane = CANON_PLANE_XY;
+        CannonInOutClass::SelectPlane(CANON_PLANE_XY);
+        settings->plane = CANON_PLANE_XY;
     }
-  else if(g_code == G_18)
+    else if(g_code == G_18)
     {
-      CHK((settings->cutter_comp_side != OFF),
-      NCE_CANNOT_USE_XZ_PLANE_WITH_CUTTER_RADIUS_COMP);
-      CannonInOutClass::SelectPlane(CANON_PLANE_XZ);
-      settings->plane = CANON_PLANE_XZ;
+        CHK((settings->cutter_comp_side != OFF),NCE_CANNOT_USE_XZ_PLANE_WITH_CUTTER_RADIUS_COMP);
+        CannonInOutClass::SelectPlane(CANON_PLANE_XZ);
+        settings->plane = CANON_PLANE_XZ;
     }
-  else if(g_code == G_19)
+    else if(g_code == G_19)
     {
-      CHK((settings->cutter_comp_side != OFF),
-      NCE_CANNOT_USE_YZ_PLANE_WITH_CUTTER_RADIUS_COMP);
-      CannonInOutClass::SelectPlane(CANON_PLANE_YZ);
-      settings->plane = CANON_PLANE_YZ;
+        CHK((settings->cutter_comp_side != OFF),NCE_CANNOT_USE_YZ_PLANE_WITH_CUTTER_RADIUS_COMP);
+        CannonInOutClass::SelectPlane(CANON_PLANE_YZ);
+        settings->plane = CANON_PLANE_YZ;
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G17_G18_OR_G19);
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_G17_G18_OR_G19);
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4319,14 +4313,17 @@ Side effects:
 Called by: execute_block.
 
 */
-
-int rs274ngcClass::convert_speed( /* ARGUMENTS                                */
- block_pointer block,    /* pointer to a block of RS274 instructions */
- setup_pointer settings)  /* pointer to machine settings              */
+/**
+ * @brief rs274ngcClass::convert_speed
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_speed(block_pointer block,setup_pointer settings)
 {
-  CannonInOutClass::SetSpindleSpeed(block->s_number);
-  settings->speed = block->s_number;
-  return RS274NGC_OK;
+    CannonInOutClass::SetSpindleSpeed(block->s_number);
+    settings->speed = block->s_number;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4417,56 +4414,43 @@ int rs274ngcClass::convert_stop(  /* ARGUMENTS                                  
   else if((block->m_modes[4] == 2) || (block->m_modes[4] == 30))
     { /* reset stuff here */
 /*1*/
-      settings->current_x = settings->current_x
-    + settings->origin_offset_x + settings->axis_offset_x;
-      settings->current_y = settings->current_y
-    + settings->origin_offset_y + settings->axis_offset_y;
-      settings->current_z = settings->current_z
-    + settings->origin_offset_z + settings->axis_offset_z;
-      settings->AA_current = settings->AA_current              /*AA*/
-    + settings->AA_origin_offset + settings->AA_axis_offset;    /*AA*/
-      settings->BB_current = settings->BB_current              /*BB*/
-    + settings->BB_origin_offset + settings->BB_axis_offset;    /*BB*/
-      settings->CC_current = settings->CC_current              /*CC*/
-    + settings->CC_origin_offset + settings->CC_axis_offset;    /*CC*/
+      settings->current_x = settings->current_x + settings->origin_offset_x + settings->axis_offset_x;
+      settings->current_y = settings->current_y + settings->origin_offset_y + settings->axis_offset_y;
+      settings->current_z = settings->current_z + settings->origin_offset_z + settings->axis_offset_z;
+      settings->AA_current = settings->AA_current + settings->AA_origin_offset + settings->AA_axis_offset;
+      settings->BB_current = settings->BB_current + settings->BB_origin_offset + settings->BB_axis_offset;
+      settings->CC_current = settings->CC_current + settings->CC_origin_offset + settings->CC_axis_offset;
 
       settings->origin_index = 1;
       settings->parameters[5220] = 1.0;
       settings->origin_offset_x = settings->parameters[5221];
       settings->origin_offset_y = settings->parameters[5222];
       settings->origin_offset_z = settings->parameters[5223];
-      settings->AA_origin_offset = settings->parameters[5224]; /*AA*/
-      settings->BB_origin_offset = settings->parameters[5225]; /*BB*/
-      settings->CC_origin_offset = settings->parameters[5226]; /*CC*/
+      settings->AA_origin_offset = settings->parameters[5224];
+      settings->BB_origin_offset = settings->parameters[5225];
+      settings->CC_origin_offset = settings->parameters[5226];
 
       settings->axis_offset_x = 0;
       settings->axis_offset_x = 0;
       settings->axis_offset_x = 0;
-      settings->AA_axis_offset = 0;                            /*AA*/
-      settings->BB_axis_offset = 0;                            /*BB*/
-      settings->CC_axis_offset = 0;                            /*CC*/
+      settings->AA_axis_offset = 0;
+      settings->BB_axis_offset = 0;
+      settings->CC_axis_offset = 0;
 
-      settings->current_x = settings->current_x -
-    settings->origin_offset_x;
-      settings->current_y = settings->current_y -
-    settings->origin_offset_y;
-      settings->current_z = settings->current_z -
-    settings->origin_offset_z;
-      settings->AA_current = settings->AA_current -            /*AA*/
-    settings->AA_origin_offset;                                 /*AA*/
-      settings->BB_current = settings->BB_current -            /*BB*/
-    settings->BB_origin_offset;                                 /*BB*/
-      settings->CC_current = settings->CC_current -            /*CC*/
-    settings->CC_origin_offset;                                 /*CC*/
+      settings->current_x = settings->current_x - settings->origin_offset_x;
+      settings->current_y = settings->current_y - settings->origin_offset_y;
+      settings->current_z = settings->current_z - settings->origin_offset_z;
+      settings->AA_current = settings->AA_current - settings->AA_origin_offset;
+      settings->BB_current = settings->BB_current - settings->BB_origin_offset;
+      settings->CC_current = settings->CC_current - settings->CC_origin_offset;
 
 
       CannonInOutClass::SetOriginOffsets(settings->origin_offset_x,
-             settings->origin_offset_y,
-             settings->origin_offset_z
-,			 settings->AA_origin_offset
-,			 settings->BB_origin_offset
-,			 settings->CC_origin_offset
-);
+                                         settings->origin_offset_y,
+                                         settings->origin_offset_z,
+                                         settings->AA_origin_offset,
+                                         settings->BB_origin_offset,
+                                         settings->CC_origin_offset);
 
 /*2*/ if(settings->plane != CANON_PLANE_XY)
         {
@@ -4636,9 +4620,9 @@ int rs274ngcClass::convert_straight(int move,block_pointer block,setup_pointer s
     }
     else if(move == G_0)
     {
-      CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end,BB_end,CC_end);
-      settings->current_x = end_x;
-      settings->current_y = end_y;
+        CannonInOutClass::StraightTraverse(end_x,end_y,end_z,AA_end,BB_end,CC_end);
+        settings->current_x = end_x;
+        settings->current_y = end_y;
     }
     else if(move == G_1)
     {
@@ -4648,8 +4632,8 @@ int rs274ngcClass::convert_straight(int move,block_pointer block,setup_pointer s
         settings->current_x = end_x;
         settings->current_y = end_y;
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G0_OR_G1);
+    else
+        ERM(NCE_BUG_CODE_NOT_G0_OR_G1);
     settings->current_z = end_z;
     settings->AA_current = AA_end;
     settings->BB_current = BB_end;
@@ -4691,59 +4675,67 @@ center of a circle of the same radius tangent to the tangent line at
 the destination point.
 
 */
-
-int rs274ngcClass::convert_straight_comp1( /* ARGUMENTS                       */
- int move,              /* either G_0 or G_1                         */
- block_pointer block,   /* pointer to a block of RS274 instructions  */
- setup_pointer settings,/* pointer to machine settings               */
- double px,             /* X coordinate of end point                 */
- double py,             /* Y coordinate of end point                 */
- double end_z            /* Z coordinate of end point                 */
- ,double AA_end         /* A coordinate of end point           *//*AA*/
- ,double BB_end         /* B coordinate of end point           *//*BB*/
- ,double CC_end         /* C coordinate of end point           *//*CC*/
-)
+/**
+ * @brief rs274ngcClass::convert_straight_comp1
+ * @param move     - either G_0 or G_1
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @param px       - X coordinate of end point
+ * @param py       - Y coordinate of end point
+ * @param end_z    - Z coordinate of end point
+ * @param AA_end   - A coordinate of end point
+ * @param BB_end   - B coordinate of end point
+ * @param CC_end   - C coordinate of end point
+ * @return
+ */
+int rs274ngcClass::convert_straight_comp1(int move,
+                                          block_pointer block,
+                                          setup_pointer settings,
+                                          double px,
+                                          double py,
+                                          double end_z,
+                                          double AA_end,
+                                          double BB_end,
+                                          double CC_end)
 {
-  static char name[] = "convert_straight_comp1";
-  double alpha;
-  double cx;        /* first current point x then end point x */
-  double cy;        /* first current point y then end point y */
-  double distance;
-  double radius;
-  int side;
-  double theta;
+    static char name[] = "convert_straight_comp1";
+    double alpha;
+    double cx;        /* first current point x then end point x */
+    double cy;        /* first current point y then end point y */
+    double distance;
+    double radius;
+    int side;
+    double theta;
 
-  side = settings->cutter_comp_side;
-  cx = settings->current_x;
-  cy = settings->current_y;
+    side = settings->cutter_comp_side;
+    cx = settings->current_x;
+    cy = settings->current_y;
 
-  radius = settings->cutter_comp_radius; /* always will be positive */
-  distance = hypot((px - cx),(py -cy));
+    radius = settings->cutter_comp_radius; /* always will be positive */
+    distance = hypot((px - cx),(py -cy));
 
-  CHK(((side != LEFT) && (side != RIGHT)),NCE_BUG_SIDE_NOT_RIGHT_OR_LEFT);
-  CHK((distance <= radius),NCE_CUTTER_GOUGING_WITH_CUTTER_RADIUS_COMP);
+    CHK(((side != LEFT) && (side != RIGHT)),NCE_BUG_SIDE_NOT_RIGHT_OR_LEFT);
+    CHK((distance <= radius),NCE_CUTTER_GOUGING_WITH_CUTTER_RADIUS_COMP);
 
-  theta = acos(radius/distance);
-  alpha = (side == LEFT) ? (atan2((cy - py),(cx - px)) - theta) :
-                                (atan2((cy - py),(cx - px)) + theta);
-  cx = (px + (radius * cos(alpha))); /* reset to end location */
-  cy = (py + (radius * sin(alpha)));
-  if(move == G_0)
-    CannonInOutClass::StraightTraverse(cx,cy,end_z,AA_end, BB_end, CC_end);
-  else if(move == G_1)
+    theta = acos(radius/distance);
+    alpha = (side == LEFT) ? (atan2((cy - py),(cx - px)) - theta) : (atan2((cy - py),(cx - px)) + theta);
+    cx = (px + (radius * cos(alpha))); /* reset to end location */
+    cy = (py + (radius * sin(alpha)));
+    if(move == G_0)
+        CannonInOutClass::StraightTraverse(cx,cy,end_z,AA_end, BB_end, CC_end);
+    else if(move == G_1)
     {
-      if(settings->feed_mode == INVERSE_TIME)
-    inverse_time_rate_straight(cx,cy,end_z,AA_end,BB_end,CC_end,block,settings);
-      CannonInOutClass::StraightFeed(cx,cy,end_z,AA_end, BB_end, CC_end);
+        if(settings->feed_mode == INVERSE_TIME)
+            inverse_time_rate_straight(cx,cy,end_z,AA_end,BB_end,CC_end,block,settings);
+        CannonInOutClass::StraightFeed(cx,cy,end_z,AA_end, BB_end, CC_end);
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G0_OR_G1);
-
-  settings->current_x = cx;
-  settings->current_y = cy;
-  settings->program_x = px;
-  settings->program_y = py;
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_G0_OR_G1);
+    settings->current_x = cx;
+    settings->current_y = cy;
+    settings->program_x = px;
+    settings->program_y = py;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -4983,17 +4975,18 @@ In [NCMS,page 73,74] there are three other legal approaches in addition
 to this one.
 
 */
-
-int rs274ngcClass::convert_tool_change( /* ARGUMENTS                   */
- setup_pointer settings)        /* pointer to machine settings */
+/**
+ * @brief rs274ngcClass::convert_tool_change
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_tool_change(setup_pointer settings)
 {
-  static char name[] = "convert_tool_change";
-
-  CannonInOutClass::ChangeTool(settings->selected_tool_slot);
-  settings->current_slot = settings->selected_tool_slot;
-  settings->spindle_turning = CANON_STOPPED;
-
-  return RS274NGC_OK;
+    static char name[] = "convert_tool_change";
+    CannonInOutClass::ChangeTool(settings->selected_tool_slot);
+    settings->current_slot = settings->selected_tool_slot;
+    settings->spindle_turning = CANON_STOPPED;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5026,38 +5019,39 @@ The H number in the block (if present) was checked for being a non-negative
 integer when it was read,so that check does  ! need to be repeated.
 
 */
-
-int rs274ngcClass::convert_tool_length_offset( /* ARGUMENTS                      */
- int g_code,            /* g_code being executed (must be G_43 or G_49) */
- block_pointer block,   /* pointer to a block of RS274/NGC instructions */
- setup_pointer settings) /* pointer to machine settings                  */
+/**
+ * @brief rs274ngcClass::convert_tool_length_offset
+ * @param g_code   - g_code being executed (must be G_43 or G_49
+ * @param block    - pointer to a block of RS274/NGC instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_tool_length_offset(int g_code,block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_tool_length_offset";
-  int index;
-  double offset;
+    static char name[] = "convert_tool_length_offset";
+    int index;
+    double offset;
 
-  if(g_code == G_49)
+    if(g_code == G_49)
     {
-      CannonInOutClass::UseToolLengthOffset(0.0);
-      settings->current_z = (settings->current_z +
-                  settings->tool_length_offset);
-      settings->tool_length_offset = 0.0;
-      settings->length_offset_index = 0;
+        CannonInOutClass::UseToolLengthOffset(0.0);
+        settings->current_z = (settings->current_z + settings->tool_length_offset);
+        settings->tool_length_offset = 0.0;
+        settings->length_offset_index = 0;
     }
-  else if(g_code == G_43)
+    else if(g_code == G_43)
     {
-      index = block->h_number;
-      CHK((index == -1),NCE_OFFSET_INDEX_MISSING);
-      offset = settings->tool_table[index].length;
-      CannonInOutClass::UseToolLengthOffset(offset);
-      settings->current_z =
-    (settings->current_z + settings->tool_length_offset - offset);
-      settings->tool_length_offset = offset;
-      settings->length_offset_index = index;
+        index = block->h_number;
+        CHK((index == -1),NCE_OFFSET_INDEX_MISSING);
+        offset = settings->tool_table[index].length;
+        CannonInOutClass::UseToolLengthOffset(offset);
+        settings->current_z = (settings->current_z + settings->tool_length_offset - offset);
+        settings->tool_length_offset = offset;
+        settings->length_offset_index = index;
     }
-  else
-    ERM(NCE_BUG_CODE_NOT_G43_OR_G49);
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_G43_OR_G49);
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5085,18 +5079,19 @@ A check that the t_number ==  ! negative has already been made in read_t.
 A zero t_number == allowed && means no tool should be selected.
 
 */
-
-int rs274ngcClass::convert_tool_select( /* ARGUMENTS                                */
- block_pointer block,          /* pointer to a block of RS274 instructions */
- setup_pointer settings)        /* pointer to machine settings              */
+/**
+ * @brief rs274ngcClass::convert_tool_select
+ * @param block    - pointer to a block of RS274 instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_tool_select(block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_tool_select";
-
-  CHK((block->t_number > settings->tool_max),
-      NCE_SELECTED_TOOL_SLOT_NUMBER_TOO_LARGE);
-  CannonInOutClass::SelectTool(block->t_number);
-  settings->selected_tool_slot = block->t_number;
-  return RS274NGC_OK;
+    static char name[] = "convert_tool_select";
+    CHK((block->t_number > settings->tool_max),NCE_SELECTED_TOOL_SLOT_NUMBER_TOO_LARGE);
+    CannonInOutClass::SelectTool(block->t_number);
+    settings->selected_tool_slot = block->t_number;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5123,23 +5118,24 @@ This writes a STRAIGHT_FEED command appropriate for a cycle move with
 respect to the given plane. No rotary axis motion takes place.
 
 */
-
-int rs274ngcClass::cycle_feed( /* ARGUMENTS                  */
- CANON_PLANE plane,   /* currently selected plane   */
- double end1,         /* first coordinate value     */
- double end2,         /* second coordinate value    */
- double end3)          /* third coordinate value     */
+/**
+ * @brief rs274ngcClass::cycle_feed
+ * @param plane - currently selected plane
+ * @param end1  - first coordinate value
+ * @param end2  - second coordinate value
+ * @param end3  - third coordinate value
+ * @return
+ */
+int rs274ngcClass::cycle_feed(CANON_PLANE plane,double end1,double end2,double end3)
 {
-  static char name[] = "cycle_feed";
-
-  if(plane == CANON_PLANE_XY)
-    CannonInOutClass::StraightFeed(end1,end2,end3,_setup.AA_current, _setup.BB_current, _setup.CC_current);
-  else if(plane == CANON_PLANE_YZ)
-    CannonInOutClass::StraightFeed(end3,end1,end2,_setup.AA_current, _setup.BB_current, _setup.CC_current);
-  else /* if(plane == CANON_PLANE_XZ) */
-    CannonInOutClass::StraightFeed(end2,end3,end1,_setup.AA_current, _setup.BB_current, _setup.CC_current);
-
-  return RS274NGC_OK;
+    static char name[] = "cycle_feed";
+    if(plane == CANON_PLANE_XY)
+        CannonInOutClass::StraightFeed(end1,end2,end3,_setup.AA_current,_setup.BB_current,_setup.CC_current);
+    else if(plane == CANON_PLANE_YZ)
+        CannonInOutClass::StraightFeed(end3,end1,end2,_setup.AA_current,_setup.BB_current,_setup.CC_current);
+    else /* if(plane == CANON_PLANE_XZ) */
+        CannonInOutClass::StraightFeed(end2,end3,end1,_setup.AA_current,_setup.BB_current,_setup.CC_current);
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5166,21 +5162,24 @@ This writes a STRAIGHT_TRAVERSE command appropriate for a cycle
 move with respect to the given plane. No rotary axis motion takes place.
 
 */
-
-int rs274ngcClass::cycle_traverse( /* ARGUMENTS                 */
- CANON_PLANE plane,       /* currently selected plane  */
- double end1,             /* first coordinate value    */
- double end2,             /* second coordinate value   */
- double end3)              /* third coordinate value    */
+/**
+ * @brief rs274ngcClass::cycle_traverse
+ * @param plane - currently selected plane
+ * @param end1  - first coordinate value
+ * @param end2  - second coordinate value
+ * @param end3  - third coordinate value
+ * @return
+ */
+int rs274ngcClass::cycle_traverse(CANON_PLANE plane,double end1,double end2,double end3)
 {
-  static char name[] = "cycle_traverse";
-  if(plane == CANON_PLANE_XY)
-    CannonInOutClass::StraightTraverse(end1,end2,end3,_setup.AA_current, _setup.BB_current, _setup.CC_current);
-  else if(plane == CANON_PLANE_YZ)
-    CannonInOutClass::StraightTraverse(end3,end1,end2,_setup.AA_current,_setup.BB_current,_setup.CC_current);
-  else /* if(plane == CANON_PLANE_XZ) */
-    CannonInOutClass::StraightTraverse(end2,end3,end1,_setup.AA_current,_setup.BB_current,_setup.CC_current);
-  return RS274NGC_OK;
+    static char name[] = "cycle_traverse";
+    if(plane == CANON_PLANE_XY)
+        CannonInOutClass::StraightTraverse(end1,end2,end3,_setup.AA_current, _setup.BB_current, _setup.CC_current);
+    else if(plane == CANON_PLANE_YZ)
+        CannonInOutClass::StraightTraverse(end3,end1,end2,_setup.AA_current,_setup.BB_current,_setup.CC_current);
+    else /* if(plane == CANON_PLANE_XZ) */
+        CannonInOutClass::StraightTraverse(end2,end3,end1,_setup.AA_current,_setup.BB_current,_setup.CC_current);
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5229,9 +5228,9 @@ int rs274ngcClass::enhance_block( /* ARGUMENTS                         */
 
   axis_flag = ((block->x_flag == ON) ||
             (block->y_flag == ON) ||
-            (block->a_flag == ON) || /*AA*/
-            (block->b_flag == ON) || /*BB*/
-            (block->c_flag == ON) || /*CC*/
+            (block->a_flag == ON) ||
+            (block->b_flag == ON) ||
+            (block->c_flag == ON) ||
             (block->z_flag == ON));
   mode_zero_covets_axes = ((block->g_modes[0] == G_10) ||
                 (block->g_modes[0] == G_28) ||
@@ -5286,20 +5285,22 @@ Called by: read_real_expression
 This just calls either execute_binary1 or execute_binary2.
 
 */
-
-int rs274ngcClass::execute_binary(
- double * left,
- int operation,
- double * right)
+/**
+ * @brief rs274ngcClass::execute_binary
+ * @param left      - pointer to the left operand
+ * @param operation - integer code for the operation
+ * @param right     - pointer to the right operand
+ * @return
+ */
+int rs274ngcClass::execute_binary(double* left,int operation,double* right)
 {
-  static char name[] = "execute_binary";
-  int status;
-
-  if(operation < AND2)
-    CHP(execute_binary1(left,operation,right));
-  else
-    CHP(execute_binary2(left,operation,right));
-  return RS274NGC_OK;
+    static char name[] = "execute_binary";
+    int status;
+    if(operation < AND2)
+        CHP(execute_binary1(left,operation,right));
+    else
+        CHP(execute_binary2(left,operation,right));
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5322,38 +5323,40 @@ Called by: read_real_expression.
 This executes the operations: DIVIDED_BY,MODULO,POWER,TIMES.
 
 */
-
-int rs274ngcClass::execute_binary1( /* ARGUMENTS                       */
- double * left,            /* pointer to the left operand     */
- int operation,            /* integer code for the operation  */
- double * right)            /* pointer to the right operand    */
+/**
+ * @brief rs274ngcClass::execute_binary1
+ * @param left      - pointer to the left operand
+ * @param operation - integer code for the operation
+ * @param right     - pointer to the right operand
+ * @return
+ */
+int rs274ngcClass::execute_binary1(double* left,int operation,double* right)
 {
-  static char name[] = "execute_binary1";
-  switch (operation)
+    static char name[] = "execute_binary1";
+    switch (operation)
     {
-    case DIVIDED_BY:
-      CHK((*right == 0.0),NCE_ATTEMPT_TO_DIVIDE_BY_ZERO);
-      *left = (*left / *right);
-      break;
-    case MODULO: /* always calculates a positive answer */
-      *left = fmod(*left,*right);
-      if(*left < 0.0)
-    {
-      *left = (*left + fabs(*right));
-    }
-      break;
-    case POWER:
-      CHK(((*left < 0.0) && (floor(*right) != *right)),
-      NCE_ATTEMPT_TO_RAISE_NEGATIVE_TO_NON_INTEGER_POWER);
-      *left = pow(*left,*right);
-      break;
-    case TIMES:
-      *left = (*left * *right);
-      break;
-    default:
-      ERM(NCE_BUG_UNKNOWN_OPERATION);
-    }
-  return RS274NGC_OK;
+        case DIVIDED_BY:
+            CHK((*right == 0.0),NCE_ATTEMPT_TO_DIVIDE_BY_ZERO);
+            *left = (*left / *right);
+            break;
+        case MODULO: /* always calculates a positive answer */
+            *left = fmod(*left,*right);
+            if(*left < 0.0)
+            {
+                *left = (*left + fabs(*right));
+            }
+        break;
+        case POWER:
+            CHK(((*left < 0.0) && (floor(*right) != *right)),NCE_ATTEMPT_TO_RAISE_NEGATIVE_TO_NON_INTEGER_POWER);
+            *left = pow(*left,*right);
+            break;
+        case TIMES:
+            *left = (*left * *right);
+            break;
+        default:
+            ERM(NCE_BUG_UNKNOWN_OPERATION);
+        }
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5379,35 +5382,37 @@ false.
 
 
 */
-
-int rs274ngcClass::execute_binary2( /* ARGUMENTS                       */
- double * left,            /* pointer to the left operand     */
- int operation,            /* integer code for the operation  */
- double * right)            /* pointer to the right operand    */
+/**
+ * @brief rs274ngcClass::execute_binary2
+ * @param left      - pointer to the left operand
+ * @param operation - integer code for the operation
+ * @param right     - pointer to the right operand
+ * @return
+ */
+int rs274ngcClass::execute_binary2(double* left,int operation,double* right)
 {
-  static char name[] = "execute_binary2";
-  switch (operation)
+    static char name[] = "execute_binary2";
+    switch (operation)
     {
-    case AND2:
-      *left = ((*left == 0.0) || (*right == 0.0)) ? 0.0 : 1.0;
-      break;
-    case EXCLUSIVE_OR:
-      *left = (((*left == 0.0) && (*right != 0.0)) ||
-            ((*left != 0.0) && (*right == 0.0))) ? 1.0 : 0.0;
-      break;
-    case MINUS:
-      *left = (*left - *right);
-      break;
-    case NON_EXCLUSIVE_OR:
-      *left = ((*left != 0.0) || (*right != 0.0)) ? 1.0 : 0.0;
-      break;
-    case PLUS:
-      *left = (*left + *right);
-      break;
-    default:
-      ERM(NCE_BUG_UNKNOWN_OPERATION);
+        case AND2:
+            *left = ((*left == 0.0) || (*right == 0.0)) ? 0.0 : 1.0;
+            break;
+        case EXCLUSIVE_OR:
+            *left = (((*left == 0.0) && (*right != 0.0)) || ((*left != 0.0) && (*right == 0.0))) ? 1.0 : 0.0;
+            break;
+        case MINUS:
+            *left = (*left - *right);
+            break;
+        case NON_EXCLUSIVE_OR:
+            *left = ((*left != 0.0) || (*right != 0.0)) ? 1.0 : 0.0;
+            break;
+        case PLUS:
+            *left = (*left + *right);
+            break;
+        default:
+            ERM(NCE_BUG_UNKNOWN_OPERATION);
     }
-  return RS274NGC_OK;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5700,91 +5705,45 @@ int rs274ngcClass::find_ends(    /* ARGUMENTS                                   
 
 )
 {
-  int mode;
-  int middle;
-  int comp;
+    int mode;
+    int middle;
+    int comp;
 
-  mode = settings->distance_mode;
-  middle = (settings->program_x != UNKNOWN);
-  comp = (settings->cutter_comp_side != OFF);
+    mode = settings->distance_mode;
+    middle = (settings->program_x != UNKNOWN);
+    comp = (settings->cutter_comp_side != OFF);
 
-  if(block->g_modes[0] == G_53) /* distance mode == absolute in this case */
+    if(block->g_modes[0] == G_53) /* distance mode == absolute in this case */
     {
-#ifdef DEBUG_EMC
-      CannonInOutClass::Comment("interpreter: offsets temporarily suspended");
-#endif
-      *px = (block->x_flag == ON) ? (block->x_number -
-           (settings->origin_offset_x + settings->axis_offset_x)) :
-             settings->current_x;
-      *py = (block->y_flag == ON) ? (block->y_number -
-           (settings->origin_offset_y + settings->axis_offset_y)) :
-             settings->current_y;
-      *pz = (block->z_flag == ON) ? (block->z_number -
-               (settings->tool_length_offset + settings->origin_offset_z
-            + settings->axis_offset_z)) : settings->current_z;
-      *AA_p = (block->a_flag == ON) ? (block->a_number -            /*AA*/
-          (settings->AA_origin_offset + settings->AA_axis_offset)) : /*AA*/
-               settings->AA_current;                                 /*AA*/
-      *BB_p = (block->b_flag == ON) ? (block->b_number -            /*BB*/
-          (settings->BB_origin_offset + settings->BB_axis_offset)) : /*BB*/
-               settings->BB_current;                                 /*BB*/
-      *CC_p = (block->c_flag == ON) ? (block->c_number -            /*CC*/
-          (settings->tool_length_offset + settings->CC_origin_offset /*CC*/
-        + settings->CC_axis_offset)) : settings->CC_current;     /*CC*/
-
+    #ifdef DEBUG_EMC
+        CannonInOutClass::Comment("interpreter: offsets temporarily suspended");
+    #endif
+        *px   = (block->x_flag == ON) ? (block->x_number - (settings->origin_offset_x    + settings->axis_offset_x)) : settings->current_x;
+        *py   = (block->y_flag == ON) ? (block->y_number - (settings->origin_offset_y    + settings->axis_offset_y)) : settings->current_y;
+        *pz   = (block->z_flag == ON) ? (block->z_number - (settings->tool_length_offset + settings->origin_offset_z + settings->axis_offset_z)) : settings->current_z;
+        *AA_p = (block->a_flag == ON) ? (block->a_number - (settings->AA_origin_offset   + settings->AA_axis_offset)) : settings->AA_current;
+        *BB_p = (block->b_flag == ON) ? (block->b_number - (settings->BB_origin_offset   + settings->BB_axis_offset)) : settings->BB_current;
+        *CC_p = (block->c_flag == ON) ? (block->c_number - (settings->tool_length_offset + settings->CC_origin_offset + settings->CC_axis_offset)) : settings->CC_current;
     }
-  else if(mode == MODE_ABSOLUTE)
+    else if(mode == MODE_ABSOLUTE)
     {
-      *px = (block->x_flag == ON) ? block->x_number     :
-             (comp && middle)     ? settings->program_x :
-                                 settings->current_x ;
-
-      *py = (block->y_flag == ON) ? block->y_number     :
-                 (comp && middle)     ? settings->program_y :
-                                     settings->current_y ;
-
-      *pz = (block->z_flag == ON) ? block->z_number     :
-                                         settings->current_z ;
-
-      *AA_p = (block->a_flag == ON) ? block->a_number     :       /*AA*/
-
-
-                                      settings->AA_current ;       /*AA*/
-
-
-      *BB_p = (block->b_flag == ON) ? block->b_number     :       /*BB*/
-
-
-                                      settings->BB_current ;       /*BB*/
-
-      *CC_p = (block->c_flag == ON) ? block->c_number     :       /*CC*/
-                                      settings->CC_current ;       /*CC*/
-
+        *px   = (block->x_flag == ON) ? block->x_number : (comp && middle) ? settings->program_x : settings->current_x;
+        *py   = (block->y_flag == ON) ? block->y_number : (comp && middle) ? settings->program_y : settings->current_y;
+        *pz   = (block->z_flag == ON) ? block->z_number : settings->current_z ;
+        *AA_p = (block->a_flag == ON) ? block->a_number : settings->AA_current ;
+        *BB_p = (block->b_flag == ON) ? block->b_number : settings->BB_current ;
+        *CC_p = (block->c_flag == ON) ? block->c_number : settings->CC_current ;
     }
-  else /* mode == MODE_INCREMENTAL */
+    else /* mode == MODE_INCREMENTAL */
     {
-      *px = (block->x_flag == ON)
-    ? ((comp && middle) ? (block->x_number + settings->program_x)
-                         : (block->x_number + settings->current_x))
-    : ((comp && middle) ? settings->program_x
-                         : settings->current_x);
-
-      *py = (block->y_flag == ON)
-    ? ((comp && middle) ? (block->y_number + settings->program_y)
-                         : (block->y_number + settings->current_y))
-    : ((comp && middle) ? settings->program_y
-                         : settings->current_y);
-
-      *pz = (block->z_flag == ON) ?
-    (settings->current_z + block->z_number) : settings->current_z;
-      *AA_p = (block->a_flag == ON) ?                               /*AA*/
-        (settings->AA_current + block->a_number) : settings->AA_current; /*AA*/
-      *BB_p = (block->b_flag == ON) ?                               /*BB*/
-        (settings->BB_current + block->b_number) : settings->BB_current; /*BB*/
-      *CC_p = (block->c_flag == ON) ?                               /*CC*/
-    (settings->CC_current + block->c_number) : settings->CC_current; /*CC*/
+        *px   = (block->x_flag == ON) ? ((comp && middle) ? (block->x_number + settings->program_x) : (block->x_number + settings->current_x)) : ((comp && middle) ? settings->program_x : settings->current_x);
+        *py   = (block->y_flag == ON) ? ((comp && middle) ? (block->y_number + settings->program_y) : (block->y_number + settings->current_y)) : ((comp && middle) ? settings->program_y : settings->current_y);
+        *pz   = (block->z_flag == ON) ? (settings->current_z  + block->z_number) : settings->current_z;
+        *AA_p = (block->a_flag == ON) ? (settings->AA_current + block->a_number) : settings->AA_current;
+        *BB_p = (block->b_flag == ON) ? (settings->BB_current + block->b_number) : settings->BB_current;
+        *CC_p = (block->c_flag == ON) ? (settings->CC_current + block->c_number) : settings->CC_current;
     }
-  return RS274NGC_OK;
+    return RS274NGC_OK;
 }
 
 /****************************************************************************/
@@ -5813,27 +5772,23 @@ int rs274ngcClass::find_relative( /* ARGUMENTS                   */
  double x1,              /* absolute x position         */
  double y1,              /* absolute y position         */
  double z1,              /* absolute z position         */
- double AA_1,            /* absolute a position         */ /*AA*/
- double BB_1,            /* absolute b position         */ /*BB*/
- double CC_1,            /* absolute c position         */ /*CC*/
+ double AA_1,            /* absolute a position         */
+ double BB_1,            /* absolute b position         */
+ double CC_1,            /* absolute c position         */
  double * x2,            /* pointer to relative x       */
  double * y2,            /* pointer to relative y       */
  double * z2,            /* pointer to relative z       */
- double * AA_2,          /* pointer to relative a       */ /*AA*/
- double * BB_2,          /* pointer to relative b       */ /*BB*/
- double * CC_2,          /* pointer to relative c       */ /*CC*/
+ double * AA_2,          /* pointer to relative a       */
+ double * BB_2,          /* pointer to relative b       */
+ double * CC_2,          /* pointer to relative c       */
  setup_pointer settings)  /* pointer to machine settings */
 {
-  *x2 = (x1 - (settings->origin_offset_x + settings->axis_offset_x));
-  *y2 = (y1 - (settings->origin_offset_y + settings->axis_offset_y));
-  *z2 = (z1 - (settings->tool_length_offset +
-            settings->origin_offset_z + settings->axis_offset_z));
-  *AA_2 = (AA_1 - (settings->AA_origin_offset +    /*AA*/
-            settings->AA_axis_offset));     /*AA*/
-  *BB_2 = (BB_1 - (settings->BB_origin_offset +    /*BB*/
-            settings->BB_axis_offset));     /*BB*/
-  *CC_2 = (CC_1 - (settings->CC_origin_offset +    /*CC*/
-            settings->CC_axis_offset));     /*CC*/
+  *x2   = (x1   - (settings->origin_offset_x + settings->axis_offset_x));
+  *y2   = (y1   - (settings->origin_offset_y + settings->axis_offset_y));
+  *z2   = (z1   - (settings->tool_length_offset + settings->origin_offset_z + settings->axis_offset_z));
+  *AA_2 = (AA_1 - (settings->AA_origin_offset + settings->AA_axis_offset));
+  *BB_2 = (BB_1 - (settings->BB_origin_offset + settings->BB_axis_offset));
+  *CC_2 = (CC_1 - (settings->CC_origin_offset + settings->CC_axis_offset));
   return RS274NGC_OK;
 }
 
@@ -6750,8 +6705,7 @@ int rs274ngcClass::read_g(    /* ARGUMENTS                                      
   CHK((value < 0),NCE_NEGATIVE_G_CODE_USED);
   mode = _gees[value];
   CHK((mode == -1),NCE_UNKNOWN_G_CODE_USED);
-  CHK((block->g_modes[mode] != -1),
-      NCE_TWO_G_CODES_USED_FROM_SAME_MODAL_GROUP);
+  CHK((block->g_modes[mode] != -1),NCE_TWO_G_CODES_USED_FROM_SAME_MODAL_GROUP);
   block->g_modes[mode] = value;
   return RS274NGC_OK;
 }
