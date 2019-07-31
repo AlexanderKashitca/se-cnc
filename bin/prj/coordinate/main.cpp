@@ -1,14 +1,12 @@
 ///-----------------------------------------------------------------------------
 #include <QCoreApplication>
 ///-----------------------------------------------------------------------------
-#include "../../../src/plannerTrajectory/coordMotion.h"
+#include "../../../src/coordinate/coordinate.h"
 ///-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+    QCoreApplication a(argc, argv);
 
-    CoordMotionClass CoordMotion;
-
-    return app.exec();
+    return a.exec();
 }
 ///-----------------------------------------------------------------------------

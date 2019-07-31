@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------------------
 QT -= gui
-QT += core
 #-------------------------------------------------------------------------------
 CONFIG += c++11
 CONFIG += console
@@ -18,14 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 #-------------------------------------------------------------------------------
 SOURCES += \
-            ../../../src/parser_cldata/command.cpp \
-            ../../../src/parser_cldata/parser.cpp \
             main.cpp
-
-#-------------------------------------------------------------------------------
-HEADERS += \
-            ../../../src/parser_cldata/command.h \
-            ../../../src/parser_cldata/parser.h
 
 #-------------------------------------------------------------------------------
 # Default rules for deployment.

@@ -1,11 +1,8 @@
 #--------------------------------------------------------------------------------
 QT -= gui
-QT += core
-QT += widgets
-QT += datavisualization
 #--------------------------------------------------------------------------------
 CONFIG += c++11
-CONFIG -= console
+CONFIG += console
 CONFIG -= app_bundle
 #--------------------------------------------------------------------------------
 # The following define makes your compiler emit warnings if you use
@@ -20,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 #--------------------------------------------------------------------------------
 SOURCES += \
+            ../../../src/planner/planner.cpp \
             ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
             ../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
             ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
@@ -48,10 +46,10 @@ SOURCES += \
             ../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
             ../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp \
             ../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
-            main.cpp \
-            mainform.cpp
-
+            main.cpp
+#--------------------------------------------------------------------------------
 HEADERS += \
+            ../../../src/planner/planner.h \
             ../../../src/reflexesII/RML/inc/RMLFlags.h \
             ../../../src/reflexesII/RML/inc/RMLInputParameters.h \
             ../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
@@ -77,18 +75,14 @@ HEADERS += \
             ../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h \
             ../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h \
             ../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h \
-            ../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-            mainform.h
+            ../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h
 
+#--------------------------------------------------------------------------------
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/inc
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/src
 #--------------------------------------------------------------------------------
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-#--------------------------------------------------------------------------------
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/inc
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/src
-#--------------------------------------------------------------------------------
-FORMS += \
-        mainform.ui
 #--------------------------------------------------------------------------------

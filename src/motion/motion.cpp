@@ -1,10 +1,6 @@
 ///-----------------------------------------------------------------------------
 #include "motion.h"
 ///-----------------------------------------------------------------------------
-
-
-
-///-----------------------------------------------------------------------------
 extern QString MainPathDLL;
 extern QString MainPath;
 extern QString MainPathRoot;
@@ -597,7 +593,7 @@ void MotionClass::DoErrMsg(const char *s)
 #endif
 }
 ///-----------------------------------------------------------------------------
-int MotionClass::GetStatus(MAIN_STATUS& status, bool lock)
+int MotionClass::getStatus(MAIN_STATUS& status, bool lock)
 {
 #if 0
     int i,result,n,token;

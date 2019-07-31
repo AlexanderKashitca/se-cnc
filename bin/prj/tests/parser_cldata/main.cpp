@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 ///-----------------------------------------------------------------------------
-#include "../../../src/parser_cldata/parser.h"
+#include "parser.h"
 ///-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {

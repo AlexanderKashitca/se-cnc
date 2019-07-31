@@ -67,7 +67,7 @@ class MOTIONSHARED_EXPORT MotionClass : public QObject
         int     SetErrMsgCallback(ERRMSG_HANDLER *eh);
         int     CheckKMotionVersion(int *type = nullptr,bool GetBoardTypeOnly = false);
 
-        int     GetStatus(MAIN_STATUS& status,bool lock);
+        int     getStatus(MAIN_STATUS& status,bool lock);
         void    DoErrMsg(const char *s);
 
         bool    _errMessageDisplayed;
