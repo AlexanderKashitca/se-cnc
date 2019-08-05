@@ -95,15 +95,43 @@ enum
     STOPPED_COORD,
     STOPPED_COORD_FINISHED
 };
+
+typedef enum
+{
+    COORD_MOTION_OK   = 0,
+    COORD_MOTION_FAIL = 1
+}COORD_MOTION_RETVAL;
 ///-----------------------------------------------------------------------------
 class CoordMotionClass
 {
     private:
         MotionDirectClass* _motion;
 
-        bool _halt;
-        bool _abort;
-        bool _simulate;
+        /// variables for _motion
+        int     _result;
+        QString _cmd;
+        QString _response;
+
+        QString _writeLineBuffer;
+        double  _writeLineBufferTime;
+
+        bool    _halt;
+        bool    _abort;
+        bool    _simulate;
+
+        bool    _threadingMode;             /// Launches coordinated motion in spindle sync mode
+        double  _threadingBaseSpeedRPS;    /// Base Rev/sec speed where trajectory should run an real-time
+
+        bool    _defineCS_valid;
+        /// map board channel number to interperter axis
+        int     _x_axis;
+        int     _y_axis;
+        int     _z_axis;
+        int     _a_axis;
+        int     _b_axis;
+        int     _c_axis;
+
+        bool    _axisDisabled;
 
 
         double _feedRateOverride;
@@ -111,11 +139,10 @@ class CoordMotionClass
         double _hardwareFRORange;
         double _spindleRateOverride;
 
-        int putWriteLineBuffer(QString s,double Time);
-        int flushWriteLineBuffer();
-        int clearWriteLineBuffer();
-        int launchCoordMotion();
-
+        COORD_MOTION_RETVAL putWriteLineBuffer(QString s,double Time);
+        COORD_MOTION_RETVAL flushWriteLineBuffer();
+        COORD_MOTION_RETVAL clearWriteLineBuffer();
+        COORD_MOTION_RETVAL launchCoordMotion();
 
 
     public:
@@ -133,28 +160,45 @@ class CoordMotionClass
         void clearHalt();
         bool getHalt();
 
-        int setMotionCmd(const char *s,BOOL FlushBeforeUnbufferedOperation);
+        COORD_MOTION_RETVAL setAxisDefinitions(int x,int y,int z,int a,int b,int c);
+        COORD_MOTION_RETVAL getAxisDefinitions(int* x,int* y,int* z,int* a,int* b,int* c);
 
-        int     CheckMotionHalt(bool Coord);
-        int WaitForMoveXYZABCFinished();
-        int WaitForSegmentsFinished(BOOL NoErrorOnDisable = FALSE);
+        COORD_MOTION_RETVAL getDestination(int axis,double *d);
+        COORD_MOTION_RETVAL getPosition(int axis,double *d);
+
+        COORD_MOTION_RETVAL getRapidSettings();
+        COORD_MOTION_RETVAL getRapidSettingsAxis(int axis,double* Vel,double* Accel,double* Jerk,double* SoftLimitPos,double* SoftLimitNeg,double CountsPerInch);
+
+        COORD_MOTION_RETVAL determineSoftwareHardwareFRO(double &HW,double &SW);
+        COORD_MOTION_RETVAL getAxisDone(int axis,int* r);
+        COORD_MOTION_RETVAL setFeedRateOverride(double v);
+        COORD_MOTION_RETVAL setFeedRateRapidOverride(double v);
+        COORD_MOTION_RETVAL setHardwareFRORange(double v);
+        COORD_MOTION_RETVAL setSpindleRateOverride(double v);
+        double              getFeedRateOverride();
+        double              getFeedRateRapidOverride();
+        double              getSpindleRateOverride();
+        double              getHardwareFRORange();
+
+
+        int setMotionCmd(const char *s,BOOL FlushBeforeUnbufferedOperation);
+        int checkMotionHalt(bool Coord);
+        int waitForMoveXYZABCFinished();
+        int waitForSegmentsFinished(BOOL NoErrorOnDisable = FALSE);
+
         int DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation);
         int DoKMotionBufCmd(const char *s,int sequence_number=-1);
+
         int FlushSegments();
         int LaunchCoordMotion();
         int OutputSegment(int iseg);
         int DownloadDoneSegments();
-        int SetAxisDefinitions(int x, int y, int z, int a, int b, int c);
-        int SetAxisDefinitions(int x, int y, int z, int a, int b, int c, int u, int v);
-        int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c);
-        int GetAxisDefinitions(int *x, int *y, int *z, int *a, int *b, int *c, int *u, int *v);
-        int GetRapidSettings();
-        int GetRapidSettingsAxis(int axis,double *Vel,double *Accel,double *Jerk, double *SoftLimitPos, double *SoftLimitNeg, double CountsPerInch);
-        int GetDestination(int axis, double *d);
-        int GetPosition(int axis, double *d);
-        int GetAxisDone(int axis, int *r);
-        void    SetFeedRateOverride(double v);
-        void SetFeedRateRapidOverride(double v);
+
+
+
+
+
+
         int FlushWriteLineBuffer();
         int ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev);
         int GetSpindleRPS(float &speed);
@@ -164,13 +208,9 @@ class CoordMotionClass
         void    DownloadInit();
 
         int     ExecutionStop();
-        double  GetFeedRateOverride();
-        double  GetFeedRateRapidOverride();
-        double  GetSpindleRateOverride();
 
-        void SetHardwareFRORange(double v);
-	double GetHardwareFRORange();
-	void SetSpindleRateOverride(double v);
+
+
 
 
 

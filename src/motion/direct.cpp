@@ -135,7 +135,7 @@ int MotionDirectClass::listLocations(int *nlocations, int *list)
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::writeLineReadLine(const char *s, char *response)
+int MotionDirectClass::writeLineReadLine(const char *s,char *response)
 {
     return MotionIO.writeLineReadLine(s, response);
 }
@@ -150,7 +150,7 @@ int MotionDirectClass::writeLineWithEcho(const char *s)
     return MotionIO.writeLineWithEcho(s);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::readLineTimeOut(char *buf, int TimeOutms)
+int MotionDirectClass::readLineTimeOut(char *buf,int TimeOutms)
 {
     return MotionIO.readLineTimeOut(buf,TimeOutms);
 }

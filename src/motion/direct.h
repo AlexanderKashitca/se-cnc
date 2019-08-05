@@ -3,6 +3,7 @@
 #define DIRECT_H
 ///-----------------------------------------------------------------------------
 #include <QLibrary>
+#include "commands.h"
 #include "../../../src/motion/motion_io.h"
 ///-----------------------------------------------------------------------------
 class MotionDirectClass

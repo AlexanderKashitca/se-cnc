@@ -18,6 +18,7 @@ extern const char VersionAndBuildTime[];  // string with version and build time
 #define CLOCKFREQ   25.0e6   // 100 MHz/4   
 
 typedef int BOOL;
+
 #ifndef _SIZE_T
 #define _SIZE_T
 typedef unsigned int size_t;
