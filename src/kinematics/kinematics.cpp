@@ -8,8 +8,6 @@
 //#include "kinematics5AxisTableAGimbalB.h"
 //#include "kinematicsGeppetto.h"
 //#include "kinematicsGeppettoExtrude.h"
-
-#include<limits.h>
 ///-----------------------------------------------------------------------------
 #define sqr(x) ((x)*(x))
 ///-----------------------------------------------------------------------------

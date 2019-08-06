@@ -16,9 +16,102 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 #-------------------------------------------------------------------------------
+INCLUDEPATH += /usr/local/lib
+DEPENDPATH  += /usr/local/lib
+LIBS        += -L/usr/local/lib/ -lftd2xx
+#-------------------------------------------------------------------------------
 SOURCES += \
+            ../../../src/planner/planner.cpp                                                    \
+            ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp                                    \
+            ../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp             \
+            ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp                         \
+            ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp                         \
+            ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp                         \
+            ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp                          \
+            ../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp                              \
+            ../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp                       \
+            ../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp         \
+            ../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp                             \
+            ../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp                               \
+            ../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp                              \
+            ../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp           \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp                                  \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp              \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp                          \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp                                  \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp              \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp              \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp                          \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp            \
+            ../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp                                  \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp                               \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp     \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp               \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp                        \
+            ../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp  \
+            ../../../src/parser/command.cpp                                                     \
+            ../../../src/parser/parser.cpp                                                      \
+            ../../../src/interpreter/cannon_in_out.cpp                                          \
+            ../../../src/interpreter/interpreter.cpp                                            \
+            ../../../src/interpreter/rs274ngc.cpp                                               \
+            ../../../src/coordinate/coordinate.cpp                                              \
+            ../../../src/kinematics/kinematics.cpp                                              \
+            ../../../src/motion/common.cpp                                                      \
+            ../../../src/motion/direct.cpp                                                      \
+            ../../../src/motion/motion_io.cpp                                                   \
+            ../../../src/system/system.cpp \
             main.cpp
+#--------------------------------------------------------------------------------
+HEADERS += \
+            ../../../src/planner/motion_param.h                                    \
+            ../../../src/planner/planner.h                                         \
+            ../../../src/reflexesII/RML/inc/RMLFlags.h                             \
+            ../../../src/reflexesII/RML/inc/RMLInputParameters.h                   \
+            ../../../src/reflexesII/RML/inc/RMLOutputParameters.h                  \
+            ../../../src/reflexesII/RML/inc/RMLPositionFlags.h                     \
+            ../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h           \
+            ../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h          \
+            ../../../src/reflexesII/RML/inc/RMLVector.h                            \
+            ../../../src/reflexesII/RML/inc/RMLVelocityFlags.h                     \
+            ../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h           \
+            ../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h          \
+            ../../../src/reflexesII/RML/inc/ReflexxesAPI.h                         \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h              \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h              \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h              \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h               \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h                   \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLMath.h                        \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h                  \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h                    \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h                   \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h   \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h               \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h   \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h               \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h \
+            ../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h                    \
+            ../../../src/parser/command.h                                          \
+            ../../../src/parser/parser.h                                           \
+            ../../../src/interpreter/cannon_in_out.h                               \
+            ../../../src/interpreter/interpreter.h                                 \
+            ../../../src/interpreter/canon.h                                       \
+            ../../../src/interpreter/rs274ngc.h                                    \
+            ../../../src/interpreter/rs274ngc_define.h                             \
+            ../../../src/interpreter/rs274ngc_return.h                             \
+            ../../../src/coordinate/coordinate.h                                   \
+            ../../../src/ftdi/WinTypes.h                                           \
+            ../../../src/ftdi/ftd2xx.h                                             \
+            ../../../src/kinematics/kinematics.h                                   \
+            ../../../src/motion/common.h                                           \
+            ../../../src/motion/direct.h                                           \
+            ../../../src/motion/motion_io.h \
+            ../../../src/system/system.h
 
+#--------------------------------------------------------------------------------
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/inc
+INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/src
 #-------------------------------------------------------------------------------
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

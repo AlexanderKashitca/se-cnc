@@ -10,9 +10,6 @@
 ///-----------------------------------------------------------------------------
 namespace PLANNER_SPACE
 {
-
-
-
     /**
      * @brief The PlannerClass class
      */

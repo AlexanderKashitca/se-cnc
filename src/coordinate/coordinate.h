@@ -93,7 +93,6 @@ typedef void ARC_FEED_SIX_AXIS_CALLBACK
 ///-----------------------------------------------------------------------------
 namespace COORD_MOTION_SPACE
 {
-    using namespace MOTION_DIRECT_SPACE;
 
     enum
     {
@@ -111,7 +110,7 @@ namespace COORD_MOTION_SPACE
     class CoordMotionClass
     {
         private:
-            MotionDirectClass* _motion;
+            MOTION_DIRECT_SPACE::MotionDirectClass* _motion;
 
             /// variables for _motion
             int     _result;

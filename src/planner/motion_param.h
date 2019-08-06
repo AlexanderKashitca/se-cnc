@@ -87,7 +87,7 @@ namespace PLANNER_SPACE
         bool TCP_Active;  // tool center point control active
         double TCP_X, TCP_Y, TCP_Z;  // tool center point offsets
 
-    } MOTION_PARAMS;
+    }MOTION_PARAMS;
 }
 ///-----------------------------------------------------------------------------
 #endif // MOTION_PARAM_H

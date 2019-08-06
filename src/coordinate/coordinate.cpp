@@ -4,6 +4,7 @@
 ///-----------------------------------------------------------------------------
 using namespace KINEMATICS_SPACE;
 using namespace COORD_MOTION_SPACE;
+using namespace MOTION_DIRECT_SPACE;
 ///-----------------------------------------------------------------------------
 CoordMotionClass::CoordMotionClass()
 {
