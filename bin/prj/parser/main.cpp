@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
 
 
-    ParserDataClass parser;
+    PARSER_SPACE::ParserDataClass parser;
 
     QString path = "/home/evil/Programming/Qt/se-cnc/bin/prj/parser";
     QString name = "rs274ngc.out";

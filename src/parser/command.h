@@ -6,13 +6,16 @@
 #include <QPair>
 #include <QVector>
 ///-----------------------------------------------------------------------------
-class CommandClass
+namespace PARSER_SPACE
 {
-    public:
-        CommandClass();
-        virtual ~CommandClass();
-        QVector<QPair<int,QString>> motion_command;
-};
+    class CommandClass
+    {
+        public:
+            CommandClass();
+            virtual ~CommandClass();
+            QVector<QPair<int,QString>> motion_command;
+    };
+} /// end PARSER_SPACE
 ///-----------------------------------------------------------------------------
 #endif /// COMMAND_H
 ///-----------------------------------------------------------------------------

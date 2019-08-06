@@ -24,12 +24,12 @@ const QString Commands[] =
 "MOVEREL D0 7 =G",							// MoveRelN=D/Move axis N relative to current dest D units/ie. MoveRel0=100.1
 "MOVERELATVEL D0 7 =GG",					// MoveRelAtVelN=D V/Move axis N relative to current dest D units/using specified Velocity/ie. MoveRelAtVel0=100.1 30.0
 "MOVEXYZABC GGGGGG",   						// MoveXYZABC=D D D D D D/Move the 6 axes defined to be x,y,z,a,b,c/(each axis moves independently)/ie. MoveXYZABC 100.1 200.2 300.3 400.4 500.5 600.6
-"MOVE D0 7 =G",								// MoveN=D/Move axis N to absolute coordinates D/ie. Move0=100.1
-"MOVEATVEL D0 7 =GG",						// MoveAtVelN=D V/Move axis N to absolute coordinates D at specified Velocity/ie. MoveAtVel0=100.1 30.0
-"MOVEEXP D0 7 =GG",							// MoveExpN=D T/Move axis N to absolute coordinates D exponentially at Time Constant T/ie. MoveExp0=100.1 1.0
-"JOG D0 7 =G",								// JogN=V/Move axis N at velocity V/Uses Accel and Jerk parameters for the axis/Specify zero Vel to decel to stop/ie. Jog0=-200.5
-"ADC D0 7",									// ADCN/Display ADC channel N (0 through 7)/range -2048 to 2047/Channels 0-3 are 10V inputs/Channels 4-7 are Motor Currents/ie. ADC0
-"DAC D0 7 =D-2048 2047",					// DACN=M/Set DAC N (0..7) to/value M (-2048..2047)/ie. DAC0=2000
+"MOVE D0 7 =G",			// MoveN=D/Move axis N to absolute coordinates D/ie. Move0=100.1
+"MOVEATVEL D0 7 =GG",		// MoveAtVelN=D V/Move axis N to absolute coordinates D at specified Velocity/ie. MoveAtVel0=100.1 30.0
+"MOVEEXP D0 7 =GG",		// MoveExpN=D T/Move axis N to absolute coordinates D exponentially at Time Constant T/ie. MoveExp0=100.1 1.0
+"JOG D0 7 =G",			// JogN=V/Move axis N at velocity V/Uses Accel and Jerk parameters for the axis/Specify zero Vel to decel to stop/ie. Jog0=-200.5
+"ADC D0 7",			// ADCN/Display ADC channel N (0 through 7)/range -2048 to 2047/Channels 0-3 are 10V inputs/Channels 4-7 are Motor Currents/ie. ADC0
+"DAC D0 7 =D-2048 2047",        // DACN=M/Set DAC N (0..7) to/value M (-2048..2047)/ie. DAC0=2000
 "3PH D0 7 =GG",								// 3PHN=D A/Set PWMs of axis N for Magnitude D phase angle A/Magnitude is -230 ,, +230/Angle in Commutation cycles/ie. 3PH0=230 0.5
 "4PH D0 7 =GG",								// 4PHN=D A/Set PWMs of axis N for Magnitude D phase angle A/Magnitude is -250 ,, +250/Angle in Commutation cycles/ie. 4PH0=250 0.5
 "FLASH ",									// Flash/Flash current User programs and axis params/ie. Flash

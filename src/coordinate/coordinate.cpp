@@ -2,14 +2,27 @@
 #include "coordinate.h"
 #include "../motion/common.h"
 ///-----------------------------------------------------------------------------
+using namespace KINEMATICS_SPACE;
+using namespace COORD_MOTION_SPACE;
+///-----------------------------------------------------------------------------
 CoordMotionClass::CoordMotionClass()
 {
-    _motion = new MotionDirectClass;
+    _kinematics = new KinematicsClass;
+    _motion     = new MotionDirectClass;
 }
 ///-----------------------------------------------------------------------------
 CoordMotionClass::~CoordMotionClass()
 {
     delete _motion;
+    delete _kinematics;
+}
+///-----------------------------------------------------------------------------
+int CoordMotionClass::initialization()
+{
+    /// TODO
+    /// init direct channel
+
+    return(0);
 }
 ///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::putWriteLineBuffer(QString s,double Time)
@@ -35,7 +48,7 @@ COORD_MOTION_RETVAL CoordMotionClass::putWriteLineBuffer(QString s,double Time)
 
     /// If we have too much motion time in the buffer send it now
     /// allocate 10% of the Lookahead to be buffered here
-//    if (_writeLineBufferTime > Kinematics->m_MotionParams.TPLookahead * 0.1)
+    if (_writeLineBufferTime > _kinematics->_motionParams.tPLookahead * 0.1)
     {
         if(flushWriteLineBuffer())
         {
@@ -109,6 +122,72 @@ COORD_MOTION_RETVAL CoordMotionClass::launchCoordMotion()
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
+/// Use a combination of Hardware and Software factors to
+/// achieve the desired FRO.
+///
+/// Start at a SW=1.0 and HW=1.0 and gradually change one or the other
+/// to move the current FRO toward our goal.  Whenever the total FRO
+/// is above the HW Limit adjust the SW factor.  Whenever below the FRO
+/// then adjust the HW Limit.
+COORD_MOTION_RETVAL CoordMotionClass::determineSoftwareHardwareFRO(
+        double &HW,
+        double &SW)
+{
+    HW = 1.0;
+    SW = 1.0;
+
+    /// check if current FRO is above the HW limit
+    if(1.0 > _hardwareFRORange)
+    {
+        /// yes it is above, SW should be used
+        if(1.0 <= _feedRateOverride)  // need to increase?
+        { /// yes, go all the way with SW
+            SW = _feedRateOverride;
+        }
+        else
+        { /// need to decrease
+            /// check if decreasing all the way to desired FRO
+            /// will put us below the HW Limit
+            if(_feedRateOverride < _hardwareFRORange)
+            {
+                /// yes it will, decrease SW to limit
+                SW = _hardwareFRORange;
+                /// then remainder with HW
+                HW = _feedRateOverride/SW;
+            }
+            else
+            {
+                /// no, do all with SW
+                SW = _feedRateOverride;
+            }
+        }
+    }
+    else
+    { /// Starting FRO=1.0 is below HW limit, HW should be used
+        if(1.0 <= _feedRateOverride)  // need to increase (above 1.0)?
+        {
+            /// yes, check if increasing all the way to desired FRO
+            /// will put us above the HW Limit?
+            if(_feedRateOverride > _hardwareFRORange)
+            {
+                /// yes it will, increase HW to limit
+                HW = _hardwareFRORange;
+                /// then remainder with SW
+                SW = _feedRateOverride / HW;
+            }
+            else
+            { /// no we will still be below HW limit.  Use HW entirely
+                HW = _feedRateOverride;
+            }
+        }
+        else
+        { /// need to decrease, do all with HW
+            HW = _feedRateOverride;
+        }
+    }
+    return(COORD_MOTION_OK);
+}
+///-----------------------------------------------------------------------------
 void CoordMotionClass::setAbort()
 {
     _abort = true;
@@ -147,22 +226,34 @@ bool CoordMotionClass::getHalt()
     return(_halt);
 }
 ///-----------------------------------------------------------------------------
-int CoordMotionClass::setMotionCmd(const char *s,BOOL FlushBeforeUnbufferedOperation)
+COORD_MOTION_RETVAL CoordMotionClass::setMotionCmd(
+                                        const char *s,
+                                        bool FlushBeforeUnbufferedOperation)
 {
     /// exit if we are simulating
     if(_simulate)
-        return 0;
+    {
+        return(COORD_MOTION_OK);
+    }
     if(FlushBeforeUnbufferedOperation)
     {
-        //if (FlushSegments()) {SetAbort(); return 1;}
-        //if (WaitForSegmentsFinished(TRUE)) {SetAbort(); return 1;}
+//        if(flushSegments())
+//        {
+//            setAbort();
+//            return(COORD_MOTION_FAIL);
+//        }
+//        if(waitForSegmentsFinished(true))
+//        {
+//            setAbort();
+//            return(COORD_MOTION_FAIL);
+//        }
     }
     if(_motion->writeLine(s))
     {
         setAbort();
-        return 1;
+        return(COORD_MOTION_FAIL);
     }
-    return 0;
+    return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::setAxisDefinitions(int x,int y,int z,int a,int b,int c)
@@ -433,7 +524,10 @@ COORD_MOTION_RETVAL CoordMotionClass::setFeedRateOverride(double v)
 ///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::setFeedRateRapidOverride(double v)
 {
-//	if (v > Kinematics->m_MotionParams.MaxRapidFRO) v = Kinematics->m_MotionParams.MaxRapidFRO;
+    if(v > _kinematics->_motionParams.maxRapidFRO)
+    {
+        v = _kinematics->_motionParams.maxRapidFRO;
+    }
     _feedRateRapidOverride = v;
     if(!_simulate)
     {
@@ -453,72 +547,6 @@ COORD_MOTION_RETVAL CoordMotionClass::setHardwareFRORange(double v)
 COORD_MOTION_RETVAL CoordMotionClass::setSpindleRateOverride(double v)
 {
     _spindleRateOverride = v;
-    return(COORD_MOTION_OK);
-}
-///-----------------------------------------------------------------------------
-/// Use a combination of Hardware and Software factors to
-/// achieve the desired FRO.
-///
-/// Start at a SW=1.0 and HW=1.0 and gradually change one or the other
-/// to move the current FRO toward our goal.  Whenever the total FRO
-/// is above the HW Limit adjust the SW factor.  Whenever below the FRO
-/// then adjust the HW Limit.
-COORD_MOTION_RETVAL CoordMotionClass::determineSoftwareHardwareFRO(
-        double &HW,
-        double &SW)
-{
-    HW = 1.0;
-    SW = 1.0;
-
-    /// check if current FRO is above the HW limit
-    if(1.0 > _hardwareFRORange)
-    {
-        /// yes it is above, SW should be used
-        if(1.0 <= _feedRateOverride)  // need to increase?
-        { /// yes, go all the way with SW
-            SW = _feedRateOverride;
-        }
-        else
-        { /// need to decrease
-            /// check if decreasing all the way to desired FRO
-            /// will put us below the HW Limit
-            if(_feedRateOverride < _hardwareFRORange)
-            {
-                /// yes it will, decrease SW to limit
-                SW = _hardwareFRORange;
-                /// then remainder with HW
-                HW = _feedRateOverride/SW;
-            }
-            else
-            {
-                /// no, do all with SW
-                SW = _feedRateOverride;
-            }
-        }
-    }
-    else
-    { /// Starting FRO=1.0 is below HW limit, HW should be used
-        if(1.0 <= _feedRateOverride)  // need to increase (above 1.0)?
-        {
-            /// yes, check if increasing all the way to desired FRO
-            /// will put us above the HW Limit?
-            if(_feedRateOverride > _hardwareFRORange)
-            {
-                /// yes it will, increase HW to limit
-                HW = _hardwareFRORange;
-                /// then remainder with SW
-                SW = _feedRateOverride / HW;
-            }
-            else
-            { /// no we will still be below HW limit.  Use HW entirely
-                HW = _feedRateOverride;
-            }
-        }
-        else
-        { /// need to decrease, do all with HW
-            HW = _feedRateOverride;
-        }
-    }
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------

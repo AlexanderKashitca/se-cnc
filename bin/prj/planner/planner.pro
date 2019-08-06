@@ -49,6 +49,7 @@ SOURCES += \
             main.cpp
 #--------------------------------------------------------------------------------
 HEADERS += \
+            ../../../src/planner/motion_param.h \
             ../../../src/planner/planner.h \
             ../../../src/reflexesII/RML/inc/RMLFlags.h \
             ../../../src/reflexesII/RML/inc/RMLInputParameters.h \

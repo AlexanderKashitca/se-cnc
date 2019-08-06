@@ -1,7 +1,7 @@
 ///-----------------------------------------------------------------------------
 #include "command.h"
 ///-----------------------------------------------------------------------------
-CommandClass::CommandClass()
+PARSER_SPACE::CommandClass::CommandClass()
 {
     QPair<int,QString> pair;
     motion_command.clear();
@@ -150,7 +150,7 @@ CommandClass::CommandClass()
     motion_command.push_back(pair);
 };
 ///-----------------------------------------------------------------------------
-CommandClass::~CommandClass()
+PARSER_SPACE::CommandClass::~CommandClass()
 {
 
 }

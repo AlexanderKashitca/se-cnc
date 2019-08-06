@@ -1,7 +1,7 @@
 ///-----------------------------------------------------------------------------
 #include "planner.h"
 ///-----------------------------------------------------------------------------
-PlannerClass::PlannerClass()
+PLANNER_SPACE::PlannerClass::PlannerClass()
 {
     _reflexxesDegreesOfFreedom   = 3;
     _reflexxesCycleTimeInSeconds = 0.001;
@@ -13,7 +13,7 @@ PlannerClass::PlannerClass()
     _REFLEXX_OP  = new RMLPositionOutputParameters(_reflexxesDegreesOfFreedom);
 }
 ///-----------------------------------------------------------------------------
-PlannerClass::~PlannerClass()
+PLANNER_SPACE::PlannerClass::~PlannerClass()
 {
     delete _REFLEXX_RML;
     delete _REFLEXX_IP;
@@ -33,7 +33,7 @@ _REFLEXX_IP->MaxJerkVector->VecData              [0] =    100.0      ;
 _REFLEXX_IP->MaxJerkVector->VecData              [1] =    100.0      ;
 _REFLEXX_IP->MaxJerkVector->VecData              [2] =    100.0      ;
 */
-void PlannerClass::ReflexxesSetCurrentPosition(QVector<double> position)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetCurrentPosition(QVector<double> position)
 {
     int axis;
     QVector<double>::iterator it_pos;
@@ -47,7 +47,7 @@ void PlannerClass::ReflexxesSetCurrentPosition(QVector<double> position)
     }
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::ReflexxesSetCurrentVelocity(QVector<double> velocity)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetCurrentVelocity(QVector<double> velocity)
 {
     int axis;
     QVector<double>::iterator it_vel;
@@ -61,7 +61,7 @@ void PlannerClass::ReflexxesSetCurrentVelocity(QVector<double> velocity)
     }
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::ReflexxesSetCurrentAcceleration(QVector<double> acceleration)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetCurrentAcceleration(QVector<double> acceleration)
 {
     int axis;
     QVector<double>::iterator it_accsel;
@@ -75,7 +75,7 @@ void PlannerClass::ReflexxesSetCurrentAcceleration(QVector<double> acceleration)
     }
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::ReflexxesSetTargetPosition(QVector<double> position)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetTargetPosition(QVector<double> position)
 {
     int axis;
     QVector<double>::iterator it_pos;
@@ -89,7 +89,7 @@ void PlannerClass::ReflexxesSetTargetPosition(QVector<double> position)
     }
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::ReflexxesSetTargetVelocity(QVector<double> velocity)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetTargetVelocity(QVector<double> velocity)
 {
     int axis;
     QVector<double>::iterator it_vel;
@@ -103,7 +103,7 @@ void PlannerClass::ReflexxesSetTargetVelocity(QVector<double> velocity)
     }
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::ReflexxesSetSelection(QVector<bool> enable)
+void PLANNER_SPACE::PlannerClass::ReflexxesSetSelection(QVector<bool> enable)
 {
     int axis;
     QVector<bool>::iterator it_selection;
@@ -117,7 +117,7 @@ void PlannerClass::ReflexxesSetSelection(QVector<bool> enable)
     }
 }
 ///-----------------------------------------------------------------------------
-bool PlannerClass::ReflexxesValidity()
+bool PLANNER_SPACE::PlannerClass::ReflexxesValidity()
 {
     return(_REFLEXX_IP->CheckForValidity());
 }

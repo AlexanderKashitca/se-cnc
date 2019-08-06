@@ -53,10 +53,8 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../../src/kinematics/kinematics.cpp \
-		../../../src/kinematics/kinematics3Rod.cpp \
 		../../prj/kinematics/main.cpp 
 OBJECTS       = kinematics.o \
-		kinematics3Rod.o \
 		main.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
@@ -251,9 +249,7 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/kinematics/kinematics.pro ../../../src/kinematics/kinematics.h \
-		../../../src/kinematics/kinematics3Rod.h ../../../src/kinematics/kinematics.cpp \
-		../../../src/kinematics/kinematics3Rod.cpp \
+		../../prj/kinematics/kinematics.pro ../../../src/kinematics/kinematics.h ../../../src/kinematics/kinematics.cpp \
 		../../prj/kinematics/main.cpp
 QMAKE_TARGET  = kinematics
 DESTDIR       = 
@@ -672,8 +668,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/kinematics/kinematics.h ../../../src/kinematics/kinematics3Rod.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/kinematics/kinematics.cpp ../../../src/kinematics/kinematics3Rod.cpp ../../prj/kinematics/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/kinematics/kinematics.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/kinematics/kinematics.cpp ../../prj/kinematics/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -722,9 +718,8 @@ compiler_clean: compiler_moc_predefs_clean
 ####### Compile
 
 kinematics.o: ../../../src/kinematics/kinematics.cpp ../../../src/kinematics/kinematics.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmath.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
@@ -746,6 +741,10 @@ kinematics.o: ../../../src/kinematics/kinematics.cpp ../../../src/kinematics/kin
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
@@ -754,51 +753,8 @@ kinematics.o: ../../../src/kinematics/kinematics.cpp ../../../src/kinematics/kin
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
-		../../../src/kinematics/kinematics3Rod.h \
-		../../../src/kinematics/kinematics5AxisGimbalAB.h \
-		../../../src/kinematics/kinematics5AxisGimbalCB.h \
-		../../../src/kinematics/kinematics5AxisTableAC.h \
-		../../../src/kinematics/kinematics5AxisTableBC.h \
-		../../../src/kinematics/kinematics5AxisTableAGimbalB.h \
-		../../../src/kinematics/kinematicsGeppetto.h \
-		../../../src/kinematics/kinematicsGeppettoExtrude.h
+		../../../src/planner/motion_param.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics.o ../../../src/kinematics/kinematics.cpp
-
-kinematics3Rod.o: ../../../src/kinematics/kinematics3Rod.cpp ../../../src/kinematics/kinematics3Rod.h \
-		../../../src/kinematics/kinematics.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
-		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o kinematics3Rod.o ../../../src/kinematics/kinematics3Rod.cpp
 
 main.o: ../../prj/kinematics/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \

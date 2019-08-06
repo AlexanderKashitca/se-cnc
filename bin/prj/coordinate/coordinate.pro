@@ -22,6 +22,7 @@ LIBS        += -L/usr/local/lib/ -lftd2xx
 #-------------------------------------------------------------------------------
 SOURCES += \
             ../../../src/coordinate/coordinate.cpp \
+            ../../../src/kinematics/kinematics.cpp \
             ../../../src/motion/common.cpp         \
             ../../../src/motion/direct.cpp         \
             ../../../src/motion/motion_io.cpp      \
@@ -31,12 +32,13 @@ HEADERS += \
             ../../../src/coordinate/coordinate.h \
             ../../../src/ftdi/WinTypes.h         \
             ../../../src/ftdi/ftd2xx.h           \
+            ../../../src/kinematics/kinematics.h \
             ../../../src/motion/common.h         \
             ../../../src/motion/direct.h         \
             ../../../src/motion/motion_io.h
 #-------------------------------------------------------------------------------
 # Default rules for deployment.
-#qnx: target.path = /tmp/$${TARGET}/bin
-#else: unix:!android: target.path = /opt/$${TARGET}/bin
-#!isEmpty(target.path): INSTALLS += target
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 #-------------------------------------------------------------------------------

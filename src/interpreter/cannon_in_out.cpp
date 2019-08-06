@@ -2,6 +2,8 @@
 #include "cannon_in_out.h"
 #include "rs274ngc.h"
 ///-----------------------------------------------------------------------------
+using namespace INTERPRETER_SPACE;
+///-----------------------------------------------------------------------------
 /**
  * @note static inicialization
  */

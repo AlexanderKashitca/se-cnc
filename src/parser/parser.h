@@ -7,42 +7,44 @@
 ///-----------------------------------------------------------------------------
 #include "command.h"
 ///-----------------------------------------------------------------------------
-
-typedef enum
+namespace PARSER_SPACE
 {
-    ARGUMENT_TYPE_NO     = 0,
-    ARGUMENT_TYPE_INT    = 1,
-    ARGUMENT_TYPE_DOUBLE = 2,
-    ARGUMENT_TYPE_STRING = 3,
-    ARGUMENT_TYPE_ARC    = 4,
-    ARGUMENT_TYPE_ORIENT = 5
-}ARGUMENT_TYPE;
-///-----------------------------------------------------------------------------
-class ParserDataClass
-{
-    private :
-        QFile*  _file_in;
-        QString _filename;
-        CommandClass* _command;
+    typedef enum
+    {
+        ARGUMENT_TYPE_NO     = 0,
+        ARGUMENT_TYPE_INT    = 1,
+        ARGUMENT_TYPE_DOUBLE = 2,
+        ARGUMENT_TYPE_STRING = 3,
+        ARGUMENT_TYPE_ARC    = 4,
+        ARGUMENT_TYPE_ORIENT = 5
+    }ARGUMENT_TYPE;
+    ///-----------------------------------------------------------------------------
+    class ParserDataClass
+    {
+        private :
+            QFile*  _file_in;
+            QString _filename;
+            CommandClass* _command;
 
-        QString         _line;
-        QVector<double> _arg_double;
-        QVector<int>    _arg_int;
-        QString         _arg_string;
+            QString         _line;
+            QVector<double> _arg_double;
+            QVector<int>    _arg_int;
+            QString         _arg_string;
 
-        void GetArguments(ARGUMENT_TYPE type);
+            void GetArguments(ARGUMENT_TYPE type);
 
-    public :
-        ParserDataClass();
-        ~ParserDataClass();
-        ParserDataClass(const ParserDataClass &);
+        public :
+            ParserDataClass();
+            ~ParserDataClass();
+            ParserDataClass(const ParserDataClass &);
 
 
-        bool open(QString file_path,QString file_name);
-        void close();
-        bool parse();
+            bool open(QString file_path,QString file_name);
+            void close();
+            bool parse();
 
-};
+    };
+} /// end PARSER_SPACE
 ///-----------------------------------------------------------------------------
 #endif /// PARSERCLDATACLASS_H
 ///-----------------------------------------------------------------------------

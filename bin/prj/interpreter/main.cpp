@@ -4,6 +4,8 @@
 ///-----------------------------------------------------------------------------
 #include "../../../src/interpreter/interpreter.h"
 ///-----------------------------------------------------------------------------
+using namespace INTERPRETER_SPACE;
+///-----------------------------------------------------------------------------
 const QString tool_path = "/home/evil/Programming/Qt/se-cnc/bin/build/build-interpreter-Desktop_Qt_5_12_3_GCC_64bit-Debug";
 const QString tool_name = "rs274ngc.tool_default";
 

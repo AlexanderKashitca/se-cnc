@@ -1,7 +1,7 @@
 ///-----------------------------------------------------------------------------
 #include "direct.h"
 ///-----------------------------------------------------------------------------
-MotionDirectClass::MotionDirectClass()
+MOTION_DIRECT_SPACE::MotionDirectClass::MotionDirectClass()
 {
     library.setFileName("libftd2xx.so");
     if(!library.load())
@@ -14,13 +14,13 @@ MotionDirectClass::MotionDirectClass()
     }
 }
 ///-----------------------------------------------------------------------------
-MotionDirectClass::~MotionDirectClass()
+MOTION_DIRECT_SPACE::MotionDirectClass::~MotionDirectClass()
 {
     library.unload();
     MotionIO.~MotionIOClass();
 }
 ///-----------------------------------------------------------------------------
-bool MotionDirectClass::getFtdiLibraryLoad()
+bool MOTION_DIRECT_SPACE::MotionDirectClass::getFtdiLibraryLoad()
 {
     return(_ftdiLibraryLoad);
 }
@@ -39,7 +39,7 @@ bool MotionDirectClass::getFtdiLibraryLoad()
 //
 // If a new Board Identifier is encountered the first available MotionIO
 // object is assigned to it
-///int MotionDirectClass::mapBoardToIndex(int BoardID)
+///int MOTION_DIRECT_SPACE::MotionDirectClass::mapBoardToIndex(int BoardID)
 ///{
 ///
 ///    int i;
@@ -92,7 +92,7 @@ bool MotionDirectClass::getFtdiLibraryLoad()
 ///    return i;
 ///}
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::listLocations(int *nlocations, int *list)
+int MOTION_DIRECT_SPACE::MotionDirectClass::listLocations(int *nlocations, int *list)
 {
     FT_DEVICE_LIST_INFO_NODE *devInfo;
     FT_STATUS ftStatus;
@@ -135,88 +135,88 @@ int MotionDirectClass::listLocations(int *nlocations, int *list)
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::writeLineReadLine(const char *s,char *response)
+int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineReadLine(const char *s,char *response)
 {
     return MotionIO.writeLineReadLine(s, response);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::writeLine(const char *s)
+int MOTION_DIRECT_SPACE::MotionDirectClass::writeLine(const char *s)
 {
     return MotionIO.writeLine(s);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::writeLineWithEcho(const char *s)
+int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineWithEcho(const char *s)
 {
     return MotionIO.writeLineWithEcho(s);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::readLineTimeOut(char *buf,int TimeOutms)
+int MOTION_DIRECT_SPACE::MotionDirectClass::readLineTimeOut(char *buf,int TimeOutms)
 {
     return MotionIO.readLineTimeOut(buf,TimeOutms);
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::failed()
+int MOTION_DIRECT_SPACE::MotionDirectClass::failed()
 {
     return MotionIO.failed();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::disconnect()
+int MOTION_DIRECT_SPACE::MotionDirectClass::disconnect()
 {
     return MotionIO.disconnect();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::firmwareVersion()
+int MOTION_DIRECT_SPACE::MotionDirectClass::firmwareVersion()
 {
     return MotionIO.firmwareVersion();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::checkForReady()
+int MOTION_DIRECT_SPACE::MotionDirectClass::checkForReady()
 {
     return MotionIO.checkForReady();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::motionLock(char *CallerID)
+int MOTION_DIRECT_SPACE::MotionDirectClass::motionLock(char *CallerID)
 {
     return MotionIO.motionLock(CallerID);
 }
 ///-----------------------------------------------------------------------------
-QString MotionDirectClass::usbLocation()
+QString MOTION_DIRECT_SPACE::MotionDirectClass::usbLocation()
 {
     return MotionIO.usbLocation();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::motionLockRecovery()
+int MOTION_DIRECT_SPACE::MotionDirectClass::motionLockRecovery()
 {
     return MotionIO.motionLockRecovery();
 }
 ///-----------------------------------------------------------------------------
-void MotionDirectClass::releaseToken()
+void MOTION_DIRECT_SPACE::MotionDirectClass::releaseToken()
 {
     MotionIO.releaseToken();
 }
 ///-----------------------------------------------------------------------------
-int  MotionDirectClass::serviceConsole()
+int  MOTION_DIRECT_SPACE::MotionDirectClass::serviceConsole()
 {
     return MotionIO.serviceConsole();
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::setConsoleCallback(SERVER_CONSOLE_HANDLER *ch)
+int MOTION_DIRECT_SPACE::MotionDirectClass::setConsoleCallback(SERVER_CONSOLE_HANDLER *ch)
 {
     MotionIO.setConsoleCallback(ch);
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MotionDirectClass::nInstances()
+int MOTION_DIRECT_SPACE::MotionDirectClass::nInstances()
 {
     return(1);
 }
 ///-----------------------------------------------------------------------------
-const char * MotionDirectClass::getErrMsg()
+const char * MOTION_DIRECT_SPACE::MotionDirectClass::getErrMsg()
 {
     return MotionIO._errMsg.toStdString().c_str();
 }
 ///-----------------------------------------------------------------------------
-void MotionDirectClass::clearErrMsg()
+void MOTION_DIRECT_SPACE::MotionDirectClass::clearErrMsg()
 {
     MotionIO._errMsg="";
 }

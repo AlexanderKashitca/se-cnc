@@ -3,7 +3,7 @@
 ///-----------------------------------------------------------------------------
 #include <QDebug>
 ///-----------------------------------------------------------------------------
-ParserDataClass::ParserDataClass()
+PARSER_SPACE::ParserDataClass::ParserDataClass()
 {
     _command  = new CommandClass;
     _file_in  = new QFile;
@@ -13,18 +13,18 @@ ParserDataClass::ParserDataClass()
     _arg_string.clear();
 }
 ///-----------------------------------------------------------------------------
-ParserDataClass::~ParserDataClass()
+PARSER_SPACE::ParserDataClass::~ParserDataClass()
 {
     delete _command;
     delete _file_in;
 }
 ///-----------------------------------------------------------------------------
-void ParserDataClass::close()
+void PARSER_SPACE::ParserDataClass::close()
 {
     _file_in->close();
 }
 ///-----------------------------------------------------------------------------
-bool ParserDataClass::open(QString file_path,QString file_name)
+bool PARSER_SPACE::ParserDataClass::open(QString file_path,QString file_name)
 {
     QString file_name_in;
 
@@ -46,7 +46,7 @@ bool ParserDataClass::open(QString file_path,QString file_name)
     return(true);
 }
 ///-----------------------------------------------------------------------------
-bool ParserDataClass::parse()
+bool PARSER_SPACE::ParserDataClass::parse()
 {
     int     index(-1);
     QString command;
@@ -125,7 +125,7 @@ bool ParserDataClass::parse()
     return(true);
 }
 ///-----------------------------------------------------------------------------
-void ParserDataClass::GetArguments(ARGUMENT_TYPE type)
+void PARSER_SPACE::ParserDataClass::GetArguments(ARGUMENT_TYPE type)
 {
     int end;
     int begin;
