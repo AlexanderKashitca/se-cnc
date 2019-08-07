@@ -31,7 +31,7 @@ MotionIOClass::~MotionIOClass()
 }
 ///-----------------------------------------------------------------------------
 // save the error message to be piped back to caller
-int MotionIOClass::errorMessageBox(const char *s)
+int MotionIOClass::errorMessageBox(QString s)
 {
     _errMsg = s;
     return 0;
@@ -154,7 +154,7 @@ int MotionIOClass::connect()
     _saveChars[0] = 0; /// start anew
     if(!requestedDeviceAvail(&reason))
     {
-        errorMessageBox(reason.toStdString().c_str());
+        errorMessageBox(reason);
         return 1;
     }
     /// FT_ListDevices OK, number of devices connected is in numDevs
@@ -220,7 +220,7 @@ void MotionIOClass::charToUpper(char* mass,unsigned int length)
         }
     }
 }
-int MotionIOClass::checkForReady()
+SE_MOTION_STATE MotionIOClass::checkForReady()
 {
 	char buf[257];
 	char *beg;
@@ -230,9 +230,9 @@ int MotionIOClass::checkForReady()
 
     while(1)
 	{
-        if (_connected)
+        if(_connected)
 		{
-            if (!numberBytesAvailToRead(&nbytes,true) && nbytes > 0)
+            if(!numberBytesAvailToRead(&nbytes,true) && nbytes > 0)
 			{
                 if(readLineTimeOutRaw(buf,100) == 0)
 				{
@@ -941,9 +941,8 @@ QString MotionIOClass::usbLocation()
 /// returns 1 SE_MOTION_IN_USE if already in use
 /// returns 2 SE_MOTION_NOT_CONNECTED if not able to connect
 /// stronger than a _mutex lock because it protects against the same thread
-int MotionIOClass::motionLock(char *CallerID)
+SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
 {
-	int result;
     if(!_mutex->tryLock(3000))
     {
         return SE_MOTION_NOT_CONNECTED;
@@ -974,25 +973,25 @@ int MotionIOClass::motionLock(char *CallerID)
         {
             _lastCallerID = CallerID;
         }
-        result = SE_MOTION_LOCKED;
+        _mutex->unlock();
+        return(SE_MOTION_LOCKED);
 	}
 	else
 	{
-        result = SE_MOTION_IN_USE;
+        _mutex->unlock();
+        return(SE_MOTION_IN_USE);
 	}
-    _mutex->unlock();
-	return result;
 }
 ///-----------------------------------------------------------------------------
 /// Special routine to connect to KMotion board
 /// without aborting out of the recovery Bootloader
-int MotionIOClass::motionLockRecovery()
+SE_MOTION_LOCK_STATE MotionIOClass::motionLockRecovery()
 {
-    int  result;
+    SE_MOTION_LOCK_STATE result;
     char CallerID[] = "KMotionLockRecovery";
-    _sendAbortOnConnect=false;
+    _sendAbortOnConnect = false;
     result = motionLock(&CallerID[0]);
-    _sendAbortOnConnect=true;
+    _sendAbortOnConnect = true;
     return result;
 }
 ///-----------------------------------------------------------------------------

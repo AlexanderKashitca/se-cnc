@@ -19,21 +19,29 @@ namespace MOTION_DIRECT_SPACE
             MotionDirectClass(const MotionDirectClass&) = delete;
             ~MotionDirectClass();
             bool    getFtdiLibraryLoad();
-            ///int     mapBoardToIndex(int BoardID);
-            int     writeLineReadLine(const char *s,char *response);
-            int     writeLine(const char *s);
-            int     writeLineWithEcho(const char *s);
-            int     readLineTimeOut(char *buf,int TimeOutms);
-            int     listLocations(int *nlocations,int *list);
-            void    waitToken(char *CallerID = nullptr);
-            int     motionLock(char *CallerID = nullptr);
+
             QString usbLocation();
-            int     motionLockRecovery();
-            void    releaseToken();
+            int     listLocations(int *nlocations,int *list);
+            SE_MOTION_LOCK_STATE     motionLock(char *CallerID = nullptr);
+            SE_MOTION_LOCK_STATE     motionLockRecovery();
+            void    releaseToken(); /// ???
+            SE_MOTION_STATE checkForReady();
             int     failed();
             int     disconnect();
+
+
+            ///int     mapBoardToIndex(int BoardID);
+            int     writeLine(const char *s);
+            int     writeLineReadLine(const char *s,char *response);
+            int     writeLineWithEcho(const char *s);
+            int     readLineTimeOut(char *buf,int TimeOutms);
+            ///void    waitToken(char *CallerID = nullptr);
+
+
+
+
             int     firmwareVersion();
-            int     checkForReady();
+
             int     serviceConsole();
             const char* getErrMsg();
             void    clearErrMsg();

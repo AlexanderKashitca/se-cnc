@@ -137,7 +137,7 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::listLocations(int *nlocations, int *
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineReadLine(const char *s,char *response)
 {
-    return MotionIO.writeLineReadLine(s, response);
+    return MotionIO.writeLineReadLine(s,response);
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLine(const char *s)
@@ -170,24 +170,24 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::firmwareVersion()
     return MotionIO.firmwareVersion();
 }
 ///-----------------------------------------------------------------------------
-int MOTION_DIRECT_SPACE::MotionDirectClass::checkForReady()
+SE_MOTION_STATE MOTION_DIRECT_SPACE::MotionDirectClass::checkForReady()
 {
     return MotionIO.checkForReady();
 }
 ///-----------------------------------------------------------------------------
-int MOTION_DIRECT_SPACE::MotionDirectClass::motionLock(char *CallerID)
+SE_MOTION_LOCK_STATE MOTION_DIRECT_SPACE::MotionDirectClass::motionLock(char *CallerID)
 {
     return MotionIO.motionLock(CallerID);
+}
+///-----------------------------------------------------------------------------
+SE_MOTION_LOCK_STATE MOTION_DIRECT_SPACE::MotionDirectClass::motionLockRecovery()
+{
+    return MotionIO.motionLockRecovery();
 }
 ///-----------------------------------------------------------------------------
 QString MOTION_DIRECT_SPACE::MotionDirectClass::usbLocation()
 {
     return MotionIO.usbLocation();
-}
-///-----------------------------------------------------------------------------
-int MOTION_DIRECT_SPACE::MotionDirectClass::motionLockRecovery()
-{
-    return MotionIO.motionLockRecovery();
 }
 ///-----------------------------------------------------------------------------
 void MOTION_DIRECT_SPACE::MotionDirectClass::releaseToken()
@@ -211,7 +211,7 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::nInstances()
     return(1);
 }
 ///-----------------------------------------------------------------------------
-const char * MOTION_DIRECT_SPACE::MotionDirectClass::getErrMsg()
+const char* MOTION_DIRECT_SPACE::MotionDirectClass::getErrMsg()
 {
     return MotionIO._errMsg.toStdString().c_str();
 }

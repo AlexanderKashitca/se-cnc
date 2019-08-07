@@ -9,6 +9,11 @@
 ///-----------------------------------------------------------------------------
 namespace SYSTEM_SPACE
 {
+    typedef enum
+    {
+        SYSTEM_OK   = 0,
+        SYSTEM_FAIL = 1
+    }SYSTEM_STATE;
     class SystemClass
     {
         private :
@@ -19,6 +24,8 @@ namespace SYSTEM_SPACE
         public :
             SystemClass();
             ~SystemClass();
+            SYSTEM_STATE initialization();
+            SYSTEM_STATE reInitialization();
     };
 } /// end SYSTEM_SPACE
 ///-----------------------------------------------------------------------------

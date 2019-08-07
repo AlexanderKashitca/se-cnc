@@ -18,12 +18,38 @@ CoordMotionClass::~CoordMotionClass()
     delete _kinematics;
 }
 ///-----------------------------------------------------------------------------
-int CoordMotionClass::initialization()
+#include <QDebug>
+COORD_MOTION_RETVAL CoordMotionClass::initialization()
 {
+    SE_MOTION_STATE state;
     /// TODO
-    /// init direct channel
+    if(_motion == nullptr)
+        return(COORD_MOTION_FAIL);
 
-    return(0);
+    if(!_motion->getFtdiLibraryLoad())
+    {
+        qDebug() << "FTDI Library not loaded." << endl;
+        return(COORD_MOTION_FAIL);
+    }
+
+    if(_motion->motionLock() != SE_MOTION_LOCKED)
+    {
+        qDebug() << "SE MOTION not locked." << endl;
+        return(COORD_MOTION_FAIL);
+    }
+    /// checking
+    state = _motion->checkForReady();
+    switch(state)
+    {
+        case SE_MOTION_OK      : break;
+        case SE_MOTION_TIMEOUT : return(COORD_MOTION_FAIL);
+        case SE_MOTION_READY   : break;
+        case SE_MOTION_ERROR   : return(COORD_MOTION_FAIL);
+    }
+
+    qDebug() << "SE MOTION initialization successful.";
+    qDebug() << "Serial Number - " << _motion->usbLocation();
+    return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::putWriteLineBuffer(QString s,double Time)

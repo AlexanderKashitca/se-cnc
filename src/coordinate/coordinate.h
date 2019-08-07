@@ -157,7 +157,7 @@ namespace COORD_MOTION_SPACE
             void operator= (const CoordMotionClass&)  = delete;
             ~CoordMotionClass();
 
-            int initialization();
+            COORD_MOTION_RETVAL initialization();
             KINEMATICS_SPACE::KinematicsClass* _kinematics;
 
 

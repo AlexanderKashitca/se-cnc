@@ -8,6 +8,8 @@
 #include "../ftdi/ftd2xx.h"
 #include "../dsp/PC-DSP.h"
 ///-----------------------------------------------------------------------------
+#include "common.h"
+///-----------------------------------------------------------------------------
 #ifndef MAX_LINE
     #define MAX_LINE    2560
 #endif
@@ -27,7 +29,7 @@ class MotionIOClass
         bool    _sendAbortOnConnect;
         bool    _connected;
 
-        int     errorMessageBox(const char *s);
+        int     errorMessageBox(QString s);
         DWORD   getCurrentTimeMs(void);
         int     sleep(DWORD miliseconds);
         bool    requestedDeviceAvail(QString *reason);
@@ -58,11 +60,11 @@ class MotionIOClass
         void operator=(const MotionIOClass&)= delete; /// desable overload operator=
         virtual ~MotionIOClass();
 
-        int     motionLock(char *CallerID);
-        int     motionLockRecovery();
+        SE_MOTION_LOCK_STATE    motionLock(char *CallerID);
+        SE_MOTION_LOCK_STATE    motionLockRecovery();
         QString usbLocation();
         void    releaseToken();
-        int     checkForReady();
+        SE_MOTION_STATE checkForReady();
         int     failed();
         int     disconnect();
         int     firmwareVersion();
