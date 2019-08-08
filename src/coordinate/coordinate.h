@@ -161,6 +161,8 @@ namespace COORD_MOTION_SPACE
             void operator= (const CoordMotionClass&)  = delete;
             ~CoordMotionClass();
 
+            QString getLastErrorMessage();
+
             void setDebug(bool enable);
             bool getDebug();
 

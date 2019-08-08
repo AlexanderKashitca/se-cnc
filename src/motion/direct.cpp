@@ -17,12 +17,17 @@ MOTION_DIRECT_SPACE::MotionDirectClass::MotionDirectClass()
 MOTION_DIRECT_SPACE::MotionDirectClass::~MotionDirectClass()
 {
     library.unload();
-    MotionIO.~MotionIOClass();
+    _motionIO.~MotionIOClass();
 }
 ///-----------------------------------------------------------------------------
 bool MOTION_DIRECT_SPACE::MotionDirectClass::getFtdiLibraryLoad()
 {
     return(_ftdiLibraryLoad);
+}
+///-----------------------------------------------------------------------------
+QString MOTION_DIRECT_SPACE::MotionDirectClass::getLastErrorMessage()
+{
+    return(_motionIO.getLastErrorMessage());
 }
 ///-----------------------------------------------------------------------------
 // Maps a specified Board Identifiers to a MotionIO Index (or object)
@@ -52,9 +57,9 @@ bool MOTION_DIRECT_SPACE::MotionDirectClass::getFtdiLibraryLoad()
 ///    /// to that USB location
 ///    for(i = 0;i < MAX_BOARDS;i++)
 ///    {
-///        if(MotionIO.BoardIDAssigned &&
-///           MotionIO.m_Connected &&
-///           MotionIO.USB_Loc_ID == BoardID
+///        if(_motionIO.BoardIDAssigned &&
+///           _motionIO.m_Connected &&
+///           _motionIO.USB_Loc_ID == BoardID
 ///        )
 ///        { /// found previously assigned matching Location use it
 ///            return i;
@@ -62,20 +67,20 @@ bool MOTION_DIRECT_SPACE::MotionDirectClass::getFtdiLibraryLoad()
 ///    }
 ///    for(i = 0;i < MAX_BOARDS;i++)
 ///    {
-///        if(MotionIO.BoardIDAssigned)
+///        if(_motionIO.BoardIDAssigned)
 ///        {
-///            if(MotionIO.USB_Loc_ID == BoardID)
+///            if(_motionIO.USB_Loc_ID == BoardID)
 ///            { /// found previously assigned matching object, return it
 ///                return i;
 ///            }
 ///        }
 ///    }
 ///    /// BoardID never before encountered
-///    MotionIO.Mutex->lock(); /// better lock while assigning objects
+///    _motionIO.Mutex->lock(); /// better lock while assigning objects
 ///    /// find an available object to handle it
 ///    for(i = 0;i < MAX_BOARDS;i++)
 ///    {
-///        if(!MotionIO.BoardIDAssigned)
+///        if(!_motionIO.BoardIDAssigned)
 ///        {
 ///            break;
 ///        }
@@ -83,12 +88,12 @@ bool MOTION_DIRECT_SPACE::MotionDirectClass::getFtdiLibraryLoad()
 ///    if(i == MAX_BOARDS)
 ///    {
 ///		AfxMessageBox("Fatal Error: Too Many Board IDs used",MB_ICONSTOP|MB_OK);
-///     MotionIO.Mutex->unlock();
+///     _motionIO.Mutex->unlock();
 ///        exit(1);
 ///    }
-///    MotionIO.BoardIDAssigned = true;
-///    MotionIO.USB_Loc_ID = BoardID; /// assign the ID
-/////    MotionIO.Mutex->unlock();
+///    _motionIO.BoardIDAssigned = true;
+///    _motionIO.USB_Loc_ID = BoardID; /// assign the ID
+/////    _motionIO.Mutex->unlock();
 ///    return i;
 ///}
 ///-----------------------------------------------------------------------------
@@ -137,72 +142,72 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::listLocations(int *nlocations, int *
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineReadLine(const char *s,char *response)
 {
-    return MotionIO.writeLineReadLine(s,response);
+    return _motionIO.writeLineReadLine(s,response);
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLine(const char *s)
 {
-    return MotionIO.writeLine(s);
+    return _motionIO.writeLine(s);
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineWithEcho(const char *s)
 {
-    return MotionIO.writeLineWithEcho(s);
+    return _motionIO.writeLineWithEcho(s);
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::readLineTimeOut(char *buf,int TimeOutms)
 {
-    return MotionIO.readLineTimeOut(buf,TimeOutms);
+    return _motionIO.readLineTimeOut(buf,TimeOutms);
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::failed()
 {
-    return MotionIO.failed();
+    return _motionIO.failed();
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::disconnect()
 {
-    return MotionIO.disconnect();
+    return _motionIO.disconnect();
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::firmwareVersion()
 {
-    return MotionIO.firmwareVersion();
+    return _motionIO.firmwareVersion();
 }
 ///-----------------------------------------------------------------------------
 SE_MOTION_STATE MOTION_DIRECT_SPACE::MotionDirectClass::checkForReady()
 {
-    return MotionIO.checkForReady();
+    return _motionIO.checkForReady();
 }
 ///-----------------------------------------------------------------------------
 SE_MOTION_LOCK_STATE MOTION_DIRECT_SPACE::MotionDirectClass::motionLock(char *CallerID)
 {
-    return MotionIO.motionLock(CallerID);
+    return _motionIO.motionLock(CallerID);
 }
 ///-----------------------------------------------------------------------------
 SE_MOTION_LOCK_STATE MOTION_DIRECT_SPACE::MotionDirectClass::motionLockRecovery()
 {
-    return MotionIO.motionLockRecovery();
+    return _motionIO.motionLockRecovery();
 }
 ///-----------------------------------------------------------------------------
 QString MOTION_DIRECT_SPACE::MotionDirectClass::usbLocation()
 {
-    return MotionIO.usbLocation();
+    return _motionIO.usbLocation();
 }
 ///-----------------------------------------------------------------------------
 void MOTION_DIRECT_SPACE::MotionDirectClass::releaseToken()
 {
-    MotionIO.releaseToken();
+    _motionIO.releaseToken();
 }
 ///-----------------------------------------------------------------------------
 int  MOTION_DIRECT_SPACE::MotionDirectClass::serviceConsole()
 {
-    return MotionIO.serviceConsole();
+    return _motionIO.serviceConsole();
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::setConsoleCallback(SERVER_CONSOLE_HANDLER *ch)
 {
-    MotionIO.setConsoleCallback(ch);
+    _motionIO.setConsoleCallback(ch);
     return 0;
 }
 ///-----------------------------------------------------------------------------
@@ -213,11 +218,11 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::nInstances()
 ///-----------------------------------------------------------------------------
 const char* MOTION_DIRECT_SPACE::MotionDirectClass::getErrMsg()
 {
-    return MotionIO._errMsg.toStdString().c_str();
+    return _motionIO._errMsg.toStdString().c_str();
 }
 ///-----------------------------------------------------------------------------
 void MOTION_DIRECT_SPACE::MotionDirectClass::clearErrMsg()
 {
-    MotionIO._errMsg="";
+    _motionIO._errMsg="";
 }
 ///-----------------------------------------------------------------------------

@@ -41,6 +41,8 @@ SYSTEM_STATE SystemClass::initialization()
     /// initialization coordinate system
     if(_coordinate->initialization() != COORD_MOTION_OK)
     {
+        if(_debug)
+            qDebug() << _coordinate->getLastErrorMessage();
         return(SYSTEM_FAIL);
     }
     /// initialization interpreter

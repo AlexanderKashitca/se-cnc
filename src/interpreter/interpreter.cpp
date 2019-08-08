@@ -94,8 +94,6 @@ INTERPRETER_STATE InterpreterClass::setProgramInFile(QString file_path,QString f
     _program_in_file.append(file_path);
     _program_in_file.append("/");
     _program_in_file.append(file_name);
-    if(_debug)
-        qDebug() << "_program_in_file size - " << _program_in_file.size() << endl;
 
     if(!QFile::exists(_program_in_file))
     {
@@ -110,8 +108,6 @@ INTERPRETER_STATE InterpreterClass::setProgramInFile(QString file_path,QString f
  * @param file_name - program file name
  * @return INTERPRETER_STATE
  */
-#include <stdio.h>
-#include <iostream>
 INTERPRETER_STATE InterpreterClass::setProgramOutFile(QString file_path,QString file_name)
 {
     QFile file_out;
@@ -130,7 +126,6 @@ INTERPRETER_STATE InterpreterClass::setProgramOutFile(QString file_path,QString 
     {
         return(INTERPRETER_FILE_NOT_EXIST);
     }
-
     ///_output_progra_file = stdout;
     _output_program_file = new QFile;
     if(_output_program_file == nullptr)
@@ -146,7 +141,6 @@ INTERPRETER_STATE InterpreterClass::setProgramOutFile(QString file_path,QString 
     file_out.close();
     return(INTERPRETER_OK);
 }
-
 ///-----------------------------------------------------------------------------
 /**
  * @brief InterpreterClass::SetParameterFile
@@ -220,7 +214,7 @@ INTERPRETER_STATE InterpreterClass::readToolFile()
     }
     /// reading tool file and set tool parameter table
     if(_debug)
-        qDebug() << "============ READ TOOL TABLE FILE ============ " << endl;
+        qDebug() << "============ READ TOOL TABLE FILE ============ ";
     while(!in.atEnd())
     {
         line = in.readLine();
@@ -269,10 +263,12 @@ INTERPRETER_STATE InterpreterClass::readToolFile()
                      << tool_id       << '\t'
                      << tool_offset   << '\t'
                      << tool_diameter << '\t'
-                     << endl;
+                    ;
         }
 
     }
+    if(_debug)
+        qDebug() << "============================================== ";
     return(INTERPRETER_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -356,7 +352,7 @@ INTERPRETER_STATE InterpreterClass::loadFromFile(int print_stack)
     {
         status = rs274ngc.rs274ngc_read(nullptr);
         if(_debug)
-            qDebug() << "rs274ngc.rs274ngc_read - " << status << endl;
+            qDebug() << "rs274ngc.rs274ngc_read - " << status;
         if(status == RS274NGC_ENDFILE)
             break;
         if((status != RS274NGC_OK) && (status != RS274NGC_EXECUTE_FINISH))

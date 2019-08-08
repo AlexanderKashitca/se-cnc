@@ -19,6 +19,11 @@ CoordMotionClass::~CoordMotionClass()
     delete _kinematics;
 }
 ///-----------------------------------------------------------------------------
+QString CoordMotionClass::getLastErrorMessage()
+{
+    return(_motion->getLastErrorMessage());
+}
+///-----------------------------------------------------------------------------
 void CoordMotionClass::setDebug(bool enable)
 {
     _debug = enable;
@@ -60,14 +65,14 @@ COORD_MOTION_RETVAL CoordMotionClass::initialization()
     if(!_motion->getFtdiLibraryLoad())
     {
         if(_debug)
-            qDebug() << "FTDI Library not loaded." << endl;
+            qDebug() << "FTDI Library not loaded.";
         return(COORD_MOTION_FAIL);
     }
 
     if(_motion->motionLock() != SE_MOTION_LOCKED)
     {
         if(_debug)
-            qDebug() << "SE MOTION not locked." << endl;
+            qDebug() << "SE MOTION not locked.";
         return(COORD_MOTION_FAIL);
     }
     /// checking
@@ -435,7 +440,7 @@ COORD_MOTION_RETVAL CoordMotionClass::getPosition(int axis,double *d)
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap = false,bool NoGeo = false)
+COORD_MOTION_RETVAL CoordMotionClass::getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap,bool NoGeo)
 {
 
     return(COORD_MOTION_OK);
@@ -646,7 +651,7 @@ PLANNER_SPACE::MOTION_PARAMS* CoordMotionClass::getMotionParams()
 ///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::checkMotionHalt(bool Coord)
 {
-
+#if 0
     CString response,responsebuf;
     double BufTime=0;
     bool Finished=false, NotStarted=false;
@@ -866,7 +871,7 @@ COORD_MOTION_RETVAL CoordMotionClass::checkMotionHalt(bool Coord)
         setAbort();
         return 2;
     }
-
+#endif
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------

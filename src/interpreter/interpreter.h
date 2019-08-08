@@ -59,10 +59,7 @@ namespace INTERPRETER_SPACE
             bool getDebug();
             void setTolerance(double tolerance);
 
-
-
             INTERPRETER_STATE readToolFile();
-
             INTERPRETER_STATE initialization(INTERPRETER_SETTINGS* settings);
             INTERPRETER_STATE execute();
 

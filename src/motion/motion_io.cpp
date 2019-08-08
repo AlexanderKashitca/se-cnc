@@ -30,6 +30,11 @@ MotionIOClass::~MotionIOClass()
     delete _mutex;
 }
 ///-----------------------------------------------------------------------------
+QString MotionIOClass::getLastErrorMessage(void)
+{
+    return(_errMsg);
+}
+///-----------------------------------------------------------------------------
 // save the error message to be piped back to caller
 int MotionIOClass::errorMessageBox(QString s)
 {
@@ -115,8 +120,7 @@ bool MotionIOClass::requestedDeviceAvail(QString *Reason)
                 {
                     if(Reason)
                     {
-                        *Reason = QString("FT_GetDeviceInfoList failed (error code %d)")
-                                    .arg(ftStatus);
+                        *Reason = QString("FT_GetDeviceInfoList failed (error code %d)").arg(ftStatus);
                     }
                     delete (devInfo);
                     return false;
@@ -133,7 +137,10 @@ bool MotionIOClass::requestedDeviceAvail(QString *Reason)
 		}
 		else
 		{
-            if(Reason) *Reason ="No SEMotion devices available";
+            if(Reason)
+            {
+                *Reason ="No SEMotion devices available";
+            }
 			return false;
 		}
         delete (devInfo);
@@ -943,6 +950,7 @@ QString MotionIOClass::usbLocation()
 /// stronger than a _mutex lock because it protects against the same thread
 SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
 {
+    QString reason;
     if(!_mutex->tryLock(3000))
     {
         return SE_MOTION_NOT_CONNECTED;
@@ -950,8 +958,9 @@ SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
     if(!_connected)
 	{
         /// try to connect
-        if(!requestedDeviceAvail(nullptr))
+        if(!requestedDeviceAvail(&reason))
         {
+            errorMessageBox(reason);
             _nonRespondingCount = 0;
             _mutex->unlock();  /// no such device available
             return SE_MOTION_NOT_CONNECTED;

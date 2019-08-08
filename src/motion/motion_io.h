@@ -59,21 +59,21 @@ class MotionIOClass
         MotionIOClass(const MotionIOClass&) = delete; /// disable copy constructor
         void operator=(const MotionIOClass&)= delete; /// desable overload operator=
         virtual ~MotionIOClass();
-
+        QString                 getLastErrorMessage(void);
         SE_MOTION_LOCK_STATE    motionLock(char *CallerID);
         SE_MOTION_LOCK_STATE    motionLockRecovery();
-        QString usbLocation();
-        void    releaseToken();
-        SE_MOTION_STATE checkForReady();
-        int     failed();
-        int     disconnect();
-        int     firmwareVersion();
-        int     writeLineReadLine(const char *send,char *response);
-        int     readLineTimeOut(char *buf,int TimeOutms);
-        int     writeLineWithEcho(const char * s);
-        int     writeLine(const char *s);
-        int     serviceConsole();
-        int     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
+        QString                 usbLocation();
+        void                    releaseToken();
+        SE_MOTION_STATE         checkForReady();
+        int                     failed();
+        int                     disconnect();
+        int                     firmwareVersion();
+        int                     writeLineReadLine(const char *send,char *response);
+        int                     readLineTimeOut(char *buf,int TimeOutms);
+        int                     writeLineWithEcho(const char * s);
+        int                     writeLine(const char *s);
+        int                     serviceConsole();
+        int                     setConsoleCallback(SERVER_CONSOLE_HANDLER *ch);
 };
 ///-----------------------------------------------------------------------------
 #endif /// MOTION_IO_H

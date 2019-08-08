@@ -11,23 +11,23 @@ namespace MOTION_DIRECT_SPACE
     class MotionDirectClass
     {
         private:
-            MotionIOClass MotionIO;
+            MotionIOClass _motionIO;
             QLibrary library;
             bool    _ftdiLibraryLoad;
         public:
             MotionDirectClass();
             MotionDirectClass(const MotionDirectClass&) = delete;
             ~MotionDirectClass();
-            bool    getFtdiLibraryLoad();
-
-            QString usbLocation();
-            int     listLocations(int *nlocations,int *list);
-            SE_MOTION_LOCK_STATE     motionLock(char *CallerID = nullptr);
-            SE_MOTION_LOCK_STATE     motionLockRecovery();
-            void    releaseToken(); /// ???
-            SE_MOTION_STATE checkForReady();
-            int     failed();
-            int     disconnect();
+            bool                    getFtdiLibraryLoad();
+            QString                 getLastErrorMessage();
+            QString                 usbLocation();
+            int                     listLocations(int *nlocations,int *list);
+            SE_MOTION_LOCK_STATE    motionLock(char *CallerID = nullptr);
+            SE_MOTION_LOCK_STATE    motionLockRecovery();
+            void                    releaseToken(); /// ???
+            SE_MOTION_STATE         checkForReady();
+            int                     failed();
+            int                     disconnect();
 
 
             ///int     mapBoardToIndex(int BoardID);
