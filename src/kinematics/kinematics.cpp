@@ -194,9 +194,9 @@ int KINEMATICS_SPACE::KinematicsClass::maxAccelInDirection(double dx,double dy,d
     // limit accel based on proportion in that direction
     if(pure_angle)
     {
-        if(fda>0 && _motionParams.maxAccelA < AccelToUse * fda / d) AccelToUse = _motionParams.maxAccelA * d / fda;
-        if(fdb>0 && _motionParams.maxAccelB < AccelToUse * fdb / d) AccelToUse = _motionParams.maxAccelB * d / fdb;
-        if(fdc>0 && _motionParams.maxAccelC < AccelToUse * fdc / d) AccelToUse = _motionParams.maxAccelC * d / fdc;
+        if(fda > 0 && _motionParams.maxAccelA < AccelToUse * fda / d) AccelToUse = _motionParams.maxAccelA * d / fda;
+        if(fdb > 0 && _motionParams.maxAccelB < AccelToUse * fdb / d) AccelToUse = _motionParams.maxAccelB * d / fdb;
+        if(fdc > 0 && _motionParams.maxAccelC < AccelToUse * fdc / d) AccelToUse = _motionParams.maxAccelC * d / fdc;
     }
     else
     {

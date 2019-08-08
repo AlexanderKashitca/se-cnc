@@ -74,18 +74,20 @@ namespace PLANNER_SPACE
         double	maxLinearLength;
         double	maxAngularChange;
 
-        bool arcsToSegs;
-        bool degreesA;
-        bool degreesB;
-        bool degreesC;
+        bool    arcsToSegs;
+        bool    degreesA;
+        bool    degreesB;
+        bool    degreesC;
 
-        bool useOnlyLinearSegments;
-        bool doRapidsAsFeeds;
+        bool    useOnlyLinearSegments;
+        bool    doRapidsAsFeeds;
 
-        double maxRapidFRO;
+        double  maxRapidFRO;
 
-        bool TCP_Active;  // tool center point control active
-        double TCP_X, TCP_Y, TCP_Z;  // tool center point offsets
+        bool    TCP_Active; /// tool center point control active
+        double  TCP_X;      /// tool center X point offsets
+        double  TCP_Y;      /// tool center Y point offsets
+        double  TCP_Z;      /// tool center Z point offsets
 
     }MOTION_PARAMS;
 }

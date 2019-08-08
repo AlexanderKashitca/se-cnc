@@ -21,19 +21,29 @@ const QString in_name = "rs274ngc.in";
 int main(int argc, char *argv[])
 {
     INTERPRETER_STATE status;
+    INTERPRETER_SETTINGS settings;
+
     QCoreApplication app(argc, argv);
 
     InterpreterClass ipterpreter;
 
-    status = ipterpreter.SetToolFile(tool_path,tool_name);
-    status = ipterpreter.ReadToolFile();
-    status = ipterpreter.SetParameterFile(param_path,param_name);
-    status = ipterpreter.SetProgramInFile(in_path,in_name);
-    status = ipterpreter.SetProgramOutFile(out_path,out_name);
+    settings.tool_path = tool_path;
+    settings.tool_name = tool_name;
+    settings.param_path = param_path;
+    settings.param_name = param_name;
+    settings.parogram_in_path = in_path;
+    settings.parogram_in_name = in_name;
+    settings.parogram_out_path = out_path;
+    settings.parogram_out_name = out_name;
+
+    ipterpreter.setDebug(true);
+
+    status = ipterpreter.initialization(&settings);
     if(status == INTERPRETER_OK)
     {
-        ipterpreter.SetTolerance(2.0);
-        ipterpreter.Execute();
+        ipterpreter.setTolerance(2.0);
+        status = ipterpreter.execute();
+        qDebug() << "execution status - " << status << endl;
     }
     else{
         qDebug() << "Status - " << status << endl;

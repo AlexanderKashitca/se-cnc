@@ -18,6 +18,18 @@ namespace INTERPRETER_SPACE
         INTERPRETER_FILE_NOT_CREATE,
         INTERPRETER_FILE_ERROR
     }INTERPRETER_STATE;
+
+    typedef struct
+    {
+        QString tool_path;
+        QString tool_name;
+        QString param_path;
+        QString param_name;
+        QString parogram_in_path;
+        QString parogram_in_name;
+        QString parogram_out_path;
+        QString parogram_out_name;
+    }INTERPRETER_SETTINGS;
     ///-------------------------------------------------------------------------
     class InterpreterClass
     {
@@ -32,25 +44,27 @@ namespace INTERPRETER_SPACE
             int     _ems[RS274NGC_ACTIVE_M_CODES];
             double  _sets[RS274NGC_ACTIVE_SETTINGS];
             bool    _debug;
-            INTERPRETER_STATE LoadFromFile(int print_stack);
-            void ReportError(int error_code,int print_stack);
-
+            INTERPRETER_STATE loadFromFile(int print_stack);
+            void              reportError(int error_code,int print_stack);
+            INTERPRETER_STATE setToolFile(QString file_path,QString file_name);
+            INTERPRETER_STATE setParameterFile(QString file_path,QString file_name);
+            INTERPRETER_STATE setProgramInFile(QString file_path,QString file_name);
+            INTERPRETER_STATE setProgramOutFile(QString file_path,QString file_name);
         public :
             InterpreterClass();
             virtual ~InterpreterClass();
             InterpreterClass(const InterpreterClass&);
 
-            void OnDebug();
-            void OffDebug();
-            void SetTolerance(double tolerance);
+            void setDebug(bool enable);
+            bool getDebug();
+            void setTolerance(double tolerance);
 
-            INTERPRETER_STATE SetToolFile(QString file_path,QString file_name);
-            INTERPRETER_STATE SetParameterFile(QString file_path,QString file_name);
-            INTERPRETER_STATE SetProgramInFile(QString file_path,QString file_name);
-            INTERPRETER_STATE SetProgramOutFile(QString file_path,QString file_name);
 
-            INTERPRETER_STATE ReadToolFile();
-            INTERPRETER_STATE Execute();
+
+            INTERPRETER_STATE readToolFile();
+
+            INTERPRETER_STATE initialization(INTERPRETER_SETTINGS* settings);
+            INTERPRETER_STATE execute();
 
     };
 }

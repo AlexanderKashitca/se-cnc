@@ -3,6 +3,8 @@
 #define COORD_MOTION_H
 ///-----------------------------------------------------------------------------
 #include <linux/limits.h> /// MAX_PATH
+#include <sys/time.h>     /// nanosleep
+#include <QDebug>
 #define MAX_PATH PATH_MAX
 ///-----------------------------------------------------------------------------
 #include "../motion/direct.h"
@@ -117,6 +119,8 @@ namespace COORD_MOTION_SPACE
             QString _cmd;
             QString _response;
 
+            bool    _debug;
+
             QString _writeLineBuffer;
             double  _writeLineBufferTime;
 
@@ -143,7 +147,7 @@ namespace COORD_MOTION_SPACE
             double _feedRateRapidOverride;
             double _hardwareFRORange;
             double _spindleRateOverride;
-
+            int sleep(unsigned int miliseconds);
             COORD_MOTION_RETVAL putWriteLineBuffer(QString s,double Time);
             COORD_MOTION_RETVAL flushWriteLineBuffer();
             COORD_MOTION_RETVAL clearWriteLineBuffer();
@@ -156,6 +160,9 @@ namespace COORD_MOTION_SPACE
             CoordMotionClass(const CoordMotionClass&) = delete;
             void operator= (const CoordMotionClass&)  = delete;
             ~CoordMotionClass();
+
+            void setDebug(bool enable);
+            bool getDebug();
 
             COORD_MOTION_RETVAL initialization();
             KINEMATICS_SPACE::KinematicsClass* _kinematics;
@@ -171,11 +178,15 @@ namespace COORD_MOTION_SPACE
             void clearHalt();
             bool getHalt();
 
+            COORD_MOTION_RETVAL setMotionCmd(const char *s,bool FlushBeforeUnbufferedOperation);
+
             COORD_MOTION_RETVAL setAxisDefinitions(int x,int y,int z,int a,int b,int c);
             COORD_MOTION_RETVAL getAxisDefinitions(int* x,int* y,int* z,int* a,int* b,int* c);
 
             COORD_MOTION_RETVAL getDestination(int axis,double *d);
             COORD_MOTION_RETVAL getPosition(int axis,double *d);
+
+            COORD_MOTION_RETVAL getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap = false,bool NoGeo = false);
 
             COORD_MOTION_RETVAL getRapidSettings();
             COORD_MOTION_RETVAL getRapidSettingsAxis(int axis,double* Vel,double* Accel,double* Jerk,double* SoftLimitPos,double* SoftLimitNeg,double CountsPerInch);
@@ -191,13 +202,16 @@ namespace COORD_MOTION_SPACE
             double              getSpindleRateOverride();
             double              getHardwareFRORange();
 
+            COORD_MOTION_RETVAL checkMotionHalt(bool Coord);
+            COORD_MOTION_RETVAL waitForMoveXYZABCFinished();
 
-            COORD_MOTION_RETVAL setMotionCmd(const char *s,bool FlushBeforeUnbufferedOperation);
+            PLANNER_SPACE::MOTION_PARAMS* getMotionParams();
 
 
 
-            //int checkMotionHalt(bool Coord);
-            //int waitForMoveXYZABCFinished();
+
+            //
+
             //int waitForSegmentsFinished(bool NoErrorOnDisable = FALSE);
 
             //int DoKMotionCmd(const char *s, BOOL FlushBeforeUnbufferedOperation);
@@ -220,18 +234,6 @@ namespace COORD_MOTION_SPACE
 
 
 
-
-
-
-        CoordMotionClass(MotionClass *KMotionDLL = new MotionClass(0));
-        virtual ~CoordMotionClass();
-
-
-
-
-
-
-        MOTION_PARAMS *GetMotionParams();
 
         int MeasurePointAppendToFile(const char *name);
         int StraightTraverse(double x, double y, double z, double a, double b, double c, bool NoCallback=false, int sequence_number=-1, int ID=0);
@@ -288,7 +290,7 @@ namespace COORD_MOTION_SPACE
         int Dwell(double seconds, int sequence_number=0);
 
         int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, bool snap=false, bool NoGeo = false);
-        int ReadCurAbsPosition(double *x, double *y, double *z, double *a, double *b, double *c, double *u, double *v, bool snap=false, bool NoGeo = false);
+
 
         void SetStraightTraverseCallback(STRAIGHT_TRAVERSE_CALLBACK *p);
         void SetStraightTraverseCallback(STRAIGHT_TRAVERSE_SIX_AXIS_CALLBACK *p);

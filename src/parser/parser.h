@@ -31,17 +31,20 @@ namespace PARSER_SPACE
             QVector<int>    _arg_int;
             QString         _arg_string;
 
-            void GetArguments(ARGUMENT_TYPE type);
+            void getArguments(ARGUMENT_TYPE type);
+            bool open(QString file_path,QString file_name);
+            void close();
 
+            bool    _debug;
         public :
             ParserDataClass();
             ~ParserDataClass();
             ParserDataClass(const ParserDataClass &);
 
+            void setDebug(bool enable);
+            bool getDebug();
 
-            bool open(QString file_path,QString file_name);
-            void close();
-            bool parse();
+            bool parse(QString file_path,QString file_name);
 
     };
 } /// end PARSER_SPACE
@@ -97,7 +100,7 @@ namespace PARSER_SPACE
 //// void ProgramEnd();
 //// void ProgramStop();
 
-
+/// NOW NOT PRESENTS
 //// void NurbKnotVector(); /* double knot values, -1.0 signals done */
 //// void NurbControlPoint(int i,double x,double y,double z,double w);
 //// void NurbFeed(double sStart,double sEnd);

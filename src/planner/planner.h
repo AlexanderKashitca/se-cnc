@@ -24,18 +24,23 @@ namespace PLANNER_SPACE
             RMLPositionOutputParameters* _REFLEXX_OP;
             RMLPositionFlags             _reflexxesFlags;
 
-            void ReflexxesSetCurrentPosition(QVector<double> position);
-            void ReflexxesSetCurrentVelocity(QVector<double> velocity);
-            void ReflexxesSetCurrentAcceleration(QVector<double> acceleration);
-            void ReflexxesSetTargetPosition(QVector<double> position);
-            void ReflexxesSetTargetVelocity(QVector<double> velocity);
-            void ReflexxesSetSelection(QVector<bool> enable);
-            bool ReflexxesValidity();
+            void reflexxesSetCurrentPosition(QVector<double> position);
+            void reflexxesSetCurrentVelocity(QVector<double> velocity);
+            void reflexxesSetCurrentAcceleration(QVector<double> acceleration);
+            void reflexxesSetTargetPosition(QVector<double> position);
+            void reflexxesSetTargetVelocity(QVector<double> velocity);
+            void reflexxesSetSelection(QVector<bool> enable);
+            bool reflexxesValidity();
+
+            bool _debug;
 
         public:
             PlannerClass();
             PlannerClass(const PlannerClass&);
             ~PlannerClass();
+
+            void setDebug(bool enable);
+            bool getDebug();
     };
 } /// end PLANNER_SPACE
 ///-----------------------------------------------------------------------------

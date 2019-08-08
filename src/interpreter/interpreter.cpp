@@ -10,7 +10,7 @@ static CannonInOutClass io;
 ///-----------------------------------------------------------------------------
 InterpreterClass::InterpreterClass()
 {
-    _debug  = true;
+    _debug  = false;
     _tool_file.clear();
     _parameter_file.clear();
     _program_in_file.clear();
@@ -24,21 +24,41 @@ InterpreterClass::~InterpreterClass()
     delete _output_program_file;
 }
 ///-----------------------------------------------------------------------------
-void InterpreterClass::OnDebug()
+void InterpreterClass::setDebug(bool enable)
 {
-    _debug = true;
+    _debug = enable;
 }
 ///-----------------------------------------------------------------------------
-void InterpreterClass::OffDebug()
+bool InterpreterClass::getDebug()
 {
-    _debug = false;
+    return(_debug);
+}
+///-----------------------------------------------------------------------------
+INTERPRETER_STATE InterpreterClass::initialization(INTERPRETER_SETTINGS* settings)
+{
+    INTERPRETER_STATE status;
+
+    status = setToolFile(settings->tool_path,settings->tool_name);
+    if(status != INTERPRETER_OK)
+        return(status);
+    status = readToolFile();
+    if(status != INTERPRETER_OK)
+        return(status);
+    status = setParameterFile(settings->param_path,settings->param_name);
+    if(status != INTERPRETER_OK)
+        return(status);
+    status = setProgramInFile(settings->parogram_in_path,settings->parogram_in_name);
+    if(status != INTERPRETER_OK)
+        return(status);
+    status = setProgramOutFile(settings->parogram_out_path,settings->parogram_out_name);
+    return(status);
 }
 ///-----------------------------------------------------------------------------
 /**
  * @brief InterpreterClass::SetTolerance
  * @param tolerance
  */
-void InterpreterClass::SetTolerance(double tolerance)
+void InterpreterClass::setTolerance(double tolerance)
 {
     rs274ngc.SetTolerance(tolerance);
 }
@@ -49,7 +69,7 @@ void InterpreterClass::SetTolerance(double tolerance)
  * @param file_name - tool file name
  * @return INTERPRETER_STATE
  */
-INTERPRETER_STATE InterpreterClass::SetToolFile(QString file_path,QString file_name)
+INTERPRETER_STATE InterpreterClass::setToolFile(QString file_path,QString file_name)
 {
     _tool_file.clear();
     _tool_file.append(file_path);
@@ -68,7 +88,7 @@ INTERPRETER_STATE InterpreterClass::SetToolFile(QString file_path,QString file_n
  * @param file_name - program file name
  * @return INTERPRETER_STATE
  */
-INTERPRETER_STATE InterpreterClass::SetProgramInFile(QString file_path,QString file_name)
+INTERPRETER_STATE InterpreterClass::setProgramInFile(QString file_path,QString file_name)
 {
     _program_in_file.clear();
     _program_in_file.append(file_path);
@@ -92,7 +112,7 @@ INTERPRETER_STATE InterpreterClass::SetProgramInFile(QString file_path,QString f
  */
 #include <stdio.h>
 #include <iostream>
-INTERPRETER_STATE InterpreterClass::SetProgramOutFile(QString file_path,QString file_name)
+INTERPRETER_STATE InterpreterClass::setProgramOutFile(QString file_path,QString file_name)
 {
     QFile file_out;
     _program_out_file = file_name;
@@ -134,7 +154,7 @@ INTERPRETER_STATE InterpreterClass::SetProgramOutFile(QString file_path,QString 
  * @param file_name - parameter file name
  * @return INTERPRETER_STATE
  */
-INTERPRETER_STATE InterpreterClass::SetParameterFile(QString file_path,QString file_name)
+INTERPRETER_STATE InterpreterClass::setParameterFile(QString file_path,QString file_name)
 {
     _parameter_file.clear();
     _parameter_file.append(file_path);
@@ -167,7 +187,7 @@ INTERPRETER_STATE InterpreterClass::SetParameterFile(QString file_path,QString f
  * @return INTERPRETER_STATE
  * @note   reding tool file and set tool table structure
  */
-INTERPRETER_STATE InterpreterClass::ReadToolFile()
+INTERPRETER_STATE InterpreterClass::readToolFile()
 {
     QFile       file_in;
     QTextStream in(&file_in);
@@ -260,7 +280,7 @@ INTERPRETER_STATE InterpreterClass::ReadToolFile()
  * @brief InterpreterClass::Execute
  * @return
  */
-INTERPRETER_STATE InterpreterClass::Execute()
+INTERPRETER_STATE InterpreterClass::execute()
 {
     int status;
     char buffer[80];
@@ -269,16 +289,16 @@ INTERPRETER_STATE InterpreterClass::Execute()
     print_stack = OFF;
     if((status = rs274ngc.rs274ngc_init()) != RS274NGC_OK)
     {
-        ReportError(status, print_stack);
+        reportError(status, print_stack);
         return(INTERPRETER_INIT);
     }
     status = rs274ngc.rs274ngc_open(_program_in_file.toStdString().c_str());
     if(status != RS274NGC_OK) /* do not need to close since not open */
     {
-        ReportError(status,print_stack);
+        reportError(status,print_stack);
         return(INTERPRETER_FILE_NOT_OPEN);
     }
-    state = LoadFromFile(print_stack);
+    state = loadFromFile(print_stack);
     if(state != INTERPRETER_OK)
         return(state);
     rs274ngc.rs274ngc_file_name(buffer,5);  /* called to exercise the function */
@@ -298,7 +318,7 @@ INTERPRETER_STATE InterpreterClass::Execute()
  * @param error_code  - the code number of the error message
  * @param print_stack - print stack if ON, otherwise not
  */
-void InterpreterClass::ReportError(int error_code,int print_stack)
+void InterpreterClass::reportError(int error_code,int print_stack)
 {
     if(_debug)
     {
@@ -329,7 +349,7 @@ void InterpreterClass::ReportError(int error_code,int print_stack)
  * @param print_stack  - option which is ON or OFF
  * @return
  */
-INTERPRETER_STATE InterpreterClass::LoadFromFile(int print_stack)
+INTERPRETER_STATE InterpreterClass::loadFromFile(int print_stack)
 {
     int status;
     while(1)
@@ -341,13 +361,13 @@ INTERPRETER_STATE InterpreterClass::LoadFromFile(int print_stack)
             break;
         if((status != RS274NGC_OK) && (status != RS274NGC_EXECUTE_FINISH))
         {
-            ReportError(status,print_stack);
+            reportError(status,print_stack);
             break;
         }
         status = rs274ngc.rs274ngc_execute();
         if((status != RS274NGC_OK) && (status != RS274NGC_EXIT) && (status != RS274NGC_EXECUTE_FINISH))
         {
-            ReportError(status,print_stack);
+            reportError(status,print_stack);
             break;
         }
         else

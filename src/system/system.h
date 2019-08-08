@@ -21,11 +21,18 @@ namespace SYSTEM_SPACE
             PARSER_SPACE::ParserDataClass* _parser;
             INTERPRETER_SPACE::InterpreterClass* _interpreter;
             COORD_MOTION_SPACE::CoordMotionClass* _coordinate;
+            bool _debug;
+
         public :
             SystemClass();
             ~SystemClass();
+            void setDebug(bool enable);
+            bool getDebug();
             SYSTEM_STATE initialization();
             SYSTEM_STATE reInitialization();
+
+
+            INTERPRETER_SPACE::INTERPRETER_SETTINGS _interpreter_settings;
     };
 } /// end SYSTEM_SPACE
 ///-----------------------------------------------------------------------------

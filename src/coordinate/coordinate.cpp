@@ -10,6 +10,7 @@ CoordMotionClass::CoordMotionClass()
 {
     _kinematics = new KinematicsClass;
     _motion     = new MotionDirectClass;
+    _debug      = false;
 }
 ///-----------------------------------------------------------------------------
 CoordMotionClass::~CoordMotionClass()
@@ -18,7 +19,37 @@ CoordMotionClass::~CoordMotionClass()
     delete _kinematics;
 }
 ///-----------------------------------------------------------------------------
-#include <QDebug>
+void CoordMotionClass::setDebug(bool enable)
+{
+    _debug = enable;
+}
+///-----------------------------------------------------------------------------
+bool CoordMotionClass::getDebug()
+{
+    return(_debug);
+}
+///-----------------------------------------------------------------------------
+int CoordMotionClass::sleep(unsigned int miliseconds)
+{
+    struct timespec req;
+    struct timespec rem;
+    if(miliseconds > 999)
+    {
+        /// Must be Non-Negative
+        req.tv_sec = static_cast<int>(miliseconds / 1000);
+        /// Must be in range of 0 to 999999999
+        req.tv_nsec = (miliseconds - (static_cast<long>(req.tv_sec) * 1000)) * 1000000;
+    }
+    else
+    {
+        /// Must be Non-Negative
+        req.tv_sec = 0;
+        /// Must be in range of 0 to 999999999
+        req.tv_nsec = miliseconds * 1000000;
+    }
+    return(nanosleep(&req,&rem));
+}
+///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::initialization()
 {
     SE_MOTION_STATE state;
@@ -28,13 +59,15 @@ COORD_MOTION_RETVAL CoordMotionClass::initialization()
 
     if(!_motion->getFtdiLibraryLoad())
     {
-        qDebug() << "FTDI Library not loaded." << endl;
+        if(_debug)
+            qDebug() << "FTDI Library not loaded." << endl;
         return(COORD_MOTION_FAIL);
     }
 
     if(_motion->motionLock() != SE_MOTION_LOCKED)
     {
-        qDebug() << "SE MOTION not locked." << endl;
+        if(_debug)
+            qDebug() << "SE MOTION not locked." << endl;
         return(COORD_MOTION_FAIL);
     }
     /// checking
@@ -46,9 +79,12 @@ COORD_MOTION_RETVAL CoordMotionClass::initialization()
         case SE_MOTION_READY   : break;
         case SE_MOTION_ERROR   : return(COORD_MOTION_FAIL);
     }
+    if(_debug)
+    {
+        qDebug() << "SE MOTION initialization successful.";
+        qDebug() << "Serial Number - " << _motion->usbLocation();
+    }
 
-    qDebug() << "SE MOTION initialization successful.";
-    qDebug() << "Serial Number - " << _motion->usbLocation();
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -399,6 +435,12 @@ COORD_MOTION_RETVAL CoordMotionClass::getPosition(int axis,double *d)
     return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
+COORD_MOTION_RETVAL CoordMotionClass::getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap = false,bool NoGeo = false)
+{
+
+    return(COORD_MOTION_OK);
+}
+///-----------------------------------------------------------------------------
 COORD_MOTION_RETVAL CoordMotionClass::getRapidSettings()
 {
 
@@ -595,5 +637,265 @@ double CoordMotionClass::getSpindleRateOverride()
 double CoordMotionClass::getHardwareFRORange()
 {
     return(_hardwareFRORange);
+}
+///-----------------------------------------------------------------------------
+PLANNER_SPACE::MOTION_PARAMS* CoordMotionClass::getMotionParams()
+{
+    return(&_kinematics->_motionParams);
+}
+///-----------------------------------------------------------------------------
+COORD_MOTION_RETVAL CoordMotionClass::checkMotionHalt(bool Coord)
+{
+
+    CString response,responsebuf;
+    double BufTime=0;
+    bool Finished=false, NotStarted=false;
+    SEGMENT *segs_to_check;
+
+    if (!m_Abort && m_Halt && !m_Simulate)
+    {
+        // stop immediately
+        if (KMotionDLL->WriteLine("StopImmediate0"))  {SetAbort(); return 1;}
+
+        // wait until stopped
+        do
+        {
+            if (KMotionDLL->WriteLineReadLine("GetStopState",response.GetBufferSetLength(MAX_LINE)))  {SetAbort(); return 1;}
+            response.ReleaseBuffer();
+            if (m_Abort) return 1;
+
+            // There is a chance that the motion path could complete just as the StopImmediate was
+            // in progress.  So see if this was the case.
+
+            if (Coord && response == '1')
+            {
+                if (KMotionDLL->WriteLineReadLine("CheckDoneBuf",responsebuf.GetBufferSetLength(MAX_LINE))) {SetAbort(); return 1;}
+                responsebuf.ReleaseBuffer();
+
+                if (responsebuf == "1")
+                {
+                    // yes we are all finished with the buffer
+                    Finished = true;
+                }
+                else if (responsebuf == "-1")
+                {
+                    m_AxisDisabled=true;
+                    SetAbort();
+                }
+            }
+        }
+        while (!Finished && (response == '1' || response == '2'));
+
+        if (response == '0') NotStarted=true;
+
+        // default to current line in case somthing bad happens
+        m_PreviouslyStoppedSeqNo = _setup.sequence_number;
+
+        if (Coord)
+        {
+            if (Finished)
+                m_PreviouslyStopped = m_Stopping = STOPPED_COORD_FINISHED;
+            else
+                m_PreviouslyStopped = m_Stopping = STOPPED_COORD;
+        }
+        else
+            m_PreviouslyStopped = m_Stopping = STOPPED_INDEP;
+
+        if (Coord)
+        {
+            if (Finished || NotStarted)
+            {
+                m_TimeAlreadyExecuted=0;
+            }
+            else
+            {
+                // determine the line number we were at
+                if (KMotionDLL->WriteLineReadLine("ExecTime",response.GetBufferSetLength(MAX_LINE))) return 1;
+                response.ReleaseBuffer();
+                int result=sscanf(response, "%lf",&m_TimeAlreadyExecuted);
+                if (result != 1)  return 1;
+                if (m_TimeAlreadyExecuted < 0.0) return 1;
+            }
+        }
+
+
+        // clear stop state - note this clears time executed in DSP
+        if (KMotionDLL->WriteLine("StopImmediate2"))  {SetAbort(); return 1;}
+
+        // save the raw machine positions
+        if (ReadCurAbsPosition(&m_StoppedMachinex,&m_StoppedMachiney,&m_StoppedMachinez,&m_StoppedMachinea,&m_StoppedMachineb,&m_StoppedMachinec,&m_StoppedMachineu,&m_StoppedMachinev,true)) return 1;
+
+        if (Coord)
+        {
+            int i,k,n;
+
+            if (NotStarted)
+            {
+                // might be stuff in the planner
+                n=nsegs;
+                segs_to_check=segments;
+            }
+            else if (Finished)
+            {
+                if (segments_executing==segments)
+                {
+                    // check if everything was downloaded
+                    if (m_nsegs_downloaded>0 && nsegs>0 && m_nsegs_downloaded == nsegs)
+                    {
+                        // We were all finished and nothing was done ahead so exit
+                        SetAbort();
+                        return 2;
+                    }
+                    else
+                    {
+                        // This is a somewhat invalid case where where we were buffering a very
+                        // small amount ahead (less than the amount of time to stop) so we finished
+                        // what was in the buffer before the feedhold slowed time to a stop
+                        // this would result in a sudden motion stop.  But set the Stopped state to
+                        // what we last downloaded.
+
+                        // set stop conditions for this segment
+                        SetPreviouslyStoppedAtSeg(segments,m_nsegs_downloaded-1);
+
+                        SetAbort();
+                        return 2;
+                    }
+                }
+                else
+                {
+                    // yes we switched buffers so there might be newer stuff in segments
+                    n=nsegs;
+                    segs_to_check=segments;
+                }
+            }
+            else
+            {
+                segs_to_check = segments_executing;
+
+                if (segments_executing==segments)
+                    n=nsegs;
+                else
+                    n=prev_nsegs;
+            }
+
+            // if we finished and there is nothing else
+            // then stay at the current line
+
+            if (Finished && n==0)
+            {
+                m_PreviouslyStopped = m_Stopping = STOPPED_NONE;
+                SetAbort();
+                return 1;
+            }
+
+
+            if (Finished || NotStarted)
+            {
+                // we finished the path, so set that we are at the
+                // at the very beginning of the next.  Note the
+                // next path might not be planned yet and will have
+                // invalid or zero times
+                 i=0;
+
+                 // if nothing in the buffer exit leaving everything as it is
+                 if (n==0)
+                 {
+                    m_PreviouslyStoppedType = SEG_UNDEFINED;
+                    m_PreviouslyStoppedID = -1;
+                    SetAbort();
+                    return 2;
+                 }
+            }
+            else
+            {
+                // search backwards for where we were in the path based on time
+                int index;
+
+                if (segs_to_check==segments0)
+                    index=0;
+                else
+                    index=1;
+
+                BufTime=SegsDoneTime[index];
+
+                // if nothing done or downloaded yet don't search or worry if we
+                // can't find current segment in the motion buffer
+                if (SegsDone[index] == -1)
+                {
+                    // if initial buffered commands are present with a valid
+                    // sequence number than return that
+                    if (special_cmds_initial_sequence_no[index] >= 0)
+                    {
+                        m_PreviouslyStoppedSeqNo = special_cmds_initial_sequence_no[index];
+                    }
+                    m_PreviouslyStoppedType = SEG_UNDEFINED;
+                    m_PreviouslyStoppedID = -1;
+                    SetAbort();
+                    return 2;
+                }
+
+                for (i=SegsDone[index]; i>=0; i--)
+                {
+                    for (k=segs_to_check[TPMOD(i)].nTrips-1; k>=0; k--)
+                    {
+                        if (BufTime <= m_TimeAlreadyExecuted) break;
+                        BufTime -= segs_to_check[TPMOD(i)].C[k].t;
+                    }
+                    if (BufTime <= m_TimeAlreadyExecuted ||
+                        (m_TimeAlreadyExecuted==0.0 && BufTime<1e-6)) break;
+                }
+            }
+
+            if (i==-1)
+            {
+                SetAbort();
+                KMotionDLL->DoErrMsg("Invalid buffer times on Halt");
+                return 1;
+            }
+
+            // set stop conditions for this segment
+            SetPreviouslyStoppedAtSeg(segs_to_check,i);
+        }
+        else
+        {
+            m_PreviouslyStoppedType = SEG_UNDEFINED;
+            m_PreviouslyStoppedID = -1;
+        }
+
+
+        setAbort();
+        return 2;
+    }
+
+    return(COORD_MOTION_OK);
+}
+///-----------------------------------------------------------------------------
+COORD_MOTION_RETVAL CoordMotionClass::waitForMoveXYZABCFinished()
+{
+    int count = 0;
+    do
+    {
+        if(count++) sleep(10);
+        if(_motion->writeLineReadLine("CheckDoneXYZABC",_response.toLatin1().begin()))
+        {
+            setAbort();
+            return(COORD_MOTION_FAIL);
+        }
+        if(_response == "-1")
+        {
+            _axisDisabled = true;
+            setAbort();
+        }
+        if(checkMotionHalt(false) != COORD_MOTION_OK)
+        {
+            return(COORD_MOTION_FAIL); /// return 2; /*!!!*/
+        }
+        if(_abort)
+        {
+            return(COORD_MOTION_FAIL);
+        }
+    }
+    while(_response != "1");
+    return(COORD_MOTION_OK);
 }
 ///-----------------------------------------------------------------------------
