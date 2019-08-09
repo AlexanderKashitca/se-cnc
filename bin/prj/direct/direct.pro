@@ -23,15 +23,21 @@ DEPENDPATH  += /usr/local/lib
 LIBS        += -L/usr/local/lib/ -lftd2xx
 #-------------------------------------------------------------------------------
 SOURCES += \
+            ../../../src/motion/coff.cpp \
             ../../../src/motion/common.cpp    \
             ../../../src/motion/direct.cpp    \
+            ../../../src/motion/loader.cpp    \
             ../../../src/motion/motion_io.cpp \
             main.cpp
 #-------------------------------------------------------------------------------
 HEADERS += \
             ../../../src/ftdi/WinTypes.h    \
             ../../../src/ftdi/ftd2xx.h      \
+            ../../../src/motion/coff.h \
             ../../../src/motion/common.h    \
             ../../../src/motion/direct.h    \
-            ../../../src/motion/motion_io.h
+            ../../../src/motion/loader.h    \
+            ../../../src/motion/motion_io.h \
+            ../../../src/motion/params.h    \
+            ../../../src/motion/version.h
 #-------------------------------------------------------------------------------
