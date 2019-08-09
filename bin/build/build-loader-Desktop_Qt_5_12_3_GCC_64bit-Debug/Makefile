@@ -52,8 +52,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../prj/loader/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../../../src/loader/CLOAD.cpp \
+		../../../src/loader/COFF.cpp \
+		../../prj/loader/main.cpp 
+OBJECTS       = CLOAD.o \
+		COFF.o \
+		main.o
 DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -247,7 +251,12 @@ DIST          = /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/loader/loader.pro  ../../prj/loader/main.cpp
+		../../prj/loader/loader.pro ../../../src/loader/CLOAD.h \
+		../../../src/loader/COFF.h \
+		../../../src/loader/PARAMS.h \
+		../../../src/loader/VERSION.h ../../../src/loader/CLOAD.cpp \
+		../../../src/loader/COFF.cpp \
+		../../prj/loader/main.cpp
 QMAKE_TARGET  = loader
 DESTDIR       = 
 TARGET        = loader
@@ -665,7 +674,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/loader/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/loader/CLOAD.h ../../../src/loader/COFF.h ../../../src/loader/PARAMS.h ../../../src/loader/VERSION.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/loader/CLOAD.cpp ../../../src/loader/COFF.cpp ../../prj/loader/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -712,6 +722,50 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+CLOAD.o: ../../../src/loader/CLOAD.cpp ../../../src/loader/CLOAD.h \
+		../../../src/loader/PARAMS.h \
+		../../../src/loader/VERSION.h \
+		../../../src/loader/COFF.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CLOAD.o ../../../src/loader/CLOAD.cpp
+
+COFF.o: ../../../src/loader/COFF.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../src/loader/CLOAD.h \
+		../../../src/loader/PARAMS.h \
+		../../../src/loader/VERSION.h \
+		../../../src/loader/COFF.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o COFF.o ../../../src/loader/COFF.cpp
 
 main.o: ../../prj/loader/main.cpp /home/evil/Qt/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \

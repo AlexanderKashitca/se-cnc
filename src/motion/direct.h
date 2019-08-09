@@ -35,7 +35,7 @@ namespace MOTION_DIRECT_SPACE
             int     writeLineReadLine(const char *s,char *response);
             int     writeLineWithEcho(const char *s);
             int     readLineTimeOut(char *buf,int TimeOutms);
-            ///void    waitToken(char *CallerID = nullptr);
+            void    waitToken(char *CallerID = nullptr);
 
 
 

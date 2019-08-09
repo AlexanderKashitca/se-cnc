@@ -14,16 +14,14 @@
 ///               -i        enable interrupts from SDB to PC
 ///               -p        pause before running
 ///-----------------------------------------------------------------------------
+#include <QString>
+///-----------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <QString>
-
+///-----------------------------------------------------------------------------
 #include "CLOAD.h"
 ///-----------------------------------------------------------------------------
-extern void errorMessageBox(const QString);
-
 #define MIN(a,b) ((a)<(b)?(a):(b))
 ///-----------------------------------------------------------------------------
 /// SDB HARDWARE INTERFACE PARAMETERS
@@ -64,6 +62,7 @@ extern void errorMessageBox(const QString);
 #define TIMEOUT  2
 unsigned long time();
 
+extern void errorMessageBox(QString s);
 ///-----------------------------------------------------------------------------
 /// LOADER DEFINITIONS
 ///-----------------------------------------------------------------------------
@@ -88,18 +87,18 @@ int           pflag = 0;                 /* PAUSE BEFORE RUNNING           */
 int           packtoflash= 0;            /* PACK to Flash Memory image     */
 int           firstdata= 1;              /* flag so we can clear flash image*/
 ///-----------------------------------------------------------------------------
-CSEMotionLibrary *SEMotionDLL;
+MOTION_DIRECT_SPACE::MotionDirectClass *Motion;
 ///-----------------------------------------------------------------------------
 /// MAIN()
 ///-----------------------------------------------------------------------------
-int LoadCoff(CSEMotionLibrary *SEMotionDLLtoUse, const char *Name, unsigned int *EntryPoint, int PackToFlash)
+int LoadCoff(MOTION_DIRECT_SPACE::MotionDirectClass *MotionDirect, const char *Name, unsigned int *EntryPoint, int PackToFlash)
 {
 	int  files   = 0;
 	int  nostart = 0;
 	
 	need_symbols = 0;
 
-    SEMotionDLL = SEMotionDLLtoUse;  // save globally so memwrite can use it
+    Motion = MotionDirect;  // save globally so memwrite can use it
 
 	/*----------------------------------------------------------------------*/
 	/* PROCESS COMMAND LINE ARGUMENTS                                       */
@@ -157,7 +156,6 @@ int BytesPerLine=N_BYTES_PER_LINE;
 ///-----------------------------------------------------------------------------
 int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 {
-#if 0
 	char s[256],x[256];
 	int i,k;
 	
@@ -167,10 +165,10 @@ int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 	{
 		if (firstdata && packtoflash!=2)
 		{
-            if (SEMotionDLL->FirmwareVersion()==1)
+            if (Motion->firmwareVersion()==1)
 				BytesPerLine=16;
 
-            if (SEMotionDLL->WriteLine("CLEARFLASHIMAGE")) return 0;
+            if (Motion->writeLine("CLEARFLASHIMAGE")) return 0;
 			firstdata=0;
 		}
 
@@ -200,10 +198,10 @@ int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 		sprintf(s,"LOADDATA %X %X",addr,nbytes);
 	}
 	
-    if (SEMotionDLL->WaitToken("memwritecoff")) return 0;
-    if (SEMotionDLL->WriteLine(s))
+//    if (Motion->waitToken("memwritecoff")) return 0;
+    if (Motion->writeLine(s))
 	{
-        SEMotionDLL->ReleaseToken();
+        Motion->releaseToken();
 		return 0;
 	}
 
@@ -222,15 +220,15 @@ int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 
 			strcat(s,x);
 		}
-        if (SEMotionDLL->WriteLine(s))
+        if (Motion->writeLine(s))
 		{
-            SEMotionDLL->ReleaseToken();
+            Motion->releaseToken();
 			return 0;
 		}
 	}
 
-    SEMotionDLL->ReleaseToken();
-#endif
+    Motion->releaseToken();
+
 	return 1;
 }
 ///-----------------------------------------------------------------------------
@@ -253,9 +251,9 @@ int load_syms(int need_reloc)
 ///-----------------------------------------------------------------------------
 char *myalloc(int size)
 {
-    char *p = (char *)malloc(size);
+    char *p = static_cast<char*>(malloc(static_cast<size_t>(size)));
     if(p) return p;
-    errorMessageBox("out of memory");
+    ///errorMessageBox("out of memory");
     exit(1);
 }
 ///-----------------------------------------------------------------------------
@@ -263,7 +261,7 @@ char *mralloc(char *p,int size)
 {
     p = (char *)realloc(p,size);
     if(p) return p;
-    errorMessageBox("out of memory");
+    ///errorMessageBox("out of memory");
     exit(1);
 }
 ///-----------------------------------------------------------------------------

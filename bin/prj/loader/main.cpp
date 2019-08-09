@@ -1,12 +1,28 @@
+///-----------------------------------------------------------------------------
 #include <QCoreApplication>
-
+#include <QDebug>
+///-----------------------------------------------------------------------------
+#include "../../../src/loader/CLOAD.h"
+///-----------------------------------------------------------------------------
+void errorMessageBox(QString s)
+{
+    qDebug() << "Error MESSAGE - " << s;
+}
+///-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
+    unsigned int EntryPoint;
+    const char *Name;
+    int PackToFlash;
+
+//    MOTION_DIRECT_SPACE::MotionDirectClass MotionDirect;
+//    int result = LoadCoff(&MotionDirect,Name,&EntryPoint,PackToFlash);
+
     return a.exec();
 }
-
+///-----------------------------------------------------------------------------
 #if 0
 /*
 /// Note: ALL User Thread Numbers start with 1

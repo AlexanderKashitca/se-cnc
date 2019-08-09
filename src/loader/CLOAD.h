@@ -7,6 +7,8 @@
 #include "PARAMS.h"
 #include "COFF.h"
 ///-----------------------------------------------------------------------------
+#include "../motion/direct.h"
+///-----------------------------------------------------------------------------
 /// THIS MACRO IS USED TO FACILIATE ACCESS TO THE SECTION HEADERS
 ///-----------------------------------------------------------------------------
 #define SECT_HDR(i) ((SCNHDR *)(sect_hdrs + (i) * SCNHSZ))
@@ -88,8 +90,8 @@ char *mralloc(char *p,int size);
 /// WRITE OUT LOADER DEBUG INFO
 void load_msg(char *a,long b,long c,long d,long e,long f,long g);
 ///-----------------------------------------------------------------------------
-class CSEMotionLibrary;
-int LoadCoff(CSEMotionLibrary *SEMotionDLLtoUse,const char * Name,unsigned int *EntryPoint,int PackToFlash);
+class MotionDirectClass;
+int LoadCoff(MOTION_DIRECT_SPACE::MotionDirectClass *MotionDirect,const char * Name,unsigned int *EntryPoint,int PackToFlash);
 ///-----------------------------------------------------------------------------
 #endif /// CLOAD_H
 ///-----------------------------------------------------------------------------
