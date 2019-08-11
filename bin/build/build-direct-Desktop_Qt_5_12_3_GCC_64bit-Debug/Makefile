@@ -52,14 +52,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../../src/motion/coff.cpp \
-		../../../src/motion/common.cpp \
+SOURCES       = ../../../src/motion/common.cpp \
 		../../../src/motion/direct.cpp \
 		../../../src/motion/loader.cpp \
 		../../../src/motion/motion_io.cpp \
 		../../prj/direct/main.cpp 
-OBJECTS       = coff.o \
-		common.o \
+OBJECTS       = common.o \
 		direct.o \
 		loader.o \
 		motion_io.o \
@@ -263,8 +261,7 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		../../../src/motion/loader.h \
 		../../../src/motion/motion_io.h \
 		../../../src/motion/params.h \
-		../../../src/motion/version.h ../../../src/motion/coff.cpp \
-		../../../src/motion/common.cpp \
+		../../../src/motion/version.h ../../../src/motion/common.cpp \
 		../../../src/motion/direct.cpp \
 		../../../src/motion/loader.cpp \
 		../../../src/motion/motion_io.cpp \
@@ -683,7 +680,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../src/ftdi/WinTypes.h ../../../src/ftdi/ftd2xx.h ../../../src/motion/coff.h ../../../src/motion/common.h ../../../src/motion/direct.h ../../../src/motion/loader.h ../../../src/motion/motion_io.h ../../../src/motion/params.h ../../../src/motion/version.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/motion/coff.cpp ../../../src/motion/common.cpp ../../../src/motion/direct.cpp ../../../src/motion/loader.cpp ../../../src/motion/motion_io.cpp ../../prj/direct/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/motion/common.cpp ../../../src/motion/direct.cpp ../../../src/motion/loader.cpp ../../../src/motion/motion_io.cpp ../../prj/direct/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -730,9 +727,6 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
-
-coff.o: ../../../src/motion/coff.cpp ../../../src/motion/coff.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o coff.o ../../../src/motion/coff.cpp
 
 common.o: ../../../src/motion/common.cpp ../../../src/motion/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o common.o ../../../src/motion/common.cpp
@@ -801,7 +795,8 @@ direct.o: ../../../src/motion/direct.cpp ../../../src/motion/direct.h \
 
 loader.o: ../../../src/motion/loader.cpp ../../../src/motion/loader.h \
 		../../../src/motion/params.h \
-		../../../src/motion/version.h
+		../../../src/motion/version.h \
+		../../../src/motion/coff.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loader.o ../../../src/motion/loader.cpp
 
 motion_io.o: ../../../src/motion/motion_io.cpp ../../../src/motion/common.h \

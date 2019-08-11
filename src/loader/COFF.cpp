@@ -156,6 +156,7 @@ int BytesPerLine=N_BYTES_PER_LINE;
 ///-----------------------------------------------------------------------------
 int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 {
+#if 0
 	char s[256],x[256];
 	int i,k;
 	
@@ -228,7 +229,7 @@ int mem_write(unsigned char *buffer,int nbytes,T_ADDR addr,int page)
 	}
 
     Motion->releaseToken();
-
+#endif
 	return 1;
 }
 ///-----------------------------------------------------------------------------

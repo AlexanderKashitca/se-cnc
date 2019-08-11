@@ -2,10 +2,14 @@
 #include <QCoreApplication>
 ///-----------------------------------------------------------------------------
 #include "../../../src/motion/direct.h"
+#include "../../../src/motion/loader.h"
 ///-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
+
+    LOADER_SPACE::LoaderClass loader;
+
     return app.exec();
 }
 ///-----------------------------------------------------------------------------

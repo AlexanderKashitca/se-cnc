@@ -23,7 +23,6 @@ DEPENDPATH  += /usr/local/lib
 LIBS        += -L/usr/local/lib/ -lftd2xx
 #-------------------------------------------------------------------------------
 SOURCES += \
-            ../../../src/motion/coff.cpp \
             ../../../src/motion/common.cpp    \
             ../../../src/motion/direct.cpp    \
             ../../../src/motion/loader.cpp    \
