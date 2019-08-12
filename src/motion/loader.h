@@ -12,23 +12,23 @@ namespace LOADER_SPACE
 ///-----------------------------------------------------------------------------
 /// SDB HARDWARE INTERFACE PARAMETERS
 ///-----------------------------------------------------------------------------
-#define CONPORT     0x0339              /// CONTROL REGISTER
-#define MAPORT      0x0338              /// MAP REGISTER
-#define XINTCLR     0x02                /// IF 1, ENABLE INTERRUPTS TO PC
-#define DPSEL       0x04                /// EANBLE DUAL-PORT RAM
-#define SWRESET     0x08                /// IF 0, HOLD C30 IN RESET
-#define DEFPAGE     0xC9000             /// DEFAULT ADDRESS OF DP RAM
-#define SETADDR     0xFF
-#define SETEXE      0xFE
-#define OKSDB       0x07
-#define TEST        0x55
-#define TESTRESP    0xAA
-#define BUSY         0x330             /// CONTROLLING SIDE IS PROCESSING
-#define IDLE         0x331             /// CONTROLLING SIDE IS WAITING
-#define RUN          0x332             /// SDB IS RUNNING
-#define LATCH(s)     (outp(s,0))       /// LATCH IN A REQUEST FOR CONTROL
-#define UNLOCK(s)    (outp(s,1))       /// FREE CONTROL OF THE SEMAPHORE
-#define IS_LOCKED(s) (inp(s) != 0)     /// FREE CONTROL OF THE SEMAPHORE
+#define CONPORT         0x0339          /// CONTROL REGISTER
+#define MAPORT          0x0338          /// MAP REGISTER
+#define XINTCLR         0x02            /// IF 1, ENABLE INTERRUPTS TO PC
+#define DPSEL           0x04            /// EANBLE DUAL-PORT RAM
+#define SWRESET         0x08            /// IF 0, HOLD C30 IN RESET
+#define DEFPAGE         0xC9000         /// DEFAULT ADDRESS OF DP RAM
+#define SETADDR         0xFF
+#define SETEXE          0xFE
+#define OKSDB           0x07
+#define TEST            0x55
+#define TESTRESP        0xAA
+#define BUSY            0x330           /// CONTROLLING SIDE IS PROCESSING
+#define IDLE            0x331           /// CONTROLLING SIDE IS WAITING
+#define RUN             0x332           /// SDB IS RUNNING
+#define LATCH(s)        (outp(s,0))     /// LATCH IN A REQUEST FOR CONTROL
+#define UNLOCK(s)       (outp(s,1))     /// FREE CONTROL OF THE SEMAPHORE
+#define IS_LOCKED(s)    (inp(s) != 0)   /// FREE CONTROL OF THE SEMAPHORE
 #define TIMEOUT  2
 
 

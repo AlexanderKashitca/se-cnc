@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 //#include <assert.h>
+
+#include <QDebug>
 ///-----------------------------------------------------------------------------
 using namespace LOADER_SPACE;
 
@@ -22,7 +24,7 @@ LoaderClass::LoaderClass()
     _clear_bss    = FALSE;
     _sect_hdrs    = nullptr;
 
-    _pageloc = (unsigned char*)DEFPAGE;
+    _pageloc = (unsigned char*)(DEFPAGE);
 
     _reloc = 0;      /// RELOCATION AMOUNT
     _quiet = 0;      /// NO BANNER
@@ -96,13 +98,17 @@ int LoaderClass::cload_headers()
             swap4byte(&_o_filehdr.text_start);
             swap4byte(&_o_filehdr.data_start);
         }
-        _entry_point = (unsigned long)_o_filehdr.entrypt;
+        _entry_point = static_cast<unsigned long>(_o_filehdr.entrypt);
     }
-    else if(_file_hdr.f_opthdr && fseek(_fin,(long)_file_hdr.f_opthdr, 1) == -1)
+    else if(_file_hdr.f_opthdr && fseek(_fin,static_cast<long>(_file_hdr.f_opthdr), 1) == -1)
         return FALSE;
     /// READ IN SECTION HEADERS.
-    if(!(_sect_hdrs = myalloc((_n_sections = _file_hdr.f_nscns) * SCNHSZ)) ||
-       fread(_sect_hdrs,SCNHSZ,(size_t)_n_sections, _fin) != (unsigned)_n_sections
+    if(
+        !(_sect_hdrs = myalloc((_n_sections = _file_hdr.f_nscns) * SCNHSZ)) ||
+        fread(_sect_hdrs,
+              SCNHSZ,
+              static_cast<size_t>(_n_sections),_fin) !=
+        static_cast<unsigned>(_n_sections)
     )
         return FALSE;
     /// SWAP SECTION HEADERS IF REQUIRED.
@@ -927,7 +933,7 @@ int LoaderClass::load(const char* Name,unsigned int* EntryPoint,int PackToFlash)
 
     _clear_bss = 1;
     _quiet     = 1;
-    nostart   = 1;
+    nostart    = 1;
     _sflag     = 1;
     _iflag     = 1;
     _pflag     = 1;
@@ -944,11 +950,13 @@ int LoaderClass::load(const char* Name,unsigned int* EntryPoint,int PackToFlash)
         char s2[300]="can't open file : ";
         strcat(s2,Name);
 ///		AfxMessageBox(s2,MB_OK|MB_SYSTEMMODAL);
+        qDebug() << s2;
         return 1;
     }
     if (!cload())
     {
 ///		AfxMessageBox("error loading file",MB_OK|MB_SYSTEMMODAL);
+        qDebug() << "error loading file";
         fclose(_fin);
         return 1;
     }
@@ -1007,14 +1015,16 @@ int LoaderClass::mem_write(unsigned char* buffer,int nbytes,T_ADDR addr,int page
         sprintf(s,"LOADDATA %X %X",addr,nbytes);
     }
 
+
+    qDebug() << s;
 //    if(Motion->waitToken("memwritecoff")) return 0;
 //    if(Motion->writeLine(s))
-    {
+//    {
 //        Motion->releaseToken();
-        return 0;
-    }
+//        return 0;
+//    }
 
-    for(i = 0;i< nbytes;i+= BytesPerLine)
+    for(i = 0;i < nbytes;i += BytesPerLine)
     {
         s[0] = 0;
         for(k = 0;k < BytesPerLine && i+k < nbytes;k++)
@@ -1025,11 +1035,14 @@ int LoaderClass::mem_write(unsigned char* buffer,int nbytes,T_ADDR addr,int page
                 sprintf(x,"%02X",buffer[i+k]);
             strcat(s,x);
         }
+
+        qDebug() << s;
+
 //        if(Motion->writeLine(s))
-        {
+//        {
 //            Motion->releaseToken();
-            return 0;
-        }
+//            return 0;
+//        }
     }
 //    Motion->releaseToken();
     return 1;

@@ -137,11 +137,11 @@ namespace LOADER_SPACE
     ///-------------------------------------------------------------------------
     /// Define constants for names of "special" sections
     ///-------------------------------------------------------------------------
-    //#define _TEXT    ".text"
-    //#define _DATA    ".data"
-    //#define _BSS     ".bss"
-    //#define _CINIT   ".cinit"
-    //#define _TV      ".tv"
+    #define _TEXT    ".text"
+    #define _DATA    ".data"
+    #define _BSS     ".bss"
+    #define _CINIT   ".cinit"
+    #define _TV      ".tv"
     ///-------------------------------------------------------------------------
     /// The low 4 bits of s_flags is used as a section "type"
     #define STYP_REG    0x00   /// "regular" : allocated, relocated, loaded
@@ -385,23 +385,23 @@ namespace LOADER_SPACE
     ///-------------------------------------------------------------------------
     /// NAMES OF "SPECIAL" SYMBOLS
     ///-------------------------------------------------------------------------
-    //#define _STEXT          ".text"
-    //#define _ETEXT          "etext"
-    //#define _SDATA          ".data"
-    //#define _EDATA          "edata"
-    //#define _SBSS           ".bss"
-    //#define _END            "end"
-    //#define _CINITPTR       "cinit"
+    #define _STEXT          ".text"
+    #define _ETEXT          "etext"
+    #define _SDATA          ".data"
+    #define _EDATA          "edata"
+    #define _SBSS           ".bss"
+    #define _END            "end"
+    #define _CINITPTR       "cinit"
     ///-------------------------------------------------------------------------
     /// ENTRY POINT SYMBOLS
     ///-------------------------------------------------------------------------
-    //#define _START          "_start"
-    //#define _MAIN           "_main"
+    #define _START          "_start"
+    #define _MAIN           "_main"
         /*  _CSTART         "_c_int00" (defined in params.h)  */
-    //#define _TVORIG         "_tvorig"
-    //#define _TORIGIN        "_torigin"
-    //#define _DORIGIN        "_dorigin"
-    //#define _SORIGIN        "_sorigin"
+    #define _TVORIG         "_tvorig"
+    #define _TORIGIN        "_torigin"
+    #define _DORIGIN        "_dorigin"
+    #define _SORIGIN        "_sorigin"
 } /// end LOADER_SPACE
 ///-----------------------------------------------------------------------------
 #endif /// COFF_H

@@ -35,7 +35,7 @@ void PARSER_SPACE::ParserDataClass::close()
     _file_in->close();
 }
 ///-----------------------------------------------------------------------------
-bool PARSER_SPACE::ParserDataClass::open(QString file_path,QString file_name)
+PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::open(QString file_path,QString file_name)
 {
     QString file_name_in;
 
@@ -47,24 +47,26 @@ bool PARSER_SPACE::ParserDataClass::open(QString file_path,QString file_name)
 
     if(!QFile::exists(file_name_in))
     {
-        return(false);
+        return(PARESER_FILE_NOT_EXIST);
     }
     _file_in->setFileName(file_name_in);
     if(!_file_in->open(QIODevice::ReadOnly))
     {
-        return(false);
+        return(PARESER_FILE_NOT_OPEN);
     }
-    return(true);
+    return(PARESER_OK);
 }
 ///-----------------------------------------------------------------------------
-bool PARSER_SPACE::ParserDataClass::parse(QString file_path,QString file_name)
+PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::parse(QString file_path,QString file_name)
 {
     int     index(-1);
+    PARESER_STATE state;
     QString command;
     QTextStream in(_file_in);
 
-    if(!open(file_path,file_name))
-        return(false);
+    state = open(file_path,file_name);
+    if(state != PARESER_OK)
+        return(state);
 
     while(!in.atEnd())
     {
@@ -138,7 +140,7 @@ bool PARSER_SPACE::ParserDataClass::parse(QString file_path,QString file_name)
         }
     }
     close();
-    return(true);
+    return(state);
 }
 ///-----------------------------------------------------------------------------
 void PARSER_SPACE::ParserDataClass::getArguments(ARGUMENT_TYPE type)

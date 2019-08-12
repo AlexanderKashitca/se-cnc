@@ -55,34 +55,34 @@ int CoordMotionClass::sleep(unsigned int miliseconds)
     return(nanosleep(&req,&rem));
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::initialization()
+COORDINATE_STATE CoordMotionClass::initialization()
 {
     SE_MOTION_STATE state;
     /// TODO
     if(_motion == nullptr)
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
 
     if(!_motion->getFtdiLibraryLoad())
     {
         if(_debug)
             qDebug() << "FTDI Library not loaded.";
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     if(_motion->motionLock() != SE_MOTION_LOCKED)
     {
         if(_debug)
             qDebug() << "SE MOTION not locked.";
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     /// checking
     state = _motion->checkForReady();
     switch(state)
     {
         case SE_MOTION_OK      : break;
-        case SE_MOTION_TIMEOUT : return(COORD_MOTION_FAIL);
+        case SE_MOTION_TIMEOUT : return(COORD_STATE_FAIL);
         case SE_MOTION_READY   : break;
-        case SE_MOTION_ERROR   : return(COORD_MOTION_FAIL);
+        case SE_MOTION_ERROR   : return(COORD_STATE_FAIL);
     }
     if(_debug)
     {
@@ -90,22 +90,22 @@ COORD_MOTION_RETVAL CoordMotionClass::initialization()
         qDebug() << "Serial Number - " << _motion->usbLocation();
     }
 
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::putWriteLineBuffer(QString s,double Time)
+COORDINATE_STATE CoordMotionClass::putWriteLineBuffer(QString s,double Time)
 {
     if(_abort)
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     /// new string won't fit, flush it first
     if(_writeLineBuffer.length() + s.length() > (MAX_LINE - 10))
     {
-        if(flushWriteLineBuffer() != COORD_MOTION_OK)
+        if(flushWriteLineBuffer() != COORD_STATE_OK)
         {
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
 
@@ -120,47 +120,47 @@ COORD_MOTION_RETVAL CoordMotionClass::putWriteLineBuffer(QString s,double Time)
     {
         if(flushWriteLineBuffer())
         {
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::flushWriteLineBuffer()
+COORDINATE_STATE CoordMotionClass::flushWriteLineBuffer()
 {
     if(_abort)
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     ///int Length = _writeLineBuffer.length();
     int result = _motion->writeLine(_writeLineBuffer.toStdString().c_str());
     clearWriteLineBuffer();
     if(result == 0)
-        return(COORD_MOTION_OK);
-    return(COORD_MOTION_FAIL);
+        return(COORD_STATE_OK);
+    return(COORD_STATE_FAIL);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::clearWriteLineBuffer()
+COORDINATE_STATE CoordMotionClass::clearWriteLineBuffer()
 {
     _writeLineBuffer.clear();
     _writeLineBufferTime = 0.0;
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::launchCoordMotion()
+COORDINATE_STATE CoordMotionClass::launchCoordMotion()
 {
     QString response;
     response.clear();
     if(_motion->writeLineReadLine("CheckDoneBuf",response.toLatin1().begin()))
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     if(response == "-1")
     {
         _axisDisabled = true;
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     if(_threadingMode)  // Launch coordinated motion in spindle sync mode ?
@@ -169,14 +169,14 @@ COORD_MOTION_RETVAL CoordMotionClass::launchCoordMotion()
         {
             ///AfxMessageBox("Error Threading with Zero Speed");
             setAbort();
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
         _cmd.clear();
         _cmd = QString("TrigThread %.6f").arg(_threadingBaseSpeedRPS);
         if(_motion->writeLine(_cmd.toStdString().c_str()))
         {
             setAbort();
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
     else  // no normal coordinated motion
@@ -184,10 +184,10 @@ COORD_MOTION_RETVAL CoordMotionClass::launchCoordMotion()
         if(_motion->writeLine("ExecBuf"))
         {
             setAbort();
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
 /// Use a combination of Hardware and Software factors to
@@ -197,7 +197,7 @@ COORD_MOTION_RETVAL CoordMotionClass::launchCoordMotion()
 /// to move the current FRO toward our goal.  Whenever the total FRO
 /// is above the HW Limit adjust the SW factor.  Whenever below the FRO
 /// then adjust the HW Limit.
-COORD_MOTION_RETVAL CoordMotionClass::determineSoftwareHardwareFRO(
+COORDINATE_STATE CoordMotionClass::determineSoftwareHardwareFRO(
         double &HW,
         double &SW)
 {
@@ -253,7 +253,7 @@ COORD_MOTION_RETVAL CoordMotionClass::determineSoftwareHardwareFRO(
             HW = _feedRateOverride;
         }
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
 void CoordMotionClass::setAbort()
@@ -294,44 +294,44 @@ bool CoordMotionClass::getHalt()
     return(_halt);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setMotionCmd(
+COORDINATE_STATE CoordMotionClass::setMotionCmd(
                                         const char *s,
                                         bool FlushBeforeUnbufferedOperation)
 {
     /// exit if we are simulating
     if(_simulate)
     {
-        return(COORD_MOTION_OK);
+        return(COORD_STATE_OK);
     }
     if(FlushBeforeUnbufferedOperation)
     {
 //        if(flushSegments())
 //        {
 //            setAbort();
-//            return(COORD_MOTION_FAIL);
+//            return(COORD_STATE_FAIL);
 //        }
 //        if(waitForSegmentsFinished(true))
 //        {
 //            setAbort();
-//            return(COORD_MOTION_FAIL);
+//            return(COORD_STATE_FAIL);
 //        }
     }
     if(_motion->writeLine(s))
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setAxisDefinitions(int x,int y,int z,int a,int b,int c)
+COORDINATE_STATE CoordMotionClass::setAxisDefinitions(int x,int y,int z,int a,int b,int c)
 {
     _cmd.clear();
     _cmd = QString("DefineCS %d %d %d %d %d %d")
             .arg(x).arg(y).arg(z).arg(a).arg(b).arg(c);
     if(_motion->writeLine(_cmd.toStdString().c_str()))
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     _x_axis = x;
     _y_axis = y;
@@ -342,10 +342,10 @@ COORD_MOTION_RETVAL CoordMotionClass::setAxisDefinitions(int x,int y,int z,int a
 
     _defineCS_valid = true;
 
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,int *a,int *b,int *c)
+COORDINATE_STATE CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,int *a,int *b,int *c)
 {
     if(!_defineCS_valid)
     {
@@ -353,7 +353,7 @@ COORD_MOTION_RETVAL CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,in
         _cmd.append("DefineCS");
         if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
         {
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
         _result = sscanf(_response.toStdString().c_str(),
                             "%d%d%d%d%d%d",
@@ -362,7 +362,7 @@ COORD_MOTION_RETVAL CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,in
                         );
         if(_result != 6)
         {
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
 
@@ -373,23 +373,23 @@ COORD_MOTION_RETVAL CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,in
     *b = _b_axis;
     *c = _c_axis;
 
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getDestination(int axis,double *d)
+COORDINATE_STATE CoordMotionClass::getDestination(int axis,double *d)
 {
     *d = 0.0;
 
     /// not used in coordinate system
     if(axis == -1)
     {
-        return(COORD_MOTION_OK);
+        return(COORD_STATE_OK);
     }
 
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     /// send command
     _cmd.clear();
@@ -397,30 +397,30 @@ COORD_MOTION_RETVAL CoordMotionClass::getDestination(int axis,double *d)
     if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     _result = sscanf(_response.toStdString().c_str(),"%lf",d);
     if(_result != 1)
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getPosition(int axis,double *d)
+COORDINATE_STATE CoordMotionClass::getPosition(int axis,double *d)
 {
     *d=0.0;
 
     if(axis==-1)
     { /// not used in coordinate system
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     _cmd.clear();
@@ -428,31 +428,31 @@ COORD_MOTION_RETVAL CoordMotionClass::getPosition(int axis,double *d)
     if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     _result = sscanf(_response.toStdString().c_str(),"%lf",d);
     if(_result != 1)
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap,bool NoGeo)
+COORDINATE_STATE CoordMotionClass::getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap,bool NoGeo)
 {
 
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getRapidSettings()
+COORDINATE_STATE CoordMotionClass::getRapidSettings()
 {
 
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getRapidSettingsAxis(
+COORDINATE_STATE CoordMotionClass::getRapidSettingsAxis(
                                         int axis,
                                         double *Vel,
                                         double *Accel,
@@ -466,12 +466,12 @@ COORD_MOTION_RETVAL CoordMotionClass::getRapidSettingsAxis(
 
     if(CountsPerInch == 0.0)
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     if(axis == -1)
     {
-        return(COORD_MOTION_OK);
+        return(COORD_STATE_OK);
     }
     _cmd.clear();
     _cmd = QString("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d")
@@ -482,7 +482,7 @@ COORD_MOTION_RETVAL CoordMotionClass::getRapidSettingsAxis(
                 .arg(axis);
     if(_motion->writeLine(_cmd.toStdString().c_str()))
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
@@ -492,42 +492,42 @@ COORD_MOTION_RETVAL CoordMotionClass::getRapidSettingsAxis(
     _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
     if(_result != 1)
     {
-         return(COORD_MOTION_FAIL);
+         return(COORD_STATE_FAIL);
     }
     *Vel = fabs(temp/CountsPerInch);
 
     if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
     {
-         return(COORD_MOTION_FAIL);
+         return(COORD_STATE_FAIL);
     }
 
     _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
     if(_result != 1)
     {
-         return(COORD_MOTION_FAIL);
+         return(COORD_STATE_FAIL);
     }
     *Accel = fabs(temp/CountsPerInch);
 
     if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
 
     _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
     if(_result != 1)
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     *Jerk = fabs(temp/CountsPerInch);
 
     if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
     if(_result != 1)
     {
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     if(CountsPerInch >= 0.0)
         *SoftLimitPos = temp / CountsPerInch;
@@ -536,51 +536,51 @@ COORD_MOTION_RETVAL CoordMotionClass::getRapidSettingsAxis(
 
     if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
     {
-         return(COORD_MOTION_FAIL);
+         return(COORD_STATE_FAIL);
     }
     _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
     if(_result != 1)
     {
-         return(COORD_MOTION_FAIL);
+         return(COORD_STATE_FAIL);
     }
     if(CountsPerInch >= 0.0)
         *SoftLimitNeg = temp / CountsPerInch;
     else
         *SoftLimitPos = temp / CountsPerInch;
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::getAxisDone(int axis,int* r)
+COORDINATE_STATE CoordMotionClass::getAxisDone(int axis,int* r)
 {
     *r = -1; /// assume disabled
 
     if(axis == -1)
     { /// not used in coordinate system
-        return(COORD_MOTION_OK);
+        return(COORD_STATE_OK);
     }
 
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     _cmd.clear();
     _cmd = QString("CheckDone%d").arg(axis);
     if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
     _result = sscanf(_response.toStdString().c_str(),"%d",r);
     if(_result != 1)
     {
         setAbort();
-        return(COORD_MOTION_FAIL);
+        return(COORD_STATE_FAIL);
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setFeedRateOverride(double v)
+COORDINATE_STATE CoordMotionClass::setFeedRateOverride(double v)
 {
     double HW,SW;
 
@@ -593,10 +593,10 @@ COORD_MOTION_RETVAL CoordMotionClass::setFeedRateOverride(double v)
         _cmd = QString("SetFRO %.4f").arg(HW);
         _motion->writeLine(_cmd.toStdString().c_str());
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setFeedRateRapidOverride(double v)
+COORDINATE_STATE CoordMotionClass::setFeedRateRapidOverride(double v)
 {
     if(v > _kinematics->_motionParams.maxRapidFRO)
     {
@@ -609,19 +609,19 @@ COORD_MOTION_RETVAL CoordMotionClass::setFeedRateRapidOverride(double v)
         _cmd = QString("SetRapidFRO %.4f").arg(v);
         _motion->writeLine(_cmd.toStdString().c_str());
     }
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setHardwareFRORange(double v)
+COORDINATE_STATE CoordMotionClass::setHardwareFRORange(double v)
 {
     _hardwareFRORange = v;
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::setSpindleRateOverride(double v)
+COORDINATE_STATE CoordMotionClass::setSpindleRateOverride(double v)
 {
     _spindleRateOverride = v;
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
 double CoordMotionClass::getFeedRateOverride()
@@ -649,7 +649,7 @@ PLANNER_SPACE::MOTION_PARAMS* CoordMotionClass::getMotionParams()
     return(&_kinematics->_motionParams);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::checkMotionHalt(bool Coord)
+COORDINATE_STATE CoordMotionClass::checkMotionHalt(bool Coord)
 {
 #if 0
     CString response,responsebuf;
@@ -872,10 +872,10 @@ COORD_MOTION_RETVAL CoordMotionClass::checkMotionHalt(bool Coord)
         return 2;
     }
 #endif
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
-COORD_MOTION_RETVAL CoordMotionClass::waitForMoveXYZABCFinished()
+COORDINATE_STATE CoordMotionClass::waitForMoveXYZABCFinished()
 {
     int count = 0;
     do
@@ -884,23 +884,23 @@ COORD_MOTION_RETVAL CoordMotionClass::waitForMoveXYZABCFinished()
         if(_motion->writeLineReadLine("CheckDoneXYZABC",_response.toLatin1().begin()))
         {
             setAbort();
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
         if(_response == "-1")
         {
             _axisDisabled = true;
             setAbort();
         }
-        if(checkMotionHalt(false) != COORD_MOTION_OK)
+        if(checkMotionHalt(false) != COORD_STATE_OK)
         {
-            return(COORD_MOTION_FAIL); /// return 2; /*!!!*/
+            return(COORD_STATE_FAIL); /// return 2; /*!!!*/
         }
         if(_abort)
         {
-            return(COORD_MOTION_FAIL);
+            return(COORD_STATE_FAIL);
         }
     }
     while(_response != "1");
-    return(COORD_MOTION_OK);
+    return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------

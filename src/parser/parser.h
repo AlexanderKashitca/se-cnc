@@ -18,34 +18,38 @@ namespace PARSER_SPACE
         ARGUMENT_TYPE_ARC    = 4,
         ARGUMENT_TYPE_ORIENT = 5
     }ARGUMENT_TYPE;
+
+    typedef enum
+    {
+        PARESER_OK = 0,
+        PARESER_FILE_NOT_OPEN = 1,
+        PARESER_FILE_NOT_EXIST = 2
+    } PARESER_STATE;
     ///-----------------------------------------------------------------------------
     class ParserDataClass
     {
         private :
-            QFile*  _file_in;
-            QString _filename;
-            CommandClass* _command;
-
+            bool            _debug;
+            QFile*          _file_in;
+            QString         _filename;
+            CommandClass*   _command;
             QString         _line;
             QVector<double> _arg_double;
             QVector<int>    _arg_int;
             QString         _arg_string;
 
-            void getArguments(ARGUMENT_TYPE type);
-            bool open(QString file_path,QString file_name);
             void close();
-
-            bool    _debug;
+            void getArguments(ARGUMENT_TYPE type);
+            PARESER_STATE open(QString file_path,QString file_name);
         public :
             ParserDataClass();
             ~ParserDataClass();
-            ParserDataClass(const ParserDataClass &);
+            ParserDataClass(const ParserDataClass &) = delete;
 
-            void setDebug(bool enable);
             bool getDebug();
+            void setDebug(bool enable);
 
-            bool parse(QString file_path,QString file_name);
-
+            PARESER_STATE parse(QString file_path,QString file_name);
     };
 } /// end PARSER_SPACE
 ///-----------------------------------------------------------------------------

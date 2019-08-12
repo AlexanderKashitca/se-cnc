@@ -39,7 +39,7 @@ bool SystemClass::getDebug()
 SYSTEM_STATE SystemClass::initialization()
 {
     /// initialization coordinate system
-    if(_coordinate->initialization() != COORD_MOTION_OK)
+    if(_coordinate->initialization() != COORD_STATE_OK)
     {
         if(_debug)
             qDebug() << _coordinate->getLastErrorMessage();

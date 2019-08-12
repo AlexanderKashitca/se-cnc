@@ -17,20 +17,22 @@ namespace SYSTEM_SPACE
     class SystemClass
     {
         private :
-            PLANNER_SPACE::PlannerClass* _planner;
-            PARSER_SPACE::ParserDataClass* _parser;
-            INTERPRETER_SPACE::InterpreterClass* _interpreter;
-            COORD_MOTION_SPACE::CoordMotionClass* _coordinate;
             bool _debug;
+
+            PARSER_SPACE::ParserDataClass*        _parser;
+            PLANNER_SPACE::PlannerClass*          _planner;
+            COORD_MOTION_SPACE::CoordMotionClass* _coordinate;
+            INTERPRETER_SPACE::InterpreterClass*  _interpreter;
 
         public :
             SystemClass();
             ~SystemClass();
-            void setDebug(bool enable);
+
             bool getDebug();
+            void setDebug(bool enable);
+
             SYSTEM_STATE initialization();
             SYSTEM_STATE reInitialization();
-
 
             INTERPRETER_SPACE::INTERPRETER_SETTINGS _interpreter_settings;
     };
