@@ -3,7 +3,9 @@
 ///-----------------------------------------------------------------------------
 #include <QDebug>
 ///-----------------------------------------------------------------------------
-PARSER_SPACE::ParserDataClass::ParserDataClass()
+using namespace PARSER_SPACE;
+///-----------------------------------------------------------------------------
+ParserDataClass::ParserDataClass()
 {
     _command  = new CommandClass;
     _file_in  = new QFile;
@@ -14,28 +16,28 @@ PARSER_SPACE::ParserDataClass::ParserDataClass()
     _debug = false;
 }
 ///-----------------------------------------------------------------------------
-PARSER_SPACE::ParserDataClass::~ParserDataClass()
+ParserDataClass::~ParserDataClass()
 {
     delete _command;
     delete _file_in;
 }
 ///-----------------------------------------------------------------------------
-void PARSER_SPACE::ParserDataClass::setDebug(bool enable)
+void ParserDataClass::setDebug(bool enable)
 {
     _debug = enable;
 }
 ///-----------------------------------------------------------------------------
-bool PARSER_SPACE::ParserDataClass::getDebug()
+bool ParserDataClass::getDebug()
 {
     return(_debug);
 }
 ///-----------------------------------------------------------------------------
-void PARSER_SPACE::ParserDataClass::close()
+void ParserDataClass::close()
 {
     _file_in->close();
 }
 ///-----------------------------------------------------------------------------
-PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::open(QString file_path,QString file_name)
+PARESER_STATE ParserDataClass::open(QString file_path,QString file_name)
 {
     QString file_name_in;
 
@@ -57,7 +59,7 @@ PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::open(QString file_pat
     return(PARESER_OK);
 }
 ///-----------------------------------------------------------------------------
-PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::parse(QString file_path,QString file_name)
+PARESER_STATE ParserDataClass::execut(QString file_path,QString file_name)
 {
     int     index(-1);
     PARESER_STATE state;
@@ -143,7 +145,7 @@ PARSER_SPACE::PARESER_STATE PARSER_SPACE::ParserDataClass::parse(QString file_pa
     return(state);
 }
 ///-----------------------------------------------------------------------------
-void PARSER_SPACE::ParserDataClass::getArguments(ARGUMENT_TYPE type)
+void ParserDataClass::getArguments(ARGUMENT_TYPE type)
 {
     int end;
     int begin;

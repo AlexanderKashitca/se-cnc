@@ -896,7 +896,7 @@ public:
                 // The value of MinimumOrderOfMagnitude is greater than
                 // zero:
                 if (    (MaximumOrderOfMagnitude / MinimumOrderOfMagnitude)
-                    >   (double)pow((float)10, (int)(RMLPositionInputParameters::MAXIMUM_MAGNITUDE_RANGE)))
+                    >   static_cast<double>(pow(static_cast<float>(10), static_cast<int>(RMLPositionInputParameters::MAXIMUM_MAGNITUDE_RANGE))))
                 {
                     return(false);
                 }

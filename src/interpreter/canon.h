@@ -87,12 +87,12 @@ namespace INTERPRETER_SPACE
     const int CANON_TOOL_MAX       = 128;
     const int CANON_TOOL_ENTRY_LEN = 256;
 
-    struct CANON_TOOL_TABLE
+    typedef struct
     {
-      int id;
-      double length;
-      double diameter;
-    };
+      int    _id;
+      double _length;
+      double _diameter;
+    } CANON_TOOL_TABLE;
 }
 ///-----------------------------------------------------------------------------
 #endif /// ifndef CANON_H

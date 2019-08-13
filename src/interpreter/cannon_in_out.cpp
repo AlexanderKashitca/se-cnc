@@ -1,16 +1,34 @@
 ///-----------------------------------------------------------------------------
+#include <QDebug>
+///-----------------------------------------------------------------------------
 #include "cannon_in_out.h"
 #include "rs274ngc.h"
 ///-----------------------------------------------------------------------------
 using namespace INTERPRETER_SPACE;
+
+CannonInOutClass::CannonInOutClass()
+{
+
+}
+///-----------------------------------------------------------------------------
+void CannonInOutClass::setDebug(bool enable)
+{
+    _debug = enable;
+}
+///-----------------------------------------------------------------------------
+bool CannonInOutClass::getDebug()
+{
+    return(_debug);
+}
 ///-----------------------------------------------------------------------------
 /**
  * @note static inicialization
  */
-int CannonInOutClass::_active_slot = 1;
-int CannonInOutClass::_flood = 0;
-int CannonInOutClass::_line_number = 1;
-int CannonInOutClass::_mist = 0;
+bool   CannonInOutClass::_debug = false;
+int    CannonInOutClass::_active_slot = 1;
+int    CannonInOutClass::_flood = 0;
+int    CannonInOutClass::_line_number = 1;
+int    CannonInOutClass::_mist = 0;
 double CannonInOutClass::_feed_rate = 0.0;
 double CannonInOutClass::_length_unit_factor = 1;
 double CannonInOutClass::_probe_position_a = 0.0;
@@ -104,6 +122,10 @@ void CannonInOutClass::PRINT0(const char* control)
     _line_number++;
     print_nc_line_number();
     stream << control << '\n';
+    if(_debug)
+    {
+        qDebug() << control;
+    }
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,const char* arg1)
@@ -115,6 +137,10 @@ void CannonInOutClass::PRINT1(const char* control,const char* arg1)
     _line_number++;
     print_nc_line_number();
     stream << control << "("<< data_char << ")\n";
+    if(_debug)
+    {
+        qDebug() << control << "\t" << data_char;
+    }
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,double* arg1)
@@ -126,6 +152,10 @@ void CannonInOutClass::PRINT1(const char* control,double* arg1)
     _line_number++;
     print_nc_line_number();
     stream << control << "("<< data_double << ")\n";
+    if(_debug)
+    {
+        qDebug() << control << "\t" << data_double;
+    }
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT1(const char* control,int* arg1)
@@ -137,6 +167,10 @@ void CannonInOutClass::PRINT1(const char* control,int* arg1)
     _line_number++;
     print_nc_line_number();
     stream << control << "("<< data_int << ")\n";
+    if(_debug)
+    {
+        qDebug() << control << "\t" << data_int;
+    }
 }
 ///-----------------------------------------------------------------------------
 void CannonInOutClass::PRINT2(const char* control,double* arg1,const char* arg2)
@@ -149,6 +183,10 @@ void CannonInOutClass::PRINT2(const char* control,double* arg1,const char* arg2)
     _line_number++;
     print_nc_line_number();
     stream << control << "("<< data_double << "," << data_char << ")\n";
+    if(_debug)
+    {
+        qDebug() << control << "\t" << data_double << "\t" << data_char;
+    }
 }
 ///-----------------------------------------------------------------------------
 /* Offset the origin to the point with absolute coordinates x, y, z,
@@ -164,12 +202,23 @@ void CannonInOutClass::SetOriginOffsets(double x,double y,double z,double a,doub
     print_nc_line_number();
     stream << "SET_ORIGIN_OFFSETS"
            << "("
-           << x  << " ,"
-           << y  << " ,"
-           << z  << " ,"
-           << a  << " ,"
-           << b  << " ,"
+           << x  << ","
+           << y  << ","
+           << z  << ","
+           << a  << ","
+           << b  << ","
            << c  << ")\n";
+    if(_debug)
+    {
+        qDebug() << "SET_ORIGIN_OFFSETS" << "\t"
+                 << "("
+                 << x  << ",\t"
+                 << y  << ",\t"
+                 << z  << ",\t"
+                 << a  << ",\t"
+                 << b  << ",\t"
+                 << c  << ")";
+    }
 
     _program_position_x = _program_position_x + _program_origin_x - x;
     _program_position_y = _program_position_y + _program_origin_y - y;
@@ -283,9 +332,6 @@ workpiece.
  */
 void CannonInOutClass::StraightTraverse(double x,double y,double z,double a,double b,double c)
 {
-//    fprintf(_outfile,"%5d ",_line_number++);
-//    print_nc_line_number();
-//    fprintf(_outfile,"STRAIGHT_TRAVERSE(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
     QString line_int = QString::number(_line_number);
     QTextStream stream(_outfile);
     stream << line_int << "\t";
@@ -299,7 +345,17 @@ void CannonInOutClass::StraightTraverse(double x,double y,double z,double a,doub
            << a  << ","
            << b  << ","
            << c  << ")\n";
-
+    if(_debug)
+    {
+        qDebug() << "STRAIGHT_TRAVERSE" << "\t"
+                 << "("
+                 << x  << ",\t"
+                 << y  << ",\t"
+                 << z  << ",\t"
+                 << a  << ",\t"
+                 << b  << ",\t"
+                 << c  << ")";
+    }
     _program_position_x = x;
     _program_position_y = y;
     _program_position_z = z;
@@ -525,18 +581,6 @@ void CannonInOutClass::ArcFeed(
     double c
 )
 {
-//    fprintf(_outfile, "%5d ", _line_number++);
-//    print_nc_line_number();
-//    fprintf(_outfile, "ARC_FEED(%.4f, %.4f, %.4f, %.4f, %d, %.4f"
-//           ", %.4f" /*AA*/
-//           ", %.4f" /*BB*/
-//           ", %.4f" /*CC*/
-//           ")\n", first_end, second_end, first_axis, second_axis,
-//       rotation, axis_end_point
-//       , a /*AA*/
-//           , b /*BB*/
-//           , c /*CC*/
-//       );
     QString line_int = QString::number(_line_number);
     QTextStream stream(_outfile);
     stream << line_int << "\t";
@@ -553,6 +597,20 @@ void CannonInOutClass::ArcFeed(
            << a               << ","
            << b               << ","
            << c               << ")\n";
+    if(_debug)
+    {
+        qDebug() << "ARC_FEED" << "\t" << "\t"
+                 << "("
+                 << first_end       << ",\t"
+                 << second_end      << ",\t"
+                 << first_axis      << ",\t"
+                 << second_axis     << ",\t"
+                 << rotation        << ",\t"
+                 << axis_end_point  << ",\t"
+                 << a               << ",\t"
+                 << b               << ",\t"
+                 << c               << ")";
+    }
 
     if (_active_plane==CANON_PLANE_XY)
       {
@@ -580,17 +638,17 @@ void CannonInOutClass::ArcFeed(
 /* Move at existing feed rate so that at any time during the move,
 all axes have covered the same proportion of their required motion.
 The meanings of the parameters is the same as for STRAIGHT_TRAVERSE.*/
-void CannonInOutClass::StraightFeed(
- double x, double y, double z
- , double a
- , double b
- , double c
-)
+/**
+ * @brief CannonInOutClass::StraightFeed
+ * @param x
+ * @param y
+ * @param z
+ * @param a
+ * @param b
+ * @param c
+ */
+void CannonInOutClass::StraightFeed(double x,double y,double z,double a,double b,double c)
 {
-///    fprintf(_outfile,"%5d ",_line_number++);
-///    print_nc_line_number();
-///    fprintf(_outfile,"STRAIGHT_FEED(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
-
     QString line_int = QString::number(_line_number);
     QTextStream stream(_outfile);
     stream << line_int << "\t";
@@ -604,7 +662,17 @@ void CannonInOutClass::StraightFeed(
            << a << ","
            << b << ","
            << c << ")\n";
-
+    if(_debug)
+    {
+        qDebug() << "STRAIGHT_FEED" << "\t" << "\t"
+                 << "("
+                 << x << ",\t"
+                 << y << ",\t"
+                 << z << ",\t"
+                 << a << ",\t"
+                 << b << ",\t"
+                 << c << ")";
+    }
     _program_position_x = x;
     _program_position_y = y;
     _program_position_z = z;
@@ -617,24 +685,25 @@ void CannonInOutClass::StraightFeed(
 canonical machining functions and its semantics are not defined.
 When the operation is finished, all axes should be back where they
 started. */
-void CannonInOutClass::StraightProbe(
- double x, double y, double z
- , double a
- , double b
- , double c
-)
+/**
+ * @brief CannonInOutClass::StraightProbe
+ * @param x
+ * @param y
+ * @param z
+ * @param a
+ * @param b
+ * @param c
+ */
+void CannonInOutClass::StraightProbe(double x,double y,double z,double a,double b,double c)
 {
     double distance;
     double dx, dy, dz;
     double backoff;
 
-    dx=(_program_position_x - x);
-    dy=(_program_position_y - y);
-    dz=(_program_position_z - z);
+    dx = (_program_position_x - x);
+    dy = (_program_position_y - y);
+    dz = (_program_position_z - z);
     distance=sqrt((dx * dx) + (dy * dy) + (dz * dz));
-///   fprintf(_outfile,"%5d ",_line_number++);
-///    print_nc_line_number();
-///    fprintf(_outfile, "STRAIGHT_PROBE(%.4f, %.4f, %.4f, %.4f, %.4f, %.4f)\n",x,y,z,a,b,c);
     QString line_int = QString::number(_line_number);
     QTextStream stream(_outfile);
     stream << line_int << "\t";
@@ -648,26 +717,36 @@ void CannonInOutClass::StraightProbe(
            << a << ","
            << b << ","
            << c << ")\n";
-
+    if(_debug)
+    {
+        qDebug() << "STRAIGHT_PROBE" << "\t"
+                 << "("
+                 << x << ",\t"
+                 << y << ",\t"
+                 << z << ",\t"
+                 << a << ",\t"
+                 << b << ",\t"
+                 << c << ")";
+    }
     _probe_position_x = x;
     _probe_position_y = y;
     _probe_position_z = z;
     _probe_position_a = a;
     _probe_position_b = b;
     _probe_position_c = c;
-    if (distance == 0.0)
-      {
+    if(distance == 0.0)
+    {
         ///_program_position_x=_program_position_x;
         ///_program_position_y=_program_position_y;
         ///_program_position_z=_program_position_z;
-      }
+    }
     else
-      {
-        backoff = ((_length_unit_type==CANON_UNITS_MM) ? 0.254 : 0.01);
+    {
+        backoff = ((_length_unit_type == CANON_UNITS_MM) ? 0.254 : 0.01);
         _program_position_x = (x + (backoff * (dx / distance)));
         _program_position_y = (y + (backoff * (dy / distance)));
         _program_position_z = (z + (backoff * (dz / distance)));
-      }
+    }
     _program_position_a = a;
     _program_position_b = b;
     _program_position_c = c;

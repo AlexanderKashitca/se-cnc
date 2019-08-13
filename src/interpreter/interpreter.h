@@ -11,12 +11,12 @@ namespace INTERPRETER_SPACE
 {
     typedef enum
     {
-        INTERPRETER_OK = 0,
-        INTERPRETER_INIT,
-        INTERPRETER_FILE_NOT_EXIST,
-        INTERPRETER_FILE_NOT_OPEN,
-        INTERPRETER_FILE_NOT_CREATE,
-        INTERPRETER_FILE_ERROR
+        INTERPRETER_OK              = 0,
+        INTERPRETER_INIT_FAIL       = 1,
+        INTERPRETER_FILE_NOT_EXIST  = 2,
+        INTERPRETER_FILE_NOT_OPEN   = 3,
+        INTERPRETER_FILE_NOT_CREATE = 4,
+        INTERPRETER_FILE_ERROR      = 5
     }INTERPRETER_STATE;
 
     typedef struct
@@ -44,6 +44,7 @@ namespace INTERPRETER_SPACE
             int     _ems[RS274NGC_ACTIVE_M_CODES];
             double  _sets[RS274NGC_ACTIVE_SETTINGS];
             bool    _debug;
+            QString _errMsg;
             INTERPRETER_STATE loadFromFile(int print_stack);
             void              reportError(int error_code,int print_stack);
             INTERPRETER_STATE setToolFile(QString file_path,QString file_name);
@@ -62,6 +63,8 @@ namespace INTERPRETER_SPACE
             INTERPRETER_STATE readToolFile();
             INTERPRETER_STATE initialization(INTERPRETER_SETTINGS* settings);
             INTERPRETER_STATE execute();
+
+            QString getLastErrorMessage();
 
     };
 }

@@ -34,6 +34,16 @@ namespace SYSTEM_SPACE
             SYSTEM_STATE initialization();
             SYSTEM_STATE reInitialization();
 
+            SYSTEM_STATE setToolFile(QString tool_file);
+            SYSTEM_STATE setParamFile(QString param_file);
+            SYSTEM_STATE setProgramFile(QString program_file);
+
+            SYSTEM_STATE runParser();
+            SYSTEM_STATE runInterpreter();
+
+
+
+
             INTERPRETER_SPACE::INTERPRETER_SETTINGS _interpreter_settings;
     };
 } /// end SYSTEM_SPACE

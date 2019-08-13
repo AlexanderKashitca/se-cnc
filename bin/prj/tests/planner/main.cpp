@@ -80,10 +80,9 @@ QVector<QVector3D> vector;
 vector.clear();
 
 QVector3D vector3d;
-float point = 0.0F;
-float _x;
-float _y;
-float _z;
+double _x;
+double _y;
+double _z;
 
 
 
@@ -186,9 +185,9 @@ float _z;
         _x = IP->CurrentPositionVector->VecData[0];
         _y = IP->CurrentPositionVector->VecData[1];
         _z = IP->CurrentPositionVector->VecData[2];
-        vector3d.setX(_x);
-        vector3d.setY(_y);
-        vector3d.setZ(_z);
+        vector3d.setX(static_cast<float>(_x));
+        vector3d.setY(static_cast<float>(_y));
+        vector3d.setZ(static_cast<float>(_z));
         vector.push_back(vector3d);
         /// Calling the Reflexxes OTG algorithm
         ResultValue = RML->RMLPosition(*IP,OP,Flags);

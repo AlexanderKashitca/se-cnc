@@ -1303,121 +1303,125 @@ Z-axis motion over the extra arc && the main arc in proportion to
 their lengths.
 
 */
-
-int rs274ngcClass::convert_arc_comp2( /* ARGUMENTS                                 */
- int move,              /* either G_2 (cw arc) or G_3 (ccw arc)           */
- block_pointer block,   /* pointer to a block of RS274/NGC instructions   */
- setup_pointer settings,/* pointer to machine settings                    */
- double end_x,          /* x-value at end of programmed (then actual) arc */
- double end_y,          /* y-value at end of programmed (then actual) arc */
- double end_z            /* z-value at end of arc                          */
- ,double AA_end         /* a-value at end of arc                    *//*AA*/
- ,double BB_end         /* b-value at end of arc                    *//*BB*/
- ,double CC_end         /* c-value at end of arc                    *//*CC*/
-)
+/**
+ * @brief rs274ngcClass::convert_arc_comp2
+ * @param move     - either G_2 (cw arc) or G_3 (ccw arc)
+ * @param block    - pointer to a block of RS274/NGC instructions
+ * @param settings - pointer to machine settings
+ * @param end_x    - x-value at end of programmed (then actual) arc
+ * @param end_y    - y-value at end of programmed (then actual) arc
+ * @param end_z    - z-value at end of arc
+ * @param AA_end   - a-value at end of arc
+ * @param BB_end   - b-value at end of arc
+ * @param CC_end   - c-value at end of arc
+ * @return
+ */
+int rs274ngcClass::convert_arc_comp2(int move,
+                                     block_pointer block,
+                                     setup_pointer settings,
+                                     double end_x,
+                                     double end_y,
+                                     double end_z,
+                                     double AA_end,
+                                     double BB_end,
+                                     double CC_end)
 {
-  static char name[] = "convert_arc_comp2";
-  double alpha;    /* direction of tangent to start of arc */
-  double arc_radius;
-  double beta;     /* angle between two tangents above */
-  double center_x; /* center of arc */
-  double center_y;
-  double delta;    /* direction of radius from start of arc to center of arc */
-  double gamma;    /* direction of perpendicular to arc at end */
-  double mid_x;
-  double mid_y;
-  int side;
-  double small = TOLERANCE_CONCAVE_CORNER; /* angle for testing corners */
-  double start_x;
-  double start_y;
-  int status;      /* status returned from CHP function call     */
-  double theta;    /* direction of tangent to last cut */
-  double tolerance;
-  double tool_radius;
-  int turn;        /* number of full or partial circles CCW */
+    static char name[] = "convert_arc_comp2";
+    double alpha;    /* direction of tangent to start of arc */
+    double arc_radius;
+    double beta;     /* angle between two tangents above */
+    double center_x; /* center of arc */
+    double center_y;
+    double delta;    /* direction of radius from start of arc to center of arc */
+    double gamma;    /* direction of perpendicular to arc at end */
+    double mid_x;
+    double mid_y;
+    int side;
+    double small = TOLERANCE_CONCAVE_CORNER; /* angle for testing corners */
+    double start_x;
+    double start_y;
+    int status;      /* status returned from CHP function call     */
+    double theta;    /* direction of tangent to last cut */
+    double tolerance;
+    double tool_radius;
+    int turn;        /* number of full or partial circles CCW */
+    /* find basic arc data: center_x,center_y,&& turn */
 
-/* find basic arc data: center_x,center_y,&& turn */
+    start_x = settings->program_x;
+    start_y = settings->program_y;
+    tolerance = (settings->length_units == CANON_UNITS_INCHES) ? TOLERANCE_INCH : TOLERANCE_MM;
 
-  start_x = settings->program_x;
-  start_y = settings->program_y;
-  tolerance = (settings->length_units == CANON_UNITS_INCHES) ?
-    TOLERANCE_INCH : TOLERANCE_MM;
-
-  if(block->r_flag)
+    if(block->r_flag)
     {
-      CHP(arc_data_r(move,start_x,start_y,end_x,end_y,
-             block->r_number,&center_x,&center_y,&turn));
+        CHP(arc_data_r(move,start_x,start_y,end_x,end_y,block->r_number,&center_x,&center_y,&turn));
     }
-  else
+    else
     {
-      CHP(arc_data_ijk(move,start_x,start_y,end_x,end_y,
-               block->i_number,block->j_number,
-               &center_x,&center_y,&turn,tolerance));
+        CHP(arc_data_ijk(move,start_x,start_y,end_x,end_y,block->i_number,block->j_number,&center_x,&center_y,&turn,tolerance));
     }
+    /* compute other data */
+    side = settings->cutter_comp_side;
+    tool_radius = settings->cutter_comp_radius; /* always == positive */
+    arc_radius = hypot((center_x - end_x),(center_y - end_y));
+    theta = atan2(settings->current_y - start_y,settings->current_x - start_x);
+    theta = (side == LEFT) ? (theta - PI2) : (theta + PI2);
+    delta = atan2(center_y - start_y,center_x - start_x);
+    alpha = (move == G_3) ? (delta - PI2) : (delta + PI2);
+    beta = (side == LEFT) ? (theta - alpha) : (alpha - theta);
+    beta = (beta > (1.5 * PI))  ? (beta - TWO_PI) : (beta < -PI2) ? (beta + TWO_PI) : beta;
 
-/* compute other data */
-  side = settings->cutter_comp_side;
-  tool_radius = settings->cutter_comp_radius; /* always == positive */
-  arc_radius = hypot((center_x - end_x),(center_y - end_y));
-  theta =
-    atan2(settings->current_y - start_y,settings->current_x - start_x);
-  theta = (side == LEFT) ? (theta - PI2) : (theta + PI2);
-  delta = atan2(center_y - start_y,center_x - start_x);
-  alpha = (move == G_3) ? (delta - PI2) : (delta + PI2);
-  beta = (side == LEFT) ? (theta - alpha) : (alpha - theta);
-  beta = (beta > (1.5 * PI))  ? (beta - TWO_PI) :
-              (beta < -PI2) ? (beta + TWO_PI) : beta;
-
-  if(((side == LEFT)  && (move == G_3)) ||
-      ((side == RIGHT) && (move == G_2)))
+    if(((side == LEFT)  && (move == G_3)) ||
+       ((side == RIGHT) && (move == G_2)))
     {
-      gamma = atan2 ((center_y - end_y),(center_x - end_x));
-      CHK((arc_radius <= tool_radius),
-      NCE_TOOL_RADIUS_NOT_LESS_THAN_ARC_RADIUS_WITH_COMP);
+        gamma = atan2 ((center_y - end_y),(center_x - end_x));
+        CHK((arc_radius <= tool_radius),
+        NCE_TOOL_RADIUS_NOT_LESS_THAN_ARC_RADIUS_WITH_COMP);
     }
-  else
+    else
     {
-      gamma = atan2 ((end_y - center_y),(end_x - center_x));
-      delta = (delta + PI);
+        gamma = atan2 ((end_y - center_y),(end_x - center_x));
+        delta = (delta + PI);
     }
 
-  settings->program_x = end_x;
-  settings->program_y = end_y;
-  end_x = (end_x + (tool_radius * cos(gamma))); /* end_x reset actual */
-  end_y = (end_y + (tool_radius * sin(gamma))); /* end_y reset actual */
-
-/* check if extra arc needed && insert if so */
-
-  CHK(((beta < -small) || (beta > (PI + small))),
-      NCE_CONCAVE_CORNER_WITH_CUTTER_RADIUS_COMP);
-  if(beta > small) /* two arcs needed */
+    settings->program_x = end_x;
+    settings->program_y = end_y;
+    end_x = (end_x + (tool_radius * cos(gamma))); /* end_x reset actual */
+    end_y = (end_y + (tool_radius * sin(gamma))); /* end_y reset actual */
+    /* check if extra arc needed && insert if so */
+    CHK(((beta < -small) || (beta > (PI + small))),NCE_CONCAVE_CORNER_WITH_CUTTER_RADIUS_COMP);
+    if(beta > small) /* two arcs needed */
     {
-      mid_x = (start_x + (tool_radius * cos(delta)));
-      mid_y = (start_y + (tool_radius * sin(delta)));
-      if(settings->feed_mode == INVERSE_TIME)
-    inverse_time_rate_arc2(start_x,start_y,(side == LEFT) ? -1 : 1,
+        mid_x = (start_x + (tool_radius * cos(delta)));
+        mid_y = (start_y + (tool_radius * sin(delta)));
+        if(settings->feed_mode == INVERSE_TIME)
+            inverse_time_rate_arc2(start_x,start_y,(side == LEFT) ? -1 : 1,
                    mid_x,mid_y,center_x,center_y,turn,
                    end_x,end_y,end_z,block,settings);
-      CannonInOutClass::ArcFeed(mid_x,mid_y,start_x,start_y,((side == LEFT) ? -1 : 1),
-           settings->current_z,AA_end,BB_end,CC_end);
-      CannonInOutClass::ArcFeed(end_x,end_y,center_x,center_y,turn,end_z,AA_end,BB_end,CC_end);
+            CannonInOutClass::ArcFeed(
+                                        mid_x,mid_y,start_x,start_y,
+                                        ((side == LEFT) ? -1 : 1),
+                                        settings->current_z,
+                                        AA_end,
+                                        BB_end,
+                                        CC_end);
+            CannonInOutClass::ArcFeed(end_x,end_y,center_x,center_y,turn,end_z,AA_end,BB_end,CC_end);
     }
-  else /* one arc needed */
+    else /* one arc needed */
     {
-      if(settings->feed_mode == INVERSE_TIME)
-    inverse_time_rate_arc(settings->current_x,settings->current_y,
+        if(settings->feed_mode == INVERSE_TIME)
+            inverse_time_rate_arc(settings->current_x,settings->current_y,
                   settings->current_z,center_x,center_y,turn,
                   end_x,end_y,end_z,block,settings);
-      CannonInOutClass::ArcFeed(end_x,end_y,center_x,center_y,turn,        end_z,AA_end,BB_end,CC_end);
+        CannonInOutClass::ArcFeed(end_x,end_y,center_x,center_y,turn,        end_z,AA_end,BB_end,CC_end);
     }
 
-  settings->current_x = end_x;
-  settings->current_y = end_y;
-  settings->current_z = end_z;
-  settings->AA_current = AA_end;                      /*AA*/
-  settings->BB_current = BB_end;                      /*BB*/
-  settings->CC_current = CC_end;                      /*CC*/
-  return RS274NGC_OK;
+    settings->current_x  = end_x;
+    settings->current_y  = end_y;
+    settings->current_z  = end_z;
+    settings->AA_current = AA_end;
+    settings->BB_current = BB_end;
+    settings->CC_current = CC_end;
+    return RS274NGC_OK;
 }
 ///-----------------------------------------------------------------------------
 /* convert_axis_offsets
@@ -1476,126 +1480,128 @@ G92.3 ==  ! in [NCMS]. It sets the axis offset values to the values
 given in the parameters.
 
 */
-
-int rs274ngcClass::convert_axis_offsets( /* ARGUMENTS                               */
- int g_code,             /* g_code being executed (must be in G_92 series) */
- block_pointer block,    /* pointer to a block of RS274/NGC instructions   */
- setup_pointer settings)  /* pointer to machine settings                    */
+/**
+ * @brief rs274ngcClass::convert_axis_offsets
+ * @param g_code   - g_code being executed (must be in G_92 series)
+ * @param block    - pointer to a block of RS274/NGC instructions
+ * @param settings - pointer to machine settings
+ * @return
+ */
+int rs274ngcClass::convert_axis_offsets(int g_code,block_pointer block,setup_pointer settings)
 {
-  static char name[] = "convert_axis_offsets";
-  double * pars;          /* short name for settings->parameters            */
+    static char name[] = "convert_axis_offsets";
+    double*     pars; /// short name for settings->parameters
 
-  CHK((settings->cutter_comp_side != OFF),/*  ! "IS ON" */
-      NCE_CANNOT_CHANGE_AXIS_OFFSETS_WITH_CUTTER_RADIUS_COMP);
-  pars = settings->parameters;
-  if(g_code == G_92)
+    CHK((settings->cutter_comp_side != OFF),NCE_CANNOT_CHANGE_AXIS_OFFSETS_WITH_CUTTER_RADIUS_COMP);
+    pars = settings->parameters;
+    if(g_code == G_92)
     {
-      if(block->x_flag == ON)
+        if(block->x_flag == ON)
+        {
+            settings->axis_offset_x = (settings->current_x + settings->axis_offset_x - block->x_number);
+            settings->current_x = block->x_number;
+        }
+        if(block->y_flag == ON)
+        {
+            settings->axis_offset_y = (settings->current_y + settings->axis_offset_y - block->y_number);
+            settings->current_y = block->y_number;
+        }
+        if(block->z_flag == ON)
+        {
+            settings->axis_offset_z = (settings->current_z + settings->axis_offset_z - block->z_number);
+            settings->current_z = block->z_number;
+        }
+        if(block->a_flag == ON)
+        {
+            settings->AA_axis_offset = (settings->AA_current + settings->AA_axis_offset - block->a_number);
+            settings->AA_current = block->a_number;
+        }
+        if(block->b_flag == ON)
+        {
+            settings->BB_axis_offset = (settings->BB_current + settings->BB_axis_offset - block->b_number);
+            settings->BB_current = block->b_number;
+        }
+        if(block->c_flag == ON)
+        {
+            settings->CC_axis_offset = (settings->CC_current + settings->CC_axis_offset - block->c_number);
+            settings->CC_current = block->c_number;
+        }
+
+        CannonInOutClass::SetOriginOffsets(
+                            settings->origin_offset_x + settings->axis_offset_x,
+                            settings->origin_offset_y + settings->axis_offset_y,
+                            settings->origin_offset_z + settings->axis_offset_z,
+                            (settings->AA_origin_offset + settings->AA_axis_offset),
+                            (settings->BB_origin_offset + settings->BB_axis_offset),
+                            (settings->CC_origin_offset + settings->CC_axis_offset)
+        );
+        pars[5211] = settings->axis_offset_x;
+        pars[5212] = settings->axis_offset_y;
+        pars[5213] = settings->axis_offset_z;
+        pars[5214] = settings->AA_axis_offset;
+        pars[5215] = settings->BB_axis_offset;
+        pars[5216] = settings->CC_axis_offset;
+    }
+    else if((g_code == G_92_1) || (g_code == G_92_2))
     {
-      settings->axis_offset_x =
-        (settings->current_x + settings->axis_offset_x - block->x_number);
-      settings->current_x = block->x_number;
-    }
+        settings->current_x  =  settings->current_x  + settings->axis_offset_x;
+        settings->current_y  =  settings->current_y  + settings->axis_offset_y;
+        settings->current_z  =  settings->current_z  + settings->axis_offset_z;
+        settings->AA_current = (settings->AA_current + settings->AA_axis_offset);
+        settings->BB_current = (settings->BB_current + settings->BB_axis_offset);
+        settings->CC_current = (settings->CC_current + settings->CC_axis_offset);
 
-      if(block->y_flag == ON)
+        CannonInOutClass::SetOriginOffsets(
+                                            settings->origin_offset_x,
+                                            settings->origin_offset_y,
+                                            settings->origin_offset_z,
+                                            settings->AA_origin_offset,
+                                            settings->BB_origin_offset,
+                                            settings->CC_origin_offset
+        );
+        settings->axis_offset_x = 0.0;
+        settings->axis_offset_y = 0.0;
+        settings->axis_offset_z = 0.0;
+        settings->AA_axis_offset = 0.0;
+        settings->BB_axis_offset = 0.0;
+        settings->CC_axis_offset = 0.0;
+        if(g_code == G_92_1)
+        {
+            pars[5211] = 0.0;
+            pars[5212] = 0.0;
+            pars[5213] = 0.0;
+            pars[5214] = 0.0;
+            pars[5215] = 0.0;
+            pars[5216] = 0.0;
+        }
+    }
+    else if(g_code == G_92_3)
     {
-      settings->axis_offset_y =
-        (settings->current_y + settings->axis_offset_y - block->y_number);
-      settings->current_y = block->y_number;
+        settings->current_x  = settings->current_x  + settings->axis_offset_x - pars[5211];
+        settings->current_y  = settings->current_y  + settings->axis_offset_y - pars[5212];
+        settings->current_z  = settings->current_z  + settings->axis_offset_z - pars[5213];
+        settings->AA_current = settings->AA_current + settings->AA_axis_offset - pars[5214];
+        settings->BB_current = settings->BB_current + settings->BB_axis_offset - pars[5215];
+        settings->CC_current = settings->CC_current + settings->CC_axis_offset - pars[5216];
+        settings->axis_offset_x  = pars[5211];
+        settings->axis_offset_y  = pars[5212];
+        settings->axis_offset_z  = pars[5213];
+        settings->AA_axis_offset = pars[5214];
+        settings->BB_axis_offset = pars[5215];
+        settings->CC_axis_offset = pars[5216];
+
+        CannonInOutClass::SetOriginOffsets(
+                            settings->origin_offset_x + settings->axis_offset_x,
+                            settings->origin_offset_y + settings->axis_offset_y,
+                            settings->origin_offset_z + settings->axis_offset_z,
+                            (settings->AA_origin_offset + settings->AA_axis_offset),
+                            (settings->BB_origin_offset + settings->BB_axis_offset),
+                            (settings->CC_origin_offset + settings->CC_axis_offset)
+        );
     }
-
-      if(block->z_flag == ON)
-    {
-      settings->axis_offset_z =
-        (settings->current_z + settings->axis_offset_z - block->z_number);
-      settings->current_z = block->z_number;
-    }
-
-      if(block->a_flag == ON)                                           /*AA*/
-    {settings->AA_axis_offset = (settings->AA_current +         /*AA*/
-                settings->AA_axis_offset - block->a_number); /*AA*/
-      settings->AA_current = block->a_number;}                  /*AA*/
-      if(block->b_flag == ON)                                           /*BB*/
-    {settings->BB_axis_offset = (settings->BB_current +         /*BB*/
-                settings->BB_axis_offset - block->b_number); /*BB*/
-      settings->BB_current = block->b_number;}                  /*BB*/
-      if(block->c_flag == ON)                                           /*CC*/
-    {settings->CC_axis_offset = (settings->CC_current +         /*CC*/
-                            settings->CC_axis_offset - block->c_number); /*CC*/
-      settings->CC_current = block->c_number;}                  /*CC*/
-
-      CannonInOutClass::SetOriginOffsets(settings->origin_offset_x + settings->axis_offset_x,
-             settings->origin_offset_y + settings->axis_offset_y,
-             settings->origin_offset_z + settings->axis_offset_z
-,(settings->AA_origin_offset + settings->AA_axis_offset)
-,(settings->BB_origin_offset + settings->BB_axis_offset)
-,(settings->CC_origin_offset + settings->CC_axis_offset));
-      pars[5211] = settings->axis_offset_x;
-      pars[5212] = settings->axis_offset_y;
-      pars[5213] = settings->axis_offset_z;
-      pars[5214] = settings->AA_axis_offset;                      /*AA*/
-      pars[5215] = settings->BB_axis_offset;                      /*BB*/
-      pars[5216] = settings->CC_axis_offset;                      /*CC*/
-
-
-    }
-  else if((g_code == G_92_1) || (g_code == G_92_2))
-    {
-      settings->current_x = settings->current_x + settings->axis_offset_x;
-      settings->current_y = settings->current_y + settings->axis_offset_y;
-      settings->current_z = settings->current_z + settings->axis_offset_z;
-      settings->AA_current = (settings->AA_current + settings->AA_axis_offset);
-      settings->BB_current = (settings->BB_current + settings->BB_axis_offset);
-      settings->CC_current = (settings->CC_current + settings->CC_axis_offset);
-
-      CannonInOutClass::SetOriginOffsets(settings->origin_offset_x,
-             settings->origin_offset_y,
-             settings->origin_offset_z
-,			 settings->AA_origin_offset
-,			 settings->BB_origin_offset
-,			 settings->CC_origin_offset
-);
-      settings->axis_offset_x = 0.0;
-      settings->axis_offset_y = 0.0;
-      settings->axis_offset_z = 0.0;
-      settings->AA_axis_offset = 0.0;
-      settings->BB_axis_offset = 0.0;
-      settings->CC_axis_offset = 0.0;
-      if(g_code == G_92_1)
-    {
-      pars[5211] = 0.0;
-      pars[5212] = 0.0;
-      pars[5213] = 0.0;
-      pars[5214] = 0.0;
-      pars[5215] = 0.0;
-      pars[5216] = 0.0;
-    }
-    }
-  else if(g_code == G_92_3)
-    {
-      settings->current_x = settings->current_x + settings->axis_offset_x - pars[5211];
-      settings->current_y = settings->current_y + settings->axis_offset_y - pars[5212];
-      settings->current_z = settings->current_z + settings->axis_offset_z - pars[5213];
-      settings->AA_current = settings->AA_current + settings->AA_axis_offset - pars[5214];
-      settings->BB_current = settings->BB_current + settings->BB_axis_offset - pars[5215];
-      settings->CC_current = settings->CC_current + settings->CC_axis_offset - pars[5216];
-      settings->axis_offset_x = pars[5211];
-      settings->axis_offset_y = pars[5212];
-      settings->axis_offset_z = pars[5213];
-      settings->AA_axis_offset = pars[5214];
-      settings->BB_axis_offset = pars[5215];
-      settings->CC_axis_offset = pars[5216];
-
-      CannonInOutClass::SetOriginOffsets(settings->origin_offset_x + settings->axis_offset_x,
-             settings->origin_offset_y + settings->axis_offset_y,
-             settings->origin_offset_z + settings->axis_offset_z,
-            (settings->AA_origin_offset + settings->AA_axis_offset),
-            (settings->BB_origin_offset + settings->BB_axis_offset),
-            (settings->CC_origin_offset + settings->CC_axis_offset));
-    }
-  else
-    ERM(NCE_BUG_CODE_NOT_IN_G92_SERIES);
-  return RS274NGC_OK;
+    else
+        ERM(NCE_BUG_CODE_NOT_IN_G92_SERIES);
+    return RS274NGC_OK;
 }
 ///-----------------------------------------------------------------------------
 /* convert_comment
@@ -2038,7 +2044,7 @@ int rs274ngcClass::convert_cutter_compensation_on( /* ARGUMENTS               */
       NCE_CANNOT_TURN_CUTTER_RADIUS_COMP_ON_WHEN_ON);
   index =
     (block->d_number != -1) ? block->d_number : settings->current_slot;
-  radius = ((settings->tool_table[index].diameter)/2.0);
+  radius = ((settings->tool_table[index]._diameter)/2.0);
 
   if(radius < 0.0) /* switch side & make radius positive if radius negative */
     {
@@ -5045,7 +5051,7 @@ int rs274ngcClass::convert_tool_length_offset(int g_code,block_pointer block,set
     {
         index = block->h_number;
         CHK((index == -1),NCE_OFFSET_INDEX_MISSING);
-        offset = settings->tool_table[index].length;
+        offset = settings->tool_table[index]._length;
         CannonInOutClass::UseToolLengthOffset(offset);
         settings->current_z = (settings->current_z + settings->tool_length_offset - offset);
         settings->tool_length_offset = offset;
@@ -9186,22 +9192,21 @@ _setup.tool_max == intended to be set for a particular machine.
 
 int rs274ngcClass::rs274ngc_load_tool_table() /* NO ARGUMENTS */
 {
-  static char name[] = "rs274ngc_load_tool_table";
-  int n;
+    static char name[] = "rs274ngc_load_tool_table";
+    int n;
 
-  CHK((_setup.tool_max > CANON_TOOL_MAX),NCE_TOOL_MAX_TOO_LARGE);
-  for(n = 0; n <= _setup.tool_max; n++)
+    CHK((_setup.tool_max > CANON_TOOL_MAX),NCE_TOOL_MAX_TOO_LARGE);
+    for(n = 0; n <= _setup.tool_max; n++)
     {
-      _setup.tool_table[n] = CannonInOutClass::GetExternalToolTable(n);
+        _setup.tool_table[n] = CannonInOutClass::GetExternalToolTable(n);
     }
-  for(; n <= CANON_TOOL_MAX; n++)
+    for(;n <= CANON_TOOL_MAX;n++)
     {
-      _setup.tool_table[n].id = 0;
-      _setup.tool_table[n].length = 0;
-      _setup.tool_table[n].diameter = 0;
+        _setup.tool_table[n]._id       = 0;
+        _setup.tool_table[n]._length   = 0;
+        _setup.tool_table[n]._diameter = 0;
     }
-
-  return RS274NGC_OK;
+    return RS274NGC_OK;
 }
 
 /***********************************************************************/
@@ -9335,7 +9340,7 @@ zero,this parses the line into the _setup.block1.
  * @param command - may be NULL or a string to read
  * @return
  */
-int rs274ngcClass::rs274ngc_read(const char * command)
+int rs274ngcClass::rs274ngc_read(const char* command)
 {
     static char name[] = "rs274ngc_read";
     int status;
@@ -9781,7 +9786,7 @@ max_size.
  * @param error_text - char array to copy error text into
  * @param max_size   - maximum number of characters to copy
  */
-void rs274ngcClass::rs274ngc_error_text(int error_code,char* error_text,int max_size)            /*  */
+void rs274ngcClass::rs274ngc_error_text(int error_code,char* error_text,int max_size)
 {
     if(
         ((error_code >= RS274NGC_MIN_ERROR) &&

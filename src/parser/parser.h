@@ -49,7 +49,7 @@ namespace PARSER_SPACE
             bool getDebug();
             void setDebug(bool enable);
 
-            PARESER_STATE parse(QString file_path,QString file_name);
+            PARESER_STATE execut(QString file_path,QString file_name);
     };
 } /// end PARSER_SPACE
 ///-----------------------------------------------------------------------------

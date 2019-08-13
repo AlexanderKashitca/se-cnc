@@ -142,11 +142,11 @@ namespace COORD_MOTION_SPACE
 
             bool    _axisDisabled;
 
-
             double _feedRateOverride;
             double _feedRateRapidOverride;
             double _hardwareFRORange;
             double _spindleRateOverride;
+
             int sleep(unsigned int miliseconds);
             COORDINATE_STATE putWriteLineBuffer(QString s,double Time);
             COORDINATE_STATE flushWriteLineBuffer();

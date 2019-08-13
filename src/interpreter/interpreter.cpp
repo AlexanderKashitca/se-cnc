@@ -27,6 +27,7 @@ InterpreterClass::~InterpreterClass()
 void InterpreterClass::setDebug(bool enable)
 {
     _debug = enable;
+    io.setDebug(enable);
 }
 ///-----------------------------------------------------------------------------
 bool InterpreterClass::getDebug()
@@ -202,9 +203,9 @@ INTERPRETER_STATE InterpreterClass::readToolFile()
 
     for(tool_slot = 0;tool_slot <= io._tool_max;tool_slot++)
     {
-        io._tools[tool_slot].id       = -1;
-        io._tools[tool_slot].length   = 0.0;
-        io._tools[tool_slot].diameter = 0.0;
+        io._tools[tool_slot]._id       = -1;
+        io._tools[tool_slot]._length   = 0.0;
+        io._tools[tool_slot]._diameter = 0.0;
     }
     /// open tool file
     file_in.setFileName(_tool_file);
@@ -254,9 +255,9 @@ INTERPRETER_STATE InterpreterClass::readToolFile()
         {
             return(INTERPRETER_FILE_ERROR);
         }
-        io._tools[tool_slot].id       = tool_id;
-        io._tools[tool_slot].length   = tool_offset;
-        io._tools[tool_slot].diameter = tool_diameter;
+        io._tools[tool_slot]._id       = tool_id;
+        io._tools[tool_slot]._length   = tool_offset;
+        io._tools[tool_slot]._diameter = tool_diameter;
         if(_debug)
         {
             qDebug() << " TOOL TABLE LINE - "
@@ -286,7 +287,7 @@ INTERPRETER_STATE InterpreterClass::execute()
     if((status = rs274ngc.rs274ngc_init()) != RS274NGC_OK)
     {
         reportError(status, print_stack);
-        return(INTERPRETER_INIT);
+        return(INTERPRETER_INIT_FAIL);
     }
     status = rs274ngc.rs274ngc_open(_program_in_file.toStdString().c_str());
     if(status != RS274NGC_OK) /* do not need to close since not open */
@@ -322,6 +323,8 @@ void InterpreterClass::reportError(int error_code,int print_stack)
         int k;
         rs274ngc.rs274ngc_error_text(error_code,buffer,5); /* for coverage of code */
         rs274ngc.rs274ngc_error_text(error_code,buffer,RS274NGC_TEXT_SIZE);
+        _errMsg.clear();
+        _errMsg.append(buffer);
         fprintf(stderr,"%s\n",((buffer[0] == 0) ? "Unknown error, bad error code" : buffer));
         rs274ngc.rs274ngc_line_text(buffer, RS274NGC_TEXT_SIZE);
         fprintf(stderr,"%s\n",buffer);
@@ -351,8 +354,6 @@ INTERPRETER_STATE InterpreterClass::loadFromFile(int print_stack)
     while(1)
     {
         status = rs274ngc.rs274ngc_read(nullptr);
-        if(_debug)
-            qDebug() << "rs274ngc.rs274ngc_read - " << status;
         if(status == RS274NGC_ENDFILE)
             break;
         if((status != RS274NGC_OK) && (status != RS274NGC_EXECUTE_FINISH))
@@ -378,5 +379,10 @@ INTERPRETER_STATE InterpreterClass::loadFromFile(int print_stack)
         case RS274NGC_ENDFILE        : return(INTERPRETER_OK);
         default                      : return(INTERPRETER_FILE_ERROR);
     }
+}
+///-----------------------------------------------------------------------------
+QString InterpreterClass::getLastErrorMessage()
+{
+    return(_errMsg);
 }
 ///-----------------------------------------------------------------------------

@@ -20,6 +20,7 @@ namespace INTERPRETER_SPACE
     class CannonInOutClass
     {
         private :
+            static bool _debug;
             /// static member
             static CANON_PLANE       _active_plane;
             static int               _active_slot;
@@ -55,6 +56,10 @@ namespace INTERPRETER_SPACE
             static void print_nc_line_number();
             static QFile* _outfile;
         public:
+            CannonInOutClass();
+            CannonInOutClass(CannonInOutClass&) = delete;
+            static void setDebug(bool enable);
+            static bool getDebug();
             static CANON_UNITS GetLengthUnitType();
             static char _parameter_file_name[PARAMETER_FILE_NAME_SIZE];          /// Driver writes
             static int  _tool_max;                          /// Driver reads

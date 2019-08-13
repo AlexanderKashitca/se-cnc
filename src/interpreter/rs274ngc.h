@@ -25,6 +25,7 @@ namespace INTERPRETER_SPACE
             virtual ~rs274ngcClass();
 
             static void SetTolerance(double tolerance);
+
         private:
 
             static double TOLERANCE_INCH;
