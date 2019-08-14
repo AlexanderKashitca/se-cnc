@@ -140,9 +140,9 @@ int MOTION_DIRECT_SPACE::MotionDirectClass::listLocations(int *nlocations, int *
     return 0;
 }
 ///-----------------------------------------------------------------------------
-int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineReadLine(const char *s,char *response)
+int MOTION_DIRECT_SPACE::MotionDirectClass::writeLineReadLine(const char* s,char* response)
 {
-    return _motionIO.writeLineReadLine(s,response);
+    return(_motionIO.writeLineReadLine(s,response));
 }
 ///-----------------------------------------------------------------------------
 int MOTION_DIRECT_SPACE::MotionDirectClass::writeLine(const char *s)

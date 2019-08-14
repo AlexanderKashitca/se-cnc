@@ -27,7 +27,9 @@ int main(int argc,char* argv[])
     system.setProgramFile("/home/evil/Programming/Qt/se-cnc/src/system/settings/rs274ngc.in");
 
     system.initialization();
-    system.runInterpreter();
+
+    qDebug() << "END";
+    ///system.runInterpreter();
 
     return app.exec();
 }

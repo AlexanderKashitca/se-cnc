@@ -1,4 +1,6 @@
 ///-----------------------------------------------------------------------------
+#include <QDebug>
+///-----------------------------------------------------------------------------
 #include <time.h>
 #include <stdio.h>
 #include <sys/time.h>
@@ -9,6 +11,8 @@
 #define CONNECT_TRIES       5
 #define CONNECT_TIMEOUT     1000
 #define TIME_TO_TRY_TO_OPEN 3000
+///-----------------------------------------------------------------------------
+using namespace MOTION_DIRECT_SPACE;
 ///-----------------------------------------------------------------------------
 MotionIOClass::MotionIOClass()
 {
@@ -380,23 +384,31 @@ int MotionIOClass::setLatency(UCHAR LatencyTimer)
 	FT_STATUS ftStatus;
 	unsigned char c;
 
+    _mutex->lock();
     ftStatus = FT_GetLatencyTimer(_ftHandle,&c);
+    _mutex->unlock();
     if(ftStatus != FT_OK)
     {
         errorMessageBox("Unable to get USB Latency Timer Value");
         return 1;
     }
+    _mutex->lock();
     ftStatus = FT_SetLatencyTimer(_ftHandle,LatencyTimer);
+    _mutex->unlock();
     if(ftStatus == FT_OK)
 	{ 
+        _mutex->lock();
         ftStatus = FT_GetLatencyTimer (_ftHandle, &c);
+        _mutex->unlock();
         if(ftStatus != FT_OK)
         {
             errorMessageBox("Unable to get USB Latency Timer Value");
             return 1;
         }
         /// LatencyTimer set
+        _mutex->lock();
         ftStatus = FT_SetChars(_ftHandle,'\n',1,0,0);
+        _mutex->unlock();
         if(ftStatus == FT_OK)
         { /// Event set
 			return 0;
@@ -428,7 +440,9 @@ int MotionIOClass::flushInputBuffer()
     char s[10];
     char RxBuffer[500];
 
+    _mutex->lock();
     ftStatus = FT_Purge(_ftHandle,FT_PURGE_RX|FT_PURGE_TX);
+    _mutex->unlock();
     if(ftStatus != FT_OK)
     {
         return 1;
@@ -437,7 +451,9 @@ int MotionIOClass::flushInputBuffer()
     DWORD t0 = getCurrentTimeMs();
     do
     {
+        _mutex->lock();
         ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
+        _mutex->unlock();
         if(ftStatus != FT_OK)
         {
             return 1;
@@ -448,7 +464,9 @@ int MotionIOClass::flushInputBuffer()
             {
                 RxBytes = 400;
             }
+            _mutex->lock();
             ftStatus = FT_Read(_ftHandle,RxBuffer,RxBytes,&BytesReceived);
+            _mutex->unlock();
         }
     }
     while(RxBytes > 0 && getCurrentTimeMs() - t0 < CONNECT_TIMEOUT);
@@ -457,7 +475,9 @@ int MotionIOClass::flushInputBuffer()
         /// send flush command to DSP
         s[0] = ABORT_CHAR;
         s[1] = 0;
+        _mutex->lock();
         ftStatus = FT_Write(_ftHandle,s,1,&BytesWritten);
+        _mutex->unlock();
         if(ftStatus != FT_OK)
         {
             return 1;
@@ -470,7 +490,9 @@ int MotionIOClass::flushInputBuffer()
         t0 = getCurrentTimeMs();
         do
         {
+            _mutex->lock();
             ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
+            _mutex->unlock();
             if(ftStatus != FT_OK)
             {
                 return 1;
@@ -486,7 +508,9 @@ int MotionIOClass::flushInputBuffer()
         t0 = getCurrentTimeMs();
         do
         {
+            _mutex->lock();
             ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
+            _mutex->unlock();
             if(ftStatus != FT_OK)
             {
                return 1;
@@ -512,7 +536,9 @@ int MotionIOClass::flushInputBuffer()
         }
         _nonRespondingCount = 0;
         /// read the 3 bytes
+        _mutex->lock();
         ftStatus = FT_Read(_ftHandle,RxBuffer,RxBytes,&BytesReceived);
+        _mutex->unlock();
         if(ftStatus != FT_OK)
         {
             return 1;
@@ -535,7 +561,9 @@ int MotionIOClass::flushInputBuffer()
         }
     }
     /// verify there are no transmit or receive characters
+    _mutex->lock();
     ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
+    _mutex->unlock();
     if(ftStatus != FT_OK)
     {
         return 1;
@@ -558,6 +586,7 @@ int MotionIOClass::logToConsole(char *s)
     {
         ConsoleHandler(s);
     }
+    qDebug() << "Motion Log Consol - " << s;
     return 0;
 }
 ///-----------------------------------------------------------------------------
@@ -668,7 +697,9 @@ int MotionIOClass::numberBytesAvailToRead(int *navail,bool ShowMessage)
     DWORD TxBytes;
 
     *navail = static_cast<int>(strlen(_saveChars)); /// take into account any already read in
+    _mutex->lock();
     ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
+    _mutex->unlock();
     if(ftStatus != FT_OK)
     {
         if(ShowMessage)
@@ -715,13 +746,9 @@ int MotionIOClass::readLineTimeOutRaw(char *buf, int TimeOutms)
     while(!Done)
     {
         if(FirstTime)
-        {
             FirstTime = false;
-        }
         else
-        {
             sleep(1);
-        }
         for(i = 0;i < 200;i++)
         {
             ReadBuffer[i] = 0;
@@ -785,8 +812,9 @@ int MotionIOClass::readBytesAvailable(char  *RxBuffer,
     DWORD RxBytes;
     DWORD TxBytes;
 
+    _mutex->lock();
     ftStatus = FT_GetStatus(_ftHandle,&RxBytes,&TxBytes,&EventDWord);
-
+    _mutex->unlock();
     if(ftStatus != FT_OK)
     {
         failed();
@@ -801,7 +829,9 @@ int MotionIOClass::readBytesAvailable(char  *RxBuffer,
     *BytesReceived = 0;
     if(RxBytes > 0)
     {
+        _mutex->lock();
         ftStatus = FT_Read(_ftHandle,RxBuffer,RxBytes,BytesReceived);
+        _mutex->unlock();
         if(ftStatus == FT_OK)
         {
             RxBuffer[*BytesReceived] = 0; /// null terminate
@@ -887,19 +917,15 @@ int MotionIOClass::readSendNextLine(FILE *fr)
 /// retirn 1 if failed
 int MotionIOClass::writeLineReadLine(const char *send,char *response)
 {
-    _mutex->lock();
     if(writeLine(send))
 	{
-        _mutex->unlock();
 		return 1;
 	}
     if(readLineTimeOut(response,3000))
 	{
-        _mutex->unlock();
 		return 1;
 	}
     response[strlen(response)-2] = 0; /// remove the /r /n
-    _mutex->unlock();
 	return 0;
 }
 ///-----------------------------------------------------------------------------
@@ -951,10 +977,10 @@ QString MotionIOClass::usbLocation()
 SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
 {
     QString reason;
-    if(!_mutex->tryLock(3000))
-    {
-        return SE_MOTION_NOT_CONNECTED;
-    }
+///    if(!_mutex->tryLock(3000))
+///    {
+///        return SE_MOTION_NOT_CONNECTED;
+///    }
     if(!_connected)
 	{
         /// try to connect
@@ -962,12 +988,12 @@ SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
         {
             errorMessageBox(reason);
             _nonRespondingCount = 0;
-            _mutex->unlock();  /// no such device available
+            ///_mutex->unlock();  /// no such device available
             return SE_MOTION_NOT_CONNECTED;
         }
         if(connect())
 		{
-            _mutex->unlock();  /// couldn't connect
+            ///_mutex->unlock();  /// couldn't connect
             return SE_MOTION_NOT_CONNECTED;
 		}
 	}
@@ -982,12 +1008,12 @@ SE_MOTION_LOCK_STATE MotionIOClass::motionLock(char *CallerID)
         {
             _lastCallerID = CallerID;
         }
-        _mutex->unlock();
+        ///_mutex->unlock();
         return(SE_MOTION_LOCKED);
 	}
 	else
 	{
-        _mutex->unlock();
+        ///_mutex->unlock();
         return(SE_MOTION_IN_USE);
 	}
 }
@@ -1006,14 +1032,12 @@ SE_MOTION_LOCK_STATE MotionIOClass::motionLockRecovery()
 ///-----------------------------------------------------------------------------
 void MotionIOClass::releaseToken()
 {
-    _mutex->lock();
     _lastCallerID = "";
     _token--;
     if(_token < 0)
     {
          _token = 0;
     }
-    _mutex->unlock();
 }
 ///-----------------------------------------------------------------------------
 /// Print any data to the console

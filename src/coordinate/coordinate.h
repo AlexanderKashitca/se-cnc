@@ -114,10 +114,15 @@ namespace COORD_MOTION_SPACE
         private:
             MOTION_DIRECT_SPACE::MotionDirectClass* _motion;
 
-            /// variables for _motion
+            double  _speindle_spped;
+            double  _feed_rate;
+
+
+
+            /// variables for _motion_io
             int     _result;
             QString _cmd;
-            QString _response;
+            char    _response[MOTION_DIRECT_SPACE::MAX_LINE];
 
             bool    _debug;
 

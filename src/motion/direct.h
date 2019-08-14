@@ -32,8 +32,8 @@ namespace MOTION_DIRECT_SPACE
 
             ///int     mapBoardToIndex(int BoardID);
             int     writeLine(const char *s);
-            int     writeLineReadLine(const char *s,char *response);
-            int     writeLineWithEcho(const char *s);
+            int     writeLineReadLine(const char* s,char* response);
+            int     writeLineWithEcho(const char* s);
             int     readLineTimeOut(char *buf,int TimeOutms);
             void    waitToken(char *CallerID = nullptr);
 

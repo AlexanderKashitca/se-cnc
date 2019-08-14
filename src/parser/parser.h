@@ -17,7 +17,7 @@ namespace PARSER_SPACE
         ARGUMENT_TYPE_STRING = 3,
         ARGUMENT_TYPE_ARC    = 4,
         ARGUMENT_TYPE_ORIENT = 5
-    }ARGUMENT_TYPE;
+    } ARGUMENT_TYPE;
 
     typedef enum
     {
@@ -25,6 +25,12 @@ namespace PARSER_SPACE
         PARESER_FILE_NOT_OPEN = 1,
         PARESER_FILE_NOT_EXIST = 2
     } PARESER_STATE;
+
+    typedef enum
+    {
+        EXEC_ALL = 0,
+        EXEC_LINE = 1
+    } EXEC_MODE;
     ///-----------------------------------------------------------------------------
     class ParserDataClass
     {
@@ -49,7 +55,8 @@ namespace PARSER_SPACE
             bool getDebug();
             void setDebug(bool enable);
 
-            PARESER_STATE execut(QString file_path,QString file_name);
+            PARESER_STATE execut(QString file_path,QString file_name,EXEC_MODE mode = EXEC_ALL);
+            //PARESER_STATE execut(QString file_path,QString file_name,EXEC_MODE mode = EXEC_ALL);
     };
 } /// end PARSER_SPACE
 ///-----------------------------------------------------------------------------

@@ -151,7 +151,9 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
 {
     QString response;
     response.clear();
-    if(_motion->writeLineReadLine("CheckDoneBuf",response.toLatin1().begin()))
+    _cmd.clear();
+    _cmd.append("CheckDoneBuf");
+    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response))
     {
         setAbort();
         return(COORD_STATE_FAIL);
@@ -172,7 +174,7 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
             return(COORD_STATE_FAIL);
         }
         _cmd.clear();
-        _cmd = QString("TrigThread %.6f").arg(_threadingBaseSpeedRPS);
+        _cmd = QString("TrigThread %1").arg(_threadingBaseSpeedRPS); //("TrigThread %.6f")
         if(_motion->writeLine(_cmd.toStdString().c_str()))
         {
             setAbort();
@@ -181,7 +183,9 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
     }
     else  // no normal coordinated motion
     {
-        if(_motion->writeLine("ExecBuf"))
+        _cmd.clear();
+        _cmd.append("ExecBuf");
+        if(_motion->writeLine(_cmd.toStdString().c_str()))
         {
             setAbort();
             return(COORD_STATE_FAIL);
@@ -197,9 +201,7 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
 /// to move the current FRO toward our goal.  Whenever the total FRO
 /// is above the HW Limit adjust the SW factor.  Whenever below the FRO
 /// then adjust the HW Limit.
-COORDINATE_STATE CoordMotionClass::determineSoftwareHardwareFRO(
-        double &HW,
-        double &SW)
+COORDINATE_STATE CoordMotionClass::determineSoftwareHardwareFRO(double &HW,double &SW)
 {
     HW = 1.0;
     SW = 1.0;
@@ -327,7 +329,7 @@ COORDINATE_STATE CoordMotionClass::setMotionCmd(
 COORDINATE_STATE CoordMotionClass::setAxisDefinitions(int x,int y,int z,int a,int b,int c)
 {
     _cmd.clear();
-    _cmd = QString("DefineCS %d %d %d %d %d %d")
+    _cmd = QString("DefineCS %1 %2 %3 %4 %5 %6")
             .arg(x).arg(y).arg(z).arg(a).arg(b).arg(c);
     if(_motion->writeLine(_cmd.toStdString().c_str()))
     {
@@ -351,15 +353,11 @@ COORDINATE_STATE CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,int *
     {
         _cmd.clear();
         _cmd.append("DefineCS");
-        if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
+        if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),&_response[0]))
         {
             return(COORD_STATE_FAIL);
         }
-        _result = sscanf(_response.toStdString().c_str(),
-                            "%d%d%d%d%d%d",
-                            &_x_axis,&_y_axis,&_z_axis,
-                            &_a_axis,&_b_axis,&_c_axis
-                        );
+        _result = sscanf(_response,"%d%d%d%d%d%d",&_x_axis,&_y_axis,&_z_axis,&_a_axis,&_b_axis,&_c_axis);
         if(_result != 6)
         {
             return(COORD_STATE_FAIL);
@@ -378,14 +376,13 @@ COORDINATE_STATE CoordMotionClass::getAxisDefinitions(int *x,int *y,int *z,int *
 ///-----------------------------------------------------------------------------
 COORDINATE_STATE CoordMotionClass::getDestination(int axis,double *d)
 {
-    *d = 0.0;
+    *d = 2.2;
 
     /// not used in coordinate system
     if(axis == -1)
     {
         return(COORD_STATE_OK);
     }
-
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
@@ -393,13 +390,13 @@ COORDINATE_STATE CoordMotionClass::getDestination(int axis,double *d)
     }
     /// send command
     _cmd.clear();
-    _cmd = QString("Dest%d").arg(axis);
-    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
+    _cmd = QString("Dest%1").arg(axis);
+    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response))
     {
         setAbort();
         return(COORD_STATE_FAIL);
     }
-    _result = sscanf(_response.toStdString().c_str(),"%lf",d);
+    _result = sscanf(_response,"%lf",d);
     if(_result != 1)
     {
         setAbort();
@@ -410,28 +407,24 @@ COORDINATE_STATE CoordMotionClass::getDestination(int axis,double *d)
 ///-----------------------------------------------------------------------------
 COORDINATE_STATE CoordMotionClass::getPosition(int axis,double *d)
 {
-    *d=0.0;
-
-    if(axis==-1)
+    *d = 0.0;
+    if(axis == -1)
     { /// not used in coordinate system
         return(COORD_STATE_FAIL);
     }
-
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
         return(COORD_STATE_FAIL);
     }
-
     _cmd.clear();
-    _cmd = QString("Pos%d").arg(axis);
-    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
+    _cmd = QString("Pos%1").arg(axis);
+    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response))
     {
         setAbort();
         return(COORD_STATE_FAIL);
     }
-
-    _result = sscanf(_response.toStdString().c_str(),"%lf",d);
+    _result = sscanf(_response,"%lf",d);
     if(_result != 1)
     {
         setAbort();
@@ -448,7 +441,6 @@ COORDINATE_STATE CoordMotionClass::getCurAbsPosition(double* x,double* y,double*
 ///-----------------------------------------------------------------------------
 COORDINATE_STATE CoordMotionClass::getRapidSettings()
 {
-
     return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -468,63 +460,52 @@ COORDINATE_STATE CoordMotionClass::getRapidSettingsAxis(
     {
         return(COORD_STATE_FAIL);
     }
-
     if(axis == -1)
     {
         return(COORD_STATE_OK);
     }
     _cmd.clear();
-    _cmd = QString("Vel%d;Accel%d;Jerk%d;SoftLimitPos%d;SoftLimitNeg%d")
-                .arg(axis)
-                .arg(axis)
-                .arg(axis)
-                .arg(axis)
-                .arg(axis);
+    _cmd = QString("Vel%1;Accel%2;Jerk%3;SoftLimitPos%4;SoftLimitNeg%5")
+            .arg(axis).arg(axis).arg(axis).arg(axis).arg(axis);
     if(_motion->writeLine(_cmd.toStdString().c_str()))
     {
         return(COORD_STATE_FAIL);
     }
-
-    if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
+    if(_motion->readLineTimeOut(_response,timeout))
     {
-
+        return(COORD_STATE_FAIL);
     }
-    _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
+    _result = sscanf(_response,"%lf",&temp);
     if(_result != 1)
     {
          return(COORD_STATE_FAIL);
     }
     *Vel = fabs(temp/CountsPerInch);
-
-    if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
+    if(_motion->readLineTimeOut(_response,timeout))
     {
          return(COORD_STATE_FAIL);
     }
-
-    _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
+    _result = sscanf(_response,"%lf",&temp);
     if(_result != 1)
     {
          return(COORD_STATE_FAIL);
     }
     *Accel = fabs(temp/CountsPerInch);
-
-    if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
+    if(_motion->readLineTimeOut(_response,timeout))
     {
         return(COORD_STATE_FAIL);
     }
-
-    _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
+    _result = sscanf(_response,"%lf",&temp);
     if(_result != 1)
     {
         return(COORD_STATE_FAIL);
     }
     *Jerk = fabs(temp/CountsPerInch);
-
-    if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
+    if(_motion->readLineTimeOut(_response,timeout))
     {
         return(COORD_STATE_FAIL);
     }
-    _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
+    _result = sscanf(_response,"%lf",&temp);
     if(_result != 1)
     {
         return(COORD_STATE_FAIL);
@@ -533,12 +514,11 @@ COORDINATE_STATE CoordMotionClass::getRapidSettingsAxis(
         *SoftLimitPos = temp / CountsPerInch;
     else
         *SoftLimitNeg = temp / CountsPerInch;
-
-    if(_motion->readLineTimeOut(_response.toLatin1().begin(),timeout))
+    if(_motion->readLineTimeOut(_response,timeout))
     {
          return(COORD_STATE_FAIL);
     }
-    _result = sscanf(_response.toStdString().c_str(),"%lf",&temp);
+    _result = sscanf(_response,"%lf",&temp);
     if(_result != 1)
     {
          return(COORD_STATE_FAIL);
@@ -558,20 +538,19 @@ COORDINATE_STATE CoordMotionClass::getAxisDone(int axis,int* r)
     { /// not used in coordinate system
         return(COORD_STATE_OK);
     }
-
     if(axis < 0 || axis > N_CHANNELS)
     { /// invalid
         setAbort();
         return(COORD_STATE_FAIL);
     }
     _cmd.clear();
-    _cmd = QString("CheckDone%d").arg(axis);
-    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response.toLatin1().begin()))
+    _cmd = QString("CheckDone%1").arg(axis);
+    if(_motion->writeLineReadLine(_cmd.toStdString().c_str(),_response))
     {
         setAbort();
         return(COORD_STATE_FAIL);
     }
-    _result = sscanf(_response.toStdString().c_str(),"%d",r);
+    _result = sscanf(_response,"%d",r);
     if(_result != 1)
     {
         setAbort();
@@ -582,15 +561,15 @@ COORDINATE_STATE CoordMotionClass::getAxisDone(int axis,int* r)
 ///-----------------------------------------------------------------------------
 COORDINATE_STATE CoordMotionClass::setFeedRateOverride(double v)
 {
-    double HW,SW;
-
+    double HW;
+    double SW;
     _feedRateOverride = v;
-
     if(!_simulate)
     {
         determineSoftwareHardwareFRO(HW,SW);
+        QString str;
         _cmd.clear();
-        _cmd = QString("SetFRO %.4f").arg(HW);
+        _cmd = QString("SetFRO %1").arg(HW); //("SetFRO %.4f")
         _motion->writeLine(_cmd.toStdString().c_str());
     }
     return(COORD_STATE_OK);
@@ -606,7 +585,7 @@ COORDINATE_STATE CoordMotionClass::setFeedRateRapidOverride(double v)
     if(!_simulate)
     {
         _cmd.clear();
-        _cmd = QString("SetRapidFRO %.4f").arg(v);
+        _cmd = QString("SetRapidFRO %1").arg(v); //("SetRapidFRO %.4f")
         _motion->writeLine(_cmd.toStdString().c_str());
     }
     return(COORD_STATE_OK);
@@ -881,7 +860,7 @@ COORDINATE_STATE CoordMotionClass::waitForMoveXYZABCFinished()
     do
     {
         if(count++) sleep(10);
-        if(_motion->writeLineReadLine("CheckDoneXYZABC",_response.toLatin1().begin()))
+        if(_motion->writeLineReadLine("CheckDoneXYZABC",_response))
         {
             setAbort();
             return(COORD_STATE_FAIL);

@@ -59,7 +59,7 @@ PARESER_STATE ParserDataClass::open(QString file_path,QString file_name)
     return(PARESER_OK);
 }
 ///-----------------------------------------------------------------------------
-PARESER_STATE ParserDataClass::execut(QString file_path,QString file_name)
+PARESER_STATE ParserDataClass::execut(QString file_path,QString file_name,EXEC_MODE mode)
 {
     int     index(-1);
     PARESER_STATE state;
@@ -191,12 +191,12 @@ void ParserDataClass::getArguments(ARGUMENT_TYPE type)
                     count++;
                     break;
                 case ARGUMENT_TYPE_ORIENT :
-                switch(count)
-                {
-                    case 0 : _arg_double.push_back(data.toDouble()); break;
-                    case 1 : _arg_int.push_back(data.toInt());       break;
-                }
-                count++;
+                    switch(count)
+                    {
+                        case 0 : _arg_double.push_back(data.toDouble()); break;
+                        case 1 : _arg_int.push_back(data.toInt());       break;
+                    }
+                    count++;
                     break;
                 default : break;
             }

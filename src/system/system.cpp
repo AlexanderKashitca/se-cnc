@@ -55,6 +55,36 @@ SYSTEM_STATE SystemClass::initialization()
     }
     /// initialization parser
 
+
+
+
+    /// TEMP -------------------------------------------------------------------
+    double d;
+    int axis(2);
+    int a,b,c,x,y,z;
+    _coordinate->getDestination(0,&d);
+    qDebug() << "Destination" << d;
+    _coordinate->getPosition(axis,&d);
+    qDebug() << "Position" << d;
+    _coordinate->getAxisDefinitions(&x,&y,&z,&a,&b,&c);
+    qDebug() << "Axis Definitions" << x << y << z << a << b << c;
+
+    double Vel   = 1.1;
+    double Accel = 1.1;
+    double Jerk  = 1.1;
+    double SoftLimitPos = 1.1;
+    double SoftLimitNeg = 1.1;
+    double CountsPerInch = 25400;
+    _coordinate->getRapidSettingsAxis(axis,&Vel,&Accel,&Jerk,&SoftLimitPos,&SoftLimitNeg,CountsPerInch);
+    qDebug() << axis;
+    qDebug() << Vel;
+    qDebug() << Accel;
+    qDebug() << Jerk;
+    qDebug() << SoftLimitPos;
+    qDebug() << SoftLimitNeg;
+
+    /// END TEMP ---------------------------------------------------------------
+
     return(SYSTEM_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -144,7 +174,7 @@ SYSTEM_STATE SystemClass::runInterpreter()
 {
     INTERPRETER_STATE state;
     /// TEMPER BEGIN
-    _interpreter->setTolerance(2.0F);
+    _interpreter->setTolerance(2.0);
     /// TEMPER END
     state = _interpreter->execute();
     if(state != INTERPRETER_OK)

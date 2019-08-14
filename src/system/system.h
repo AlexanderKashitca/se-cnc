@@ -43,7 +43,6 @@ namespace SYSTEM_SPACE
 
 
 
-
             INTERPRETER_SPACE::INTERPRETER_SETTINGS _interpreter_settings;
     };
 } /// end SYSTEM_SPACE

@@ -212,11 +212,11 @@ void CannonInOutClass::SetOriginOffsets(double x,double y,double z,double a,doub
     {
         qDebug() << "SET_ORIGIN_OFFSETS" << "\t"
                  << "("
-                 << x  << ",\t"
-                 << y  << ",\t"
-                 << z  << ",\t"
-                 << a  << ",\t"
-                 << b  << ",\t"
+                 << x  << ","
+                 << y  << ","
+                 << z  << ","
+                 << a  << ","
+                 << b  << ","
                  << c  << ")";
     }
 
@@ -349,11 +349,11 @@ void CannonInOutClass::StraightTraverse(double x,double y,double z,double a,doub
     {
         qDebug() << "STRAIGHT_TRAVERSE" << "\t"
                  << "("
-                 << x  << ",\t"
-                 << y  << ",\t"
-                 << z  << ",\t"
-                 << a  << ",\t"
-                 << b  << ",\t"
+                 << x  << ","
+                 << y  << ","
+                 << z  << ","
+                 << a  << ","
+                 << b  << ","
                  << c  << ")";
     }
     _program_position_x = x;
@@ -601,14 +601,14 @@ void CannonInOutClass::ArcFeed(
     {
         qDebug() << "ARC_FEED" << "\t" << "\t"
                  << "("
-                 << first_end       << ",\t"
-                 << second_end      << ",\t"
-                 << first_axis      << ",\t"
-                 << second_axis     << ",\t"
-                 << rotation        << ",\t"
-                 << axis_end_point  << ",\t"
-                 << a               << ",\t"
-                 << b               << ",\t"
+                 << first_end       << ","
+                 << second_end      << ","
+                 << first_axis      << ","
+                 << second_axis     << ","
+                 << rotation        << ","
+                 << axis_end_point  << ","
+                 << a               << ","
+                 << b               << ","
                  << c               << ")";
     }
 
@@ -666,11 +666,11 @@ void CannonInOutClass::StraightFeed(double x,double y,double z,double a,double b
     {
         qDebug() << "STRAIGHT_FEED" << "\t" << "\t"
                  << "("
-                 << x << ",\t"
-                 << y << ",\t"
-                 << z << ",\t"
-                 << a << ",\t"
-                 << b << ",\t"
+                 << x << ","
+                 << y << ","
+                 << z << ","
+                 << a << ","
+                 << b << ","
                  << c << ")";
     }
     _program_position_x = x;
@@ -721,11 +721,11 @@ void CannonInOutClass::StraightProbe(double x,double y,double z,double a,double 
     {
         qDebug() << "STRAIGHT_PROBE" << "\t"
                  << "("
-                 << x << ",\t"
-                 << y << ",\t"
-                 << z << ",\t"
-                 << a << ",\t"
-                 << b << ",\t"
+                 << x << ","
+                 << y << ","
+                 << z << ","
+                 << a << ","
+                 << b << ","
                  << c << ")";
     }
     _probe_position_x = x;
