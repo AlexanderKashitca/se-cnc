@@ -251,49 +251,49 @@ namespace INTERPRETER_SPACE
         double CC_axis_offset;             // C-axis g92 offset
         double CC_current;                 // current C-axis position
         double CC_origin_offset;           // C-axis origin offset
-        int active_g_codes[RS274NGC_ACTIVE_G_CODES];     // array of active G codes
-        int active_m_codes[RS274NGC_ACTIVE_M_CODES];     // array of active M codes
+        int    active_g_codes[RS274NGC_ACTIVE_G_CODES];     // array of active G codes
+        int    active_m_codes[RS274NGC_ACTIVE_M_CODES];     // array of active M codes
         double active_settings[RS274NGC_ACTIVE_SETTINGS];    // array of feed, speed, etc.
         double axis_offset_x;              // X-axis g92 offset
         double axis_offset_y;              // Y-axis g92 offset
         double axis_offset_z;              // Z-axis g92 offset
-        block block1;                      // parsed next block
-        char blocktext[RS274NGC_TEXT_SIZE];// linetext downcased, white space gone
+        block  block1;                     // parsed next block
+        char   blocktext[RS274NGC_TEXT_SIZE];// linetext downcased, white space gone
         CANON_MOTION_MODE control_mode;    // exact path or cutting mode
-        int current_slot;                  // carousel slot number of current tool
+        int    current_slot;               // carousel slot number of current tool
         double current_x;                  // current X-axis position
         double current_y;                  // current Y-axis position
         double current_z;                  // current Z-axis position
         double cutter_comp_radius;         // current cutter compensation radius
-        int cutter_comp_side;              // current cutter compensation side
+        int    cutter_comp_side;           // current cutter compensation side
         double cycle_cc;                   // cc-value (normal) for canned cycles
         double cycle_i;                    // i-value for canned cycles
         double cycle_j;                    // j-value for canned cycles
         double cycle_k;                    // k-value for canned cycles
-        int cycle_l;                       // l-value for canned cycles
+        int    cycle_l;                    // l-value for canned cycles
         double cycle_p;                    // p-value (dwell) for canned cycles
         double cycle_q;                    // q-value for canned cycles
         double cycle_r;                    // r-value for canned cycles
         DISTANCE_MODE distance_mode;       // absolute or incremental
-        int feed_mode;                     // G_93 (inverse time) or G_94 units/min
+        int    feed_mode;                  // G_93 (inverse time) or G_94 units/min
         ON_OFF feed_override;              // whether feed override is enabled
         double feed_rate;                  // feed rate in current units/min
-        char filename[RS274NGC_TEXT_SIZE]; // name of currently open NC code file
-        FILE * file_pointer;               // file pointer for open NC code file
+        char   filename[RS274NGC_TEXT_SIZE]; // name of currently open NC code file
+        FILE*  file_pointer;               // file pointer for open NC code file
         ON_OFF flood;                      // whether flood coolant is on
-        int length_offset_index;           // for use with tool length offsets
+        int    length_offset_index;        // for use with tool length offsets
         CANON_UNITS length_units;          // millimeters or inches
-        int line_length;                   // length of line last read
-        char linetext[RS274NGC_TEXT_SIZE]; // text of most recent line read
+        int    line_length;                // length of line last read
+        char   linetext[RS274NGC_TEXT_SIZE]; // text of most recent line read
         ON_OFF mist;                       // whether mist coolant is on
-        int motion_mode;                   // active G-code for motion
-        int origin_index;                  // active origin (1=G54 to 9=G59.3)
+        int    motion_mode;                // active G-code for motion
+        int    origin_index;               // active origin (1=G54 to 9=G59.3)
         double origin_offset_x;            // origin offset x
         double origin_offset_y;            // origin offset y
         double origin_offset_z;            // origin offset z
         double parameters[RS274NGC_MAX_PARAMETERS];     // system parameters
-        int parameter_occurrence;          // parameter buffer index
-        int parameter_numbers[50];         // parameter number buffer
+        int    parameter_occurrence;       // parameter buffer index
+        int    parameter_numbers[50];      // parameter number buffer
         double parameter_values[50];       // parameter value buffer
         ON_OFF percent_flag;               // ON means first line was percent sign
         CANON_PLANE plane;                 // active plane, XY-, YZ-, or XZ-plane
@@ -301,18 +301,18 @@ namespace INTERPRETER_SPACE
         double program_x;                  // program x, used when cutter comp on
         double program_y;                  // program y, used when cutter comp on
         RETRACT_MODE retract_mode;         // for cycles, old_z or r_plane
-        int selected_tool_slot;            // tool slot selected but not active
-        int sequence_number;               // sequence number of line last read
+        int    selected_tool_slot;         // tool slot selected but not active
+        int    sequence_number;            // sequence number of line last read
         double speed;                      // current spindle speed in rpm
         CANON_SPEED_FEED_MODE speed_feed_mode;   // independent or synched
         ON_OFF speed_override;             // whether speed override is enabled
         CANON_DIRECTION spindle_turning;   // direction spindle is turning
-        char stack[50][80];                // stack of calls for error reporting
-        int stack_index;                   // index into the stack
+        char   stack[50][80];              // stack of calls for error reporting
+        int    stack_index;                // index into the stack
         double tool_length_offset;         // current tool length offset
-        int tool_max;                      // highest number tool slot in carousel
+        int    tool_max;                   // highest number tool slot in carousel
         CANON_TOOL_TABLE tool_table[CANON_TOOL_MAX + 1];         // index is slot number
-        int tool_table_index;              // tool index used with cutter comp
+        int    tool_table_index;           // tool index used with cutter comp
         double traverse_rate;              // rate for traverse motions
     }setup;
     typedef setup* setup_pointer;
