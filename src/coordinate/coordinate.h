@@ -122,7 +122,7 @@ namespace COORD_MOTION_SPACE
             /// variables for _motion_io
             int     _result;
             QString _cmd;
-            char    _response[MOTION_DIRECT_SPACE::MAX_LINE];
+            char    _response[MOTION_DIRECT_SPACE::BUFFER_MAX_LINE];
 
             bool    _debug;
 
@@ -133,8 +133,8 @@ namespace COORD_MOTION_SPACE
             bool    _abort;
             bool    _simulate;
 
-            bool    _threadingMode;             /// Launches coordinated motion in spindle sync mode
-            double  _threadingBaseSpeedRPS;    /// Base Rev/sec speed where trajectory should run an real-time
+            bool    _threadingMode;         /// Launches coordinated motion in spindle sync mode
+            double  _threadingBaseSpeedRPS; /// Base Rev/sec speed where trajectory should run an real-time
 
             bool    _defineCS_valid;
             /// map board channel number to interperter axis
@@ -148,9 +148,9 @@ namespace COORD_MOTION_SPACE
             bool    _axisDisabled;
 
             double _feedRateOverride;
-            double _feedRateRapidOverride;
             double _hardwareFRORange;
             double _spindleRateOverride;
+            double _feedRateRapidOverride;
 
             int sleep(unsigned int miliseconds);
             COORDINATE_STATE putWriteLineBuffer(QString s,double Time);
@@ -168,8 +168,8 @@ namespace COORD_MOTION_SPACE
 
             QString getLastErrorMessage();
 
-            void setDebug(bool enable);
             bool getDebug();
+            void setDebug(bool enable);
 
             COORDINATE_STATE initialization();
             KINEMATICS_SPACE::KinematicsClass* _kinematics;
@@ -190,24 +190,23 @@ namespace COORD_MOTION_SPACE
             COORDINATE_STATE setAxisDefinitions(int x,int y,int z,int a,int b,int c);
             COORDINATE_STATE getAxisDefinitions(int* x,int* y,int* z,int* a,int* b,int* c);
 
-            COORDINATE_STATE getDestination(int axis,double *d);
-            COORDINATE_STATE getPosition(int axis,double *d);
+            COORDINATE_STATE getDestination(int axis,double* d);
+            COORDINATE_STATE getPosition(int axis,double* d);
 
             COORDINATE_STATE getCurAbsPosition(double* x,double* y,double* z,double* a,double* b,double* c,double* u,double* v,bool snap = false,bool NoGeo = false);
 
             COORDINATE_STATE getRapidSettings();
             COORDINATE_STATE getRapidSettingsAxis(int axis,double* Vel,double* Accel,double* Jerk,double* SoftLimitPos,double* SoftLimitNeg,double CountsPerInch);
 
-
             COORDINATE_STATE getAxisDone(int axis,int* r);
             COORDINATE_STATE setFeedRateOverride(double v);
             COORDINATE_STATE setFeedRateRapidOverride(double v);
             COORDINATE_STATE setHardwareFRORange(double v);
             COORDINATE_STATE setSpindleRateOverride(double v);
-            double              getFeedRateOverride();
-            double              getFeedRateRapidOverride();
-            double              getSpindleRateOverride();
-            double              getHardwareFRORange();
+            double           getFeedRateOverride();
+            double           getHardwareFRORange();
+            double           getSpindleRateOverride();
+            double           getFeedRateRapidOverride();
 
             COORDINATE_STATE checkMotionHalt(bool Coord);
             COORDINATE_STATE waitForMoveXYZABCFinished();
@@ -217,7 +216,6 @@ namespace COORD_MOTION_SPACE
 
 
 
-            //
 
             //int waitForSegmentsFinished(bool NoErrorOnDisable = FALSE);
 
@@ -226,8 +224,9 @@ namespace COORD_MOTION_SPACE
 
             //int FlushSegments();
             //int LaunchCoordMotion();
-            //int OutputSegment(int iseg);
             //int DownloadDoneSegments();
+            //int OutputSegment(int iseg);
+
 
             //int FlushWriteLineBuffer();
             //int ConfigSpindle(int type, int axis, double UpdateTime, double Tau, double CountsPerRev);

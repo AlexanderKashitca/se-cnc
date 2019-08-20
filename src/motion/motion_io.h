@@ -15,7 +15,7 @@ namespace MOTION_DIRECT_SPACE
     /**
      * @brief MAX_LINE buffer max size
      */
-    const unsigned short MAX_LINE = 2560;
+    const unsigned short BUFFER_MAX_LINE = 2560;
 
     ///-------------------------------------------------------------------------
     #define NO_SEMOTION_TIMEOUT false /// useful for debugging
@@ -51,7 +51,7 @@ namespace MOTION_DIRECT_SPACE
             void inline charToUpper(char* mass,unsigned int length);
         protected:
             int     _token;
-            char    _saveChars[MAX_LINE + 1];
+            char    _saveChars[BUFFER_MAX_LINE + 1];
             FT_HANDLE   _ftHandle;
             SERVER_CONSOLE_HANDLER *ConsoleHandler;
         public:

@@ -68,7 +68,6 @@ COORDINATE_STATE CoordMotionClass::initialization()
             qDebug() << "FTDI Library not loaded.";
         return(COORD_STATE_FAIL);
     }
-
     if(_motion->motionLock() != SE_MOTION_LOCKED)
     {
         if(_debug)
@@ -89,7 +88,6 @@ COORDINATE_STATE CoordMotionClass::initialization()
         qDebug() << "SE MOTION initialization successful.";
         qDebug() << "Serial Number - " << _motion->usbLocation();
     }
-
     return(COORD_STATE_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -101,7 +99,7 @@ COORDINATE_STATE CoordMotionClass::putWriteLineBuffer(QString s,double Time)
     }
 
     /// new string won't fit, flush it first
-    if(_writeLineBuffer.length() + s.length() > (MAX_LINE - 10))
+    if(_writeLineBuffer.length() + s.length() > (BUFFER_MAX_LINE - 10))
     {
         if(flushWriteLineBuffer() != COORD_STATE_OK)
         {
@@ -116,7 +114,7 @@ COORDINATE_STATE CoordMotionClass::putWriteLineBuffer(QString s,double Time)
 
     /// If we have too much motion time in the buffer send it now
     /// allocate 10% of the Lookahead to be buffered here
-    if (_writeLineBufferTime > _kinematics->_motionParams.tPLookahead * 0.1)
+    if(_writeLineBufferTime > _kinematics->_motionParams.tPLookahead * 0.1)
     {
         if(flushWriteLineBuffer())
         {
@@ -169,7 +167,8 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
     {
         if(fabs(_threadingBaseSpeedRPS) < 1e-9)
         {
-            ///AfxMessageBox("Error Threading with Zero Speed");
+            if(_debug)
+                qDebug() << "Error Threading with Zero Speed.";
             setAbort();
             return(COORD_STATE_FAIL);
         }
@@ -181,7 +180,7 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
             return(COORD_STATE_FAIL);
         }
     }
-    else  // no normal coordinated motion
+    else /// no normal coordinated motion
     {
         _cmd.clear();
         _cmd.append("ExecBuf");
@@ -201,7 +200,7 @@ COORDINATE_STATE CoordMotionClass::launchCoordMotion()
 /// to move the current FRO toward our goal.  Whenever the total FRO
 /// is above the HW Limit adjust the SW factor.  Whenever below the FRO
 /// then adjust the HW Limit.
-COORDINATE_STATE CoordMotionClass::determineSoftwareHardwareFRO(double &HW,double &SW)
+COORDINATE_STATE CoordMotionClass::determineSoftwareHardwareFRO(double& HW,double& SW)
 {
     HW = 1.0;
     SW = 1.0;

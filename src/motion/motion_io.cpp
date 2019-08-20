@@ -344,7 +344,7 @@ int MotionIOClass::readLineTimeOut(char *buf,int TimeOutms)
 /// retirn 1 if failed
 int MotionIOClass::writeLine(const char *s)
 {
-	char s2[MAX_LINE+1]="\x1b\x01";
+    char s2[BUFFER_MAX_LINE + 1]="\x1b\x01";
 	strcat(s2,s);
     return writeLineWithEcho(s2);
 }
@@ -356,7 +356,7 @@ int MotionIOClass::writeLineWithEcho(const char *s)
 	FT_STATUS ftStatus;
 	DWORD BytesWritten;
     DWORD length;
-	char s2[MAX_LINE+1];   
+    char s2[BUFFER_MAX_LINE + 1];
 
     if(makeSureConnected())
     {
@@ -726,7 +726,7 @@ int MotionIOClass::readLineTimeOutRaw(char *buf, int TimeOutms)
     int   result;
     DWORD NBytesRead;
     char *p;
-    char  ReadBuffer[MAX_LINE];
+    char  ReadBuffer[BUFFER_MAX_LINE];
     int   i;
     int   freespace;
     bool  FirstTime=true;
@@ -753,7 +753,7 @@ int MotionIOClass::readLineTimeOutRaw(char *buf, int TimeOutms)
         {
             ReadBuffer[i] = 0;
         }
-        freespace = MAX_LINE - TotalBytes - 1;
+        freespace = BUFFER_MAX_LINE - TotalBytes - 1;
         if(freespace > 0)
         {
             result = readBytesAvailable(ReadBuffer,freespace,&NBytesRead,0);
@@ -765,7 +765,7 @@ int MotionIOClass::readLineTimeOutRaw(char *buf, int TimeOutms)
             {
                 for(i=0;i < static_cast<int>(NBytesRead); i++)
                 {
-                    if(i+TotalBytes > MAX_LINE)
+                    if(i+TotalBytes > BUFFER_MAX_LINE)
                     {
                         errorMessageBox("SEMotion Received Line too long");
                         return 1;
@@ -1045,7 +1045,7 @@ int MotionIOClass::serviceConsole()
 {
     int nbytes;
     int timeout;
-	char b[MAX_LINE];
+    char b[BUFFER_MAX_LINE];
     char CallerID[] = "Service Console";
     /// quick check if it is available
     if (motionLock(&CallerID[0]) == SE_MOTION_LOCKED)
