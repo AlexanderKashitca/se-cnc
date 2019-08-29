@@ -77,12 +77,13 @@ int main(int argc, char *argv[])
     form.show();
 
 QVector<QVector3D> vector;
+QVector<QVector3D> segment;
 vector.clear();
 
 QVector3D vector3d;
-double _x;
-double _y;
-double _z;
+float _x;
+float _y;
+float _z;
 
 
 
@@ -248,8 +249,93 @@ double _z;
 
 
 
-    form.plotAddData(vector);
-    form.plotShow(true);
+    typedef enum
+    {
+        SEG_UNDEFINED = 0,
+        SEG_LINEAR,
+        SEG_ARC,
+        SEG_RAPID,
+        SEG_DWELL
+    }SEGMENT_TYPE;
+
+
+
+/// segment // vector 3d
+/// vector  // vector 3d
+
+    SEGMENT_TYPE _seg_type(SEG_ARC);
+    double _arc_radius_begin;
+    double _arc_radius_end;
+    double _arc_begin_x;
+    double _arc_begin_y;
+    double _arc_end_x;
+    double _arc_end_y;
+    double _arc_center_x;
+    double _arc_center_y;
+    double _arc_center_i;
+    double _arc_center_j;
+
+
+
+
+
+    _arc_begin_x =  142.0; /// X begin
+    _arc_begin_y = -2.628; /// Y begin
+
+    _arc_end_x =  140.0; /// X end
+    _arc_end_y = -3.089; /// Y end
+
+    _arc_center_i =  10.905; /// I
+    _arc_center_j = -42.374; /// J
+
+    _arc_center_x = _arc_begin_x + _arc_center_i; /// X center position
+    _arc_center_y = _arc_begin_y + _arc_center_j; /// Y center position
+
+    _arc_radius_begin = fabs(_arc_center_x - _arc_begin_x);
+    _arc_radius_end   = fabs(_arc_center_x - _arc_end_x);
+
+    qDebug() << endl;
+    qDebug() << "==========================================";
+    qDebug() << "_arc_begin_x = "      << _arc_begin_x;
+    qDebug() << "_arc_begin_y = "      << _arc_begin_y;
+    qDebug() << "_arc_end_x = "        << _arc_end_x;
+    qDebug() << "_arc_end_y = "        << _arc_end_y;
+    qDebug() << "_arc_center_i = "     << _arc_center_i;
+    qDebug() << "_arc_center_j = "     << _arc_center_j;
+    qDebug() << "_arc_center_x = "     << _arc_center_x;
+    qDebug() << "_arc_center_y = "     << _arc_center_y;
+    qDebug() << "_arc_radius_begin = " << _arc_radius_begin;
+    qDebug() << "_arc_radius_end   = " << _arc_radius_end;
+    qDebug() << "==========================================";
+
+
+    QVector2D vector_2d;
+    vector_2d.setX(static_cast<float>(_arc_end_x));
+    vector_2d.setY(static_cast<float>(_arc_end_y));
+    qDebug() << "2D length" << vector_2d.length();
+
+
+    qDebug() << "2D distance - " << vector_2d.distanceToPoint(QVector2D(10,10));
+
+
+
+
+    switch(_seg_type)
+    {
+        case SEG_ARC :
+
+
+
+
+
+
+            break;
+        default :
+            break;
+    }
+
+//    form.plotAddData(vector);
+//    form.plotShow(true);
 
     // ********************************************************************
     // Deleting the objects of the Reflexxes Motion Library end terminating

@@ -86,8 +86,8 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 #--------------------------------------------------------------------------------
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/inc
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/src
+INCLUDEPATH += /home/evil/Programming/qt/se-cnc/src/reflexesII/RML/inc
+INCLUDEPATH += /home/evil/Programming/qt/se-cnc/src/reflexesII/RML/src
 #--------------------------------------------------------------------------------
 FORMS += \
             mainform.ui

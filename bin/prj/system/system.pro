@@ -110,8 +110,8 @@ HEADERS += \
             ../../../src/system/system.h
 
 #--------------------------------------------------------------------------------
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/inc
-INCLUDEPATH += /home/evil/Programming/Qt/se-cnc/src/reflexesII/RML/src
+INCLUDEPATH += /home/evil/Programming/qt/se-cnc/src/reflexesII/RML/inc
+INCLUDEPATH += /home/evil/Programming/qt/se-cnc/src/reflexesII/RML/src
 #-------------------------------------------------------------------------------
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
