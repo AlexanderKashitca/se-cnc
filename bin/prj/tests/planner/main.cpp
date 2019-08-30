@@ -3,6 +3,9 @@
 #include <QDebug>
 
 
+#include "../../../../src/planner/planner.h"
+using namespace PLANNER_SPACE;
+using namespace SEGMENTATION_SPACE;
 
 //  ---------------------- Doxygen info ----------------------
 //! \file 01_RMLPositionSampleApplication.cpp
@@ -249,21 +252,23 @@ float _z;
 
 
 
-    typedef enum
-    {
-        SEG_UNDEFINED = 0,
-        SEG_LINEAR,
-        SEG_ARC,
-        SEG_RAPID,
-        SEG_DWELL
-    }SEGMENT_TYPE;
+
 
 
 
 /// segment // vector 3d
 /// vector  // vector 3d
 
-    SEGMENT_TYPE _seg_type(SEG_ARC);
+
+
+
+    SEGMENT_TYPE _seg_type(SEG_LINEAR);
+
+
+    double _liner_end_x;
+    double _liner_end_y;
+    double _liner_end_z;
+
     double _arc_radius_begin;
     double _arc_radius_end;
     double _arc_begin_x;
@@ -323,16 +328,15 @@ float _z;
     switch(_seg_type)
     {
         case SEG_ARC :
-
-
-
-
-
-
             break;
         default :
             break;
     }
+
+    PlannerClass planner;
+    PLANNER_STATE planner_state;
+    planner_state = planner.moveStraightTraverse(100,100,100,100,100,100,250);
+    qDebug() << "planner state - " << planner_state;
 
 //    form.plotAddData(vector);
 //    form.plotShow(true);

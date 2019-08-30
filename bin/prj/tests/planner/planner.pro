@@ -20,6 +20,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 #--------------------------------------------------------------------------------
 SOURCES += \
+            ../../../../src/planner/planner.cpp \
+            ../../../../src/planner/segmentation.cpp \
             ../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
             ../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
             ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
@@ -52,6 +54,9 @@ SOURCES += \
             mainform.cpp
 
 HEADERS += \
+            ../../../../src/planner/motion_param.h \
+            ../../../../src/planner/planner.h \
+            ../../../../src/planner/segmentation.h \
             ../../../../src/reflexesII/RML/inc/RMLFlags.h \
             ../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
             ../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
