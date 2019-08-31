@@ -17,7 +17,7 @@ CXX           = clang++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_DATAVISUALIZATION_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../../prj/tests/planner -I. -I../../../../src/reflexesII/RML/inc -I../../../../src/reflexesII/RML/src -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang
+INCPATH       = -I../../../prj/tests/planner -I. -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang
 QMAKE         = /home/evil/Qt5.12.3/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -54,66 +54,10 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../../../src/planner/planner.cpp \
 		../../../../src/planner/segmentation.cpp \
-		../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
 		../../../prj/tests/planner/main.cpp \
 		../../../prj/tests/planner/mainform.cpp moc_mainform.cpp
 OBJECTS       = planner.o \
 		segmentation.o \
-		ReflexxesAPI.o \
-		TypeIIRMLCalculatePositionalExtrems.o \
-		TypeIIRMLDecisionTree1A.o \
-		TypeIIRMLDecisionTree1B.o \
-		TypeIIRMLDecisionTree1C.o \
-		TypeIIRMLDecisionTree2.o \
-		TypeIIRMLDecisions.o \
-		TypeIIRMLFallBackStrategy.o \
-		TypeIIRMLIsPhaseSynchronizationPossible.o \
-		TypeIIRMLPolynomial.o \
-		TypeIIRMLPosition.o \
-		TypeIIRMLQuicksort.o \
-		TypeIIRMLSetupModifiedSelectionVector.o \
-		TypeIIRMLStep1.o \
-		TypeIIRMLStep1IntermediateProfiles.o \
-		TypeIIRMLStep1Profiles.o \
-		TypeIIRMLStep2.o \
-		TypeIIRMLStep2IntermediateProfiles.o \
-		TypeIIRMLStep2PhaseSynchronization.o \
-		TypeIIRMLStep2Profiles.o \
-		TypeIIRMLStep2WithoutSynchronization.o \
-		TypeIIRMLStep3.o \
-		TypeIIRMLVelocity.o \
-		TypeIIRMLVelocityCalculatePositionalExtrems.o \
-		TypeIIRMLVelocityFallBackStrategy.o \
-		TypeIIRMLVelocityIsPhaseSynchronizationPossible.o \
-		TypeIIRMLVelocityMethods.o \
-		TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o \
 		main.o \
 		mainform.o \
 		moc_mainform.o
@@ -312,62 +256,8 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		../../../prj/tests/planner/planner.pro ../../../../src/planner/motion_param.h \
 		../../../../src/planner/planner.h \
 		../../../../src/planner/segmentation.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
 		../../../prj/tests/planner/mainform.h ../../../../src/planner/planner.cpp \
 		../../../../src/planner/segmentation.cpp \
-		../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp \
-		../../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp \
 		../../../prj/tests/planner/main.cpp \
 		../../../prj/tests/planner/mainform.cpp
 QMAKE_TARGET  = planner
@@ -791,8 +681,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../../src/planner/motion_param.h ../../../../src/planner/planner.h ../../../../src/planner/segmentation.h ../../../../src/reflexesII/RML/inc/RMLFlags.h ../../../../src/reflexesII/RML/inc/RMLInputParameters.h ../../../../src/reflexesII/RML/inc/RMLOutputParameters.h ../../../../src/reflexesII/RML/inc/RMLPositionFlags.h ../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h ../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h ../../../../src/reflexesII/RML/inc/RMLVector.h ../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h ../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h ../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h ../../../../src/reflexesII/RML/inc/ReflexxesAPI.h ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h ../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h ../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h ../../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h ../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h ../../../prj/tests/planner/mainform.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../../src/planner/planner.cpp ../../../../src/planner/segmentation.cpp ../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp ../../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../../prj/tests/planner/main.cpp ../../../prj/tests/planner/mainform.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../../src/planner/motion_param.h ../../../../src/planner/planner.h ../../../../src/planner/segmentation.h ../../../prj/tests/planner/mainform.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../../src/planner/planner.cpp ../../../../src/planner/segmentation.cpp ../../../prj/tests/planner/main.cpp ../../../prj/tests/planner/mainform.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../prj/tests/planner/mainform.ui $(DISTDIR)/
 
 
@@ -1216,7 +1106,7 @@ moc_mainform.cpp: ../../../prj/tests/planner/mainform.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
 		moc_predefs.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/bin/moc
-	/home/evil/Qt5.12.3/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/qt/se-cnc/bin/build/tests/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang -I/home/evil/Programming/qt/se-cnc/bin/prj/tests/planner -I/home/evil/Programming/qt/se-cnc/src/reflexesII/RML/inc -I/home/evil/Programming/qt/se-cnc/src/reflexesII/RML/src -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../../prj/tests/planner/mainform.h -o moc_mainform.cpp
+	/home/evil/Qt5.12.3/5.12.3/gcc_64/bin/moc $(DEFINES) --include /home/evil/Programming/qt/se-cnc/bin/build/tests/build-planner-Desktop_Qt_5_12_3_GCC_64bit-Debug/moc_predefs.h -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang -I/home/evil/Programming/qt/se-cnc/bin/prj/tests/planner -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../../../prj/tests/planner/mainform.h -o moc_mainform.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1283,366 +1173,78 @@ planner.o: ../../../../src/planner/planner.cpp ../../../../src/planner/planner.h
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/planner/segmentation.h
+		../../../../src/planner/segmentation.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planner.o ../../../../src/planner/planner.cpp
 
-segmentation.o: ../../../../src/planner/segmentation.cpp ../../../../src/planner/segmentation.h
+segmentation.o: ../../../../src/planner/segmentation.cpp ../../../../src/planner/segmentation.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o segmentation.o ../../../../src/planner/segmentation.cpp
-
-ReflexxesAPI.o: ../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ReflexxesAPI.o ../../../../src/reflexesII/RML/src/ReflexxesAPI.cpp
-
-TypeIIRMLCalculatePositionalExtrems.o: ../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLCalculatePositionalExtrems.o ../../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp
-
-TypeIIRMLDecisionTree1A.o: ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLDecisionTree1A.o ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp
-
-TypeIIRMLDecisionTree1B.o: ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLDecisionTree1B.o ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp
-
-TypeIIRMLDecisionTree1C.o: ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLDecisionTree1C.o ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp
-
-TypeIIRMLDecisionTree2.o: ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLDecisionTree2.o ../../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp
-
-TypeIIRMLDecisions.o: ../../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLDecisions.o ../../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp
-
-TypeIIRMLFallBackStrategy.o: ../../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLFallBackStrategy.o ../../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp
-
-TypeIIRMLIsPhaseSynchronizationPossible.o: ../../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLIsPhaseSynchronizationPossible.o ../../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp
-
-TypeIIRMLPolynomial.o: ../../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLPolynomial.o ../../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp
-
-TypeIIRMLPosition.o: ../../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLPosition.o ../../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp
-
-TypeIIRMLQuicksort.o: ../../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLQuicksort.o ../../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp
-
-TypeIIRMLSetupModifiedSelectionVector.o: ../../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLSetupModifiedSelectionVector.o ../../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp
-
-TypeIIRMLStep1.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep1.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp
-
-TypeIIRMLStep1IntermediateProfiles.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep1IntermediateProfiles.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp
-
-TypeIIRMLStep1Profiles.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep1Profiles.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp
-
-TypeIIRMLStep2.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep2.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp
-
-TypeIIRMLStep2IntermediateProfiles.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep2IntermediateProfiles.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp
-
-TypeIIRMLStep2PhaseSynchronization.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep2PhaseSynchronization.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp
-
-TypeIIRMLStep2Profiles.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep2Profiles.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp
-
-TypeIIRMLStep2WithoutSynchronization.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep2WithoutSynchronization.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp
-
-TypeIIRMLStep3.o: ../../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLStep3.o ../../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp
-
-TypeIIRMLVelocity.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocity.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp
-
-TypeIIRMLVelocityCalculatePositionalExtrems.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocityCalculatePositionalExtrems.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp
-
-TypeIIRMLVelocityFallBackStrategy.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocityFallBackStrategy.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp
-
-TypeIIRMLVelocityIsPhaseSynchronizationPossible.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocityIsPhaseSynchronizationPossible.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp
-
-TypeIIRMLVelocityMethods.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocityMethods.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp
-
-TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o: ../../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h \
-		../../../../src/reflexesII/RML/inc/TypeIIRMLMath.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o TypeIIRMLVelocitySetupPhaseSyncSelectionVector.o ../../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp
 
 main.o: ../../../prj/tests/planner/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/QApplication \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qapplication.h \
@@ -2035,18 +1637,8 @@ main.o: ../../../prj/tests/planner/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/in
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../../src/planner/planner.h \
-		../../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
-		../../../../src/planner/segmentation.h
+		../../../../src/planner/segmentation.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../../prj/tests/planner/main.cpp
 
 mainform.o: ../../../prj/tests/planner/mainform.cpp ../../../prj/tests/planner/mainform.h \

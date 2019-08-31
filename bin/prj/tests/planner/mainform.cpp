@@ -43,14 +43,14 @@ void mainForm::plotCreate()
     _font = _graph->activeTheme()->font();
     _font.setPointSize(_fontSize);
     ///-------------------------------------------------------------------------
-    _graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeEbony);
+    _graph->activeTheme()->setType(QtDataVisualization::Q3DTheme::ThemeQt/*ThemeEbony*/);
     _graph->activeTheme()->setFont(_font);
     _graph->activeTheme()->setGridEnabled(true);
     _graph->activeTheme()->setLightColor(Qt::white);
     _graph->activeTheme()->setWindowColor(Qt::white);
     _graph->activeTheme()->setGridLineColor(Qt::green);
     _graph->activeTheme()->setBackgroundColor(Qt::white);
-    _graph->setShadowQuality(QtDataVisualization::QAbstract3DGraph::ShadowQualitySoftLow);
+    _graph->setShadowQuality(QtDataVisualization::QAbstract3DGraph::ShadowQualitySoftHigh/*ShadowQualitySoftLow*/);
     _graph->scene()->activeCamera()->setCameraPreset(QtDataVisualization::Q3DCamera::CameraPresetFront);
     ///-------------------------------------------------------------------------
     _proxy = new QtDataVisualization::QScatterDataProxy;
