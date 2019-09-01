@@ -25,6 +25,23 @@ namespace PLANNER_SPACE
     {
         private:
 
+
+            double _length;
+            double _x_delta;
+            double _y_delta;
+            double _z_delta;
+            double _velocity;
+            double _velocity_x;
+            double _velocity_y;
+            double _velocity_z;
+            double _cos_alpha;
+            double _cos_beta;
+            double _cos_gamma;
+
+            PLANNER_STATE calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
+            PLANNER_STATE calcVelocity(double velocity);
+
+
             bool _debug;
 
 
@@ -57,7 +74,7 @@ namespace PLANNER_SPACE
             SEGMENTATION_SPACE::SegmentPoint point;
             SEGMENTATION_SPACE::SegmentationClass segment;
 
-            PLANNER_STATE moveStraightTraverse(double x,double y,double z,double a,double b,double c,double feed);
+            PLANNER_STATE moveStraightTraverse(double x,double y,double z,double feed);
 
             void setDebug(bool enable);
             bool getDebug();

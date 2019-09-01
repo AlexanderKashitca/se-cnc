@@ -912,17 +912,32 @@ planner.o: ../../../src/planner/planner.cpp ../../../src/planner/planner.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h \
-		../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityFlags.h
+		../../../src/planner/segmentation.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdebug.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmap.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtextstream.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiodevice.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlocale.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvariant.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qset.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmath.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planner.o ../../../src/planner/planner.cpp
 
 ReflexxesAPI.o: ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
@@ -1954,17 +1969,7 @@ system.o: ../../../src/system/system.cpp ../../../src/system/system.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
 		../../../src/planner/planner.h \
-		../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
+		../../../src/planner/segmentation.h \
 		../../../src/coordinate/coordinate.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../src/motion/direct.h \
@@ -2066,17 +2071,7 @@ main.o: ../../prj/system/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCo
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
 		../../../src/planner/planner.h \
-		../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
-		../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVector.h \
-		../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLPositionFlags.h \
-		../../../src/reflexesII/RML/inc/RMLFlags.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h \
-		../../../src/reflexesII/RML/inc/RMLVelocityFlags.h \
+		../../../src/planner/segmentation.h \
 		../../../src/coordinate/coordinate.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../src/motion/direct.h \

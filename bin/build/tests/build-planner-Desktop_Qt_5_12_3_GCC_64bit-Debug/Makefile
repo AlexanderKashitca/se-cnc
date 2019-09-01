@@ -1173,6 +1173,15 @@ planner.o: ../../../../src/planner/planner.cpp ../../../../src/planner/planner.h
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../../src/planner/segmentation.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
@@ -1182,13 +1191,8 @@ planner.o: ../../../../src/planner/planner.cpp ../../../../src/planner/planner.h
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtextstream.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiodevice.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlocale.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvariant.h \
@@ -1196,7 +1200,9 @@ planner.o: ../../../../src/planner/planner.cpp ../../../../src/planner/planner.h
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qset.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontiguouscache.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QtMath \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmath.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planner.o ../../../../src/planner/planner.cpp
 
 segmentation.o: ../../../../src/planner/segmentation.cpp ../../../../src/planner/segmentation.h \
