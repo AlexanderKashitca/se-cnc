@@ -13,6 +13,8 @@ int main(int argc, char *argv[])
     mainForm form;
     form.show();
 
+#if 0
+
 QVector<QVector3D> vector;
 QVector<QVector3D> segment;
 vector.clear();
@@ -117,12 +119,19 @@ float _z;
         default :
             break;
     }
+#endif
 
     PlannerClass planner;
     PLANNER_STATE planner_state;
     SegmentPoint  point;
-    planner_state = planner.moveStraightTraverse(10,20,50,250);
+    planner_state = planner.moveStraightTraverse(1054.219449,1.9843,2,250);
     qDebug() << "planner state - " << planner_state;
+    if(planner_state == PLANNER_OK)
+    {
+        QVector<QVector3D> vector3d;
+        form.plotAddData(planner._coord_vector);
+        form.plotShow(true);
+    }
 
 
 //    form.plotAddData(vector);

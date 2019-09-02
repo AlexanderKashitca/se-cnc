@@ -23,8 +23,8 @@ namespace PLANNER_SPACE
      */
     class PlannerClass
     {
-        private:
-
+        //private:
+        public :
 
             double _length;
             double _x_delta;
@@ -37,6 +37,14 @@ namespace PLANNER_SPACE
             double _cos_alpha;
             double _cos_beta;
             double _cos_gamma;
+            double _current_i;
+            double _current_j;
+            double _current_k;
+
+            double const _length_delta = 0.1;
+
+            QVector<QVector3D> _coord_vector;
+            QVector3D _coordinate;
 
             PLANNER_STATE calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
             PLANNER_STATE calcVelocity(double velocity);
