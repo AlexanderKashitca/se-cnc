@@ -124,7 +124,7 @@ float _z;
     PlannerClass planner;
     PLANNER_STATE planner_state;
     SegmentPoint  point;
-    planner_state = planner.moveStraightTraverse(1054.219449,1.9843,2,250);
+    planner_state = planner.moveStraight(10.219449,1.9843,2,250);
     qDebug() << "planner state - " << planner_state;
     if(planner_state == PLANNER_OK)
     {

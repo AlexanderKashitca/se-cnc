@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = clang
 CXX           = clang++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../prj/system -I. -I/usr/local/lib -I../../../src/reflexesII/RML/inc -I../../../src/reflexesII/RML/src -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang
+INCPATH       = -I../../prj/system -I. -I/usr/local/lib -I../../../src/reflexesII/RML/inc -I../../../src/reflexesII/RML/src -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui -I/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang
 QMAKE         = /home/evil/Qt5.12.3/5.12.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = system1.0.0
 DISTDIR = /home/evil/Programming/qt/se-cnc/bin/build/build-system-Desktop_Qt_5_12_3_GCC_64bit-Debug/.tmp/system1.0.0
 LINK          = clang++
 LFLAGS        = -ccc-gcc-name g++ -Wl,-rpath,/home/evil/Qt5.12.3/5.12.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/usr/local/lib/ -lftd2xx -L/home/evil/Qt5.12.3/5.12.3/gcc_64/lib -lQt5Core -lpthread   
+LIBS          = $(SUBLIBS) -L/usr/local/lib/ -lftd2xx -L/home/evil/Qt5.12.3/5.12.3/gcc_64/lib -lQt5Gui -lQt5Core -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../../../src/planner/planner.cpp \
+		../../../src/planner/segmentation.cpp \
 		../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
 		../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
 		../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
@@ -94,6 +95,7 @@ SOURCES       = ../../../src/planner/planner.cpp \
 		../../../src/system/system.cpp \
 		../../prj/system/main.cpp 
 OBJECTS       = planner.o \
+		segmentation.o \
 		ReflexxesAPI.o \
 		TypeIIRMLCalculatePositionalExtrems.o \
 		TypeIIRMLDecisionTree1A.o \
@@ -317,6 +319,7 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/moc.prf \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -326,6 +329,7 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/system/system.pro ../../../src/planner/motion_param.h \
 		../../../src/planner/planner.h \
+		../../../src/planner/segmentation.h \
 		../../../src/reflexesII/RML/inc/RMLFlags.h \
 		../../../src/reflexesII/RML/inc/RMLInputParameters.h \
 		../../../src/reflexesII/RML/inc/RMLOutputParameters.h \
@@ -368,6 +372,7 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		../../../src/motion/direct.h \
 		../../../src/motion/motion_io.h \
 		../../../src/system/system.h ../../../src/planner/planner.cpp \
+		../../../src/planner/segmentation.cpp \
 		../../../src/reflexesII/RML/src/ReflexxesAPI.cpp \
 		../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp \
 		../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp \
@@ -602,6 +607,7 @@ Makefile: ../../prj/system/system.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/resources.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/moc.prf \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qmake_use.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/file_copies.prf \
@@ -610,6 +616,7 @@ Makefile: ../../prj/system/system.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/lex.prf \
 		../../prj/system/system.pro \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/lib/libQt5Gui.prl \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile ../../prj/system/system.pro -spec linux-clang CONFIG+=debug CONFIG+=qml_debug
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf:
@@ -795,6 +802,7 @@ Makefile: ../../prj/system/system.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/resources.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/moc.prf:
+/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/opengl.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/unix/thread.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qmake_use.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/file_copies.prf:
@@ -803,6 +811,7 @@ Makefile: ../../prj/system/system.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/yacc.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/lex.prf:
 ../../prj/system/system.pro:
+/home/evil/Qt5.12.3/5.12.3/gcc_64/lib/libQt5Gui.prl:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../../prj/system/system.pro -spec linux-clang CONFIG+=debug CONFIG+=qml_debug
@@ -819,8 +828,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/motion_param.h ../../../src/planner/planner.h ../../../src/reflexesII/RML/inc/RMLFlags.h ../../../src/reflexesII/RML/inc/RMLInputParameters.h ../../../src/reflexesII/RML/inc/RMLOutputParameters.h ../../../src/reflexesII/RML/inc/RMLPositionFlags.h ../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h ../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h ../../../src/reflexesII/RML/inc/RMLVector.h ../../../src/reflexesII/RML/inc/RMLVelocityFlags.h ../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h ../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h ../../../src/reflexesII/RML/inc/ReflexxesAPI.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h ../../../src/reflexesII/RML/inc/TypeIIRMLMath.h ../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h ../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h ../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h ../../../src/parser/command.h ../../../src/parser/parser.h ../../../src/interpreter/cannon_in_out.h ../../../src/interpreter/interpreter.h ../../../src/interpreter/canon.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_define.h ../../../src/interpreter/rs274ngc_return.h ../../../src/coordinate/coordinate.h ../../../src/ftdi/WinTypes.h ../../../src/ftdi/ftd2xx.h ../../../src/kinematics/kinematics.h ../../../src/motion/common.h ../../../src/motion/direct.h ../../../src/motion/motion_io.h ../../../src/system/system.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../../src/planner/planner.cpp ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp ../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp ../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp ../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp ../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp ../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../../src/parser/command.cpp ../../../src/parser/parser.cpp ../../../src/interpreter/cannon_in_out.cpp ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/rs274ngc.cpp ../../../src/coordinate/coordinate.cpp ../../../src/kinematics/kinematics.cpp ../../../src/motion/common.cpp ../../../src/motion/direct.cpp ../../../src/motion/motion_io.cpp ../../../src/system/system.cpp ../../prj/system/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/motion_param.h ../../../src/planner/planner.h ../../../src/planner/segmentation.h ../../../src/reflexesII/RML/inc/RMLFlags.h ../../../src/reflexesII/RML/inc/RMLInputParameters.h ../../../src/reflexesII/RML/inc/RMLOutputParameters.h ../../../src/reflexesII/RML/inc/RMLPositionFlags.h ../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h ../../../src/reflexesII/RML/inc/RMLPositionOutputParameters.h ../../../src/reflexesII/RML/inc/RMLVector.h ../../../src/reflexesII/RML/inc/RMLVelocityFlags.h ../../../src/reflexesII/RML/inc/RMLVelocityInputParameters.h ../../../src/reflexesII/RML/inc/RMLVelocityOutputParameters.h ../../../src/reflexesII/RML/inc/ReflexxesAPI.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1A.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1B.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree1C.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisionTree2.h ../../../src/reflexesII/RML/inc/TypeIIRMLDecisions.h ../../../src/reflexesII/RML/inc/TypeIIRMLMath.h ../../../src/reflexesII/RML/inc/TypeIIRMLPolynomial.h ../../../src/reflexesII/RML/inc/TypeIIRMLPosition.h ../../../src/reflexesII/RML/inc/TypeIIRMLQuicksort.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep1IntermediateProfiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep1Profiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2IntermediateProfiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2Profiles.h ../../../src/reflexesII/RML/inc/TypeIIRMLStep2WithoutSynchronization.h ../../../src/reflexesII/RML/inc/TypeIIRMLVelocity.h ../../../src/parser/command.h ../../../src/parser/parser.h ../../../src/interpreter/cannon_in_out.h ../../../src/interpreter/interpreter.h ../../../src/interpreter/canon.h ../../../src/interpreter/rs274ngc.h ../../../src/interpreter/rs274ngc_define.h ../../../src/interpreter/rs274ngc_return.h ../../../src/coordinate/coordinate.h ../../../src/ftdi/WinTypes.h ../../../src/ftdi/ftd2xx.h ../../../src/kinematics/kinematics.h ../../../src/motion/common.h ../../../src/motion/direct.h ../../../src/motion/motion_io.h ../../../src/system/system.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/planner/planner.cpp ../../../src/planner/segmentation.cpp ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../src/reflexesII/RML/src/TypeIIRMLCalculatePositionalExtrems.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1A.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1B.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree1C.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisionTree2.cpp ../../../src/reflexesII/RML/src/TypeIIRMLDecisions.cpp ../../../src/reflexesII/RML/src/TypeIIRMLFallBackStrategy.cpp ../../../src/reflexesII/RML/src/TypeIIRMLIsPhaseSynchronizationPossible.cpp ../../../src/reflexesII/RML/src/TypeIIRMLPolynomial.cpp ../../../src/reflexesII/RML/src/TypeIIRMLPosition.cpp ../../../src/reflexesII/RML/src/TypeIIRMLQuicksort.cpp ../../../src/reflexesII/RML/src/TypeIIRMLSetupModifiedSelectionVector.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1IntermediateProfiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep1Profiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2IntermediateProfiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2PhaseSynchronization.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2Profiles.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep2WithoutSynchronization.cpp ../../../src/reflexesII/RML/src/TypeIIRMLStep3.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocity.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityCalculatePositionalExtrems.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityFallBackStrategy.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityIsPhaseSynchronizationPossible.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocityMethods.cpp ../../../src/reflexesII/RML/src/TypeIIRMLVelocitySetupPhaseSyncSelectionVector.cpp ../../../src/parser/command.cpp ../../../src/parser/parser.cpp ../../../src/interpreter/cannon_in_out.cpp ../../../src/interpreter/interpreter.cpp ../../../src/interpreter/rs274ngc.cpp ../../../src/coordinate/coordinate.cpp ../../../src/kinematics/kinematics.cpp ../../../src/motion/common.cpp ../../../src/motion/direct.cpp ../../../src/motion/motion_io.cpp ../../../src/system/system.cpp ../../prj/system/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -912,8 +921,18 @@ planner.o: ../../../src/planner/planner.cpp ../../../src/planner/planner.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../src/planner/segmentation.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		../../../src/interpreter/canon.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdebug.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
@@ -921,13 +940,8 @@ planner.o: ../../../src/planner/planner.cpp ../../../src/planner/planner.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtextstream.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiodevice.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcoreevent.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qscopedpointer.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmetatype.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlocale.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvariant.h \
@@ -939,6 +953,53 @@ planner.o: ../../../src/planner/planner.cpp ../../../src/planner/planner.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QtMath \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmath.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o planner.o ../../../src/planner/planner.cpp
+
+segmentation.o: ../../../src/planner/segmentation.cpp ../../../src/planner/segmentation.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvector.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpoint.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o segmentation.o ../../../src/planner/segmentation.cpp
 
 ReflexxesAPI.o: ../../../src/reflexesII/RML/src/ReflexxesAPI.cpp ../../../src/reflexesII/RML/inc/ReflexxesAPI.h \
 		../../../src/reflexesII/RML/inc/RMLPositionInputParameters.h \
@@ -1969,7 +2030,12 @@ system.o: ../../../src/system/system.cpp ../../../src/system/system.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
 		../../../src/planner/planner.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
 		../../../src/planner/segmentation.h \
+		../../../src/interpreter/canon.h \
 		../../../src/coordinate/coordinate.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../src/motion/direct.h \
@@ -1982,7 +2048,6 @@ system.o: ../../../src/system/system.cpp ../../../src/system/system.h \
 		../../../src/ftdi/WinTypes.h \
 		../../../src/dsp/PC-DSP.h \
 		../../../src/motion/common.h \
-		../../../src/interpreter/canon.h \
 		../../../src/kinematics/kinematics.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QtMath \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmath.h \
@@ -2071,7 +2136,12 @@ main.o: ../../prj/system/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCo
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVector \
 		../../../src/planner/planner.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/QVector3D \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qvector3d.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtguiglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/qtgui-config.h \
 		../../../src/planner/segmentation.h \
+		../../../src/interpreter/canon.h \
 		../../../src/coordinate/coordinate.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../src/motion/direct.h \
@@ -2084,7 +2154,6 @@ main.o: ../../prj/system/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCo
 		../../../src/ftdi/WinTypes.h \
 		../../../src/dsp/PC-DSP.h \
 		../../../src/motion/common.h \
-		../../../src/interpreter/canon.h \
 		../../../src/kinematics/kinematics.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QtMath \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmath.h \

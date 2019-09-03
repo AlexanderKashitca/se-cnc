@@ -5,6 +5,7 @@
 #include <QVector3D>
 ///-----------------------------------------------------------------------------
 #include "segmentation.h"
+#include "../interpreter/canon.h"
 ///-----------------------------------------------------------------------------
 namespace PLANNER_SPACE
 {
@@ -13,8 +14,7 @@ namespace PLANNER_SPACE
     {
         PLANNER_OK   = 0,
         PLANNER_FAIL = 1,
-        PLANNER_INVALID_PARAMETER,
-        PLANNER_REFLEXXESS_ERROR
+        PLANNER_INVALID_PARAMETER
     } PLANNER_STATE;
 
 
@@ -46,8 +46,8 @@ namespace PLANNER_SPACE
             QVector<QVector3D> _coord_vector;
             QVector3D _coordinate;
 
-            PLANNER_STATE calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
-            PLANNER_STATE calcVelocity(double velocity);
+            PLANNER_STATE calcStraightLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
+            PLANNER_STATE calcStraightVelocity(double velocity);
 
 
             bool _debug;
@@ -82,7 +82,8 @@ namespace PLANNER_SPACE
             SEGMENTATION_SPACE::SegmentPoint point;
             SEGMENTATION_SPACE::SegmentationClass segment;
 
-            PLANNER_STATE moveStraightTraverse(double x,double y,double z,double feed);
+            PLANNER_STATE moveStraight(double x,double y,double z,double feed);
+            PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double radius,double feed);
 
             void setDebug(bool enable);
             bool getDebug();
