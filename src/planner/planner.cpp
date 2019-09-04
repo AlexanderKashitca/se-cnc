@@ -148,6 +148,42 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
 ///-----------------------------------------------------------------------------
 PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double radius,double feed)
 {
+    double _vertical_begin;
+    double _ortogonal_begin;
+    double _horizontal_begin;
+
+    double _vertical_end;
+    double _ortogonal_end;
+    double _horizontal_end;
+
+    switch(plane)
+    {
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
+            _ortogonal_end    = z;
+            _ortogonal_begin  = _current_z;
+            _horizontal_begin = _current_x;
+            _horizontal_end   = x;
+            _vertical_begin   = _current_y;
+            _vertical_end     = y;
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
+            _ortogonal_end    = x;
+            _ortogonal_begin  = _current_x;
+            _horizontal_begin = _current_z;
+            _horizontal_end   = z;
+            _vertical_begin   = _current_y;
+            _vertical_end     = y;
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
+            _ortogonal_end    = y;
+            _ortogonal_begin  = _current_y;
+            _horizontal_begin = _current_x;
+            _horizontal_end   = x;
+            _vertical_begin   = _current_z;
+            _vertical_end     = z;
+            break;
+    }
+
 
 }
 ///-----------------------------------------------------------------------------
