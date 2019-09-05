@@ -159,7 +159,14 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
     double _vertical_centr;
     double _horizontal_centr;
 
+    double _coordinate_vertical_centr;
+    double _coordinate_horizontal_centr;
+
+    double _vertical_delta;
+    double _horizontal_delta;
+
     double _radius_vector_length;
+
 
     switch(plane)
     {
@@ -170,8 +177,8 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = x;
             _vertical_begin   = _current_y;
             _vertical_end     = y;
-            _vertical_centr   = i;
-            _horizontal_centr = j;
+            _horizontal_centr = i;
+            _vertical_centr   = j;
             break;
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
             _ortogonal_end    = x;
@@ -180,8 +187,8 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = z;
             _vertical_begin   = _current_y;
             _vertical_end     = y;
-            _vertical_centr   = k;
-            _horizontal_centr = j;
+            _horizontal_centr = k;
+            _vertical_centr   = j;
             break;
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
             _ortogonal_end    = y;
@@ -190,14 +197,62 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = x;
             _vertical_begin   = _current_z;
             _vertical_end     = z;
-            _vertical_centr   = i;
-            _horizontal_centr = k;
+            _horizontal_centr = i;
+            _vertical_centr   = k;
             break;
     }
+    /// validation variables
+    if(qFuzzyCompare(_horizontal_begin,_horizontal_end))
+        return(PLANNER_INVALID_PARAMETER);
+    if(qFuzzyCompare(_vertical_begin,_vertical_end))
+        return(PLANNER_INVALID_PARAMETER);
+    /// calculation delta
+    _vertical_delta   = fabs(_vertical_centr);
+    _horizontal_delta = fabs(_horizontal_centr);
+    /// calc radius length the plane vector
+    _radius_vector_length = sqrt((pow(_vertical_delta,2)+pow(_horizontal_delta,2)));
+    /// calc center coordinate
+    _coordinate_vertical_centr   = _vertical_begin + _vertical_centr;
+    _coordinate_horizontal_centr = _horizontal_begin + _horizontal_centr;
+    if(_debug)
+    {
+        qDebug() << "_vertical_delta              - " << _vertical_delta;
+        qDebug() << "_horizontal_delta            - " << _horizontal_delta;
+        qDebug() << "_radius_vector_length        - " << _radius_vector_length;
+        qDebug() << "_coordinate_vertical_centr   - " << _coordinate_vertical_centr;
+        qDebug() << "_coordinate_horizontal_centr - " << _coordinate_horizontal_centr;
+    }
 
-    _radius_vector_length
+    /// comparing ortogonal moving
+    if(qFuzzyCompare(_ortogonal_begin,_ortogonal_end))
+    { /// no ortogonale moving. Only in the plane moving
+        if(_horizontal_begin > _horizontal_end)
+        { /// II and III
+            if(_vertical_begin > _vertical_end)
+            { /// III
+                /// find begin and end angle
 
+            }
+            else
+            { /// II
+                /// find begin and end angle
 
+            }
+        }
+        else
+        { /// I and IV
+            if(_vertical_begin > _vertical_end)
+            { /// IV
+                /// find begin and end angle
+
+            }
+            else
+            { /// I
+                /// find begin and end angle
+
+            }
+        }
+    }
 
     return(PLANNER_OK);
 }
