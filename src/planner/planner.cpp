@@ -146,7 +146,7 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
-PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double radius,double feed)
+PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double i,double j,double k,double feed)
 {
     double _vertical_begin;
     double _ortogonal_begin;
@@ -155,6 +155,11 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
     double _vertical_end;
     double _ortogonal_end;
     double _horizontal_end;
+
+    double _vertical_centr;
+    double _horizontal_centr;
+
+    double _radius_vector_length;
 
     switch(plane)
     {
@@ -165,6 +170,8 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = x;
             _vertical_begin   = _current_y;
             _vertical_end     = y;
+            _vertical_centr   = i;
+            _horizontal_centr = j;
             break;
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
             _ortogonal_end    = x;
@@ -173,6 +180,8 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = z;
             _vertical_begin   = _current_y;
             _vertical_end     = y;
+            _vertical_centr   = k;
+            _horizontal_centr = j;
             break;
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
             _ortogonal_end    = y;
@@ -181,9 +190,15 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double 
             _horizontal_end   = x;
             _vertical_begin   = _current_z;
             _vertical_end     = z;
+            _vertical_centr   = i;
+            _horizontal_centr = k;
             break;
     }
 
+    _radius_vector_length
 
+
+
+    return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------

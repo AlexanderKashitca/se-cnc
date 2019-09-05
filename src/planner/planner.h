@@ -83,7 +83,7 @@ namespace PLANNER_SPACE
             SEGMENTATION_SPACE::SegmentationClass segment;
 
             PLANNER_STATE moveStraight(double x,double y,double z,double feed);
-            PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double radius,double feed);
+            PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double i,double j,double k,double feed);
 
             void setDebug(bool enable);
             bool getDebug();
