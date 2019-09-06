@@ -171,10 +171,23 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     double _coordinate_vertical_centr;
     double _coordinate_horizontal_centr;
 
-    double _vertical_delta;
-    double _horizontal_delta;
+    double _coordinate_vertical;
+    double _coordinate_horizontal;
+    double _coordinate_ortogonal;
+
+    double _vertical_delta_begin;
+    double _horizontal_delta_begin;
+    double _vertical_delta_end;
+    double _horizontal_delta_end;
 
     double _radius_vector_length;
+
+    double _cos_alpha_begin;
+    double _cos_alpha_end;
+    double _alpha_radian_n;
+    double _alpha_radian_end;
+    double _alpha_radian_begin;
+
 
     double _hor_delta;
     double _ver_delta;
@@ -182,8 +195,7 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     double _chord_perpendicular_lenth;
     double _cos_alpha;
     double _alpha_radian;
-    double _alpha_radian_end;
-    double _alpha_radian_begin;
+
 
 
 
@@ -220,19 +232,123 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
             _vertical_centr   = k;
             break;
     }
+    /// copy ortogonal varieble
+    _coordinate_ortogonal = _ortogonal_begin;
     /// validation variables
     if(qFuzzyCompare(_horizontal_begin,_horizontal_end))
         return(PLANNER_INVALID_PARAMETER);
     if(qFuzzyCompare(_vertical_begin,_vertical_end))
         return(PLANNER_INVALID_PARAMETER);
-    /// calculation delta
-    _vertical_delta   = fabs(_vertical_centr);
-    _horizontal_delta = fabs(_horizontal_centr);
-    /// calc radius length the plane vector
-    _radius_vector_length = sqrt((pow(_vertical_delta,2)+pow(_horizontal_delta,2)));
     /// calc center coordinate
     _coordinate_vertical_centr   = _vertical_begin + _vertical_centr;
     _coordinate_horizontal_centr = _horizontal_begin + _horizontal_centr;
+    /// calculation delta
+    _vertical_delta_begin   = fabs(fabs(_vertical_begin)-fabs(_coordinate_vertical_centr));
+    _horizontal_delta_begin = fabs(fabs(_horizontal_begin)-fabs(_coordinate_horizontal_centr));
+    _vertical_delta_end     = fabs(fabs(_vertical_end)-fabs(_coordinate_vertical_centr));
+    _horizontal_delta_end   = fabs(fabs(_horizontal_end)-fabs(_coordinate_horizontal_centr));
+    /// calc radius length the plane vector
+    _radius_vector_length = sqrt((pow(_vertical_delta_begin,2)+pow(_horizontal_delta_begin,2)));
+    /// calc cos angle from begin and end arc points
+    _cos_alpha_begin = _horizontal_delta_begin / _radius_vector_length;
+    _cos_alpha_end   = _horizontal_delta_end   / _radius_vector_length;
+    /// calc radian angle from begin and end arc points
+    _alpha_radian_begin = acos(_cos_alpha_begin);
+    _alpha_radian_end   = acos(_cos_alpha_end);
+
+
+
+
+    _alpha_radian_n = _alpha_radian_begin;
+    while(1)
+    {
+        _coordinate_horizontal = _radius_vector_length * cos(_alpha_radian_n);
+        _coordinate_vertical   = _radius_vector_length * sin(_alpha_radian_n);
+
+
+        if(qFuzzyCompare(_horizontal_begin,_coordinate_horizontal_centr))
+        { /// _horizontal_begin == _coordinate_horizontal_centr (1;3)
+
+        }
+        else
+        {
+            if(_horizontal_begin < _coordinate_horizontal_centr)
+            { /// (2,3)
+
+            }
+            else
+            { /// (1,4)
+
+            }
+        }
+
+        if(_horizontal_begin < _coordinate_horizontal_centr)
+        { /// II and III
+
+        }
+        else if (_horizontal_begin < _coordinate_horizontal_centr)
+        {
+
+        }
+
+        if(_horizontal_begin >= _coordinate_horizontal_centr)
+        { /// II and III
+            if(_vertical_begin > _coordinate_vertical_centr)
+            { /// III
+                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
+                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
+            }
+            else
+            { /// II
+                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
+                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
+            }
+        }
+        else
+        { /// I and IV
+            if(_vertical_begin > _coordinate_vertical_centr)
+            { /// IV
+                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
+                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
+            }
+            else
+            { /// I
+                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
+                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
+            }
+        }
+
+
+        _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+        _coordinate.setY(static_cast<float>(_coordinate_vertical));
+        _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+        _coord_vector.push_back(_coordinate);
+        if(_alpha_radian_begin < _alpha_radian_end)
+        {
+            _alpha_radian_n = _alpha_radian_n + 0.01;
+            if(_alpha_radian_n > _alpha_radian_end)
+            {
+                break;
+            }
+        }
+        else
+        {
+            _alpha_radian_n = _alpha_radian_n - 0.01;
+            if(_alpha_radian_n < _alpha_radian_end)
+            {
+                break;
+            }
+        }
+
+
+
+    }
+
+
+
+
+
+    /*
     /// find chord length
     _hor_delta = fabs(fabs(_horizontal_begin)-fabs(_horizontal_end));
     _ver_delta = fabs(fabs(_vertical_begin)-fabs(_vertical_end));
@@ -241,71 +357,12 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     _chord_length = _chord_length / 2;
     _chord_perpendicular_lenth = sqrt(pow(_radius_vector_length,2) - pow(_chord_length,2));
     /// calc cos alpha
-    _cos_alpha = _chord_perpendicular_lenth / _radius_vector_length;
+    _cos_alpha = _chord_perpendicular_lenth / _horizontal_delta_begin;
     /// calc angle at radian
     _alpha_radian = acos(_cos_alpha);
-    /// calc begin and end angle position
-    double const M_2PI = M_PI * 2;
-
-    if(!orientation)
-    { /// G2
-        _alpha_radian_begin = 0;
-        _alpha_radian_end   = 2 * _alpha_radian;
-    }
-    else
-    { /// G3
-        _alpha_radian_begin = 2 * _alpha_radian;
-        _alpha_radian_end   = M_2PI - _alpha_radian;
-    }
+*/
 
 
-
-    if(_horizontal_begin > _horizontal_end)
-    { /// II and III
-        if(_vertical_begin > _vertical_end)
-        { /// III
-
-        }
-        else
-        { /// II
-
-        }
-    }
-    else
-    { /// I and IV
-        if(_vertical_begin > _vertical_end)
-        { /// IV
-
-        }
-        else
-        { /// I
-
-        }
-    }
-
-
-    /// comparing ortogonal moving
-    if(qFuzzyCompare(_ortogonal_begin,_ortogonal_end))
-    { /// no ortogonale moving. Only in the plane moving
-
-        double _hor;
-        double _ver;
-
-        for(double _alpha_radian_n = _alpha_radian_begin;_alpha_radian_n < _alpha_radian_end;_alpha_radian_n = _alpha_radian_n + 0.01)
-        {
-
-            _hor = _radius_vector_length * cos(_alpha_radian_n);
-            _ver = _radius_vector_length * sin(_alpha_radian_n);
-            _hor = _hor + _coordinate_horizontal_centr;
-            _ver = _ver + _coordinate_vertical_centr;
-
-            _coordinate.setX(static_cast<float>(_hor));
-            _coordinate.setY(static_cast<float>(_ver));
-            _coordinate.setZ(static_cast<float>(_current_z));
-            _coord_vector.push_back(_coordinate);
-
-        }
-    }
 
 
 
@@ -315,18 +372,20 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     {
         qDebug() << "_alpha_radian_begin          - " << _alpha_radian_begin;
         qDebug() << "_alpha_radian_end            - " << _alpha_radian_end;
-        qDebug() << "_cos_alpha                   - " << _cos_alpha;
-        qDebug() << "_alpha_radian                - " << _alpha_radian;
-        qDebug() << "_chord_perpendicular_lenth   - " << _chord_perpendicular_lenth;
-        qDebug() << "_hor_delta                   - " << _hor_delta;
-        qDebug() << "_ver_delta                   - " << _ver_delta;
-        qDebug() << "_chord_length                - " << _chord_length;
+//        qDebug() << "_cos_alpha                   - " << _cos_alpha;
+//        qDebug() << "_alpha_radian                - " << _alpha_radian;
+//        qDebug() << "_chord_perpendicular_lenth   - " << _chord_perpendicular_lenth;
+//        qDebug() << "_hor_delta                   - " << _hor_delta;
+//        qDebug() << "_ver_delta                   - " << _ver_delta;
+//        qDebug() << "_chord_length                - " << _chord_length;
         qDebug() << "_horizontal_begin            - " << _horizontal_begin;
         qDebug() << "_horizontal_end              - " << _horizontal_end;
         qDebug() << "_vertical_begin              - " << _vertical_begin;
         qDebug() << "_vertical_end                - " << _vertical_end;
-        qDebug() << "_vertical_delta              - " << _vertical_delta;
-        qDebug() << "_horizontal_delta            - " << _horizontal_delta;
+        qDebug() << "_vertical_delta_begin        - " << _vertical_delta_begin;
+        qDebug() << "_horizontal_delta_begin      - " << _horizontal_delta_begin;
+        qDebug() << "_vertical_delta_end          - " << _vertical_delta_end;
+        qDebug() << "_horizontal_delta_end        - " << _horizontal_delta_end;
         qDebug() << "_radius_vector_length        - " << _radius_vector_length;
         qDebug() << "_coordinate_vertical_centr   - " << _coordinate_vertical_centr;
         qDebug() << "_coordinate_horizontal_centr - " << _coordinate_horizontal_centr;
@@ -338,5 +397,33 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
 ///-----------------------------------------------------------------------------
 
 
+#if 0
+if(_horizontal_begin >= _coordinate_horizontal_centr)
+{ /// II and III
+    if(_vertical_begin > _coordinate_vertical_centr)
+    { /// III
+        _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
+        _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
+    }
+    else
+    { /// II
+        _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
+        _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
+    }
+}
+else
+{ /// I and IV
+    if(_vertical_begin > _coordinate_vertical_centr)
+    { /// IV
+        _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
+        _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
+    }
+    else
+    { /// I
+        _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
+        _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
+    }
+}
+#endif
 
 
