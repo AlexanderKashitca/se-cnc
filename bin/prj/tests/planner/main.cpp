@@ -124,11 +124,20 @@ float _z;
     PlannerClass planner;
     PLANNER_STATE planner_state;
     SegmentPoint  point;
-    planner_state = planner.moveStraight(10.219449,1.9843,2,250);
+    //planner_state = planner.moveStraight(10.219449,1.9843,2,250);
 
     planner._current_x = 0.0;
     planner._current_y = 1.0;
-    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,3.0,0.0,0.0,250);
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,3.0,0.0,0.0,false,250);
+//    planner._current_x = 6.0;
+//    planner._current_y = 1.0;
+//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,-3.0,0.0,0.0,false,250);
+//    planner._current_x = 0.0;
+//    planner._current_y = 1.0;
+//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,3.0,0.0,0.0,false,250);
+//    planner._current_x = 0.0;
+//    planner._current_y = 1.0;
+//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,3.0,0.0,0.0,false,250);
 
     qDebug() << "planner state - " << planner_state;
     if(planner_state == PLANNER_OK)

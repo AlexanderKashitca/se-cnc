@@ -1184,6 +1184,7 @@ planner.o: ../../../../src/planner/planner.cpp ../../../../src/planner/planner.h
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		../../../../src/planner/segmentation.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		../../../../src/interpreter/canon.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdebug.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
@@ -1644,7 +1645,8 @@ main.o: ../../../prj/tests/planner/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/in
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QDebug \
 		../../../../src/planner/planner.h \
 		../../../../src/planner/segmentation.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QPair \
+		../../../../src/interpreter/canon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../../prj/tests/planner/main.cpp
 
 mainform.o: ../../../prj/tests/planner/mainform.cpp ../../../prj/tests/planner/mainform.h \
@@ -2033,19 +2035,7 @@ mainform.o: ../../../prj/tests/planner/mainform.cpp ../../../prj/tests/planner/m
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtGui/QOffscreenSurface \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtDataVisualization/qtdatavisualizationversion.h \
-		ui_mainform.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QVariant \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/QApplication \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qapplication.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/QGraphicsView \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qgraphicsview.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qscrollarea.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qframe.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/QPushButton \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qpushbutton.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtWidgets/qabstractbutton.h
+		ui_mainform.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainform.o ../../../prj/tests/planner/mainform.cpp
 
 moc_mainform.o: moc_mainform.cpp 

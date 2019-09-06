@@ -9,10 +9,10 @@ mainForm::mainForm(QWidget *parent) : QWidget(parent),ui(new Ui::mainForm)
     _dataArray = new QtDataVisualization::QScatterDataArray;
     _scene = new QGraphicsScene;
 
-    _fontSize = 20.0f;
+    _fontSize = 40.0f;
     _style = QtDataVisualization::QAbstract3DSeries::MeshSphere;
     _smooth = true;
-    _itemCount = 900;
+    _itemCount = 10000;
     _curveDivider = 0.75f;
 
     ///-------------------------------------------------------------------------
