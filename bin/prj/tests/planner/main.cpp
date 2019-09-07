@@ -137,7 +137,7 @@ float _z;
     planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,-2.0,0.0,-3.0,0.0,0.0,false,250);
     planner._current_x = 3.0;
     planner._current_y = -2.0;
-    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,0.0,1.0,0.0,0.0,-3.0,0.0,false,250);
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,0.0,1.0,0.0,0.0,3.0,0.0,false,250);
 
     qDebug() << "planner state - " << planner_state;
     if(planner_state == PLANNER_OK)
@@ -151,11 +151,6 @@ float _z;
 //    form.plotAddData(vector);
 //    form.plotShow(true);
 
-    // ********************************************************************
-    // Deleting the objects of the Reflexxes Motion Library end terminating
-    // the process
-
-
-
     return app.exec();
 }
+///-----------------------------------------------------------------------------
