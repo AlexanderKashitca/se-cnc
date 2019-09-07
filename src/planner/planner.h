@@ -85,6 +85,8 @@ namespace PLANNER_SPACE
             PLANNER_STATE moveStraight(double x,double y,double z,double feed);
             PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double i,double j,double k,bool orientation,double feed);
 
+            void TestRotate();
+
             void setDebug(bool enable);
             bool getDebug();
     };
