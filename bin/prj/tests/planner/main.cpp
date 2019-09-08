@@ -121,23 +121,27 @@ float _z;
     }
 #endif
 
+
+    bool orientation = false;
+
     PlannerClass planner;
     PLANNER_STATE planner_state;
     SegmentPoint  point;
     //planner_state = planner.moveStraight(10.219449,1.9843,2,250);
 //planner.TestRotate();
+    planner._current_x = -3.0;
+    planner._current_y =  0.0;
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,0.0,3.0,0.0,3.0,0.0,0.0,orientation,250);
     planner._current_x = 0.0;
-    planner._current_y = 1.0;
-    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,4.0,0.0,3.0,0.0,0.0,true,250);
+    planner._current_y = 3.0;
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,0.0,0.0,3.0,0.0,0.0,orientation,250);
     planner._current_x = 3.0;
-    planner._current_y = 4.0;
-//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,6.0,1.0,0.0,0.0,-3.0,0.0,false,250);
-    planner._current_x = 6.0;
-    planner._current_y = 1.0;
-//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,3.0,-2.0,0.0,-3.0,0.0,0.0,false,250);
-    planner._current_x = 3.0;
-    planner._current_y = -2.0;
-//    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,0.0,1.0,0.0,0.0,3.0,0.0,false,250);
+    planner._current_y = 0.0;
+//    orientation = false;
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,0.0,-3.0,0.0,0.0,-3.0,0.0,orientation,250);
+    planner._current_x =  0.0;
+    planner._current_y = -3.0;
+    planner_state = planner.moveArc(INTERPRETER_SPACE::CANON_PLANE_XY,-3.0,0.0,0.0,-3.0,0.0,0.0,orientation,250);
 
     qDebug() << "planner state - " << planner_state;
     if(planner_state == PLANNER_OK)

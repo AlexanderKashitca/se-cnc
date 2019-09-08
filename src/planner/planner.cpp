@@ -182,16 +182,16 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
 
     double _length_radius_vector;
 
-    double _cos_alpha_begin;
-    double _cos_alpha_end;
-
 
     bool   _orientation;
     double _angle_degree;
     double _angle_degree_end;
     double _angle_degree_begin;
 
+    double _angle_degree_end_plus;
+    double _angle_degree_end_minus;
 
+    double const _angle_degree_delta = 0.1;
 
     _orientation = orientation;
     switch(plane)
@@ -230,44 +230,79 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     /// copy ortogonal varieble
     _coordinate_ortogonal = _ortogonal_begin;
     /// calc center coordinate
-    _coordinate_vertical_center   = _vertical_begin   + _vertical_centr;
     _coordinate_horizontal_center = _horizontal_begin + _horizontal_centr;
+    _coordinate_vertical_center   = _vertical_begin   + _vertical_centr;
     /// calculation delta
-    if(_vertical_begin >= _coordinate_vertical_center)
-        _vertical_delta_begin  = fabs((_vertical_begin) - (_coordinate_vertical_center));
-    else
-        _vertical_delta_begin  = fabs((_coordinate_vertical_center) - (_vertical_begin));
     if(_horizontal_begin >= _coordinate_horizontal_center)
-        _horizontal_delta_begin = fabs((_horizontal_begin) - (_coordinate_horizontal_center));
+        _horizontal_delta_begin = fabs(_horizontal_begin - _coordinate_horizontal_center);
     else
-        _horizontal_delta_begin = fabs((_coordinate_horizontal_center) - (_horizontal_begin));
+        _horizontal_delta_begin = fabs(_coordinate_horizontal_center - _horizontal_begin);
+
+    if(_vertical_begin >= _coordinate_vertical_center)
+        _vertical_delta_begin  = fabs(_vertical_begin - _coordinate_vertical_center);
+    else
+        _vertical_delta_begin  = fabs(_coordinate_vertical_center - _vertical_begin);
 
     if(_vertical_end >= _coordinate_vertical_center)
-        _vertical_delta_end     = fabs((_vertical_end) - (_coordinate_vertical_center));
+        _vertical_delta_end     = fabs(_vertical_end - _coordinate_vertical_center);
     else
-        _vertical_delta_end     = fabs((_coordinate_vertical_center) - (_vertical_end));
+        _vertical_delta_end     = fabs(_coordinate_vertical_center - _vertical_end);
     if(_horizontal_end >= _coordinate_horizontal_center)
-        _horizontal_delta_end   = fabs((_horizontal_end) - (_coordinate_horizontal_center));
+        _horizontal_delta_end   = fabs(_horizontal_end - _coordinate_horizontal_center);
     else
-        _horizontal_delta_end   = fabs((_coordinate_horizontal_center) - (_horizontal_end));
+        _horizontal_delta_end   = fabs(_coordinate_horizontal_center - _horizontal_end);
     /// calc radius length the plane vector
     _length_radius_vector = sqrt((pow(_vertical_delta_begin,2)+pow(_horizontal_delta_begin,2)));
-    /// calc cos angle from begin and end arc points
-    _cos_alpha_begin = _horizontal_delta_begin / _length_radius_vector;
-    _cos_alpha_end   = _horizontal_delta_end   / _length_radius_vector;
-    /// calc radian angle from begin and end arc points
-    _angle_degree_begin = qRadiansToDegrees(qAcos(_cos_alpha_begin));
-    _angle_degree_end   = qRadiansToDegrees(qAcos(_cos_alpha_end));
+    /// calc radian angle from begin and end arc points and transformation to degree
+    _angle_degree_begin = qRadiansToDegrees(qAcos(_horizontal_delta_begin / _length_radius_vector));
+    _angle_degree_end   = qRadiansToDegrees(qAcos(_horizontal_delta_end   / _length_radius_vector));
+    /// transform begin angle
+    if(_horizontal_begin >= _coordinate_horizontal_center)
+    {
+        if(_vertical_begin <= _coordinate_vertical_center)
+            _angle_degree_begin = 360.0 - _angle_degree_begin;
+        else
+            _angle_degree_begin = 0.0 + _angle_degree_begin;
+    }
+    else
+    {
+        if(_vertical_begin < _coordinate_vertical_center)
+            _angle_degree_begin = 270.0 - _angle_degree_begin;
+        else
+            _angle_degree_begin = 180.0 - _angle_degree_begin;
+    }
+    /// transform end angle
+    if(_horizontal_end >= _coordinate_horizontal_center)
+    {
+        if(_vertical_end <= _coordinate_vertical_center)
+            _angle_degree_end = 360.0 - _angle_degree_end;
+        else
+            _angle_degree_end = 180.0 - _angle_degree_end;
+    }
+    else
+    {
+        if(_vertical_end < _coordinate_vertical_center)
+            _angle_degree_end = 270.0 - _angle_degree_end;
+        else
+            _angle_degree_end = 180.0 - _angle_degree_end;
+    }
 
 
-
+/// TEMP CENTER POINT
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal_center));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical_center));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
 
 
     _angle_degree = _angle_degree_begin;
+    _angle_degree_end_plus  = _angle_degree_end - 2 * _angle_degree_delta;
+    _angle_degree_end_minus = _angle_degree_end + 2 * _angle_degree_delta;
     while(1)
     {
-        _coordinate_horizontal = _length * cos(qDegreesToRadians(_angle_degree));
-        _coordinate_vertical   = _length * sin(qDegreesToRadians(_angle_degree));
+
+        _coordinate_horizontal = _length_radius_vector * cos(qDegreesToRadians(_angle_degree));
+        _coordinate_vertical   = _length_radius_vector * sin(qDegreesToRadians(_angle_degree));
         _coordinate_horizontal += _coordinate_horizontal_center;
         _coordinate_vertical   += _coordinate_vertical_center;
         /// append point to current segment
@@ -275,61 +310,37 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
         _coordinate.setY(static_cast<float>(_coordinate_vertical));
         _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
         _coord_vector.push_back(_coordinate);
-        if(fabs(_angle_degree) > 360.0)
+
+        if(_angle_degree > 360.0)
             _angle_degree = 0.0;
-        if(fabs(_angle_degree) < 0.0)
+        if(_angle_degree < 0.0)
             _angle_degree = 360.0;
         if(_angle_degree_begin < _angle_degree_end)
         {
             if(_orientation)
-                _angle_degree = _angle_degree + 0.1;
+                _angle_degree = _angle_degree - _angle_degree_delta;
             else
-                _angle_degree = _angle_degree - 0.1;
-            if(fabs(_angle_degree) >= fabs(_angle_degree_end))
-                break;
+                _angle_degree = _angle_degree + _angle_degree_delta;
         }
         else
         {
             if(_orientation)
-                _angle_degree = _angle_degree - 0.1;
+                _angle_degree = _angle_degree - _angle_degree_delta;
             else
-                _angle_degree = _angle_degree + 0.1;
-            if(fabs(_angle_degree) <= fabs(_angle_degree_end))
+                _angle_degree = _angle_degree + _angle_degree_delta;
+        }
+        /// if _angle_degree == _angle_degree_end +/- 2*_angle_degree_delta
+        if(_angle_degree > _angle_degree_end_minus)
+        {
+            if(_angle_degree < _angle_degree_end_plus)
                 break;
         }
-
-
+        else
+        {
+            if(_angle_degree > _angle_degree_end_plus)
+                break;
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    if(_debug)
-    {
-        qDebug() << "_angle_degree_begin           - " << _angle_degree_begin;
-        qDebug() << "_angle_degree_end             - " << _angle_degree_end;
-        qDebug() << "_horizontal_begin             - " << _horizontal_begin;
-        qDebug() << "_horizontal_end               - " << _horizontal_end;
-        qDebug() << "_vertical_begin               - " << _vertical_begin;
-        qDebug() << "_vertical_end                 - " << _vertical_end;
-        qDebug() << "_vertical_delta_begin         - " << _vertical_delta_begin;
-        qDebug() << "_horizontal_delta_begin       - " << _horizontal_delta_begin;
-        qDebug() << "_vertical_delta_end           - " << _vertical_delta_end;
-        qDebug() << "_horizontal_delta_end         - " << _horizontal_delta_end;
-        qDebug() << "_radius_vector_length         - " << _length_radius_vector;
-        qDebug() << "_coordinate_vertical_center   - " << _coordinate_vertical_center;
-        qDebug() << "_coordinate_horizontal_center - " << _coordinate_horizontal_center;
-    }
-
-
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -360,8 +371,8 @@ void PlannerClass::TestRotate()
     _length = 10;
     _angle_degree = _angle_degree_begin;
 
-    //_orientation = true;
-    _orientation = false;
+    _orientation = true;
+    //_orientation = false;
 
     while(1)
     {
@@ -399,8 +410,6 @@ void PlannerClass::TestRotate()
             if(fabs(_angle_degree) <= fabs(_angle_degree_end))
                 break;
         }
-
-
     }
 
 /*
