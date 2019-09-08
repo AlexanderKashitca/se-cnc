@@ -168,8 +168,8 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     double _vertical_centr;
     double _horizontal_centr;
 
-    double _coordinate_vertical_centr;
-    double _coordinate_horizontal_centr;
+    double _coordinate_vertical_center;
+    double _coordinate_horizontal_center;
 
     double _coordinate_vertical;
     double _coordinate_horizontal;
@@ -180,25 +180,20 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     double _vertical_delta_end;
     double _horizontal_delta_end;
 
-    double _radius_vector_length;
+    double _length_radius_vector;
 
     double _cos_alpha_begin;
     double _cos_alpha_end;
-    double _alpha_radian_n;
-    double _alpha_radian_end;
-    double _alpha_radian_begin;
 
 
-    double _hor_delta;
-    double _ver_delta;
-    double _chord_length;
-    double _chord_perpendicular_lenth;
-    double _cos_alpha;
-    double _alpha_radian;
+    bool   _orientation;
+    double _angle_degree;
+    double _angle_degree_end;
+    double _angle_degree_begin;
 
 
 
-
+    _orientation = orientation;
     switch(plane)
     {
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
@@ -234,127 +229,78 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     }
     /// copy ortogonal varieble
     _coordinate_ortogonal = _ortogonal_begin;
-    /// validation variables
-    if(qFuzzyCompare(_horizontal_begin,_horizontal_end))
-        return(PLANNER_INVALID_PARAMETER);
-    if(qFuzzyCompare(_vertical_begin,_vertical_end))
-        return(PLANNER_INVALID_PARAMETER);
     /// calc center coordinate
-    _coordinate_vertical_centr   = _vertical_begin + _vertical_centr;
-    _coordinate_horizontal_centr = _horizontal_begin + _horizontal_centr;
+    _coordinate_vertical_center   = _vertical_begin   + _vertical_centr;
+    _coordinate_horizontal_center = _horizontal_begin + _horizontal_centr;
     /// calculation delta
-    if(_vertical_begin >= _coordinate_vertical_centr)
-        _vertical_delta_begin  = fabs((_vertical_begin) - (_coordinate_vertical_centr));
+    if(_vertical_begin >= _coordinate_vertical_center)
+        _vertical_delta_begin  = fabs((_vertical_begin) - (_coordinate_vertical_center));
     else
-        _vertical_delta_begin  = fabs((_coordinate_vertical_centr) - (_vertical_begin));
-    if(_horizontal_begin >= _coordinate_horizontal_centr)
-        _horizontal_delta_begin = fabs((_horizontal_begin) - (_coordinate_horizontal_centr));
+        _vertical_delta_begin  = fabs((_coordinate_vertical_center) - (_vertical_begin));
+    if(_horizontal_begin >= _coordinate_horizontal_center)
+        _horizontal_delta_begin = fabs((_horizontal_begin) - (_coordinate_horizontal_center));
     else
-        _horizontal_delta_begin = fabs((_coordinate_horizontal_centr) - (_horizontal_begin));
+        _horizontal_delta_begin = fabs((_coordinate_horizontal_center) - (_horizontal_begin));
 
-    if(_vertical_end >= _coordinate_vertical_centr)
-        _vertical_delta_end     = fabs((_vertical_end) - (_coordinate_vertical_centr));
+    if(_vertical_end >= _coordinate_vertical_center)
+        _vertical_delta_end     = fabs((_vertical_end) - (_coordinate_vertical_center));
     else
-        _vertical_delta_end     = fabs((_coordinate_vertical_centr) - (_vertical_end));
-    if(_horizontal_end >= _coordinate_horizontal_centr)
-        _horizontal_delta_end   = fabs((_horizontal_end) - (_coordinate_horizontal_centr));
+        _vertical_delta_end     = fabs((_coordinate_vertical_center) - (_vertical_end));
+    if(_horizontal_end >= _coordinate_horizontal_center)
+        _horizontal_delta_end   = fabs((_horizontal_end) - (_coordinate_horizontal_center));
     else
-        _horizontal_delta_end   = fabs((_coordinate_horizontal_centr) - (_horizontal_end));
+        _horizontal_delta_end   = fabs((_coordinate_horizontal_center) - (_horizontal_end));
     /// calc radius length the plane vector
-    _radius_vector_length = sqrt((pow(_vertical_delta_begin,2)+pow(_horizontal_delta_begin,2)));
+    _length_radius_vector = sqrt((pow(_vertical_delta_begin,2)+pow(_horizontal_delta_begin,2)));
     /// calc cos angle from begin and end arc points
-    _cos_alpha_begin = _horizontal_delta_begin / _radius_vector_length;
-    _cos_alpha_end   = _horizontal_delta_end   / _radius_vector_length;
+    _cos_alpha_begin = _horizontal_delta_begin / _length_radius_vector;
+    _cos_alpha_end   = _horizontal_delta_end   / _length_radius_vector;
     /// calc radian angle from begin and end arc points
-    _alpha_radian_begin = acos(_cos_alpha_begin);
-    _alpha_radian_end   = acos(_cos_alpha_end);
+    _angle_degree_begin = qRadiansToDegrees(qAcos(_cos_alpha_begin));
+    _angle_degree_end   = qRadiansToDegrees(qAcos(_cos_alpha_end));
 
 
 
 
-    _alpha_radian_n = _alpha_radian_begin;
 
-
-    if(!orientation)
-    {
+    _angle_degree = _angle_degree_begin;
     while(1)
     {
-        _coordinate_horizontal = _radius_vector_length * cos(_alpha_radian_n);
-        _coordinate_vertical   = _radius_vector_length * sin(_alpha_radian_n);
-
-        if(_horizontal_begin > _coordinate_horizontal_centr)
-        {
-            if(_vertical_begin > _coordinate_vertical_centr)
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
-            }
-            else if(_vertical_begin < _coordinate_vertical_centr)
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
-            }
-            else
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
-            }
-        }
-        else if(_horizontal_begin < _coordinate_horizontal_centr)
-        {
-            if(_vertical_begin > _coordinate_vertical_centr)
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
-            }
-            else if(_vertical_begin < _coordinate_vertical_centr)
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
-            }
-            else
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
-            }
-        }
-        else
-        {
-            if(_vertical_begin > _coordinate_vertical_centr)
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr + _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   + _coordinate_vertical;
-            }
-            else
-            {
-                _coordinate_horizontal = _coordinate_horizontal_centr - _coordinate_horizontal;
-                _coordinate_vertical   = _coordinate_vertical_centr   - _coordinate_vertical;
-            }
-        }
+        _coordinate_horizontal = _length * cos(qDegreesToRadians(_angle_degree));
+        _coordinate_vertical   = _length * sin(qDegreesToRadians(_angle_degree));
+        _coordinate_horizontal += _coordinate_horizontal_center;
+        _coordinate_vertical   += _coordinate_vertical_center;
         /// append point to current segment
         _coordinate.setX(static_cast<float>(_coordinate_horizontal));
         _coordinate.setY(static_cast<float>(_coordinate_vertical));
         _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
         _coord_vector.push_back(_coordinate);
-
-        if(_alpha_radian_begin < _alpha_radian_end)
+        if(fabs(_angle_degree) > 360.0)
+            _angle_degree = 0.0;
+        if(fabs(_angle_degree) < 0.0)
+            _angle_degree = 360.0;
+        if(_angle_degree_begin < _angle_degree_end)
         {
-            _alpha_radian_n = _alpha_radian_n + 0.01;
-            if(_alpha_radian_n > _alpha_radian_end)
+            if(_orientation)
+                _angle_degree = _angle_degree + 0.1;
+            else
+                _angle_degree = _angle_degree - 0.1;
+            if(fabs(_angle_degree) >= fabs(_angle_degree_end))
                 break;
         }
         else
         {
-            _alpha_radian_n = _alpha_radian_n - 0.01;
-            if(_alpha_radian_n < _alpha_radian_end)
+            if(_orientation)
+                _angle_degree = _angle_degree - 0.1;
+            else
+                _angle_degree = _angle_degree + 0.1;
+            if(fabs(_angle_degree) <= fabs(_angle_degree_end))
                 break;
         }
-    }
-    }
-    else
-    {
+
 
     }
+
 
 
 
@@ -368,60 +314,139 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
 
     if(_debug)
     {
-        qDebug() << "_alpha_radian_begin          - " << _alpha_radian_begin;
-        qDebug() << "_alpha_radian_end            - " << _alpha_radian_end;
-        qDebug() << "_horizontal_begin            - " << _horizontal_begin;
-        qDebug() << "_horizontal_end              - " << _horizontal_end;
-        qDebug() << "_vertical_begin              - " << _vertical_begin;
-        qDebug() << "_vertical_end                - " << _vertical_end;
-        qDebug() << "_vertical_delta_begin        - " << _vertical_delta_begin;
-        qDebug() << "_horizontal_delta_begin      - " << _horizontal_delta_begin;
-        qDebug() << "_vertical_delta_end          - " << _vertical_delta_end;
-        qDebug() << "_horizontal_delta_end        - " << _horizontal_delta_end;
-        qDebug() << "_radius_vector_length        - " << _radius_vector_length;
-        qDebug() << "_coordinate_vertical_centr   - " << _coordinate_vertical_centr;
-        qDebug() << "_coordinate_horizontal_centr - " << _coordinate_horizontal_centr;
+        qDebug() << "_angle_degree_begin           - " << _angle_degree_begin;
+        qDebug() << "_angle_degree_end             - " << _angle_degree_end;
+        qDebug() << "_horizontal_begin             - " << _horizontal_begin;
+        qDebug() << "_horizontal_end               - " << _horizontal_end;
+        qDebug() << "_vertical_begin               - " << _vertical_begin;
+        qDebug() << "_vertical_end                 - " << _vertical_end;
+        qDebug() << "_vertical_delta_begin         - " << _vertical_delta_begin;
+        qDebug() << "_horizontal_delta_begin       - " << _horizontal_delta_begin;
+        qDebug() << "_vertical_delta_end           - " << _vertical_delta_end;
+        qDebug() << "_horizontal_delta_end         - " << _horizontal_delta_end;
+        qDebug() << "_radius_vector_length         - " << _length_radius_vector;
+        qDebug() << "_coordinate_vertical_center   - " << _coordinate_vertical_center;
+        qDebug() << "_coordinate_horizontal_center - " << _coordinate_horizontal_center;
     }
 
 
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
-#include <QVector2D>
-#include <QMatrix4x4>
 void PlannerClass::TestRotate()
 {
+    bool   _orientation;
+    double _angle_degree;
+    double _angle_degree_end;
+    double _angle_degree_begin;
+
+    double _length;
     double _coordinate_horizontal = 3.0;
     double _coordinate_vertical   = 3.0;
     double _coordinate_ortogonal  = 0.0;
+    double _coordinate_horizontal_center = 0.0;
+    double _coordinate_vertical_center   = 0.0;
 
 
+
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal_center));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical_center));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
+
+    _angle_degree_end   = 10.0;
+    _angle_degree_begin = 100.0;
+
+    _length = 10;
+    _angle_degree = _angle_degree_begin;
+
+    //_orientation = true;
+    _orientation = false;
+
+    while(1)
+    {
+
+        _coordinate_horizontal = _length * cos(qDegreesToRadians(_angle_degree));
+        _coordinate_vertical   = _length * sin(qDegreesToRadians(_angle_degree));
+
+        _coordinate_horizontal += _coordinate_horizontal_center;
+        _coordinate_vertical   += _coordinate_vertical_center;
+        /// append point to current segment
+        _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+        _coordinate.setY(static_cast<float>(_coordinate_vertical));
+        _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+        _coord_vector.push_back(_coordinate);
+
+        if(fabs(_angle_degree) > 360.0)
+            _angle_degree = 0.0;
+        if(fabs(_angle_degree) < 0.0)
+            _angle_degree = 360.0;
+        if(_angle_degree_begin < _angle_degree_end)
+        {
+            if(_orientation)
+                _angle_degree = _angle_degree + 0.1;
+            else
+                _angle_degree = _angle_degree - 0.1;
+            if(fabs(_angle_degree) >= fabs(_angle_degree_end))
+                break;
+        }
+        else
+        {
+            if(_orientation)
+                _angle_degree = _angle_degree - 0.1;
+            else
+                _angle_degree = _angle_degree + 0.1;
+            if(fabs(_angle_degree) <= fabs(_angle_degree_end))
+                break;
+        }
+
+
+    }
+
+/*
+    _coordinate_horizontal = _length * qCos(_angle_radian);
+    _coordinate_vertical   = _length * qSin(_angle_radian);
     /// append point to current segment
     _coordinate.setX(static_cast<float>(_coordinate_horizontal));
     _coordinate.setY(static_cast<float>(_coordinate_vertical));
     _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
     _coord_vector.push_back(_coordinate);
 
-    QMatrix4x4 matrix;
-    QVector3D  vector(_coordinate_horizontal,_coordinate_vertical,_coordinate_ortogonal);
-
-
-    //matrix.translate(vector);
-    matrix.rotate(180.0,vector);
-
-
-    qDebug() << "Length - " << vector.length();
-
-    _coordinate_horizontal = vector.x();
-    _coordinate_vertical   = vector.y();
-    _coordinate_ortogonal  = vector.z();
-
-
-
-
+    _angle_radian = -M_PI_2;
+    _coordinate_horizontal = _length * qCos(_angle_radian);
+    _coordinate_vertical   = _length * qSin(_angle_radian);
     /// append point to current segment
     _coordinate.setX(static_cast<float>(_coordinate_horizontal));
     _coordinate.setY(static_cast<float>(_coordinate_vertical));
     _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
     _coord_vector.push_back(_coordinate);
+
+    _angle_radian = -M_PI;
+    _coordinate_horizontal = _length * qCos(_angle_radian);
+    _coordinate_vertical   = _length * qSin(_angle_radian);
+    /// append point to current segment
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
+
+    _angle_radian = -3 * M_PI / 2;
+    _coordinate_horizontal = _length * qCos(_angle_radian);
+    _coordinate_vertical   = _length * qSin(_angle_radian);
+    /// append point to current segment
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
+
+    _angle_radian = -2 * M_PI;
+    _coordinate_horizontal = _length * qCos(_angle_radian);
+    _coordinate_vertical   = _length * qSin(_angle_radian);
+    /// append point to current segment
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
+*/
+
 }

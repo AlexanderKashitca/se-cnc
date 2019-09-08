@@ -12,7 +12,7 @@ mainForm::mainForm(QWidget *parent) : QWidget(parent),ui(new Ui::mainForm)
     _fontSize = 40.0f;
     _style = QtDataVisualization::QAbstract3DSeries::MeshSphere;
     _smooth = true;
-    _itemCount = 10000;
+    _itemCount = 1000;
     _curveDivider = 0.75f;
 
     ///-------------------------------------------------------------------------
