@@ -18,6 +18,7 @@ namespace PLANNER_SPACE
     } PLANNER_STATE;
 
 
+
     /**
      * @brief The PlannerClass class
      */
@@ -41,7 +42,8 @@ namespace PLANNER_SPACE
             double _current_j;
             double _current_k;
 
-            double const _length_delta = 0.1;
+            double _length_delta;
+            double _angle_degree_delta;
 
             QVector<QVector3D> _coord_vector;
             QVector3D _coordinate;
@@ -79,13 +81,11 @@ namespace PLANNER_SPACE
             PlannerClass(const PlannerClass&);
             ~PlannerClass();
 
-            SEGMENTATION_SPACE::SegmentPoint point;
+            SEGMENTATION_SPACE::SEGMENT_POINT point;
             SEGMENTATION_SPACE::SegmentationClass segment;
 
             PLANNER_STATE moveStraight(double x,double y,double z,double feed);
             PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double i,double j,double k,bool orientation,double feed);
-
-            void TestRotate();
 
             void setDebug(bool enable);
             bool getDebug();

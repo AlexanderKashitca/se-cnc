@@ -23,31 +23,36 @@ namespace SEGMENTATION_SPACE
     /**
      *  @brief point
      */
-    class SegmentPoint
+    typedef struct
     {
-        public :
-            double _x;
-            double _y;
-            double _z;
-            double _a;
-            double _b;
-            double _c;
-    };
+         double _x;
+         double _y;
+         double _z;
+         double _a;
+         double _b;
+         double _c;
+         double _vel_x;
+         double _vel_y;
+         double _vel_z;
+         double _vel_a;
+         double _vel_b;
+         double _vel_c;
+    }SEGMENT_POINT;
     /**
      * @brief The SegmentationClass class
      */
     class SegmentationClass
     {
         private :
-            QVector<SegmentPoint>* _segment_cell;
+            QVector<SEGMENT_POINT>* _segment_cell;
         public :
             SegmentationClass();
             ~SegmentationClass();
 
             SEGMENT_TYPE _type;
             void clear();
-            void appendPoint(SegmentPoint& point);
-            int  getPoint(int position,SegmentPoint* point);
+            void appendPoint(SEGMENT_POINT& point);
+            int  getPoint(int position,SEGMENT_POINT* point);
             int  size();
     };
 }

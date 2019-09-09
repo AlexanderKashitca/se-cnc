@@ -5,7 +5,7 @@ using namespace SEGMENTATION_SPACE;
 ///-----------------------------------------------------------------------------
 SegmentationClass::SegmentationClass()
 {
-    _segment_cell = new QVector<SegmentPoint>;
+    _segment_cell = new QVector<SEGMENT_POINT>;
     _segment_cell->clear();
 }
 ///-----------------------------------------------------------------------------
@@ -19,7 +19,7 @@ void SegmentationClass::clear()
 
 }
 ///-----------------------------------------------------------------------------
-void SegmentationClass::appendPoint(SegmentPoint& point)
+void SegmentationClass::appendPoint(SEGMENT_POINT& point)
 {
     _segment_cell->append(point);
 }
@@ -29,7 +29,7 @@ int SegmentationClass::size()
     return(_segment_cell->size());
 }
 ///-----------------------------------------------------------------------------
-int SegmentationClass::getPoint(int position,SegmentPoint* point)
+int SegmentationClass::getPoint(int position,SEGMENT_POINT* point)
 {
     if(position >= _segment_cell->length())
         return(1);

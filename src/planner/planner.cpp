@@ -15,6 +15,8 @@ PlannerClass::PlannerClass()
     _current_b = 0.0;
     _current_c = 0.0;
     _debug = true;
+    _length_delta       = 0.1;
+    _angle_degree_delta = 0.1;
 }
 ///-----------------------------------------------------------------------------
 PlannerClass::~PlannerClass()
@@ -191,7 +193,7 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     double _angle_degree_end_plus;
     double _angle_degree_end_minus;
 
-    double const _angle_degree_delta = 0.1;
+
 
     _orientation = orientation;
     switch(plane)
@@ -344,118 +346,3 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
-void PlannerClass::TestRotate()
-{
-    bool   _orientation;
-    double _angle_degree;
-    double _angle_degree_end;
-    double _angle_degree_begin;
-
-    double _length;
-    double _coordinate_horizontal = 3.0;
-    double _coordinate_vertical   = 3.0;
-    double _coordinate_ortogonal  = 0.0;
-    double _coordinate_horizontal_center = 0.0;
-    double _coordinate_vertical_center   = 0.0;
-
-
-
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal_center));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical_center));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-
-    _angle_degree_end   = 10.0;
-    _angle_degree_begin = 100.0;
-
-    _length = 10;
-    _angle_degree = _angle_degree_begin;
-
-    _orientation = true;
-    //_orientation = false;
-
-    while(1)
-    {
-
-        _coordinate_horizontal = _length * cos(qDegreesToRadians(_angle_degree));
-        _coordinate_vertical   = _length * sin(qDegreesToRadians(_angle_degree));
-
-        _coordinate_horizontal += _coordinate_horizontal_center;
-        _coordinate_vertical   += _coordinate_vertical_center;
-        /// append point to current segment
-        _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-        _coordinate.setY(static_cast<float>(_coordinate_vertical));
-        _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-        _coord_vector.push_back(_coordinate);
-
-        if(fabs(_angle_degree) > 360.0)
-            _angle_degree = 0.0;
-        if(fabs(_angle_degree) < 0.0)
-            _angle_degree = 360.0;
-        if(_angle_degree_begin < _angle_degree_end)
-        {
-            if(_orientation)
-                _angle_degree = _angle_degree + 0.1;
-            else
-                _angle_degree = _angle_degree - 0.1;
-            if(fabs(_angle_degree) >= fabs(_angle_degree_end))
-                break;
-        }
-        else
-        {
-            if(_orientation)
-                _angle_degree = _angle_degree - 0.1;
-            else
-                _angle_degree = _angle_degree + 0.1;
-            if(fabs(_angle_degree) <= fabs(_angle_degree_end))
-                break;
-        }
-    }
-
-/*
-    _coordinate_horizontal = _length * qCos(_angle_radian);
-    _coordinate_vertical   = _length * qSin(_angle_radian);
-    /// append point to current segment
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-
-    _angle_radian = -M_PI_2;
-    _coordinate_horizontal = _length * qCos(_angle_radian);
-    _coordinate_vertical   = _length * qSin(_angle_radian);
-    /// append point to current segment
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-
-    _angle_radian = -M_PI;
-    _coordinate_horizontal = _length * qCos(_angle_radian);
-    _coordinate_vertical   = _length * qSin(_angle_radian);
-    /// append point to current segment
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-
-    _angle_radian = -3 * M_PI / 2;
-    _coordinate_horizontal = _length * qCos(_angle_radian);
-    _coordinate_vertical   = _length * qSin(_angle_radian);
-    /// append point to current segment
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-
-    _angle_radian = -2 * M_PI;
-    _coordinate_horizontal = _length * qCos(_angle_radian);
-    _coordinate_vertical   = _length * qSin(_angle_radian);
-    /// append point to current segment
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
-*/
-
-}
