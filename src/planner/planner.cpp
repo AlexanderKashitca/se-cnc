@@ -140,10 +140,6 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
         _y_n = _length_n * _cos_beta;
         _z_n = _length_n * _cos_gamma;
         /// push coordinate each axis to vector
-        _coordinate.setX(static_cast<float>(_x_n));
-        _coordinate.setY(static_cast<float>(_y_n));
-        _coordinate.setZ(static_cast<float>(_z_n));
-
         _segment_point._x = _x_n;
         _segment_point._y = _y_n;
         _segment_point._z = _z_n;
@@ -317,11 +313,40 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
 
 
 /// TEMP CENTER POINT
-    _coordinate.setX(static_cast<float>(_coordinate_horizontal_center));
-    _coordinate.setY(static_cast<float>(_coordinate_vertical_center));
-    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-    _coord_vector.push_back(_coordinate);
 
+
+
+
+    switch(plane)
+    {
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
+            _segment_point._x = _horizontal_begin;
+            _segment_point._y = _vertical_begin;
+            _segment_point._z = _ortogonal_begin;
+            _segment_point._a = 0;
+            _segment_point._b = 0;
+            _segment_point._c = 0;
+            _segment->appendPoint(_segment_point);
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
+            _segment_point._x = _ortogonal_begin;
+            _segment_point._y = _vertical_begin;
+            _segment_point._z = _horizontal_begin;
+            _segment_point._a = 0;
+            _segment_point._b = 0;
+            _segment_point._c = 0;
+            _segment->appendPoint(_segment_point);
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
+            _segment_point._x = _horizontal_begin;
+            _segment_point._y = _ortogonal_begin;
+            _segment_point._z = _vertical_begin;
+            _segment_point._a = 0;
+            _segment_point._b = 0;
+            _segment_point._c = 0;
+            _segment->appendPoint(_segment_point);
+            break;
+    }
 
     _angle_degree = _angle_degree_begin;
     _angle_degree_end_plus  = _angle_degree_end - 2 * _angle_degree_delta;
@@ -334,10 +359,36 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
         _coordinate_horizontal += _coordinate_horizontal_center;
         _coordinate_vertical   += _coordinate_vertical_center;
         /// append point to current segment
-        _coordinate.setX(static_cast<float>(_coordinate_horizontal));
-        _coordinate.setY(static_cast<float>(_coordinate_vertical));
-        _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
-        _coord_vector.push_back(_coordinate);
+        switch(plane)
+        {
+            case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
+                _segment_point._x = _horizontal_begin;
+                _segment_point._y = _vertical_begin;
+                _segment_point._z = _ortogonal_begin;
+                _segment_point._a = 0;
+                _segment_point._b = 0;
+                _segment_point._c = 0;
+                _segment->appendPoint(_segment_point);
+                break;
+            case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
+                _segment_point._x = _ortogonal_begin;
+                _segment_point._y = _vertical_begin;
+                _segment_point._z = _horizontal_begin;
+                _segment_point._a = 0;
+                _segment_point._b = 0;
+                _segment_point._c = 0;
+                _segment->appendPoint(_segment_point);
+                break;
+            case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
+                _segment_point._x = _horizontal_begin;
+                _segment_point._y = _ortogonal_begin;
+                _segment_point._z = _vertical_begin;
+                _segment_point._a = 0;
+                _segment_point._b = 0;
+                _segment_point._c = 0;
+                _segment->appendPoint(_segment_point);
+                break;
+        }
 
         if(_angle_degree > 360.0)
             _angle_degree = 0.0;

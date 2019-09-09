@@ -33,12 +33,12 @@ int SegmentationClass::getPoint(int position,SEGMENT_POINT* point)
 {
     if(position >= _segment_cell->length())
         return(1);
-    point->_x = _segment_cell->at(position)._x;
-    point->_y = _segment_cell->at(position)._y;
-    point->_z = _segment_cell->at(position)._z;
-    point->_a = _segment_cell->at(position)._a;
-    point->_b = _segment_cell->at(position)._b;
-    point->_c = _segment_cell->at(position)._c;
+    point->_x     = _segment_cell->at(position)._x;
+    point->_y     = _segment_cell->at(position)._y;
+    point->_z     = _segment_cell->at(position)._z;
+    point->_a     = _segment_cell->at(position)._a;
+    point->_b     = _segment_cell->at(position)._b;
+    point->_c     = _segment_cell->at(position)._c;
     point->_vel_x = _segment_cell->at(position)._vel_x;
     point->_vel_y = _segment_cell->at(position)._vel_y;
     point->_vel_z = _segment_cell->at(position)._vel_z;
