@@ -1,0 +1,375 @@
+///-----------------------------------------------------------------------------
+#include "planner.h"
+
+#include <QDebug>
+#include <QtMath>
+///-----------------------------------------------------------------------------
+using namespace PLANNER_SPACE;
+///-----------------------------------------------------------------------------
+PlannerClass::PlannerClass()
+{
+    _current_x = 0.0;
+    _current_y = 0.0;
+    _current_z = 0.0;
+    _current_a = 0.0;
+    _current_b = 0.0;
+    _current_c = 0.0;
+    _debug = true;
+    _length_delta       = 0.1;
+    _angle_degree_delta = 0.1;
+    _segment = new SEGMENTATION_SPACE::SegmentationClass;
+}
+///-----------------------------------------------------------------------------
+PlannerClass::~PlannerClass()
+{
+    delete[]_segment;
+}
+///-----------------------------------------------------------------------------
+void PlannerClass::setDebug(bool enable)
+{
+    _debug = enable;
+}
+///-----------------------------------------------------------------------------
+bool PlannerClass::getDebug()
+{
+    return(_debug);
+}
+///-----------------------------------------------------------------------------
+PLANNER_STATE PlannerClass::calcLinearVelocity(double velocity)
+{
+    if(_length == 0.0)
+    {
+        return(PLANNER_FAIL);
+    }
+    _velocity = velocity;
+    /// calculation velocity each axis
+    _velocity_x = _velocity * _x_delta / _length;
+    _velocity_y = _velocity * _y_delta / _length;
+    _velocity_z = _velocity * _z_delta / _length;
+    if(_debug)
+    {
+        qDebug() << "_velocity_x = " << _velocity_x;
+        qDebug() << "_velocity_y = " << _velocity_y;
+        qDebug() << "_velocity_z = " << _velocity_z;
+    }
+    return(PLANNER_OK);
+}
+///-----------------------------------------------------------------------------
+/**
+ * @brief PlannerClass::calcStraightLength
+ * @param x_begin - start point axis x
+ * @param y_begin - start point axis y
+ * @param z_begin - start point axis z
+ * @param x_end   - stop  point axis x
+ * @param y_end   - stop  point axis y
+ * @param z_end   - stop  point axis z
+ * @return PLANNER_STATE
+ * @note _length    - the all moving length
+ *       _cos_alpha - angle axis x in radian
+ *       _cos_beta  - angle axis y in radian
+ *       _cos_gamma - angle axis z in radian
+ *       _current_i - ortogonale vector for axis x
+ *       _current_j - ortogonale vector for axis y
+ *       _current_k - ortogonale vector for axis z
+ */
+PLANNER_STATE PlannerClass::calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end)
+{
+    /// cal delta axis
+    _x_delta = fabs(fabs(x_end) - fabs(x_begin));
+    _y_delta = fabs(fabs(y_end) - fabs(y_begin));
+    _z_delta = fabs(fabs(z_end) - fabs(z_begin));
+    /// calc length the vector
+    _length = sqrt((pow(_x_delta,2)+pow(_y_delta,2)+pow(_z_delta,2)));
+    if(_debug)
+    {
+        qDebug() << "_length = " << _length;
+    }
+    if(_length == 0.0)
+        return(PLANNER_FAIL);
+    /// calc cosinus algle each axis
+    _cos_alpha = _x_delta / _length;
+    _cos_beta  = _y_delta / _length;
+    _cos_gamma = _z_delta / _length;
+    if(_debug)
+    {
+        qDebug() << "_cos_alpha = " << _cos_alpha;
+        qDebug() << "_cos_beta  = " << _cos_beta;
+        qDebug() << "_cos_gamma = " << _cos_gamma;
+    }
+    /// set ortogonale vectors
+    if(qAbs(x_begin) < qAbs(x_end))
+        _current_i = 1.0;
+    else
+        _current_i = -1.0;
+    if(qAbs(y_begin) < qAbs(y_end))
+        _current_j = 1.0;
+    else
+        _current_j = -1.0;
+    if(qAbs(z_begin) < qAbs(z_end))
+        _current_k = 1.0;
+    else
+        _current_k = -1.0;
+    return(PLANNER_OK);
+}
+///-----------------------------------------------------------------------------
+/**
+ * @brief moveStraightTraverse
+ * @param x - end coordinate axis x
+ * @param y - end coordinate axis y
+ * @param z - end coordinate axis z
+ * @param feed - feed to new point
+ * @note Now realizate three axis
+ * @details liner moving from current position to new setting
+ */
+PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
+{
+    double _length_n;
+    double _x_n;
+    double _y_n;
+    double _z_n;
+
+    if(calcLength(_current_x,_current_y,_current_z,x,y,z) != PLANNER_OK)
+        return(PLANNER_FAIL);
+    if(calcLinearVelocity(feed) != PLANNER_OK)
+        return(PLANNER_FAIL);
+
+    _length_n = _length_delta;
+    while(_length_n <= _length)
+    {
+        _x_n = _length_n * _cos_alpha;
+        _y_n = _length_n * _cos_beta;
+        _z_n = _length_n * _cos_gamma;
+        /// push coordinate each axis to vector
+        _coordinate.setX(static_cast<float>(_x_n));
+        _coordinate.setY(static_cast<float>(_y_n));
+        _coordinate.setZ(static_cast<float>(_z_n));
+
+        _segment_point._x = _x_n;
+        _segment_point._y = _y_n;
+        _segment_point._z = _z_n;
+        _segment_point._a = 0;
+        _segment_point._b = 0;
+        _segment_point._c = 0;
+        _segment->appendPoint(_segment_point);
+        if(_debug)
+        {
+            qDebug() << "_length_n = " << _length_n << "_x_n = " << _x_n << " : _y_n = " << _y_n << " : _z_n = " << _z_n;
+        }
+        _length_n += _length_delta;
+    }
+    _length_n = _length;
+    _x_n = _length_n * _cos_alpha;
+    _y_n = _length_n * _cos_beta;
+    _z_n = _length_n * _cos_gamma;
+    /// push coordinate each axis to vector
+    _segment_point._x = _x_n;
+    _segment_point._y = _y_n;
+    _segment_point._z = _z_n;
+    _segment_point._a = 0;
+    _segment_point._b = 0;
+    _segment_point._c = 0;
+    _segment->appendPoint(_segment_point);
+    if(_debug)
+        qDebug() << "_length_n = " << _length_n << "_x_n = " << _x_n << " : _y_n = " << _y_n << " : _z_n = " << _z_n;
+    return(PLANNER_OK);
+}
+///-----------------------------------------------------------------------------
+/// orientation : false -> G2 true -> G3
+PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
+                                    double x,
+                                    double y,
+                                    double z,
+                                    double i,
+                                    double j,
+                                    double k,
+                                    bool   orientation,
+                                    double feed)
+{
+    double _vertical_begin;
+    double _ortogonal_begin;
+    double _horizontal_begin;
+
+    double _vertical_end;
+    double _ortogonal_end;
+    double _horizontal_end;
+
+    double _vertical_centr;
+    double _horizontal_centr;
+
+    double _coordinate_vertical_center;
+    double _coordinate_horizontal_center;
+
+    double _coordinate_vertical;
+    double _coordinate_horizontal;
+    double _coordinate_ortogonal;
+
+    double _vertical_delta_begin;
+    double _horizontal_delta_begin;
+    double _vertical_delta_end;
+    double _horizontal_delta_end;
+
+    double _length_radius_vector;
+
+
+    bool   _orientation;
+    double _angle_degree;
+    double _angle_degree_end;
+    double _angle_degree_begin;
+
+    double _angle_degree_end_plus;
+    double _angle_degree_end_minus;
+
+
+
+    _orientation = orientation;
+    switch(plane)
+    {
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
+            _ortogonal_end    = z;
+            _ortogonal_begin  = _current_z;
+            _horizontal_begin = _current_x;
+            _horizontal_end   = x;
+            _vertical_begin   = _current_y;
+            _vertical_end     = y;
+            _horizontal_centr = i;
+            _vertical_centr   = j;
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_YZ :
+            _ortogonal_end    = x;
+            _ortogonal_begin  = _current_x;
+            _horizontal_begin = _current_z;
+            _horizontal_end   = z;
+            _vertical_begin   = _current_y;
+            _vertical_end     = y;
+            _horizontal_centr = k;
+            _vertical_centr   = j;
+            break;
+        case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XZ :
+            _ortogonal_end    = y;
+            _ortogonal_begin  = _current_y;
+            _horizontal_begin = _current_x;
+            _horizontal_end   = x;
+            _vertical_begin   = _current_z;
+            _vertical_end     = z;
+            _horizontal_centr = i;
+            _vertical_centr   = k;
+            break;
+    }
+    /// copy ortogonal varieble
+    _coordinate_ortogonal = _ortogonal_begin;
+    /// calc center coordinate
+    _coordinate_horizontal_center = _horizontal_begin + _horizontal_centr;
+    _coordinate_vertical_center   = _vertical_begin   + _vertical_centr;
+    /// calculation delta
+    if(_horizontal_begin >= _coordinate_horizontal_center)
+        _horizontal_delta_begin = fabs(_horizontal_begin - _coordinate_horizontal_center);
+    else
+        _horizontal_delta_begin = fabs(_coordinate_horizontal_center - _horizontal_begin);
+
+    if(_vertical_begin >= _coordinate_vertical_center)
+        _vertical_delta_begin  = fabs(_vertical_begin - _coordinate_vertical_center);
+    else
+        _vertical_delta_begin  = fabs(_coordinate_vertical_center - _vertical_begin);
+
+    if(_vertical_end >= _coordinate_vertical_center)
+        _vertical_delta_end     = fabs(_vertical_end - _coordinate_vertical_center);
+    else
+        _vertical_delta_end     = fabs(_coordinate_vertical_center - _vertical_end);
+    if(_horizontal_end >= _coordinate_horizontal_center)
+        _horizontal_delta_end   = fabs(_horizontal_end - _coordinate_horizontal_center);
+    else
+        _horizontal_delta_end   = fabs(_coordinate_horizontal_center - _horizontal_end);
+    /// calc radius length the plane vector
+    _length_radius_vector = sqrt((pow(_vertical_delta_begin,2)+pow(_horizontal_delta_begin,2)));
+    /// calc radian angle from begin and end arc points and transformation to degree
+    _angle_degree_begin = qRadiansToDegrees(qAcos(_horizontal_delta_begin / _length_radius_vector));
+    _angle_degree_end   = qRadiansToDegrees(qAcos(_horizontal_delta_end   / _length_radius_vector));
+    /// transform begin angle
+    if(_horizontal_begin >= _coordinate_horizontal_center)
+    {
+        if(_vertical_begin <= _coordinate_vertical_center)
+            _angle_degree_begin = 360.0 - _angle_degree_begin;
+        else
+            _angle_degree_begin = 0.0 + _angle_degree_begin;
+    }
+    else
+    {
+        if(_vertical_begin < _coordinate_vertical_center)
+            _angle_degree_begin = 270.0 - _angle_degree_begin;
+        else
+            _angle_degree_begin = 180.0 - _angle_degree_begin;
+    }
+    /// transform end angle
+    if(_horizontal_end >= _coordinate_horizontal_center)
+    {
+        if(_vertical_end <= _coordinate_vertical_center)
+            _angle_degree_end = 360.0 - _angle_degree_end;
+        else
+            _angle_degree_end = 180.0 - _angle_degree_end;
+    }
+    else
+    {
+        if(_vertical_end < _coordinate_vertical_center)
+            _angle_degree_end = 270.0 - _angle_degree_end;
+        else
+            _angle_degree_end = 180.0 - _angle_degree_end;
+    }
+
+
+/// TEMP CENTER POINT
+    _coordinate.setX(static_cast<float>(_coordinate_horizontal_center));
+    _coordinate.setY(static_cast<float>(_coordinate_vertical_center));
+    _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+    _coord_vector.push_back(_coordinate);
+
+
+    _angle_degree = _angle_degree_begin;
+    _angle_degree_end_plus  = _angle_degree_end - 2 * _angle_degree_delta;
+    _angle_degree_end_minus = _angle_degree_end + 2 * _angle_degree_delta;
+    while(1)
+    {
+
+        _coordinate_horizontal = _length_radius_vector * cos(qDegreesToRadians(_angle_degree));
+        _coordinate_vertical   = _length_radius_vector * sin(qDegreesToRadians(_angle_degree));
+        _coordinate_horizontal += _coordinate_horizontal_center;
+        _coordinate_vertical   += _coordinate_vertical_center;
+        /// append point to current segment
+        _coordinate.setX(static_cast<float>(_coordinate_horizontal));
+        _coordinate.setY(static_cast<float>(_coordinate_vertical));
+        _coordinate.setZ(static_cast<float>(_coordinate_ortogonal));
+        _coord_vector.push_back(_coordinate);
+
+        if(_angle_degree > 360.0)
+            _angle_degree = 0.0;
+        if(_angle_degree < 0.0)
+            _angle_degree = 360.0;
+        if(_angle_degree_begin < _angle_degree_end)
+        {
+            if(_orientation)
+                _angle_degree = _angle_degree - _angle_degree_delta;
+            else
+                _angle_degree = _angle_degree + _angle_degree_delta;
+        }
+        else
+        {
+            if(_orientation)
+                _angle_degree = _angle_degree - _angle_degree_delta;
+            else
+                _angle_degree = _angle_degree + _angle_degree_delta;
+        }
+        /// if _angle_degree == _angle_degree_end +/- 2*_angle_degree_delta
+        if(_angle_degree > _angle_degree_end_minus)
+        {
+            if(_angle_degree < _angle_degree_end_plus)
+                break;
+        }
+        else
+        {
+            if(_angle_degree > _angle_degree_end_plus)
+                break;
+        }
+    }
+    return(PLANNER_OK);
+}
+///-----------------------------------------------------------------------------
+

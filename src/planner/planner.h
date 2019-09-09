@@ -35,6 +35,10 @@ namespace PLANNER_SPACE
             double _velocity_x;
             double _velocity_y;
             double _velocity_z;
+            double _velocity_a;
+            double _velocity_b;
+            double _velocity_c;
+
             double _cos_alpha;
             double _cos_beta;
             double _cos_gamma;
@@ -48,8 +52,8 @@ namespace PLANNER_SPACE
             QVector<QVector3D> _coord_vector;
             QVector3D _coordinate;
 
-            PLANNER_STATE calcStraightLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
-            PLANNER_STATE calcStraightVelocity(double velocity);
+            PLANNER_STATE calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
+            PLANNER_STATE calcLinearVelocity(double velocity);
 
 
             bool _debug;
@@ -75,14 +79,14 @@ namespace PLANNER_SPACE
 
 
 
-
+            SEGMENTATION_SPACE::SEGMENT_POINT _segment_point;
         public:
             PlannerClass();
             PlannerClass(const PlannerClass&);
             ~PlannerClass();
 
-            SEGMENTATION_SPACE::SEGMENT_POINT point;
-            SEGMENTATION_SPACE::SegmentationClass segment;
+
+            SEGMENTATION_SPACE::SegmentationClass* _segment;
 
             PLANNER_STATE moveStraight(double x,double y,double z,double feed);
             PLANNER_STATE moveArc(INTERPRETER_SPACE::CANON_PLANE plane,double x,double y,double z,double i,double j,double k,bool orientation,double feed);

@@ -146,9 +146,9 @@ typedef struct SEGMENT_STRUCT
 	int special_cmds_last;    // Special commands ending index at the very beginning of path
 
 	BOOL DirIsCCW;		
-	BOOL StopRequired;			// Change in Direction (or other reason) requires a stop at the beg of this seg
-	BOOL StopRequiredNextSeg;	// Change in Direction (or other reason) requires a stop at the beg of next seg
-	double ChangeInDirection;  // angle from previous seg to this one
+        BOOL StopRequired;         // Change in Direction (or other reason) requires a stop at the beg of this seg
+        BOOL StopRequiredNextSeg;  // Change in Direction (or other reason) requires a stop at the beg of next seg
+        double ChangeInDirection;  // angle from previous seg to this one
 } SEGMENT;
 
 extern int nsegs,prev_nsegs,SegBufToggle;

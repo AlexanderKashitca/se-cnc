@@ -16,7 +16,7 @@ SegmentationClass::~SegmentationClass()
 ///-----------------------------------------------------------------------------
 void SegmentationClass::clear()
 {
-
+    _segment_cell->clear();
 }
 ///-----------------------------------------------------------------------------
 void SegmentationClass::appendPoint(SEGMENT_POINT& point)
@@ -39,6 +39,12 @@ int SegmentationClass::getPoint(int position,SEGMENT_POINT* point)
     point->_a = _segment_cell->at(position)._a;
     point->_b = _segment_cell->at(position)._b;
     point->_c = _segment_cell->at(position)._c;
+    point->_vel_x = _segment_cell->at(position)._vel_x;
+    point->_vel_y = _segment_cell->at(position)._vel_y;
+    point->_vel_z = _segment_cell->at(position)._vel_z;
+    point->_vel_a = _segment_cell->at(position)._vel_a;
+    point->_vel_b = _segment_cell->at(position)._vel_b;
+    point->_vel_c = _segment_cell->at(position)._vel_c;
     return(0);
 }
 ///-----------------------------------------------------------------------------

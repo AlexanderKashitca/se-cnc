@@ -17,11 +17,12 @@ PlannerClass::PlannerClass()
     _debug = true;
     _length_delta       = 0.1;
     _angle_degree_delta = 0.1;
+    _segment = new SEGMENTATION_SPACE::SegmentationClass;
 }
 ///-----------------------------------------------------------------------------
 PlannerClass::~PlannerClass()
 {
-
+    delete[]_segment;
 }
 ///-----------------------------------------------------------------------------
 void PlannerClass::setDebug(bool enable)
@@ -34,7 +35,7 @@ bool PlannerClass::getDebug()
     return(_debug);
 }
 ///-----------------------------------------------------------------------------
-PLANNER_STATE PlannerClass::calcStraightVelocity(double velocity)
+PLANNER_STATE PlannerClass::calcLinearVelocity(double velocity)
 {
     if(_length == 0.0)
     {
@@ -54,7 +55,24 @@ PLANNER_STATE PlannerClass::calcStraightVelocity(double velocity)
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
-PLANNER_STATE PlannerClass::calcStraightLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end)
+/**
+ * @brief PlannerClass::calcStraightLength
+ * @param x_begin - start point axis x
+ * @param y_begin - start point axis y
+ * @param z_begin - start point axis z
+ * @param x_end   - stop  point axis x
+ * @param y_end   - stop  point axis y
+ * @param z_end   - stop  point axis z
+ * @return PLANNER_STATE
+ * @note _length    - the all moving length
+ *       _cos_alpha - angle axis x in radian
+ *       _cos_beta  - angle axis y in radian
+ *       _cos_gamma - angle axis z in radian
+ *       _current_i - ortogonale vector for axis x
+ *       _current_j - ortogonale vector for axis y
+ *       _current_k - ortogonale vector for axis z
+ */
+PLANNER_STATE PlannerClass::calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end)
 {
     /// cal delta axis
     _x_delta = fabs(fabs(x_end) - fabs(x_begin));
@@ -91,7 +109,6 @@ PLANNER_STATE PlannerClass::calcStraightLength(double x_begin,double y_begin,dou
         _current_k = 1.0;
     else
         _current_k = -1.0;
-
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
@@ -111,9 +128,9 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
     double _y_n;
     double _z_n;
 
-    if(calcStraightLength(_current_x,_current_y,_current_z,x,y,z) != PLANNER_OK)
+    if(calcLength(_current_x,_current_y,_current_z,x,y,z) != PLANNER_OK)
         return(PLANNER_FAIL);
-    if(calcStraightVelocity(feed) != PLANNER_OK)
+    if(calcLinearVelocity(feed) != PLANNER_OK)
         return(PLANNER_FAIL);
 
     _length_n = _length_delta;
@@ -126,7 +143,14 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
         _coordinate.setX(static_cast<float>(_x_n));
         _coordinate.setY(static_cast<float>(_y_n));
         _coordinate.setZ(static_cast<float>(_z_n));
-        _coord_vector.push_back(_coordinate);
+
+        _segment_point._x = _x_n;
+        _segment_point._y = _y_n;
+        _segment_point._z = _z_n;
+        _segment_point._a = 0;
+        _segment_point._b = 0;
+        _segment_point._c = 0;
+        _segment->appendPoint(_segment_point);
         if(_debug)
         {
             qDebug() << "_length_n = " << _length_n << "_x_n = " << _x_n << " : _y_n = " << _y_n << " : _z_n = " << _z_n;
@@ -138,13 +162,15 @@ PLANNER_STATE PlannerClass::moveStraight(double x,double y,double z,double feed)
     _y_n = _length_n * _cos_beta;
     _z_n = _length_n * _cos_gamma;
     /// push coordinate each axis to vector
-    _coordinate.setX(static_cast<float>(_x_n));
-    _coordinate.setY(static_cast<float>(_y_n));
-    _coordinate.setZ(static_cast<float>(_z_n));
-    _coord_vector.push_back(_coordinate);
+    _segment_point._x = _x_n;
+    _segment_point._y = _y_n;
+    _segment_point._z = _z_n;
+    _segment_point._a = 0;
+    _segment_point._b = 0;
+    _segment_point._c = 0;
+    _segment->appendPoint(_segment_point);
     if(_debug)
         qDebug() << "_length_n = " << _length_n << "_x_n = " << _x_n << " : _y_n = " << _y_n << " : _z_n = " << _z_n;
-
     return(PLANNER_OK);
 }
 ///-----------------------------------------------------------------------------
