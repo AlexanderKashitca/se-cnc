@@ -47,23 +47,10 @@ namespace PLANNER_SPACE
             double _length_delta;
             double _angle_degree_delta;
 
-            //QVector<QVector3D> _coord_vector;
-            //QVector3D _coordinate;
-
             PLANNER_STATE calcLength(double x_begin,double y_begin,double z_begin,double x_end,double y_end,double z_end);
             PLANNER_STATE calcLinearVelocity(double velocity);
 
-
             bool _debug;
-
-
-
-            //double _liner_begin_x;
-            //double _liner_begin_y;
-            //double _liner_begin_z;
-            //double _liner_end_x;
-            //double _liner_end_y;
-            //double _liner_end_z;
 
             double _current_x;
             double _current_y;
@@ -72,18 +59,14 @@ namespace PLANNER_SPACE
             double _current_b;
             double _current_c;
 
-            //double _current_velocity;
-            //double _current_acceleration;
-
-
-
-            SEGMENTATION_SPACE::SEGMENT_POINT _segment_point;
         public:
             PlannerClass();
             PlannerClass(const PlannerClass&);
             ~PlannerClass();
 
+            PLANNER_STATE setCurrentPosition(double x,double y,double z,double a,double b,double c);
 
+            SEGMENTATION_SPACE::SEGMENT_POINT _segment_point;
             SEGMENTATION_SPACE::SegmentationClass* _segment;
 
             PLANNER_STATE moveStraight(double x,double y,double z,double feed);
@@ -91,6 +74,7 @@ namespace PLANNER_SPACE
 
             void setDebug(bool enable);
             bool getDebug();
+
     };
 } /// end PLANNER_SPACE
 ///-----------------------------------------------------------------------------

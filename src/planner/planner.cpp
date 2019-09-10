@@ -30,6 +30,17 @@ void PlannerClass::setDebug(bool enable)
     _debug = enable;
 }
 ///-----------------------------------------------------------------------------
+PLANNER_STATE PlannerClass::setCurrentPosition(double x,double y,double z,double a,double b,double c)
+{
+    _current_x = x;
+    _current_y = y;
+    _current_z = z;
+    _current_a = a;
+    _current_b = b;
+    _current_c = c;
+    return(PLANNER_OK);
+}
+///-----------------------------------------------------------------------------
 bool PlannerClass::getDebug()
 {
     return(_debug);
@@ -310,13 +321,9 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
         else
             _angle_degree_end = 180.0 - _angle_degree_end;
     }
-
-
-/// TEMP CENTER POINT
-
-
-
-
+///-----------------------------------------------------------------------------
+/// TEMPER ADD CENTER POSITION -------------------------------------------------
+///-----------------------------------------------------------------------------
     switch(plane)
     {
         case INTERPRETER_SPACE::CANON_PLANE::CANON_PLANE_XY :
@@ -347,13 +354,12 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
             _segment->appendPoint(_segment_point);
             break;
     }
-
+///-----------------------------------------------------------------------------
     _angle_degree = _angle_degree_begin;
     _angle_degree_end_plus  = _angle_degree_end - 2 * _angle_degree_delta;
     _angle_degree_end_minus = _angle_degree_end + 2 * _angle_degree_delta;
     while(1)
     {
-
         _coordinate_horizontal = _length_radius_vector * cos(qDegreesToRadians(_angle_degree));
         _coordinate_vertical   = _length_radius_vector * sin(qDegreesToRadians(_angle_degree));
         _coordinate_horizontal += _coordinate_horizontal_center;
@@ -389,7 +395,6 @@ PLANNER_STATE PlannerClass::moveArc(INTERPRETER_SPACE::CANON_PLANE plane,
                 _segment->appendPoint(_segment_point);
                 break;
         }
-
         if(_angle_degree > 360.0)
             _angle_degree = 0.0;
         if(_angle_degree < 0.0)

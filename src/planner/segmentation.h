@@ -7,8 +7,6 @@
 ///-----------------------------------------------------------------------------
 namespace SEGMENTATION_SPACE
 {
-
-
     /**
      *  @brief segment type
      */
@@ -21,7 +19,7 @@ namespace SEGMENTATION_SPACE
         SEG_DWELL
     }SEGMENT_TYPE;
     /**
-     *  @brief point
+     *  @brief segment point
      */
     typedef struct
     {
@@ -39,21 +37,32 @@ namespace SEGMENTATION_SPACE
          double _vel_c;
     }SEGMENT_POINT;
     /**
+     *  @brief segment state
+     */
+    typedef enum
+    {
+        SEGMENT_OK   = 0,
+        SEGMENT_FAIL = 1
+    }SEGMENT_STATE;
+
+    /**
      * @brief The SegmentationClass class
      */
     class SegmentationClass
     {
         private :
             QVector<SEGMENT_POINT>* _segment_cell;
+            QVector<QVector<SEGMENT_POINT>>* _segment;
         public :
             SegmentationClass();
             ~SegmentationClass();
 
             SEGMENT_TYPE _type;
-            void clear();
-            void appendPoint(SEGMENT_POINT& point);
-            int  getPoint(int position,SEGMENT_POINT* point);
-            int  size();
+            SEGMENT_STATE clear();
+            SEGMENT_STATE appendPoint(SEGMENT_POINT& point);
+            SEGMENT_STATE appendSegmentCell();
+            SEGMENT_STATE getPoint(int segment,int position,SEGMENT_POINT* point);
+            int size();
     };
 }
 ///-----------------------------------------------------------------------------
