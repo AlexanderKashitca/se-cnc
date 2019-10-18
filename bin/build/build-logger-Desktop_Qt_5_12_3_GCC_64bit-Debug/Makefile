@@ -52,8 +52,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../../prj/logger/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../../../src/logger/logger.cpp \
+		../../prj/logger/main.cpp 
+OBJECTS       = logger.o \
+		main.o
 DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/common/unix.conf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/common/linux.conf \
@@ -226,6 +228,7 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt_config.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang/qmake.conf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_post.prf \
+		../../prj/logger/.qmake.stash \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/toolchain.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/default_pre.prf \
@@ -243,7 +246,8 @@ DIST          = /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_pre.prf 
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/exceptions.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/yacc.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/lex.prf \
-		../../prj/logger/logger.pro  ../../prj/logger/main.cpp
+		../../prj/logger/logger.pro ../../../src/logger/logger.h ../../../src/logger/logger.cpp \
+		../../prj/logger/main.cpp
 QMAKE_TARGET  = logger
 DESTDIR       = 
 TARGET        = logger
@@ -427,6 +431,7 @@ Makefile: ../../prj/logger/logger.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt_config.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang/qmake.conf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/toolchain.prf \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/default_pre.prf \
@@ -619,6 +624,7 @@ Makefile: ../../prj/logger/logger.pro /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/qt_config.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/linux-clang/qmake.conf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/toolchain.prf:
 /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/default_pre.prf:
@@ -653,7 +659,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/evil/Qt5.12.3/5.12.3/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../../prj/logger/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/logger/logger.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../../src/logger/logger.cpp ../../prj/logger/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -700,6 +707,41 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean 
 
 ####### Compile
+
+logger.o: ../../../src/logger/logger.cpp ../../../src/logger/logger.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstring.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qchar.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobal.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qconfig.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtcore-config.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qsysinfo.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlogging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qflags.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qmutex.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnumeric.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qversiontagging.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearray.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qrefcount.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qnamespace.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qarraydata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringview.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o logger.o ../../../src/logger/logger.cpp
 
 main.o: ../../prj/logger/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QCoreApplication \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcoreapplication.h \
