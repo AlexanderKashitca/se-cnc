@@ -2,49 +2,62 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 ///-----------------------------------------------------------------------------
+#include <QDateTime>
 #include <QString>
+#include <QFile>
 ///-----------------------------------------------------------------------------
-/// STREAM_STDOUT - standard stdout port
-/// STREAM_COM    - serial com port
-/// STREAM_FILE   - log file
-typedef enum
-{
-    STREAM_STDOUT = 0,
-    STREAM_COM    = 1,
-    STREAM_FILE   = 2
-}STREAM_TYPE;
-///
-typedef struct
-{
-
-}STREAM_CONFIG;
-
+#include <QDebug>
+#include <iostream>
 ///-----------------------------------------------------------------------------
-class LoggerClass
+namespace LOGGER_SPACE
 {
-    private :
-        QString _serviceName;
-        quint8  _streamType;
+    /// STREAM_STDOUT - standard stdout port
+    /// STREAM_CONSOL - serial com port
+    /// STREAM_FILE   - log file
+    /// STREAM_DEBUG  - qDebug
+    typedef enum
+    {
+        STREAM_STDOUT = 0,
+        STREAM_CONSOL = 1,
+        STREAM_FILE   = 2,
+        STREAM_DEBUG  = 3
+    }STREAM_TYPE;
+    ///
+    typedef struct
+    {
+        QString name;
+        QString file_path;
+        QString file_name;
+    }STREAM_CONFIG;
+    ///
+    typedef enum
+    {
+        LOGGER_OK = 0,
+        LOGGER_FILE_NOT_OPENED
+    }LOGGER_STATE;
+    ///-----------------------------------------------------------------------------
+    class LoggerClass
+    {
+        private :
+            QFile       _file;
+            QDateTime   _dateTime;
+            QString     _serviceName;
+            STREAM_TYPE _streamType;
 
-        void send();
-    public:
-        LoggerClass();
-        ~LoggerClass();
-        quint8 setConfiguration(STREAM_TYPE type,STREAM_CONFIG config);
+            QString     _message;
+            QString     _messageData;
+            LOGGER_STATE inline send(QString);
+        public:
+            LoggerClass();
+            ~LoggerClass();
+            LOGGER_STATE setConfiguration(STREAM_TYPE& type,STREAM_CONFIG& config);
+            LOGGER_STATE push(qint8 data);
+            LOGGER_STATE push(QString data);
 
-        void operator<<(QString data);
-        void operator<<(qint8   data);
-        void operator<<(qint16  data);
-        void operator<<(qint32  data);
-        void operator<<(qint64  data);
-        void operator<<(quint8  data);
-        void operator<<(quint16 data);
-        void operator<<(quint32 data);
-        void operator<<(quint64 data);
 
-        QString temp;
-        int ddata;
-};
+
+    };
+} /// end LOGGER_SPACE
 ///-----------------------------------------------------------------------------
 #endif /// LOGGER_H
 ///-----------------------------------------------------------------------------

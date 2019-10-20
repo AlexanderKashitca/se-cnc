@@ -1,0 +1,4 @@
+Sun Oct 20 2019 23:09:35  Test Data File String
+Sun Oct 20 2019 23:09:35  Next Line Test Data File String
+Sun Oct 20 2019 23:11:14 | CNC | Test Data File String
+Sun Oct 20 2019 23:11:14 | CNC | Next Line Test Data File String

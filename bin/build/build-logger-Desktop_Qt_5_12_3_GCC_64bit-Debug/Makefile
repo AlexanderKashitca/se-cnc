@@ -709,7 +709,8 @@ compiler_clean: compiler_moc_predefs_clean
 ####### Compile
 
 logger.o: ../../../src/logger/logger.cpp ../../../src/logger/logger.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QString \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QTime \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdatetime.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstring.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qchar.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qglobal.h \
@@ -740,7 +741,19 @@ logger.o: ../../../src/logger/logger.cpp ../../../src/logger/logger.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringliteral.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringalgorithms.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringview.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringbuilder.h
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qiterator.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qalgorithms.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhashfunctions.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qpair.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qbytearraylist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringlist.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qregexp.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o logger.o ../../../src/logger/logger.cpp
 
 main.o: ../../prj/logger/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QCoreApplication \
@@ -794,7 +807,13 @@ main.o: ../../prj/logger/main.cpp /home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCo
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qvarlengtharray.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qobject_impl.h \
-		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qeventloop.h
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qeventloop.h \
+		../../../src/logger/logger.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QTime \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qdatetime.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qshareddata.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/qhash.h \
+		/home/evil/Qt5.12.3/5.12.3/gcc_64/include/QtCore/QString
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../../prj/logger/main.cpp
 
 ####### Install
