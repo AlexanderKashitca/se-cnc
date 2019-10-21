@@ -52,6 +52,13 @@ namespace LOGGER_SPACE
             ~LoggerClass();
             LOGGER_STATE setConfiguration(STREAM_TYPE& type,STREAM_CONFIG& config);
             LOGGER_STATE push(qint8 data);
+            LOGGER_STATE push(qint16 data);
+            LOGGER_STATE push(qint64 data);
+            LOGGER_STATE push(qint32 data);
+            LOGGER_STATE push(quint8 data);
+            LOGGER_STATE push(quint16 data);
+            LOGGER_STATE push(quint64 data);
+            LOGGER_STATE push(quint32 data);
             LOGGER_STATE push(QString data);
 
 

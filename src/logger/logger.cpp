@@ -73,6 +73,41 @@ LOGGER_STATE LoggerClass::push(qint8 data)
     return(send(QString::number(data)));
 }
 ///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(qint16 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(qint32 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(qint64 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(quint8 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(quint16 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(quint32 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
+LOGGER_STATE LoggerClass::push(quint64 data)
+{
+    return(send(QString::number(data)));
+}
+///-----------------------------------------------------------------------------
 LOGGER_STATE LoggerClass::push(QString data)
 {
     return(send(data));
