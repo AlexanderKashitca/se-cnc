@@ -9,6 +9,13 @@ namespace Ui
 {
     class SeMainWindow;
 }
+
+typedef enum
+{
+    WIDGET_HIDE          = 0,
+    WIDGET_PROGRAM_CODE  = 1,
+    WIDGET_DIAGNOSTIC_IO = 2
+}WIDGET_TYPE;
 ///-----------------------------------------------------------------------------
 class SeMainWindow : public QMainWindow
 {
@@ -16,9 +23,18 @@ class SeMainWindow : public QMainWindow
     public:
         explicit SeMainWindow(QWidget *parent = nullptr);
         ~SeMainWindow();
-        QHBoxLayout* pbxLayout;
-    private:
+
+
+    public slots :
+        void menuActionOpen();
+        void menuActionClose();
+        void menuActionMaintenance();
+        void menuActionDiagnisticIO();
+private slots:
+
+private:
         Ui::SeMainWindow *ui;
+        void widgetShow(WIDGET_TYPE type);
 
 };
 ///-----------------------------------------------------------------------------

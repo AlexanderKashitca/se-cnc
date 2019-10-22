@@ -12,12 +12,14 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMdiArea>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -26,26 +28,32 @@ QT_BEGIN_NAMESPACE
 class Ui_SeMainWindow
 {
 public:
+    QAction *actionOpen;
+    QAction *actionClose;
+    QAction *actionMaintenance;
+    QAction *actionDiagnosticIO;
+    QAction *actionTEST;
     QWidget *centralWidget;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton_5;
-    QPushButton *pushButton_6;
-    QMdiArea *mdiArea;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_4;
+    QWidget *programGridWidget;
+    QGridLayout *gridLayout;
+    QLineEdit *lineEdit;
+    QPushButton *mdiPushButton;
+    QTextEdit *programCodeEdit;
+    QWidget *diagnosticIIOGridWidget;
+    QGridLayout *gridLayout_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuMachine;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
-    QToolBar *toolBar;
 
     void setupUi(QMainWindow *SeMainWindow)
     {
         if (SeMainWindow->objectName().isEmpty())
             SeMainWindow->setObjectName(QString::fromUtf8("SeMainWindow"));
         SeMainWindow->resize(1024, 768);
+        SeMainWindow->setMinimumSize(QSize(1024, 768));
+        SeMainWindow->setMaximumSize(QSize(1024, 768));
         QPalette palette;
         QBrush brush(QColor(0, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -120,29 +128,58 @@ public:
         SeMainWindow->setPalette(palette);
         SeMainWindow->setCursor(QCursor(Qt::ArrowCursor));
         SeMainWindow->setDockOptions(QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks);
+        actionOpen = new QAction(SeMainWindow);
+        actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
+        actionClose = new QAction(SeMainWindow);
+        actionClose->setObjectName(QString::fromUtf8("actionClose"));
+        actionMaintenance = new QAction(SeMainWindow);
+        actionMaintenance->setObjectName(QString::fromUtf8("actionMaintenance"));
+        actionDiagnosticIO = new QAction(SeMainWindow);
+        actionDiagnosticIO->setObjectName(QString::fromUtf8("actionDiagnosticIO"));
+        actionDiagnosticIO->setCheckable(false);
+        actionTEST = new QAction(SeMainWindow);
+        actionTEST->setObjectName(QString::fromUtf8("actionTEST"));
         centralWidget = new QWidget(SeMainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(0, 670, 80, 24));
-        pushButton_2 = new QPushButton(centralWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setGeometry(QRect(120, 670, 80, 24));
-        pushButton_5 = new QPushButton(centralWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
-        pushButton_5->setGeometry(QRect(710, 520, 80, 24));
-        pushButton_6 = new QPushButton(centralWidget);
-        pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
-        pushButton_6->setGeometry(QRect(750, 410, 80, 24));
-        mdiArea = new QMdiArea(centralWidget);
-        mdiArea->setObjectName(QString::fromUtf8("mdiArea"));
-        mdiArea->setGeometry(QRect(470, 170, 200, 160));
-        pushButton_3 = new QPushButton(centralWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
-        pushButton_3->setGeometry(QRect(360, 420, 239, 24));
-        pushButton_4 = new QPushButton(centralWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-        pushButton_4->setGeometry(QRect(260, 360, 239, 24));
+        programGridWidget = new QWidget(centralWidget);
+        programGridWidget->setObjectName(QString::fromUtf8("programGridWidget"));
+        programGridWidget->setEnabled(true);
+        programGridWidget->setGeometry(QRect(0, 0, 680, 240));
+        programGridWidget->setMinimumSize(QSize(680, 240));
+        programGridWidget->setMaximumSize(QSize(680, 240));
+        gridLayout = new QGridLayout(programGridWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        lineEdit = new QLineEdit(programGridWidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+
+        gridLayout->addWidget(lineEdit, 1, 0, 1, 1);
+
+        mdiPushButton = new QPushButton(programGridWidget);
+        mdiPushButton->setObjectName(QString::fromUtf8("mdiPushButton"));
+
+        gridLayout->addWidget(mdiPushButton, 1, 1, 1, 1);
+
+        programCodeEdit = new QTextEdit(programGridWidget);
+        programCodeEdit->setObjectName(QString::fromUtf8("programCodeEdit"));
+        QFont font;
+        font.setPointSize(15);
+        programCodeEdit->setFont(font);
+        programCodeEdit->setLineWrapMode(QTextEdit::NoWrap);
+        programCodeEdit->setReadOnly(true);
+
+        gridLayout->addWidget(programCodeEdit, 0, 0, 1, 2);
+
+        diagnosticIIOGridWidget = new QWidget(centralWidget);
+        diagnosticIIOGridWidget->setObjectName(QString::fromUtf8("diagnosticIIOGridWidget"));
+        diagnosticIIOGridWidget->setGeometry(QRect(0, 0, 680, 240));
+        diagnosticIIOGridWidget->setMinimumSize(QSize(680, 240));
+        diagnosticIIOGridWidget->setMaximumSize(QSize(680, 240));
+        gridLayout_2 = new QGridLayout(diagnosticIIOGridWidget);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         SeMainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(SeMainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -154,16 +191,22 @@ public:
         SeMainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(SeMainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        mainToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
         SeMainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(SeMainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         SeMainWindow->setStatusBar(statusBar);
-        toolBar = new QToolBar(SeMainWindow);
-        toolBar->setObjectName(QString::fromUtf8("toolBar"));
-        SeMainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuMachine->menuAction());
+        menuFile->addAction(actionOpen);
+        menuFile->addSeparator();
+        menuFile->addAction(actionClose);
+        menuFile->addSeparator();
+        menuFile->addAction(actionMaintenance);
+        menuMachine->addAction(actionDiagnosticIO);
+        mainToolBar->addSeparator();
+        mainToolBar->addAction(actionTEST);
 
         retranslateUi(SeMainWindow);
 
@@ -173,15 +216,17 @@ public:
     void retranslateUi(QMainWindow *SeMainWindow)
     {
         SeMainWindow->setWindowTitle(QApplication::translate("SeMainWindow", "SeMainWindow", nullptr));
-        pushButton->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
-        pushButton_2->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
-        pushButton_5->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
-        pushButton_6->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
-        pushButton_3->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
-        pushButton_4->setText(QApplication::translate("SeMainWindow", "PushButton", nullptr));
+        actionOpen->setText(QApplication::translate("SeMainWindow", "Open", nullptr));
+        actionClose->setText(QApplication::translate("SeMainWindow", "Close", nullptr));
+        actionMaintenance->setText(QApplication::translate("SeMainWindow", "Maintenance", nullptr));
+        actionDiagnosticIO->setText(QApplication::translate("SeMainWindow", "Diagnostic I/O", nullptr));
+        actionTEST->setText(QApplication::translate("SeMainWindow", "TEST", nullptr));
+#ifndef QT_NO_SHORTCUT
+        actionTEST->setShortcut(QApplication::translate("SeMainWindow", "Ctrl+D", nullptr));
+#endif // QT_NO_SHORTCUT
+        mdiPushButton->setText(QApplication::translate("SeMainWindow", "MDI", nullptr));
         menuFile->setTitle(QApplication::translate("SeMainWindow", "File", nullptr));
         menuMachine->setTitle(QApplication::translate("SeMainWindow", "Machine", nullptr));
-        toolBar->setWindowTitle(QApplication::translate("SeMainWindow", "toolBar", nullptr));
     } // retranslateUi
 
 };
