@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>1537</width>
+    <height>1097</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>1024</width>
-    <height>768</height>
+    <width>10240</width>
+    <height>7680</height>
    </size>
   </property>
   <property name="palette">
@@ -549,13 +549,228 @@
     </property>
     <layout class="QGridLayout" name="gridLayout_2"/>
    </widget>
+   <widget class="QWidget" name="manualGridWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>270</y>
+      <width>680</width>
+      <height>240</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>680</width>
+      <height>240</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>680</width>
+      <height>240</height>
+     </size>
+    </property>
+    <layout class="QGridLayout" name="manualGridLayout"/>
+   </widget>
+   <widget class="QWidget" name="maintenanceGridWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>250</y>
+      <width>680</width>
+      <height>240</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>680</width>
+      <height>240</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>680</width>
+      <height>240</height>
+     </size>
+    </property>
+    <layout class="QGridLayout" name="maintenanceGridLayout">
+     <item row="3" column="1">
+      <widget class="QToolButton" name="settingsPathToolButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="variablePathLabel">
+       <property name="text">
+        <string>Variable File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QToolButton" name="variablePathToolButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QComboBox" name="axisNumberComboBox">
+       <item>
+        <property name="text">
+         <string>2 Axis</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3 Axis</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>4 Axis</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>5 Axis</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QToolButton" name="toolTablePathToolButton">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="axisNumberLabel">
+       <property name="text">
+        <string>Axis Number</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="settingsPathLineEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="machineTypeLabel">
+       <property name="text">
+        <string>Machine type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLineEdit" name="toolTablePathLineEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QComboBox" name="machineTypeComboBox">
+       <item>
+        <property name="text">
+         <string>Die  EDM</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Flame</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Grinder</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Laser</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Milling</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Punch</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Turning</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wire EDM</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Probe</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Plotting</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="variablePathLineEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="settingsPathLabel">
+       <property name="text">
+        <string>Settings File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="toolTablePathLabel">
+       <property name="text">
+        <string>Tool Table</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>1537</width>
      <height>21</height>
     </rect>
    </property>
@@ -574,6 +789,8 @@
      <string>Machine</string>
     </property>
     <addaction name="actionDiagnosticIO"/>
+    <addaction name="separator"/>
+    <addaction name="actionManualControl"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMachine"/>
@@ -621,6 +838,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionManualControl">
+   <property name="text">
+    <string>Manual Control</string>
    </property>
   </action>
  </widget>

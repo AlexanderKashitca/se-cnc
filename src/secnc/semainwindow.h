@@ -12,9 +12,11 @@ namespace Ui
 
 typedef enum
 {
-    WIDGET_HIDE          = 0,
-    WIDGET_PROGRAM_CODE  = 1,
-    WIDGET_DIAGNOSTIC_IO = 2
+    WIDGET_HIDE           = 0,
+    WIDGET_PROGRAM_CODE   = 1,
+    WIDGET_DIAGNOSTIC_IO  = 2,
+    WIDGET_MANUAL_CONTROL = 3,
+    WIDGET_MAINTENANCE    = 4
 }WIDGET_TYPE;
 ///-----------------------------------------------------------------------------
 class SeMainWindow : public QMainWindow
@@ -25,16 +27,24 @@ class SeMainWindow : public QMainWindow
         ~SeMainWindow();
 
 
-    public slots :
+    private slots :
         void menuActionOpen();
         void menuActionClose();
         void menuActionMaintenance();
         void menuActionDiagnisticIO();
-private slots:
+        void menuActionManualControl();
+
+        void variablePathToolButtonAction();
+        void settingsPathToolButtonAction();
+        void toolTablePathToolButtonAction();
 
 private:
         Ui::SeMainWindow *ui;
         void widgetShow(WIDGET_TYPE type);
+        QFile   _file;
+        QString _filename;
+        QString _filetype;
+        QFileDialog* _filedlg;
 
 };
 ///-----------------------------------------------------------------------------
