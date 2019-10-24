@@ -553,7 +553,7 @@
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>270</y>
+      <y>10</y>
       <width>680</width>
       <height>240</height>
      </rect>
@@ -629,7 +629,7 @@
       </spacer>
      </item>
      <item row="0" column="0" colspan="2">
-      <widget class="QComboBox" name="axisNumberComboBox">
+      <widget class="QComboBox" name="axisConfigurationComboBox">
        <item>
         <property name="text">
          <string>2 Axis</string>
@@ -660,7 +660,7 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLabel" name="axisNumberLabel">
+      <widget class="QLabel" name="axisConfigurationLabel">
        <property name="text">
         <string>Axis Number</string>
        </property>

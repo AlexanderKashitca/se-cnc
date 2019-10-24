@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     //mainForm.cursor().setPos(500,500);
 
     //mainForm.setAutoFillBackground(true);
-    mainForm.resize(1024,768);
+    mainForm.setGeometry(0,0,1024,768);
 
     mainForm.show();
 

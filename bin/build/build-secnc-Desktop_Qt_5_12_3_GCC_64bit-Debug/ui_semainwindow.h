@@ -50,20 +50,20 @@ public:
     QGridLayout *manualGridLayout;
     QWidget *maintenanceGridWidget;
     QGridLayout *maintenanceGridLayout;
+    QToolButton *settingsPathToolButton;
+    QLabel *variablePathLabel;
+    QToolButton *variablePathToolButton;
     QSpacerItem *verticalSpacer;
-    QComboBox *axisNumberComboBox;
-    QLabel *axisNumberLabel;
+    QComboBox *axisConfigurationComboBox;
+    QToolButton *toolTablePathToolButton;
+    QLabel *axisConfigurationLabel;
     QLineEdit *settingsPathLineEdit;
     QLabel *machineTypeLabel;
+    QLineEdit *toolTablePathLineEdit;
     QComboBox *machineTypeComboBox;
     QLineEdit *variablePathLineEdit;
-    QLineEdit *toolTablePathLineEdit;
-    QLabel *variablePathLabel;
     QLabel *settingsPathLabel;
     QLabel *toolTablePathLabel;
-    QToolButton *variablePathToolButton;
-    QToolButton *settingsPathToolButton;
-    QToolButton *toolTablePathToolButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuMachine;
@@ -223,23 +223,43 @@ public:
         maintenanceGridLayout->setSpacing(6);
         maintenanceGridLayout->setContentsMargins(11, 11, 11, 11);
         maintenanceGridLayout->setObjectName(QString::fromUtf8("maintenanceGridLayout"));
+        settingsPathToolButton = new QToolButton(maintenanceGridWidget);
+        settingsPathToolButton->setObjectName(QString::fromUtf8("settingsPathToolButton"));
+
+        maintenanceGridLayout->addWidget(settingsPathToolButton, 3, 1, 1, 1);
+
+        variablePathLabel = new QLabel(maintenanceGridWidget);
+        variablePathLabel->setObjectName(QString::fromUtf8("variablePathLabel"));
+
+        maintenanceGridLayout->addWidget(variablePathLabel, 2, 2, 1, 1);
+
+        variablePathToolButton = new QToolButton(maintenanceGridWidget);
+        variablePathToolButton->setObjectName(QString::fromUtf8("variablePathToolButton"));
+
+        maintenanceGridLayout->addWidget(variablePathToolButton, 2, 1, 1, 1);
+
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         maintenanceGridLayout->addItem(verticalSpacer, 5, 0, 1, 3);
 
-        axisNumberComboBox = new QComboBox(maintenanceGridWidget);
-        axisNumberComboBox->addItem(QString());
-        axisNumberComboBox->addItem(QString());
-        axisNumberComboBox->addItem(QString());
-        axisNumberComboBox->addItem(QString());
-        axisNumberComboBox->setObjectName(QString::fromUtf8("axisNumberComboBox"));
+        axisConfigurationComboBox = new QComboBox(maintenanceGridWidget);
+        axisConfigurationComboBox->addItem(QString());
+        axisConfigurationComboBox->addItem(QString());
+        axisConfigurationComboBox->addItem(QString());
+        axisConfigurationComboBox->addItem(QString());
+        axisConfigurationComboBox->setObjectName(QString::fromUtf8("axisConfigurationComboBox"));
 
-        maintenanceGridLayout->addWidget(axisNumberComboBox, 0, 0, 1, 2);
+        maintenanceGridLayout->addWidget(axisConfigurationComboBox, 0, 0, 1, 2);
 
-        axisNumberLabel = new QLabel(maintenanceGridWidget);
-        axisNumberLabel->setObjectName(QString::fromUtf8("axisNumberLabel"));
+        toolTablePathToolButton = new QToolButton(maintenanceGridWidget);
+        toolTablePathToolButton->setObjectName(QString::fromUtf8("toolTablePathToolButton"));
 
-        maintenanceGridLayout->addWidget(axisNumberLabel, 0, 2, 1, 1);
+        maintenanceGridLayout->addWidget(toolTablePathToolButton, 4, 1, 1, 1);
+
+        axisConfigurationLabel = new QLabel(maintenanceGridWidget);
+        axisConfigurationLabel->setObjectName(QString::fromUtf8("axisConfigurationLabel"));
+
+        maintenanceGridLayout->addWidget(axisConfigurationLabel, 0, 2, 1, 1);
 
         settingsPathLineEdit = new QLineEdit(maintenanceGridWidget);
         settingsPathLineEdit->setObjectName(QString::fromUtf8("settingsPathLineEdit"));
@@ -251,6 +271,12 @@ public:
         machineTypeLabel->setObjectName(QString::fromUtf8("machineTypeLabel"));
 
         maintenanceGridLayout->addWidget(machineTypeLabel, 1, 2, 1, 1);
+
+        toolTablePathLineEdit = new QLineEdit(maintenanceGridWidget);
+        toolTablePathLineEdit->setObjectName(QString::fromUtf8("toolTablePathLineEdit"));
+        toolTablePathLineEdit->setReadOnly(true);
+
+        maintenanceGridLayout->addWidget(toolTablePathLineEdit, 4, 0, 1, 1);
 
         machineTypeComboBox = new QComboBox(maintenanceGridWidget);
         machineTypeComboBox->addItem(QString());
@@ -273,17 +299,6 @@ public:
 
         maintenanceGridLayout->addWidget(variablePathLineEdit, 2, 0, 1, 1);
 
-        toolTablePathLineEdit = new QLineEdit(maintenanceGridWidget);
-        toolTablePathLineEdit->setObjectName(QString::fromUtf8("toolTablePathLineEdit"));
-        toolTablePathLineEdit->setReadOnly(true);
-
-        maintenanceGridLayout->addWidget(toolTablePathLineEdit, 4, 0, 1, 1);
-
-        variablePathLabel = new QLabel(maintenanceGridWidget);
-        variablePathLabel->setObjectName(QString::fromUtf8("variablePathLabel"));
-
-        maintenanceGridLayout->addWidget(variablePathLabel, 2, 2, 1, 1);
-
         settingsPathLabel = new QLabel(maintenanceGridWidget);
         settingsPathLabel->setObjectName(QString::fromUtf8("settingsPathLabel"));
 
@@ -293,21 +308,6 @@ public:
         toolTablePathLabel->setObjectName(QString::fromUtf8("toolTablePathLabel"));
 
         maintenanceGridLayout->addWidget(toolTablePathLabel, 4, 2, 1, 1);
-
-        variablePathToolButton = new QToolButton(maintenanceGridWidget);
-        variablePathToolButton->setObjectName(QString::fromUtf8("variablePathToolButton"));
-
-        maintenanceGridLayout->addWidget(variablePathToolButton, 2, 1, 1, 1);
-
-        settingsPathToolButton = new QToolButton(maintenanceGridWidget);
-        settingsPathToolButton->setObjectName(QString::fromUtf8("settingsPathToolButton"));
-
-        maintenanceGridLayout->addWidget(settingsPathToolButton, 3, 1, 1, 1);
-
-        toolTablePathToolButton = new QToolButton(maintenanceGridWidget);
-        toolTablePathToolButton->setObjectName(QString::fromUtf8("toolTablePathToolButton"));
-
-        maintenanceGridLayout->addWidget(toolTablePathToolButton, 4, 1, 1, 1);
 
         SeMainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(SeMainWindow);
@@ -357,12 +357,16 @@ public:
 #endif // QT_NO_SHORTCUT
         actionManualControl->setText(QApplication::translate("SeMainWindow", "Manual Control", nullptr));
         mdiPushButton->setText(QApplication::translate("SeMainWindow", "MDI", nullptr));
-        axisNumberComboBox->setItemText(0, QApplication::translate("SeMainWindow", "2 Axis", nullptr));
-        axisNumberComboBox->setItemText(1, QApplication::translate("SeMainWindow", "3 Axis", nullptr));
-        axisNumberComboBox->setItemText(2, QApplication::translate("SeMainWindow", "4 Axis", nullptr));
-        axisNumberComboBox->setItemText(3, QApplication::translate("SeMainWindow", "5 Axis", nullptr));
+        settingsPathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
+        variablePathLabel->setText(QApplication::translate("SeMainWindow", "Variable File", nullptr));
+        variablePathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
+        axisConfigurationComboBox->setItemText(0, QApplication::translate("SeMainWindow", "2 Axis", nullptr));
+        axisConfigurationComboBox->setItemText(1, QApplication::translate("SeMainWindow", "3 Axis", nullptr));
+        axisConfigurationComboBox->setItemText(2, QApplication::translate("SeMainWindow", "4 Axis", nullptr));
+        axisConfigurationComboBox->setItemText(3, QApplication::translate("SeMainWindow", "5 Axis", nullptr));
 
-        axisNumberLabel->setText(QApplication::translate("SeMainWindow", "Axis Number", nullptr));
+        toolTablePathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
+        axisConfigurationLabel->setText(QApplication::translate("SeMainWindow", "Axis Number", nullptr));
         machineTypeLabel->setText(QApplication::translate("SeMainWindow", "Machine type", nullptr));
         machineTypeComboBox->setItemText(0, QApplication::translate("SeMainWindow", "Die  EDM", nullptr));
         machineTypeComboBox->setItemText(1, QApplication::translate("SeMainWindow", "Flame", nullptr));
@@ -375,12 +379,8 @@ public:
         machineTypeComboBox->setItemText(8, QApplication::translate("SeMainWindow", "Probe", nullptr));
         machineTypeComboBox->setItemText(9, QApplication::translate("SeMainWindow", "Plotting", nullptr));
 
-        variablePathLabel->setText(QApplication::translate("SeMainWindow", "Variable File", nullptr));
         settingsPathLabel->setText(QApplication::translate("SeMainWindow", "Settings File", nullptr));
         toolTablePathLabel->setText(QApplication::translate("SeMainWindow", "Tool Table", nullptr));
-        variablePathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
-        settingsPathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
-        toolTablePathToolButton->setText(QApplication::translate("SeMainWindow", "...", nullptr));
         menuFile->setTitle(QApplication::translate("SeMainWindow", "File", nullptr));
         menuMachine->setTitle(QApplication::translate("SeMainWindow", "Machine", nullptr));
     } // retranslateUi

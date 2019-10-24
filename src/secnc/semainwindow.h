@@ -28,15 +28,18 @@ class SeMainWindow : public QMainWindow
 
 
     private slots :
-        void menuActionOpen();
-        void menuActionClose();
-        void menuActionMaintenance();
-        void menuActionDiagnisticIO();
-        void menuActionManualControl();
+        void menuOpenAction();
+        void menuCloseAction();
+        void menuMaintenanceAction();
+        void menuDiagnisticIOAction();
+        void menuManualControlAction();
 
         void variablePathToolButtonAction();
         void settingsPathToolButtonAction();
         void toolTablePathToolButtonAction();
+
+        void axisConfigurationComboBoxCurrentIndexChanged(int index);
+        void machineTypeComboBoxCurrentIndexChanged(int index);
 
 private:
         Ui::SeMainWindow *ui;
@@ -45,6 +48,14 @@ private:
         QString _filename;
         QString _filetype;
         QFileDialog* _filedlg;
+        QString      _settingsFile;
+        QSettings*   _configSettings;
+
+
+        void loadKeySettings();
+        void saveKeySettings(const QString group,const QString name,QString& value);
+        void saveKeySettings(const QString group,const QString name,QVariant& value);
+
 
 };
 ///-----------------------------------------------------------------------------
