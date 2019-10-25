@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SeMainWindow_t {
-    QByteArrayData data[13];
-    char stringdata0[292];
+    QByteArrayData data[12];
+    char stringdata0[276];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,21 +34,20 @@ static const qt_meta_stringdata_SeMainWindow_t qt_meta_stringdata_SeMainWindow =
 QT_MOC_LITERAL(0, 0, 12), // "SeMainWindow"
 QT_MOC_LITERAL(1, 13, 14), // "menuOpenAction"
 QT_MOC_LITERAL(2, 28, 0), // ""
-QT_MOC_LITERAL(3, 29, 15), // "menuCloseAction"
-QT_MOC_LITERAL(4, 45, 21), // "menuMaintenanceAction"
-QT_MOC_LITERAL(5, 67, 22), // "menuDiagnisticIOAction"
-QT_MOC_LITERAL(6, 90, 23), // "menuManualControlAction"
-QT_MOC_LITERAL(7, 114, 28), // "variablePathToolButtonAction"
-QT_MOC_LITERAL(8, 143, 28), // "settingsPathToolButtonAction"
-QT_MOC_LITERAL(9, 172, 29), // "toolTablePathToolButtonAction"
-QT_MOC_LITERAL(10, 202, 44), // "axisConfigurationComboBoxCurr..."
-QT_MOC_LITERAL(11, 247, 5), // "index"
-QT_MOC_LITERAL(12, 253, 38) // "machineTypeComboBoxCurrentInd..."
+QT_MOC_LITERAL(3, 29, 21), // "menuMaintenanceAction"
+QT_MOC_LITERAL(4, 51, 22), // "menuDiagnisticIOAction"
+QT_MOC_LITERAL(5, 74, 23), // "menuManualControlAction"
+QT_MOC_LITERAL(6, 98, 28), // "variablePathToolButtonAction"
+QT_MOC_LITERAL(7, 127, 28), // "settingsPathToolButtonAction"
+QT_MOC_LITERAL(8, 156, 29), // "toolTablePathToolButtonAction"
+QT_MOC_LITERAL(9, 186, 44), // "axisConfigurationComboBoxCurr..."
+QT_MOC_LITERAL(10, 231, 5), // "index"
+QT_MOC_LITERAL(11, 237, 38) // "machineTypeComboBoxCurrentInd..."
 
     },
     "SeMainWindow\0menuOpenAction\0\0"
-    "menuCloseAction\0menuMaintenanceAction\0"
-    "menuDiagnisticIOAction\0menuManualControlAction\0"
+    "menuMaintenanceAction\0menuDiagnisticIOAction\0"
+    "menuManualControlAction\0"
     "variablePathToolButtonAction\0"
     "settingsPathToolButtonAction\0"
     "toolTablePathToolButtonAction\0"
@@ -63,7 +62,7 @@ static const uint qt_meta_data_SeMainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,16 +70,15 @@ static const uint qt_meta_data_SeMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x08 /* Private */,
-       3,    0,   65,    2, 0x08 /* Private */,
-       4,    0,   66,    2, 0x08 /* Private */,
-       5,    0,   67,    2, 0x08 /* Private */,
-       6,    0,   68,    2, 0x08 /* Private */,
-       7,    0,   69,    2, 0x08 /* Private */,
-       8,    0,   70,    2, 0x08 /* Private */,
-       9,    0,   71,    2, 0x08 /* Private */,
-      10,    1,   72,    2, 0x08 /* Private */,
-      12,    1,   75,    2, 0x08 /* Private */,
+       1,    0,   59,    2, 0x08 /* Private */,
+       3,    0,   60,    2, 0x08 /* Private */,
+       4,    0,   61,    2, 0x08 /* Private */,
+       5,    0,   62,    2, 0x08 /* Private */,
+       6,    0,   63,    2, 0x08 /* Private */,
+       7,    0,   64,    2, 0x08 /* Private */,
+       8,    0,   65,    2, 0x08 /* Private */,
+       9,    1,   66,    2, 0x08 /* Private */,
+      11,    1,   69,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -90,9 +88,8 @@ static const uint qt_meta_data_SeMainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   11,
-    QMetaType::Void, QMetaType::Int,   11,
+    QMetaType::Void, QMetaType::Int,   10,
+    QMetaType::Void, QMetaType::Int,   10,
 
        0        // eod
 };
@@ -104,15 +101,14 @@ void SeMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->menuOpenAction(); break;
-        case 1: _t->menuCloseAction(); break;
-        case 2: _t->menuMaintenanceAction(); break;
-        case 3: _t->menuDiagnisticIOAction(); break;
-        case 4: _t->menuManualControlAction(); break;
-        case 5: _t->variablePathToolButtonAction(); break;
-        case 6: _t->settingsPathToolButtonAction(); break;
-        case 7: _t->toolTablePathToolButtonAction(); break;
-        case 8: _t->axisConfigurationComboBoxCurrentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 9: _t->machineTypeComboBoxCurrentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->menuMaintenanceAction(); break;
+        case 2: _t->menuDiagnisticIOAction(); break;
+        case 3: _t->menuManualControlAction(); break;
+        case 4: _t->variablePathToolButtonAction(); break;
+        case 5: _t->settingsPathToolButtonAction(); break;
+        case 6: _t->toolTablePathToolButtonAction(); break;
+        case 7: _t->axisConfigurationComboBoxCurrentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 8: _t->machineTypeComboBoxCurrentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -147,13 +143,13 @@ int SeMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 9;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 9)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 9;
     }
     return _id;
 }

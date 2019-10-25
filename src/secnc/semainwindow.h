@@ -29,7 +29,6 @@ class SeMainWindow : public QMainWindow
 
     private slots :
         void menuOpenAction();
-        void menuCloseAction();
         void menuMaintenanceAction();
         void menuDiagnisticIOAction();
         void menuManualControlAction();

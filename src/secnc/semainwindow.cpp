@@ -9,7 +9,6 @@ SeMainWindow::SeMainWindow(QWidget *parent) :
     ui->setupUi(this);
     /// add action connection
     connect(ui->actionOpen,          SIGNAL(triggered()), this, SLOT(menuOpenAction()));
-    connect(ui->actionClose,         SIGNAL(triggered()), this, SLOT(menuCloseAction()));
     connect(ui->actionMaintenance,   SIGNAL(triggered()), this, SLOT(menuMaintenanceAction()));
     connect(ui->actionDiagnosticIO,  SIGNAL(triggered()), this, SLOT(menuDiagnisticIOAction()));
     connect(ui->actionManualControl, SIGNAL(triggered()), this, SLOT(menuManualControlAction()));
@@ -20,7 +19,6 @@ SeMainWindow::SeMainWindow(QWidget *parent) :
 
     connect(ui->axisConfigurationComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(axisConfigurationComboBoxCurrentIndexChanged(int)));
     connect(ui->machineTypeComboBox,       SIGNAL(currentIndexChanged(int)), this, SLOT(machineTypeComboBoxCurrentIndexChanged(int)));
-
 
 
     /// hide all widgets
@@ -128,11 +126,6 @@ void SeMainWindow::menuOpenAction()
         /// show programm widget and hide other
         widgetShow(WIDGET_PROGRAM_CODE);
     }
-}
-///-----------------------------------------------------------------------------
-void SeMainWindow::menuCloseAction()
-{
-    qDebug() << "action Close";
 }
 ///-----------------------------------------------------------------------------
 void SeMainWindow::menuMaintenanceAction()

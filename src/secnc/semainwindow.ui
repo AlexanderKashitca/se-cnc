@@ -780,7 +780,6 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
-    <addaction name="actionClose"/>
     <addaction name="separator"/>
     <addaction name="actionMaintenance"/>
    </widget>

@@ -207,7 +207,7 @@ public:
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         manualGridWidget = new QWidget(centralWidget);
         manualGridWidget->setObjectName(QString::fromUtf8("manualGridWidget"));
-        manualGridWidget->setGeometry(QRect(730, 270, 680, 240));
+        manualGridWidget->setGeometry(QRect(730, 10, 680, 240));
         manualGridWidget->setMinimumSize(QSize(680, 240));
         manualGridWidget->setMaximumSize(QSize(680, 240));
         manualGridLayout = new QGridLayout(manualGridWidget);
@@ -330,7 +330,6 @@ public:
         menuBar->addAction(menuMachine->menuAction());
         menuFile->addAction(actionOpen);
         menuFile->addSeparator();
-        menuFile->addAction(actionClose);
         menuFile->addSeparator();
         menuFile->addAction(actionMaintenance);
         menuMachine->addAction(actionDiagnosticIO);
