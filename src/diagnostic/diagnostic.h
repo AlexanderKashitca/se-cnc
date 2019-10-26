@@ -5,11 +5,14 @@
 ///-----------------------------------------------------------------------------
 #include "../dbus/client/client.h"
 ///-----------------------------------------------------------------------------
-class diagnosticClass : dbusClientClass
+namespace DIAGNOSTIC_SPACE
 {
-    public:
-        diagnosticClass();
-};
+    class diagnosticClass : public dbusClientClass
+    {
+        public:
+            diagnosticClass();
+    };
+}
 ///-----------------------------------------------------------------------------
 #endif // DIAGNOSTIC_H
 ///-----------------------------------------------------------------------------

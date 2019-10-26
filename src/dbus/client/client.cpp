@@ -7,45 +7,40 @@
 #include <QtCore/QProcess>
 #include <QtDBus/QtDBus>
 
-#include "../common.h"
 #include "client.h"
 ///-----------------------------------------------------------------------------
 int dbusClientClass::initialization()
 {
-    if (!QDBusConnection::sessionBus().isConnected()) {
+    if(!QDBusConnection::sessionBus().isConnected()) {
         fprintf(stderr, "Cannot connect to the D-Bus session bus.\n"
                 "To start it, run:\n"
                 "\teval `dbus-launch --auto-syntax`\n");
         return(1);
     }
-
-
-    serviceWatcher.addWatchedService(SERVICE_NAME);
-    serviceWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration);
-
-    //serviceWatcher.setWatchMode(DBusServiceWatcher::WatchModeFlag::WatchForRegistration);
-    //        (SERVICE_NAME,
-    //         QDBusConnection::sessionBus(),
-    //         QDBusServiceWatcher::WatchForRegistration);
-
-    //QDBusServiceWatcher(const QString &service,
-    //                    const QDBusConnection &connection,
-    //                    WatchMode watchMode = WatchForOwnerChange,
-    //                    QObject *parent = nullptr);
+    /// setting watcher
+    _serviceWatcher.addWatchedService(SERVICE_NAME);
+    _serviceWatcher.setConnection(QDBusConnection::sessionBus());
+    _serviceWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration);
 
     return(0);
 }
 ///-----------------------------------------------------------------------------
-void dbusClientClass::start(const QString &name)
+int dbusClientClass::connect(const QString &name)
 {
-        QObject::connect(&serviceWatcher,&QDBusServiceWatcher::serviceRegistered,this,&dbusClientClass::start);
+    QObject::connect(&_serviceWatcher,
+                     &QDBusServiceWatcher::serviceRegistered,
+                     this,
+                     &dbusClientClass::sendQuery(
+                         _query,
+                         _answer,
+                         _data));
     if(name != SERVICE_NAME)
-        return;
+        return(1);
 
-    // open stdin for reading
+    /// open stdin for reading
     qstdin.open(stdin, QIODevice::ReadOnly);
 
-    // find our remote
+    /// find our remote
     iface = new QDBusInterface(SERVICE_NAME,"/",SERVICE_INTERFACE_NAME,QDBusConnection::sessionBus(), this);
     if(!iface->isValid())
     {
@@ -53,17 +48,35 @@ void dbusClientClass::start(const QString &name)
         QCoreApplication::instance()->quit();
     }
 
-    connect(iface, SIGNAL(aboutToQuit()),QCoreApplication::instance(),SLOT(quit()));
+    QObject::connect(iface,SIGNAL(aboutToQuit()),QCoreApplication::instance(),SLOT(quit()));
 
-    while(true)
-    {
+    return(0);
+}
+///-----------------------------------------------------------------------------
+/**
+ * @brief dbusClientClass::sendQuery
+ * @param query  - query to server
+ * @param answer - answer from server
+ * @param data   - data the query if necessary
+ * @return 0 - successful
+ *         1 - failed
+ */
+int dbusClientClass::sendQuery(const QString& query,QByteArray& answer,QByteArray& data)
+{
+
+
+
+
         printf("Ask your question: ");
+        //QString line = QString::fromLocal8Bit(qstdin.readLine()).trimmed();
+        //QByteArray ba = "";//"TEST SEND BBYTE ARRAY";
 
-        QString line = QString::fromLocal8Bit(qstdin.readLine()).trimmed();
-        QByteArray ba = "";//"TEST SEND BBYTE ARRAY";
-
-        QDBusReply<QDBusVariant> reply = iface->call("query", line);
+        QDBusReply<QDBusVariant> reply = iface->call("query", query);
         if(reply.isValid())
+        {
+
+  //          answer = qPrintable(reply.value().variant().toString());
+        }
             printf("Reply was: %s\n", qPrintable(reply.value().variant().toString()));
 
 
@@ -83,6 +96,7 @@ void dbusClientClass::start(const QString &name)
         ///}
         ///if (iface->lastError().isValid())
         ///    fprintf(stderr, "Call failed: %s\n", qPrintable(iface->lastError().message()));
-    }
+
+            return(0);
 }
 ///-----------------------------------------------------------------------------

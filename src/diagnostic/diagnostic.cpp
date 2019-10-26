@@ -1,7 +1,7 @@
 ///-----------------------------------------------------------------------------
 #include "diagnostic.h"
 ///-----------------------------------------------------------------------------
-diagnosticClass::diagnosticClass()
+DIAGNOSTIC_SPACE::diagnosticClass::diagnosticClass()
 {
 
 }

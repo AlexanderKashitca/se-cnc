@@ -4,29 +4,30 @@
 ///-----------------------------------------------------------------------------
 #include <QtCore/QObject>
 #include <QtCore/QFile>
+#include <QtDBus/QtDBus>
 #include <QtDBus/QDBusInterface>
 
-
-//#include <QtCore/QFile>
-//#include <QtCore/QDebug>
-//#include <QtCore/QProcess>
-#include <QtDBus/QtDBus>
+#include "../common.h"
 ///-----------------------------------------------------------------------------
 class dbusClientClass : public QObject
 {
         Q_OBJECT
     private :
-        QDBusServiceWatcher serviceWatcher;
-    public slots:
-        void start(const QString &);
+        QDBusServiceWatcher _serviceWatcher;
 
-    private :
+    public slots:
+        int connect(const QString& name);
+        int sendQuery(const QString& query,QByteArray& answer,QByteArray& data);
+    public :
         int initialization();
+
     public:
         QFile qstdin;
         QDBusInterface *iface;
 
-
+        const QString _query;
+        QByteArray    _answer;
+        QByteArray    _data;
 
 };
 ///-----------------------------------------------------------------------------
