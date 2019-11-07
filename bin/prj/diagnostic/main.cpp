@@ -9,13 +9,14 @@ int main(int argc, char *argv[])
     DIAGNOSTIC_SPACE::diagnosticClass* diagnistic;
 
     diagnistic  = new DIAGNOSTIC_SPACE::diagnosticClass;
-    diagnistic->initialization();
-    diagnistic->connect(SERVICE_NAME);
 
-    const QString query = "ping";
-    QByteArray answer = "";
-    QByteArray data = "";
-   // diagnistic->sendQuery(query,answer,data);
+    if(diagnistic->initialization())
+    {
+        qDebug() << "init successful";
+        diagnistic->getIO();
+    }
+
+
 
     return a.exec();
 

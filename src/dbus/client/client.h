@@ -3,33 +3,37 @@
 #define CLIENT_DBUS_H
 ///-----------------------------------------------------------------------------
 #include <QtCore/QObject>
+#include <QtCore/QList>
 #include <QtCore/QFile>
 #include <QtDBus/QtDBus>
 #include <QtDBus/QDBusInterface>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
+#include <QtCore/QProcess>
 
+#include <stdio.h>
+///-----------------------------------------------------------------------------
 #include "../common.h"
 ///-----------------------------------------------------------------------------
-class dbusClientClass : public QObject
+namespace DBUS_SPACE
 {
-        Q_OBJECT
-    private :
-        QDBusServiceWatcher _serviceWatcher;
+    class dbusClientClass : public QObject
+    {
+            Q_OBJECT
+        private :
+            QDBusServiceWatcher _serviceWatcher;
+        public slots:
+            bool connect(const QString& name);
 
-    public slots:
-        int connect(const QString& name);
-        int sendQuery(const QString& query,QByteArray& answer,QByteArray& data);
-    public :
-        int initialization();
 
-    public:
-        QFile qstdin;
-        QDBusInterface *iface;
-
-        const QString _query;
-        QByteArray    _answer;
-        QByteArray    _data;
-
-};
+        public :
+            bool initialization();
+            QString  sendQuery(const QString& query,QList<QVariant>& args);
+        public:
+            QFile qstdin;
+            QDBusInterface *iface;
+    };
+}
 ///-----------------------------------------------------------------------------
 #endif /// CLIENT_DBUS_H
 ///-----------------------------------------------------------------------------

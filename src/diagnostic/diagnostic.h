@@ -7,12 +7,22 @@
 ///-----------------------------------------------------------------------------
 namespace DIAGNOSTIC_SPACE
 {
-    class diagnosticClass : public dbusClientClass
+    using namespace DBUS_SPACE;
+
+    class diagnosticClass
     {
-        public:
+        private :
+            dbusClientClass* _dbus;
+            QVector<bool> _input_state;
+            QVector<bool> _output_state;
+        public :
             diagnosticClass();
+            ~diagnosticClass();
+
+            bool initialization();
+            bool getIO();
     };
-}
+} /// end namespace DIAGNOSTIC_SPACE
 ///-----------------------------------------------------------------------------
-#endif // DIAGNOSTIC_H
+#endif /// DIAGNOSTIC_H
 ///-----------------------------------------------------------------------------

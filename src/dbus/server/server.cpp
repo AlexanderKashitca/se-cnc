@@ -9,26 +9,30 @@
 #include "server.h"
 ///-----------------------------------------------------------------------------
 /// the property
-QString dbusServerClass::value() const
+QString DBUS_SPACE::dbusServerClass::value() const
 {
     return m_value;
 }
 ///-----------------------------------------------------------------------------
-void dbusServerClass::setValue(const QString &newValue)
+void DBUS_SPACE::dbusServerClass::setValue(const QString &newValue)
 {
     m_value = newValue;
 }
 ///-----------------------------------------------------------------------------
-void dbusServerClass::quit()
+void DBUS_SPACE::dbusServerClass::quit()
 {
-    QTimer::singleShot(0, QCoreApplication::instance(), &QCoreApplication::quit);
+    QTimer::singleShot(0,QCoreApplication::instance(),&QCoreApplication::quit);
 }
 ///-----------------------------------------------------------------------------
-QDBusVariant dbusServerClass::query(const QString &query)
+/*
+QDBusVariant DBUS_SPACE::dbusServerClass::query(const QString &query)
 {
     QString q = query.toLower();
+    QByteArray ba = q.toLocal8Bit();
+    const char* q_str = ba.data();
 
     fprintf(stdout,"server getting  query.\n");
+    fprintf(stdout,"input query - %s\n",q_str);
 
     if(q == "hello")
         return QDBusVariant("World");
@@ -44,4 +48,23 @@ QDBusVariant dbusServerClass::query(const QString &query)
 
     return QDBusVariant("Sorry, I don't know the answer");
 }
+*/
 ///-----------------------------------------------------------------------------
+QDBusVariant DBUS_SPACE::dbusServerClass::getIO(const QList<QVariant>& io)
+{
+    fprintf(stdout,"server getting  IO with arguments.\n");
+
+    return QDBusVariant("server getting  IO answer");
+}
+///-----------------------------------------------------------------------------
+QDBusVariant DBUS_SPACE::dbusServerClass::query(const QString &query,const QList<QVariant>& args)
+{
+    QString q = query.toLower();
+    QByteArray ba = q.toLocal8Bit();
+    const char* q_str = ba.data();
+
+    fprintf(stdout,"server getting  query with arguments.\n");
+    fprintf(stdout,"input query - %s, arguments - \n",q_str);
+
+    return QDBusVariant("Sorry, I don't know the answer");
+}
